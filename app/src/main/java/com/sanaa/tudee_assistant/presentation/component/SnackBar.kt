@@ -20,37 +20,41 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.Status
 
 @Composable
 fun SnackBar(
-    errorStatus: Boolean = false,
+    status: Status = Status.SUCCESS,
+    description: String
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
             .background(color = Theme.color.surfaceHigh, shape = RoundedCornerShape(16.dp))
-            .padding(8.dp), verticalAlignment = Alignment.CenterVertically
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
                 .background(
-                    color = if (errorStatus) Theme.color.errorVariant else Theme.color.greenVariant,
+                    color = if (status == Status.ERROR) Theme.color.errorVariant else Theme.color.greenVariant,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(9.25.dp)
         ) {
             Image(
                 painter = painterResource(
-                    id = if (errorStatus) R.drawable.snack_bar_error else R.drawable.snack_bar_success
+                    id = if (status == Status.ERROR) R.drawable.snack_bar_error else R.drawable.snack_bar_success
                 ),
-                contentDescription = if (errorStatus) "Error Icon" else "Success Icon",
-                modifier = Modifier.size(24.dp)
-            )
+                contentDescription = description,
+                modifier = Modifier.size(24.dp),
+
+                )
         }
 
         Text(
-            text = if (errorStatus) stringResource(R.string.snack_bar_error) else stringResource(R.string.snack_bar_success),
+            text = description,
             color = Theme.color.body,
             style = Theme.textStyle.body.medium,
             modifier = Modifier.padding(start = 12.dp)
@@ -63,7 +67,7 @@ fun SnackBar(
 @Composable
 fun SnackBarDarkPreview() {
     TudeeTheme(isDarkTheme = true) {
-        SnackBar()
+        SnackBar(description = "Success")
     }
 }
 
@@ -71,6 +75,6 @@ fun SnackBarDarkPreview() {
 @Composable
 fun SnackBarLightPreview() {
     TudeeTheme(isDarkTheme = false) {
-        SnackBar(true)
+        SnackBar(Status.ERROR, description = "Something went wrong")
     }
 }

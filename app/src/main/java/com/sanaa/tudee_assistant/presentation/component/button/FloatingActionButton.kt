@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.component.button
 
 import android.graphics.drawable.Icon
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -28,7 +29,7 @@ fun FloatingActionButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isLoading: Boolean = false,
-    iconId: Int = R.drawable.ic_loading,
+    @DrawableRes iconRes: Int = R.drawable.ic_loading,
     onClick: () -> Unit = {}
 ) {
 
@@ -64,7 +65,7 @@ fun FloatingActionButton(
             true -> SpinnerIcon(tint = if(enabled) Theme.color.onPrimary else Theme.color.stroke)
             false -> Icon(
                 modifier = Modifier.size(28.dp),
-                painter = painterResource(iconId),
+                painter = painterResource(iconRes),
                 contentDescription = null,
                 tint = if(enabled) Theme.color.onPrimary else Theme.color.stroke
             )

@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-
 @Composable
 fun TudeeTextField(
     value: String,
@@ -42,7 +41,6 @@ fun TudeeTextField(
     icon: Painter? = null,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ) {
-
     val isFocused by interactionSource.collectIsFocusedAsState()
     val borderColor = if (isFocused) Theme.color.primary else Theme.color.stroke
     val iconTint = if (isFocused || value.isNotEmpty()) Theme.color.body else Theme.color.hint
@@ -93,7 +91,8 @@ fun TudeeTextField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            style = Theme.textStyle.label.medium.copy(color = Theme.color.hint),
+                            style = Theme.textStyle.label.medium,
+                            color = Theme.color.hint
                         )
                     }
                     innerTextField()

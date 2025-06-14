@@ -23,14 +23,13 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.Day
 
 @Composable
-fun DayToggle(
+fun DayItem(
     day: Day,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() },
     ) {
         Column(
@@ -86,8 +85,8 @@ private fun Preview() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            DayToggle(Day(day = "15", dayName = "Mon", isSelected = true)) {}
-            DayToggle(Day(day = "16", dayName = "Tue", isSelected = false)) {}
+            DayItem(Day(day = "15", dayName = "Mon", isSelected = true)) {}
+            DayItem(Day(day = "16", dayName = "Tue", isSelected = false)) {}
         }
     }
 }

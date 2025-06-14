@@ -1,0 +1,53 @@
+name: Enforce Branch Naming Convention
+
+on:
+  create:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-branch-name:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install yq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq  # Ensures YAML parsing tool is available
+
+      - name: Read allowed prefixes
+        id: load_prefixes
+        run: |
+          PREFIXES=$(yq e '.allowed_prefixes | join("|")' .github/branch-prefixes.yml)
+          echo "ALLOWED_PREFIXES=$PREFIXES" >> $GITHUB_ENV
+
+      - name: Validate branch naming
+        env:
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          # Ensure branch starts with an allowed prefix
+          if [[ ! "$BRANCH_NAME" =~ ^($ALLOWED_PREFIXES).+ ]]; then
+            echo "❌ Invalid branch name '$BRANCH_NAME'. Must start with an allowed prefix."
+            exit 1
+          fi
+          
+          # Ensure no uppercase letters
+          if [[ "$BRANCH_NAME" =~ [A-Z] ]]; then
+            echo "❌ Branch name '$BRANCH_NAME' contains uppercase letters. Use lowercase only."
+            exit 1
+          fi
+
+          # Ensure only allowed characters
+          if [[ "$BRANCH_NAME" =~ [^a-z0-9/-] ]]; then
+            echo "❌ Branch name '$BRANCH_NAME' contains invalid characters. Use lowercase, numbers, `/`, and `-` only."
+            exit 1
+          fi
+
+          echo "✅ Branch name '$BRANCH_NAME' is valid."

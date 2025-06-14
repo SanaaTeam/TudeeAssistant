@@ -1,0 +1,5 @@
+allowed_prefixes:
+  - fix/
+  - refactor/
+  - feature/
+  - test/

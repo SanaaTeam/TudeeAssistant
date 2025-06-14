@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.design_system.components
+package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.util.dropShadow
 import com.sanaa.tudee_assistant.presentation.util.innerShadow
 
@@ -53,7 +54,7 @@ fun DarkThemeSwitch(
     val animationSpecDurationMillis = 800
 
     val bgColor by animateColorAsState(
-        targetValue = if (isDarkMode) Color(0xFF151535) else Color(0xFF548EFE),
+        targetValue = if (isDarkMode) Color(0xFF151535) else Theme.color.primary,
         animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
     )
 

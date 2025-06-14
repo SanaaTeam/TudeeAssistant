@@ -13,18 +13,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.Statue
+import com.sanaa.tudee_assistant.presentation.model.Status
 
 @Composable
-fun StatueImage(imageSize: Dp, statue: Statue) {
+fun StatueImage(imageSize: Dp, status: Status) {
     Image(
         modifier = Modifier.size(imageSize),
         painter = painterResource(
-            id = when (statue) {
-                Statue.Good -> R.drawable.good_statues
-                Statue.Okay -> R.drawable.okay_statues
-                Statue.Poor -> R.drawable.poor_statues
-                Statue.Bad -> R.drawable.bad_staues
+            id = when (status) {
+                Status.Good -> R.drawable.good_statues
+                Status.Okay -> R.drawable.okay_statues
+                Status.Poor -> R.drawable.poor_statues
+                Status.Bad -> R.drawable.bad_staues
             }
         ),
         contentDescription = null,
@@ -39,10 +39,10 @@ private fun Preview() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            StatueImage(24.dp, Statue.Good)
-            StatueImage(24.dp, Statue.Okay)
-            StatueImage(24.dp, Statue.Poor)
-            StatueImage(24.dp,Statue.Bad)
+            StatueImage(24.dp, Status.Good)
+            StatueImage(24.dp, Status.Okay)
+            StatueImage(24.dp, Status.Poor)
+            StatueImage(24.dp,Status.Bad)
         }
     }
 }

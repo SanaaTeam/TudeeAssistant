@@ -23,10 +23,10 @@ import com.sanaa.tudee_assistant.presentation.composables.HorizontalSpace
 import com.sanaa.tudee_assistant.presentation.composables.VerticalSpace
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.Statue
+import com.sanaa.tudee_assistant.presentation.model.Status
 
 @Composable
-fun Slider(title: String, description: String, statue: Statue) {
+fun Slider(title: String, description: String, status: Status) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(
             modifier = Modifier
@@ -41,7 +41,7 @@ fun Slider(title: String, description: String, statue: Statue) {
 
                 HorizontalSpace(8.dp)
 
-                StatueImage(20.dp, statue)
+                StatueImage(20.dp, status)
             }
 
             VerticalSpace(8.dp)
@@ -87,26 +87,26 @@ private fun Preview() {
             Slider(
                 title = "Stay working!",
                 description = "You've completed 3 out of 10 tasks Keep going!",
-                Statue.Okay
+                Status.Okay
             )
 
             Slider(
                 title = "Tadaa!",
                 description = "You’re doing amazing!!!\n" +
                         "Tudee is proud of you.",
-                Statue.Good
+                Status.Good
             )
 
             Slider(
                 title = "Zero progress?!",
                 description = "You just scrolling, not working. Tudee is watching. back to work!!!",
-                Statue.Bad
+                Status.Bad
             )
 
             Slider(
                 title = "Nothing on your list…",
                 description = "Fill your day with something awesome.",
-                Statue.Poor
+                Status.Poor
             )
         }
     }

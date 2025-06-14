@@ -1,11 +1,11 @@
-package com.sanaa.tudee_assistant.domain.model
+package com.sanaa.tudee_assistant.presentation.model
 
 import com.sanaa.tudee_assistant.R
 
 enum class DefaultCategory(
-    override val title: String,
-    override val iconResource: Int
-) : Category {
+    title: String,
+    iconResource: Int
+) {
     EDUCATION("Education", R.drawable.education_cat),
     SHOPPING("Shopping", R.drawable.shopping_cat),
     MEDICAL("Medical", R.drawable.medical_cat),
@@ -22,7 +22,5 @@ enum class DefaultCategory(
     AGRICULTURE("Agriculture", R.drawable.agriculture_cat),
     CODING("Coding", R.drawable.coding_cat),
     COOKING("Cooking", R.drawable.cooking_cat),
-    FAMILY_FRIEND("Family & friend", R.drawable.family_friend_cat);
-
-    override val id: String get() = name
+    FAMILY_FRIEND("Family & friend", R.drawable.family_friend_cat)
 }

@@ -1,15 +1,16 @@
-package com.sanaa.tudee_assistant.presentation.component
+package com.sanaa.tudee_assistant.presentation.component.category
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,61 +19,27 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.domain.model.Category
-import com.sanaa.tudee_assistant.domain.model.DefaultCategory
+import com.sanaa.tudee_assistant.presentation.composables.CategoryCount
+import com.sanaa.tudee_assistant.presentation.composables.CheckMarkContainer
+import com.sanaa.tudee_assistant.presentation.model.Category
+import com.sanaa.tudee_assistant.presentation.model.DefaultCategory
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
-
 @Composable
-fun Category(
+fun CategoryItem(
     category: Category,
-    count: String,
-    selected: Boolean = false
+    onClick: () -> Unit,
+    TopContent: @Composable () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
             .width(104.dp)
             .height(102.dp)
             .background(color = Theme.color.surfaceHigh)
+            .clickable { onClick() },
     ) {
-        if (!selected) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 13.dp),
-                contentAlignment = Alignment.TopEnd
-            ) {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            color = Theme.color.surfaceLow,
-                            shape = RoundedCornerShape(100.dp)
-                        )
-                        .padding(vertical = 2.dp, horizontal = 10.5.dp)
-                ) {
-                    Text(
-                        text = count,
-                        style = Theme.textStyle.label.small,
-                        color = Theme.color.hint
-                    )
-                }
-            }
-        }
-
-        if (selected) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 15.dp, top = 2.dp),
-                contentAlignment = Alignment.TopEnd
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.checkmark_container),
-                    contentDescription = null,
-                )
-            }
-        }
+        TopContent()
 
         Box(
             modifier = Modifier
@@ -83,6 +50,7 @@ fun Category(
             Image(
                 painter = painterResource(id = category.iconResource),
                 contentDescription = null,
+                modifier = Modifier.size(32.dp)
             )
         }
 
@@ -104,9 +72,10 @@ fun Category(
 @Composable
 fun CategoryDarkPreview() {
     TudeeTheme(isDarkTheme = true) {
-        Category(
-            category = DefaultCategory.EDUCATION,
-            count = "16"
+        CategoryItem(
+            category = Category(DefaultCategory.EDUCATION.name, R.drawable.education_cat),
+            onClick = {},
+            TopContent = { CheckMarkContainer() }
         )
     }
 }
@@ -115,10 +84,11 @@ fun CategoryDarkPreview() {
 @Composable
 fun CategoryLightPreview() {
     TudeeTheme(isDarkTheme = false) {
-        Category(
-            category = DefaultCategory.EDUCATION,
-            count = "16",
-            selected = true
+        CategoryItem(
+            category = Category(DefaultCategory.EDUCATION.name, R.drawable.education_cat),
+            onClick = {},
+            TopContent = { CategoryCount("16") }
+
         )
     }
 }

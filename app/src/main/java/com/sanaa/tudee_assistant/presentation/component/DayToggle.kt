@@ -5,15 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,10 +20,11 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.composables.VerticalSpace
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.Day
 
 @Composable
 fun DayToggle(
-    selected: Boolean,
+    day: Day,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
@@ -35,13 +33,12 @@ fun DayToggle(
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() },
     ) {
-
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
                 .width(56.dp)
                 .then(
-                    if (selected) {
+                    if (day.isSelected) {
                         Modifier.background(
                             Brush.verticalGradient(
                                 listOf(
@@ -60,8 +57,8 @@ fun DayToggle(
         ) {
             Text(
                 modifier = Modifier,
-                text = "15",
-                color = if (selected) Theme.color.onPrimary else Theme.color.body,
+                text = day.day,
+                color = if (day.isSelected) Theme.color.onPrimary else Theme.color.body,
                 style = Theme.textStyle.title.medium
             )
 
@@ -69,8 +66,8 @@ fun DayToggle(
 
             Text(
                 modifier = Modifier,
-                text = "Mon",
-                color = if (selected) Theme.color.onPrimaryCaption else Theme.color.hint,
+                text = day.dayName,
+                color = if (day.isSelected) Theme.color.onPrimaryCaption else Theme.color.hint,
                 style = Theme.textStyle.body.small
             )
         }
@@ -81,20 +78,16 @@ fun DayToggle(
 @Preview
 @Composable
 private fun Preview() {
-    var selectState by remember { mutableStateOf(false) }
-    var selectState2 by remember { mutableStateOf(false) }
-
-    TudeeTheme {
+    TudeeTheme(isDarkTheme = true) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Theme.color.surface)
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            DayToggle(selectState) {
-                selectState = !selectState
-            }
-            DayToggle(selectState2) {
-                selectState2 = !selectState2
-            }
+            DayToggle(Day(day = "15", dayName = "Mon", isSelected = true)) {}
+            DayToggle(Day(day = "16", dayName = "Tue", isSelected = false)) {}
         }
     }
 }

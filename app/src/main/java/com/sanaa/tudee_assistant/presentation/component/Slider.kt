@@ -41,7 +41,7 @@ fun Slider(title: String, description: String, status: Status) {
 
                 HorizontalSpace(8.dp)
 
-                StatueImage(20.dp, status)
+                StatusImage(20.dp, status)
             }
 
             VerticalSpace(8.dp)

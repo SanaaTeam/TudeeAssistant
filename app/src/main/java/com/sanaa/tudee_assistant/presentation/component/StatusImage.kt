@@ -16,7 +16,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.Status
 
 @Composable
-fun StatueImage(imageSize: Dp, status: Status) {
+fun StatusImage(imageSize: Dp, status: Status) {
     Image(
         modifier = Modifier.size(imageSize),
         painter = painterResource(
@@ -39,10 +39,10 @@ private fun Preview() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            StatueImage(24.dp, Status.Good)
-            StatueImage(24.dp, Status.Okay)
-            StatueImage(24.dp, Status.Poor)
-            StatueImage(24.dp,Status.Bad)
+            StatusImage(24.dp, Status.Good)
+            StatusImage(24.dp, Status.Okay)
+            StatusImage(24.dp, Status.Poor)
+            StatusImage(24.dp,Status.Bad)
         }
     }
 }

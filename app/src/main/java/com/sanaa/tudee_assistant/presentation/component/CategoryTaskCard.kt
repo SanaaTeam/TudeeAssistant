@@ -57,7 +57,7 @@ fun CategoryTaskCard(
 
             HorizontalSpace()
 
-            categoryTask.date?.let { Date(it) }
+            categoryTask.date?.let { DateChip(it) }
 
             HorizontalSpace(4.dp)
 
@@ -86,7 +86,7 @@ fun CategoryTaskCard(
 }
 
 @Composable
-private fun Date(date: String) {
+private fun DateChip(date: String) {
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(100.dp))

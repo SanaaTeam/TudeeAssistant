@@ -28,6 +28,14 @@ fun DayItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
+    val backgroundBrush = Brush.verticalGradient(
+        listOf(
+            Theme.color.primary,
+            Theme.color.primaryGradientStart,
+            Theme.color.primaryGradientEnd,
+        )
+    )
+
     Box(
         modifier = modifier
             .clickable { onClick() },
@@ -37,19 +45,8 @@ fun DayItem(
                 .clip(RoundedCornerShape(16.dp))
                 .width(56.dp)
                 .then(
-                    if (day.isSelected) {
-                        Modifier.background(
-                            Brush.verticalGradient(
-                                listOf(
-                                    Theme.color.primary,
-                                    Theme.color.primaryGradientStart,
-                                    Theme.color.primaryGradientEnd,
-                                )
-                            )
-                        )
-                    } else {
-                        Modifier.background(Theme.color.surface)
-                    }
+                    if (day.isSelected) Modifier.background(backgroundBrush)
+                    else Modifier.background(Theme.color.surface)
                 )
                 .padding(vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally

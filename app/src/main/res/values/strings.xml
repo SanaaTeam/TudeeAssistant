@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TudeeAssistant</string>
+    <string name="snack_bar_error">Some error happened.</string>
+    <string name="snack_bar_success">Successfully.</string>
 </resources>

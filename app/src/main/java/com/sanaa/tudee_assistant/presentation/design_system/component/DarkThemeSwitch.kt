@@ -159,15 +159,23 @@ fun DarkThemeSwitch(
             clickedOffsetY = 50.dp
         )
 
+
+        val offsetX by animateDpAsState(
+            targetValue = if (isDarkMode) 50.dp else (-12).dp,
+            animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
+        )
+
+        val offsetY by animateDpAsState(
+            targetValue = if (isDarkMode) 50.dp else 4.dp,
+            animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
+        )
 //        second small white cloud
-        AnimatedCircle(
-            isDarkMode,
-            modifier = Modifier.align(Alignment.BottomEnd),
-            size = 16.dp,
-            startOffsetX = (-10).dp,
-            clickedOffsetX = 50.dp,
-            startOffsetY = 4.dp,
-            clickedOffsetY = 50.dp
+        Box(
+            modifier = Modifier.align(Alignment.BottomEnd)
+                .size(14.dp, 16.dp)
+                .offset(x = offsetX, y = offsetY)
+                .background(Color.White, RoundedCornerShape(100.dp))
+
         )
 
 //        moon circle that transfer to cloud
@@ -187,7 +195,6 @@ fun DarkThemeSwitch(
             isDarkMode,
             enter = fadeIn(animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)),
             exit = fadeOut(animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)),
-
             ) {
             Box(modifier = Modifier.fillMaxSize()) {
 
@@ -284,24 +291,20 @@ fun AnimatedCircle(
         animationSpec = tween(durationMillis = durationMillis, easing = EaseOut)
     )
 
-    var boxModifier = modifier
-        .size(size)
-        .offset(x = offsetX, y = offsetY)
-        .background(color, CircleShape)
-
-    if (hasInnerShadow) {
-        boxModifier = boxModifier
-            .innerShadow(
-                shape = CircleShape,
-                color = if (isClicked) Color(0xFFBFD2FF) else Color.Transparent,
-                blur = 4.dp,
-                offsetX = 1.dp,
-                offsetY = 1.dp
-            )
-    }
-
     // Circle composable
     Box(
-        modifier = boxModifier
+        modifier = modifier
+            .size(size)
+            .offset(x = offsetX, y = offsetY)
+            .background(color, CircleShape)
+            .then(
+                if (hasInnerShadow) Modifier.innerShadow(
+                    shape = CircleShape,
+                    color = if (isClicked) Color(0xFFBFD2FF) else Color.Transparent,
+                    blur = 4.dp,
+                    offsetX = 1.dp,
+                    offsetY = 1.dp
+                ) else Modifier
+            )
     )
 }

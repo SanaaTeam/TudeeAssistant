@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.component.category
+package com.sanaa.tudee_assistant.presentation.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

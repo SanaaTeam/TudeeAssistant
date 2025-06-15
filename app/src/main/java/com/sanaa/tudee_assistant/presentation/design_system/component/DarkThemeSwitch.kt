@@ -7,11 +7,16 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -35,6 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
@@ -48,18 +54,10 @@ fun DarkThemeSwitch(
     onCheckedChange: (Boolean) -> Unit = {}
 ) {
 
-    val sunColor = Brush.linearGradient(listOf(Color(0xFFF2C849), Color(0xFFF49061)))
-    val moonColor = Brush.linearGradient(listOf(Color(0xFFE9F0FF), Color(0xFFE0E9FE)))
-
     val animationSpecDurationMillis = 800
 
     val bgColor by animateColorAsState(
         targetValue = if (isDarkMode) Color(0xFF151535) else Theme.color.primary,
-        animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
-    )
-
-    val moonCircleSize by animateDpAsState(
-        targetValue = if (isDarkMode) 8.dp else 29.dp,
         animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
     )
 
@@ -79,123 +77,35 @@ fun DarkThemeSwitch(
             )
     ) {
 
+        AnimatedMoon(isDarkMode, animationSpecDurationMillis)
+
+        AnimatedSun(isDarkMode, animationSpecDurationMillis)
+
+        FirstGreyCloud(isDarkMode)
+
+        SecondGreyCloud(isDarkMode)
+
+        FirstWhiteCloud(isDarkMode)
+
+        TransformingWhiteCloud(isDarkMode, animationSpecDurationMillis)
+
+        AnimatedTransformingMoonCircle(isDarkMode, animationSpecDurationMillis)
+
         AnimatedVisibility(
             isDarkMode,
-            enter = fadeIn(animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)),
-            exit = slideOutHorizontally(
-                targetOffsetX = { -it },
-                animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
-            ) + fadeOut(animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)),
-            modifier = Modifier.align(Alignment.CenterEnd)
+            enter = fadeIn(
+                animationSpec = tween(
+                    durationMillis = animationSpecDurationMillis,
+                    easing = EaseOut
+                )
+            ),
+            exit = fadeOut(
+                animationSpec = tween(
+                    durationMillis = animationSpecDurationMillis,
+                    easing = EaseOut
+                )
+            ),
         ) {
-//          moon
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .dropShadow(
-                        offsetX = (-1).dp,
-                        offsetY = 1.dp,
-                        blur = 3.dp,
-                        color = Color(0xFF323297),
-                    )
-                    .background(moonColor, CircleShape)
-            )
-        }
-//      sun
-        AnimatedVisibility(
-            !isDarkMode,
-            enter = fadeIn(animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)),
-            exit = slideOutHorizontally(
-                targetOffsetX = { it },
-                animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
-            ) + fadeOut(animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)),
-            modifier = Modifier.align(Alignment.CenterStart)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .dropShadow(
-                        offsetX = 1.dp,
-                        offsetY = (-1).dp,
-                        blur = 3.dp,
-                        color = Color(0xFF79A4FD),
-                    )
-                    .background(sunColor, CircleShape)
-            )
-        }
-
-        //first gray cloud
-        AnimatedCircle(
-            isClicked = isDarkMode,
-            modifier = Modifier.align(Alignment.TopEnd),
-            size = 32.dp,
-            startOffsetX = 14.dp,
-            clickedOffsetX = 50.dp,
-            startOffsetY = (-4).dp,
-            clickedOffsetY = 50.dp,
-            color = Color(0xFFF0F0F0),
-        )
-
-        //second gray cloud
-        AnimatedCircle(
-            isClicked = isDarkMode,
-            modifier = Modifier.align(Alignment.BottomEnd),
-            size = 24.dp,
-            startOffsetX = (-6).dp,
-            clickedOffsetX = 50.dp,
-            startOffsetY = 8.dp,
-            clickedOffsetY = 50.dp,
-            color = Color(0xFFF0F0F0),
-        )
-
-//        first small white cloud
-        AnimatedCircle(
-            isDarkMode,
-            modifier = Modifier.align(Alignment.BottomEnd),
-            size = 16.dp,
-            startOffsetX = 1.dp,
-            clickedOffsetX = 50.dp,
-            startOffsetY = 4.dp,
-            clickedOffsetY = 50.dp
-        )
-
-
-        val offsetX by animateDpAsState(
-            targetValue = if (isDarkMode) 50.dp else (-12).dp,
-            animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
-        )
-
-        val offsetY by animateDpAsState(
-            targetValue = if (isDarkMode) 50.dp else 4.dp,
-            animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
-        )
-//        second small white cloud
-        Box(
-            modifier = Modifier.align(Alignment.BottomEnd)
-                .size(14.dp, 16.dp)
-                .offset(x = offsetX, y = offsetY)
-                .background(Color.White, RoundedCornerShape(100.dp))
-
-        )
-
-//        moon circle that transfer to cloud
-        AnimatedCircle(
-            isClicked = isDarkMode,
-            modifier = Modifier.align(Alignment.TopEnd),
-            size = moonCircleSize,
-            startOffsetX = (15).dp,
-            clickedOffsetX = (-14).dp,
-            startOffsetY = (-2).dp,
-            clickedOffsetY = 4.dp,
-            color = if (isDarkMode) Color(0xFFE9EFFF) else Color(0xFFFFFFFF),
-            hasInnerShadow = true,
-        )
-
-        AnimatedVisibility(
-            isDarkMode,
-            enter = fadeIn(animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)),
-            exit = fadeOut(animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)),
-            ) {
             Box(modifier = Modifier.fillMaxSize()) {
 
                 Box(
@@ -216,48 +126,18 @@ fun DarkThemeSwitch(
                         .size(32.dp)
                         .align(Alignment.CenterEnd)
                 ) {
-//                    moon large circle
-                    Box(
-                        modifier = Modifier
-                            .size(14.dp)
-                            .align(Alignment.BottomStart)
-                            .offset(x = 4.dp, y = (-6).dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFE9EFFF))
-                            .innerShadow(
-                                shape = CircleShape,
-                                color = Color(0xFFBFD2FF),
-                                blur = 4.dp,
-                                offsetX = 1.dp,
-                                offsetY = 1.dp
-                            )
-                    )
-//                    moon small circle
-                    Box(
-                        modifier = Modifier
-                            .size(4.dp)
-                            .align(Alignment.BottomEnd)
-                            .offset(x = (-9).dp, y = (-4).dp)
-                            .clip(CircleShape)
-                            .align(Alignment.BottomEnd)
-                            .background(Color(0xFFE9EFFF))
-                            .innerShadow(
-                                shape = CircleShape,
-                                color = Color(0xFFBFD2FF),
-                                blur = 4.dp,
-                                offsetX = 1.dp,
-                                offsetY = 1.dp
-                            )
-                    )
+                    MoonLargeCircle()
+                    MoonSmallCircle()
                 }
             }
         }
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
-fun DarkThemeSwitchPreview() {
+private fun DarkThemeSwitchPreview() {
     Column {
 
         var checkedState by remember { mutableStateOf(false) }
@@ -267,8 +147,261 @@ fun DarkThemeSwitchPreview() {
     }
 }
 
+
+
 @Composable
-fun AnimatedCircle(
+private fun BoxScope.AnimatedSun(
+    isDarkMode: Boolean,
+    animationSpecDurationMillis: Int
+) {
+    AnimatedVisibility(
+        !isDarkMode,
+        enter = fadeIn(
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ),
+        exit = slideOutHorizontally(
+            targetOffsetX = { it },
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ) + fadeOut(
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ),
+        modifier = Modifier.align(Alignment.CenterStart)
+    ) {
+        val sunColor = Brush.linearGradient(listOf(Color(0xFFF2C849), Color(0xFFF49061)))
+
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .dropShadow(
+                    offsetX = 1.dp,
+                    offsetY = (-1).dp,
+                    blur = 3.dp,
+                    color = Color(0xFF79A4FD),
+                )
+                .background(sunColor, CircleShape)
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.AnimatedMoon(
+    isDarkMode: Boolean,
+    animationSpecDurationMillis: Int
+) {
+    AnimatedVisibility(
+        isDarkMode,
+        enter = fadeIn(
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ),
+        exit = slideOutHorizontally(
+            targetOffsetX = { -it },
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ) + fadeOut(
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ),
+        modifier = Modifier.align(Alignment.CenterEnd)
+    ) {
+
+        val moonColor = Brush.linearGradient(listOf(Color(0xFFE9F0FF), Color(0xFFE0E9FE)))
+
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .dropShadow(
+                    offsetX = (-1).dp,
+                    offsetY = 1.dp,
+                    blur = 3.dp,
+                    color = Color(0xFF323297),
+                )
+                .background(moonColor, CircleShape)
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.MoonSmallCircle() {
+    Box(
+        modifier = Modifier
+            .size(4.dp)
+            .align(Alignment.BottomEnd)
+            .offset(x = (-9).dp, y = (-4).dp)
+            .clip(CircleShape)
+            .align(Alignment.BottomEnd)
+            .background(Color(0xFFE9EFFF))
+            .innerShadow(
+                shape = CircleShape,
+                color = Color(0xFFBFD2FF),
+                blur = 4.dp,
+                offsetX = 1.dp,
+                offsetY = 1.dp
+            )
+    )
+}
+
+@Composable
+private fun BoxScope.MoonLargeCircle() {
+    Box(
+        modifier = Modifier
+            .size(14.dp)
+            .align(Alignment.BottomStart)
+            .offset(x = 4.dp, y = (-6).dp)
+            .clip(CircleShape)
+            .background(Color(0xFFE9EFFF))
+            .innerShadow(
+                shape = CircleShape,
+                color = Color(0xFFBFD2FF),
+                blur = 4.dp,
+                offsetX = 1.dp,
+                offsetY = 1.dp
+            )
+    )
+}
+
+@Composable
+private fun BoxScope.TransformingWhiteCloud(
+    isDarkMode: Boolean,
+    animationSpecDurationMillis: Int
+) {
+    AnimatedVisibility(
+        !isDarkMode,
+        enter = slideIn(
+            initialOffset = { IntOffset((-1.5 * it.width).toInt(), (it.height / 2).toInt()) },
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ) + scaleIn(
+            initialScale = 0.5f,
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ) + fadeIn(
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ),
+        exit = slideOut(
+            targetOffset = { IntOffset((-1.5 * it.width).toInt(), (it.height / 2).toInt()) },
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ) + scaleOut(
+            targetScale = 0.5f,
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ) + fadeOut(
+            animationSpec = tween(
+                durationMillis = animationSpecDurationMillis,
+                easing = EaseOut
+            )
+        ),
+        modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .offset(x = (-12).dp, y = 4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(14.dp, 16.dp)
+                .background(Color.White, RoundedCornerShape(100.dp))
+
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.FirstWhiteCloud(isDarkMode: Boolean) {
+    AnimatedCircle(
+        isDarkMode,
+        modifier = Modifier.align(Alignment.BottomEnd),
+        size = 16.dp,
+        startOffsetX = 1.dp,
+        clickedOffsetX = 50.dp,
+        startOffsetY = 4.dp,
+        clickedOffsetY = 50.dp
+    )
+}
+
+@Composable
+private fun BoxScope.SecondGreyCloud(isDarkMode: Boolean) {
+    AnimatedCircle(
+        isClicked = isDarkMode,
+        modifier = Modifier.align(Alignment.BottomEnd),
+        size = 24.dp,
+        startOffsetX = (-6).dp,
+        clickedOffsetX = 50.dp,
+        startOffsetY = 8.dp,
+        clickedOffsetY = 50.dp,
+        color = Color(0xFFF0F0F0),
+    )
+}
+
+@Composable
+private fun BoxScope.FirstGreyCloud(isDarkMode: Boolean) {
+    AnimatedCircle(
+        isClicked = isDarkMode,
+        modifier = Modifier.align(Alignment.TopEnd),
+        size = 32.dp,
+        startOffsetX = 14.dp,
+        clickedOffsetX = 50.dp,
+        startOffsetY = (-4).dp,
+        clickedOffsetY = 50.dp,
+        color = Color(0xFFF0F0F0),
+    )
+}
+
+@Composable
+private fun BoxScope.AnimatedTransformingMoonCircle(
+    isDarkMode: Boolean,
+    animationSpecDurationMillis: Int,
+) {
+
+    val moonCircleSize by animateDpAsState(
+        targetValue = if (isDarkMode) 8.dp else 29.dp,
+        animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
+    )
+
+    val circleColor by animateColorAsState(
+        targetValue = if (isDarkMode) Color(0xFFE9EFFF) else Color(0xFFFFFFFF),
+        animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
+    )
+    AnimatedCircle(
+        isClicked = isDarkMode,
+        modifier = Modifier.align(Alignment.TopEnd),
+        size = moonCircleSize,
+        startOffsetX = (15).dp,
+        clickedOffsetX = (-14).dp,
+        startOffsetY = (-2).dp,
+        clickedOffsetY = 4.dp,
+        color = circleColor,
+        hasInnerShadow = true,
+    )
+}
+
+@Composable
+private fun AnimatedCircle(
     isClicked: Boolean = false,
     size: Dp,
     color: Color = Color.White,
@@ -291,7 +424,11 @@ fun AnimatedCircle(
         animationSpec = tween(durationMillis = durationMillis, easing = EaseOut)
     )
 
-    // Circle composable
+    val innerShadowColor by animateColorAsState(
+        targetValue = if (isClicked) Color(0xFFBFD2FF) else Color.Transparent,
+        animationSpec = tween(durationMillis = durationMillis, easing = EaseOut)
+    )
+
     Box(
         modifier = modifier
             .size(size)
@@ -300,7 +437,7 @@ fun AnimatedCircle(
             .then(
                 if (hasInnerShadow) Modifier.innerShadow(
                     shape = CircleShape,
-                    color = if (isClicked) Color(0xFFBFD2FF) else Color.Transparent,
+                    color = innerShadowColor,
                     blur = 4.dp,
                     offsetX = 1.dp,
                     offsetY = 1.dp

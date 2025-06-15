@@ -25,7 +25,7 @@ fun SpinnerIcon(modifier: Modifier = Modifier, tint: Color) {
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000, easing = LinearEasing),
+            animation = tween(durationMillis = 2500, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "rotationAnimation"

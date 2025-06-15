@@ -8,20 +8,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryItem
+import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.Category
+import com.sanaa.tudee_assistant.presentation.model.DefaultCategory
 
 @Composable
-fun CheckMarkContainer() {
+fun CheckMarkContainer(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(end = 15.dp, top = 2.dp),
-        contentAlignment = Alignment.TopEnd
+        modifier = modifier,
     ) {
         Image(
             painter = painterResource(R.drawable.checkmark_container),
             contentDescription = null,
         )
+    }
+}
+
+@Preview()
+@Composable
+fun CheckMarkContainerPreview() {
+    TudeeTheme(isDarkTheme = false) {
+        CheckMarkContainer()
     }
 }

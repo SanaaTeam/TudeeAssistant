@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.component
+package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,30 +29,40 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
 @Composable
 fun CategoryItem(
+    modifier: Modifier = Modifier,
     category: Category,
     onClick: () -> Unit,
-    TopContent: @Composable () -> Unit = {},
+    topContent: @Composable () -> Unit = {},
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .width(104.dp)
             .height(102.dp)
-            .background(color = Theme.color.surfaceHigh)
             .clickable { onClick() },
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopContent()
 
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 3.dp),
-            contentAlignment = Alignment.Center,
+                .background(color = Theme.color.surfaceHigh, shape = RoundedCornerShape(100.dp))
+                .size(78.dp),
         ) {
-            Image(
-                painter = painterResource(id = category.iconResource),
-                contentDescription = null,
-                modifier = Modifier.size(32.dp)
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.TopEnd
+            ) {
+                topContent()
+            }
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Image(
+                    painter = painterResource(id = category.iconResource),
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
         }
 
         Box(
@@ -61,7 +72,7 @@ fun CategoryItem(
             Text(
                 text = category.title,
                 style = Theme.textStyle.label.small,
-                color = Theme.color.hint,
+                color = Theme.color.body,
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
@@ -75,7 +86,9 @@ fun CategoryDarkPreview() {
         CategoryItem(
             category = Category(DefaultCategory.EDUCATION.name, R.drawable.education_cat),
             onClick = {},
-            TopContent = { CheckMarkContainer() }
+            topContent = { CheckMarkContainer(modifier = Modifier.padding(2.dp)) },
+            modifier = Modifier.background(color = Theme.color.surface)
+
         )
     }
 }
@@ -87,7 +100,8 @@ fun CategoryLightPreview() {
         CategoryItem(
             category = Category(DefaultCategory.EDUCATION.name, R.drawable.education_cat),
             onClick = {},
-            TopContent = { CategoryCount("16") }
+            topContent = { CategoryCount("16") },
+            modifier = Modifier.background(color = Theme.color.surface)
 
         )
     }

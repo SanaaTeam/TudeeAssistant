@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.design_system.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,10 +22,9 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composables.CategoryCount
 import com.sanaa.tudee_assistant.presentation.composables.CheckMarkContainer
-import com.sanaa.tudee_assistant.presentation.model.Category
-import com.sanaa.tudee_assistant.presentation.model.DefaultCategory
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.Category
 
 @Composable
 fun CategoryItem(
@@ -57,10 +56,11 @@ fun CategoryItem(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Image(
+                Icon(
                     painter = painterResource(id = category.iconResource),
                     contentDescription = null,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(32.dp),
+                    tint = category.tint
                 )
             }
         }
@@ -81,10 +81,14 @@ fun CategoryItem(
 
 @Preview(name = "Dark Theme")
 @Composable
-fun CategoryDarkPreview() {
+private fun CategoryDarkPreview() {
     TudeeTheme(isDarkTheme = true) {
         CategoryItem(
-            category = Category(DefaultCategory.EDUCATION.name, R.drawable.education_cat),
+            category = Category(
+                "Education",
+                R.drawable.education_cat,
+                Theme.color.purpleAccent
+            ),
             onClick = {},
             topContent = { CheckMarkContainer(modifier = Modifier.padding(2.dp)) },
             modifier = Modifier.background(color = Theme.color.surface)
@@ -95,10 +99,14 @@ fun CategoryDarkPreview() {
 
 @Preview(name = "Light Theme")
 @Composable
-fun CategoryLightPreview() {
+private fun CategoryLightPreview() {
     TudeeTheme(isDarkTheme = false) {
         CategoryItem(
-            category = Category(DefaultCategory.EDUCATION.name, R.drawable.education_cat),
+            category = Category(
+                "Education",
+                R.drawable.education_cat,
+                Theme.color.purpleAccent
+            ),
             onClick = {},
             topContent = { CategoryCount("16") },
             modifier = Modifier.background(color = Theme.color.surface)

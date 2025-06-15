@@ -2,7 +2,6 @@ package com.sanaa.tudee_assistant.presentation.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,12 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.Category
-import com.sanaa.tudee_assistant.presentation.model.DefaultCategory
 
 @Composable
 fun CategoryCount(count: String, modifier: Modifier = Modifier) {
@@ -46,7 +41,7 @@ fun CategoryCount(count: String, modifier: Modifier = Modifier) {
 
 @Preview()
 @Composable
-fun CategoryCountPreview() {
+private fun CategoryCountPreview() {
     TudeeTheme(isDarkTheme = false) {
         CategoryCount("16")
     }

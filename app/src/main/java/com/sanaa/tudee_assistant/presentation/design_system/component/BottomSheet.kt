@@ -3,7 +3,6 @@ package com.sanaa.tudee_assistant.presentation.design_system.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,7 +25,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 @Composable
 fun BaseBottomSheet(
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-    content: @Composable BoxScope.() -> Unit,
+    content: @Composable () -> Unit,
     sheetHeight: Dp,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
@@ -35,7 +34,7 @@ fun BaseBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismiss,
         scrimColor = Color.Black.copy(alpha = 0.6f),
-        shape = RoundedCornerShape(Theme.dimension.large,Theme.dimension.large),
+        shape = RoundedCornerShape(Theme.dimension.large, Theme.dimension.large),
         containerColor = Theme.color.surface,
         dragHandle = {
             Row(
@@ -56,8 +55,8 @@ fun BaseBottomSheet(
         content = {
             Box(
                 modifier = Modifier.height(sheetHeight),
-                content = content
             )
+            { content() }
         }
     )
 }

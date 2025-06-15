@@ -24,11 +24,12 @@ import com.sanaa.tudee_assistant.presentation.model.Status
 
 @Composable
 fun SnackBar(
+    modifier: Modifier = Modifier,
     status: Status = Status.SUCCESS,
-    description: String
+    description: String,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
             .background(color = Theme.color.surfaceHigh, shape = RoundedCornerShape(16.dp))
@@ -36,7 +37,7 @@ fun SnackBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .background(
                     color = if (status == Status.ERROR) Theme.color.errorVariant else Theme.color.greenVariant,
                     shape = RoundedCornerShape(12.dp)
@@ -48,7 +49,7 @@ fun SnackBar(
                     id = if (status == Status.ERROR) R.drawable.snack_bar_error else R.drawable.snack_bar_success
                 ),
                 contentDescription = description,
-                modifier = Modifier.size(24.dp),
+                modifier = modifier.size(24.dp),
 
                 )
         }
@@ -57,7 +58,7 @@ fun SnackBar(
             text = description,
             color = Theme.color.body,
             style = Theme.textStyle.body.medium,
-            modifier = Modifier.padding(start = 12.dp)
+            modifier = modifier.padding(start = 12.dp)
 
         )
     }
@@ -75,6 +76,6 @@ fun SnackBarDarkPreview() {
 @Composable
 fun SnackBarLightPreview() {
     TudeeTheme(isDarkTheme = false) {
-        SnackBar(Status.ERROR, description = "Something went wrong")
+        SnackBar(status = Status.ERROR, description = "Something went wrong")
     }
 }

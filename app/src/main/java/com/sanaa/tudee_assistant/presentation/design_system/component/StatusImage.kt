@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.Status
 
@@ -36,13 +36,13 @@ fun StatusImage(imageSize: Dp, status: Status) {
 private fun Preview() {
     TudeeTheme {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(Theme.dimension.medium),
+            verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
-            StatusImage(24.dp, Status.GOOD)
-            StatusImage(24.dp, Status.OKAY)
-            StatusImage(24.dp, Status.POOR)
-            StatusImage(24.dp, Status.BAD)
+            StatusImage(Theme.dimension.large, Status.GOOD)
+            StatusImage(Theme.dimension.large, Status.OKAY)
+            StatusImage(Theme.dimension.large, Status.POOR)
+            StatusImage(Theme.dimension.large, Status.BAD)
         }
     }
 }

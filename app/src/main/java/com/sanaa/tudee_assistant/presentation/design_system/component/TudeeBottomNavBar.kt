@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.component
+package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -36,10 +36,10 @@ fun TudeeBottomNavBar(
 ) {
     Row(
         modifier = modifier
-            .shadow(12.dp)
+            .shadow(Theme.dimension.regular)
             .background(Theme.color.surfaceHigh)
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(vertical = Theme.dimension.medium),
         Arrangement.Absolute.SpaceEvenly
     ) {
         content()
@@ -56,7 +56,7 @@ fun TudeeBottomNavBarItem(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(Theme.dimension.medium))
             .background(if (selected) Theme.color.primaryVariant else Color.Transparent)
             .size(42.dp)
             .clickable {
@@ -64,7 +64,7 @@ fun TudeeBottomNavBarItem(
             }, contentAlignment = Alignment.Center
     ) {
         Image(
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(Theme.dimension.large),
             painter = painterResource(id = if (selected) selectedIconRes else iconRes),
             contentDescription = null,
             colorFilter = ColorFilter.tint(

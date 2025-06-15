@@ -22,32 +22,32 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composables.HorizontalSpace
-import com.sanaa.tudee_assistant.presentation.composables.VerticalSpace
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.Status
 
 @Composable
 fun Slider(title: String, description: String, status: Status, @DrawableRes imageRes: Int) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Theme.dimension.regular)
+    ) {
         Column(
-            modifier = Modifier
-                .weight(1f),
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
+            ) {
                 Text(
                     text = title,
                     style = Theme.textStyle.title.small,
                     color = Theme.color.title
                 )
 
-                HorizontalSpace(8.dp)
-
                 StatusImage(20.dp, status)
             }
-
-            VerticalSpace(8.dp)
 
             Text(
                 text = description,
@@ -56,15 +56,13 @@ fun Slider(title: String, description: String, status: Status, @DrawableRes imag
             )
         }
 
-        HorizontalSpace(12.dp)
-
-        Box() {
+        Box {
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
                     .background(Theme.color.primary.copy(alpha = 0.16f))
                     .align(Alignment.BottomStart)
-                    .padding(bottom = 4.dp)
+                    .padding(bottom = Theme.dimension.extraSmall)
                     .size(76.dp),
             )
 
@@ -88,7 +86,7 @@ private fun Preview() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Theme.color.surface)
-                .padding(16.dp),
+                .padding(Theme.dimension.medium),
             verticalArrangement = Arrangement.spacedBy(21.dp)
         ) {
             Slider(

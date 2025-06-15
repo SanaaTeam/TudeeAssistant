@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.design_system.componets.text_fields
+package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -56,7 +56,7 @@ fun TudeeTextField(
             .border(
                 width = 1.dp,
                 color = borderColor,
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(Theme.dimension.medium)
             ),
         textStyle = Theme.textStyle.body.medium.copy(color = Theme.color.body),
         singleLine = true,
@@ -64,16 +64,16 @@ fun TudeeTextField(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(all = 12.dp)
+                    .padding(all = Theme.dimension.regular)
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(Theme.dimension.regular)
             ) {
                 if (icon != null) {
                     Image(
                         painter = icon,
                         contentDescription = null,
                         modifier = Modifier
-                            .size(24.dp),
+                            .size(Theme.dimension.large),
                         colorFilter = ColorFilter.tint(iconTint)
                     )
                     VerticalDivider(

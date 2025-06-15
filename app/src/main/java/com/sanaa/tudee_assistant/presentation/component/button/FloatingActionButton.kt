@@ -78,8 +78,9 @@ fun FloatingActionButton(
 @Composable
 fun FloatingActionButtonP(modifier: Modifier = Modifier) {
     FloatingActionButton(
-        enabled = false,
+        enabled = true,
         isLoading = false,
-        onClick = {}
+        onClick = {},
+        iconRes = R.drawable.ic_loading
     )
 }

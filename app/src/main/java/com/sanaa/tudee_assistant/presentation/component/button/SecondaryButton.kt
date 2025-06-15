@@ -28,18 +28,14 @@ fun SecondaryButton(
     isLoading: Boolean = false,
     onClick: () -> Unit = {}
     ) {
-        val interactionSource = remember { MutableInteractionSource() }
-
 
         Row(
             modifier = modifier
+                .clip(RoundedCornerShape(100.dp))
                 .clickable(
-                    interactionSource = interactionSource,
-                    indication = null,
                     enabled = enabled,
                     onClick = onClick
                 )
-                .clip(RoundedCornerShape(100.dp))
                 .border(
                     width = 1.dp,
                     color = Theme.color.stroke,
@@ -80,7 +76,7 @@ fun SecondaryButton(
 fun SecondaryButtonP(modifier: Modifier = Modifier) {
     SecondaryButton(
         text = "Submit",
-        enabled = true,
+        enabled = false,
         isLoading = true,
         onClick = {  }
     )

@@ -23,12 +23,9 @@ fun TextButton(
     isLoading: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     Row (
         modifier
             .clickable(
-                interactionSource = interactionSource,
-                indication = null,
                 enabled = enabled,
                 onClick = onClick
             ),
@@ -55,13 +52,13 @@ fun TextButton(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun TextButtonP(modifier: Modifier = Modifier) {
     TextButton(
         label = "Cancel",
         enabled = false,
-        isLoading = false,
+        isLoading = true,
         onClick = {}
     )
 }

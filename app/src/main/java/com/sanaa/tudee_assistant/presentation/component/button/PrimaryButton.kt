@@ -29,18 +29,15 @@ fun PrimaryButton(
     isLoading: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
 
 
     Row(
         modifier = modifier
+            .clip(RoundedCornerShape(100.dp))
             .clickable(
-                interactionSource = interactionSource,
-                indication = null,
                 enabled = enabled,
                 onClick = onClick
             )
-            .clip(RoundedCornerShape(100.dp))
             .then(
                 when (enabled) {
                     true -> Modifier.background(
@@ -51,7 +48,6 @@ fun PrimaryButton(
                             )
                         )
                     )
-
                     false -> Modifier.background(color = Theme.color.disable)
                 }
             )
@@ -92,7 +88,7 @@ fun PrimaryButtonP(modifier: Modifier = Modifier) {
     Box(modifier.padding(top = 8.dp, start = 8.dp)) {
         PrimaryButton(
             label = "Submit",
-            isLoading = false,
+            isLoading = true,
             enabled = true,
             onClick = {},
         )

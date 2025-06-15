@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.data.datasource.local.converters
+package com.sanaa.tudee_assistant.data.local.converters
 
 import androidx.room.TypeConverter
 import java.util.Date

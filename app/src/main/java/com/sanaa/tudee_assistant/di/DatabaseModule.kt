@@ -3,9 +3,9 @@ package com.sanaa.tudee_assistant.di
 
 import android.content.Context
 import androidx.room.Room
-import com.sanaa.tudee_assistant.data.datasource.local.AppDatabase
-import com.sanaa.tudee_assistant.data.datasource.local.dao.CategoryDao
-import com.sanaa.tudee_assistant.data.datasource.local.dao.TaskDao
+import com.sanaa.tudee_assistant.data.local.AppDatabase
+import com.sanaa.tudee_assistant.data.local.dao.CategoryDao
+import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import org.koin.dsl.module
 
 private const val DATABASE_NAME = "tudee.db"

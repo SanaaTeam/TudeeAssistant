@@ -33,7 +33,7 @@ fun PriorityTag(
 ) {
     Row(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(Theme.dimension.medium))
             .background(
                 when (priority) {
                     HIGH -> Theme.color.pinkAccent
@@ -41,12 +41,12 @@ fun PriorityTag(
                     LOW -> Theme.color.greenAccent
                 }
             )
-            .padding(vertical = 6.dp, horizontal = 8.dp),
+            .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Icon(
-            modifier = Modifier.size(12.dp),
+            modifier = Modifier.size(Theme.dimension.regular),
             painter = painterResource(
                 id = when (priority) {
                     HIGH -> R.drawable.flag
@@ -79,7 +79,7 @@ private fun Preview() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Theme.color.surfaceHigh)
-                .padding(16.dp)
+                .padding(Theme.dimension.medium)
         ) {
             PriorityTag(modifier = Modifier.padding(10.dp), priority = HIGH)
             PriorityTag(modifier = Modifier.padding(10.dp), priority = MEDIUM)

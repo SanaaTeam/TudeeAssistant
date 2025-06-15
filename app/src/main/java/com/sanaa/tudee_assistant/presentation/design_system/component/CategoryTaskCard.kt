@@ -39,9 +39,13 @@ fun CategoryTaskCard(
         modifier = modifier
             .fillMaxWidth()
             .height(111.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(Theme.dimension.medium))
             .background(Theme.color.surfaceHigh)
-            .padding(start = 4.dp, top = 4.dp, end = 12.dp),
+            .padding(
+                start = Theme.dimension.extraSmall,
+                top = Theme.dimension.extraSmall,
+                end = Theme.dimension.regular
+            ),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Row(
@@ -50,7 +54,7 @@ fun CategoryTaskCard(
         ) {
             Box(modifier = Modifier.size(56.dp), contentAlignment = Alignment.Center) {
                 Image(
-                    modifier = Modifier.size(32.dp),
+                    modifier = Modifier.size(Theme.dimension.extraLarge),
                     painter = categoryTask.icon,
                     contentDescription = null,
                 )
@@ -61,14 +65,14 @@ fun CategoryTaskCard(
             categoryTask.date?.let { DateChip(it) }
 
             PriorityTag(
-                modifier = Modifier.padding(start = 4.dp),
+                modifier = Modifier.padding(start = Theme.dimension.extraSmall),
                 priority = categoryTask.priority
             )
         }
 
 
         Column(
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = Theme.dimension.small),
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(
@@ -96,12 +100,12 @@ private fun DateChip(date: String) {
         modifier = Modifier
             .clip(RoundedCornerShape(100.dp))
             .background(Theme.color.surface)
-            .padding(8.dp),
+            .padding(Theme.dimension.small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Image(
-            modifier = Modifier.size(12.dp),
+            modifier = Modifier.size(Theme.dimension.regular),
             painter = painterResource(id = R.drawable.calendar_favorite_01),
             contentDescription = null,
         )
@@ -145,8 +149,8 @@ private fun Preview() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Theme.color.surface),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            contentPadding = PaddingValues(Theme.dimension.medium),
+            verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             items(
                 items

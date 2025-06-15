@@ -20,15 +20,16 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.composables.VerticalSpace
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.Day
-import com.sanaa.tudee_assistant.presentation.util.DateFormater.getDayName
+import com.sanaa.tudee_assistant.presentation.util.DateFormater.getShortDayName
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun DayItem(
-    day: Day,
+    dayDate: LocalDateTime,
+    isSelected: Boolean = false,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
@@ -49,7 +50,7 @@ fun DayItem(
                 .clip(RoundedCornerShape(16.dp))
                 .width(56.dp)
                 .then(
-                    if (day.isSelected) Modifier.background(backgroundBrush)
+                    if (isSelected) Modifier.background(backgroundBrush)
                     else Modifier.background(Theme.color.surface)
                 )
                 .padding(vertical = 12.dp),
@@ -57,8 +58,8 @@ fun DayItem(
         ) {
             Text(
                 modifier = Modifier,
-                text = day.dayDate.dayOfMonth.toString(),
-                color = if (day.isSelected) Theme.color.onPrimary else Theme.color.body,
+                text = dayDate.dayOfMonth.toString(),
+                color = if (isSelected) Theme.color.onPrimary else Theme.color.body,
                 style = Theme.textStyle.title.medium
             )
 
@@ -66,8 +67,8 @@ fun DayItem(
 
             Text(
                 modifier = Modifier,
-                text = day.dayDate.getDayName(),
-                color = if (day.isSelected) Theme.color.onPrimaryCaption else Theme.color.hint,
+                text = dayDate.getShortDayName(),
+                color = if (isSelected) Theme.color.onPrimaryCaption else Theme.color.hint,
                 style = Theme.textStyle.body.small
             )
         }
@@ -87,16 +88,12 @@ private fun Preview() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             DayItem(
-                Day(
-                    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                    isSelected = true
-                )
+                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                isSelected = true
             ) {}
             DayItem(
-                Day(
-                    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                    isSelected = false
-                )
+                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                isSelected = false
             ) {}
         }
     }

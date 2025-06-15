@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,12 +23,12 @@ import com.sanaa.tudee_assistant.presentation.composables.CategoryCount
 import com.sanaa.tudee_assistant.presentation.composables.CheckMarkContainer
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.Category
+import com.sanaa.tudee_assistant.presentation.model.CategoryUIInfo
 
 @Composable
 fun CategoryItem(
     modifier: Modifier = Modifier,
-    category: Category,
+    category: CategoryUIInfo,
     onClick: () -> Unit,
     topContent: @Composable () -> Unit = {},
 ) {
@@ -48,7 +47,7 @@ fun CategoryItem(
         ) {
             Box(
                 modifier = Modifier.align(Alignment.TopEnd),
-                ) {
+            ) {
                 topContent()
             }
             Box(
@@ -56,7 +55,7 @@ fun CategoryItem(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    painter = painterResource(id = category.iconResource),
+                    painter = category.categoryPainter,
                     contentDescription = null,
                     modifier = Modifier.size(32.dp),
                     tint = category.tint
@@ -83,9 +82,9 @@ fun CategoryItem(
 private fun CategoryDarkPreview() {
     TudeeTheme(isDarkTheme = true) {
         CategoryItem(
-            category = Category(
+            category = CategoryUIInfo(
                 "Education",
-                R.drawable.education_cat,
+                painterResource(R.drawable.education_cat),
                 Theme.color.purpleAccent
             ),
             onClick = {},
@@ -101,9 +100,9 @@ private fun CategoryDarkPreview() {
 private fun CategoryLightPreview() {
     TudeeTheme(isDarkTheme = false) {
         CategoryItem(
-            category = Category(
+            category = CategoryUIInfo(
                 "Education",
-                R.drawable.education_cat,
+                painterResource(R.drawable.education_cat),
                 Theme.color.purpleAccent
             ),
             onClick = {},

@@ -1,11 +1,10 @@
 package com.sanaa.tudee_assistant.presentation.model
 
-import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 
-data class Category(
+data class CategoryUIInfo(
     val title: String,
-    @get:DrawableRes
-    val iconResource: Int,
+    val categoryPainter: Painter,
     val tint: Color
 )

@@ -21,6 +21,10 @@ import com.sanaa.tudee_assistant.presentation.composables.VerticalSpace
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.Day
+import com.sanaa.tudee_assistant.presentation.util.DateFormater.getDayName
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun DayItem(
@@ -53,7 +57,7 @@ fun DayItem(
         ) {
             Text(
                 modifier = Modifier,
-                text = day.day,
+                text = day.dayDate.dayOfMonth.toString(),
                 color = if (day.isSelected) Theme.color.onPrimary else Theme.color.body,
                 style = Theme.textStyle.title.medium
             )
@@ -62,7 +66,7 @@ fun DayItem(
 
             Text(
                 modifier = Modifier,
-                text = day.dayName,
+                text = day.dayDate.getDayName(),
                 color = if (day.isSelected) Theme.color.onPrimaryCaption else Theme.color.hint,
                 style = Theme.textStyle.body.small
             )
@@ -82,8 +86,18 @@ private fun Preview() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            DayItem(Day(day = "15", dayName = "Mon", isSelected = true)) {}
-            DayItem(Day(day = "16", dayName = "Tue", isSelected = false)) {}
+            DayItem(
+                Day(
+                    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    isSelected = true
+                )
+            ) {}
+            DayItem(
+                Day(
+                    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    isSelected = false
+                )
+            ) {}
         }
     }
 }

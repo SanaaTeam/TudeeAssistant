@@ -1,7 +1,8 @@
 package com.sanaa.tudee_assistant.presentation.model
 
+import kotlinx.datetime.LocalDateTime
+
 data class Day(
-    val day: String,
-    val dayName: String,
+    val dayDate: LocalDateTime,
     val isSelected: Boolean = false,
 )

@@ -43,13 +43,13 @@ fun DayItem(
     Box(modifier = modifier.clickable { onClick() }) {
         Column(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(Theme.dimension.medium))
                 .width(56.dp)
                 .then(
                     if (isSelected) Modifier.background(backgroundBrush)
                     else Modifier.background(Theme.color.surface)
                 )
-                .padding(vertical = 12.dp),
+                .padding(vertical = Theme.dimension.regular),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
@@ -77,8 +77,8 @@ private fun Preview() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Theme.color.surface)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(Theme.dimension.medium),
+            verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             DayItem(
                 dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),

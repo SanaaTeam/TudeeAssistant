@@ -28,6 +28,7 @@ fun BaseBottomSheet(
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     content: @Composable BoxScope.() -> Unit,
     sheetHeight: Dp,
+    modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
 ) {
     ModalBottomSheet(
@@ -38,13 +39,13 @@ fun BaseBottomSheet(
         containerColor = Theme.color.surface,
         dragHandle = {
             Row(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(Theme.dimension.medium),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Box(
-                    modifier = Modifier
+                    modifier = modifier
                         .height(Theme.dimension.extraSmall)
                         .width(Theme.dimension.extraLarge)
                         .alpha(0.4f)

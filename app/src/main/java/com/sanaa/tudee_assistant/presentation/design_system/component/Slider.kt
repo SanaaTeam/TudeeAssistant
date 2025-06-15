@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.component
+package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

@@ -110,7 +110,7 @@ fun SecondaryButtonLight(modifier: Modifier = Modifier) {
 }
 
 
-@Preview(showBackground = true)
+@Preview()
 @Composable
 fun SecondaryButtonDark(modifier: Modifier = Modifier) {
     TudeeTheme (isDarkTheme = true){

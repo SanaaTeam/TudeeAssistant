@@ -24,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composables.HorizontalSpace
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.CategoryTaskState
@@ -50,8 +49,10 @@ fun CategoryTaskCard(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
+
             Box(modifier = Modifier.size(56.dp), contentAlignment = Alignment.Center) {
                 Image(
                     modifier = Modifier.size(Theme.dimension.extraLarge),
@@ -60,14 +61,15 @@ fun CategoryTaskCard(
                 )
             }
 
-            HorizontalSpace()
+            Row {
 
-            categoryTask.date?.let { DateChip(it) }
+                categoryTask.date?.let { DateChip(it) }
 
-            PriorityTag(
-                modifier = Modifier.padding(start = Theme.dimension.extraSmall),
-                priority = categoryTask.priority
-            )
+                PriorityTag(
+                    modifier = Modifier.padding(start = Theme.dimension.extraSmall),
+                    priority = categoryTask.priority
+                )
+            }
         }
 
 
@@ -100,7 +102,7 @@ private fun DateChip(date: String) {
         modifier = Modifier
             .clip(RoundedCornerShape(100.dp))
             .background(Theme.color.surface)
-            .padding(Theme.dimension.small),
+            .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
@@ -118,7 +120,7 @@ private fun DateChip(date: String) {
     }
 }
 
-@Preview
+@Preview(widthDp = 360)
 @Composable
 private fun Preview() {
     TudeeTheme {

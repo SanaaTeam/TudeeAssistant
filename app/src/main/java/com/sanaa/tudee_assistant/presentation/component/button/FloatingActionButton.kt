@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.component.button.utils.SpinnerIcon
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
 
 @Composable
@@ -76,11 +78,78 @@ fun FloatingActionButton(
 
 @Preview
 @Composable
-fun FloatingActionButtonP(modifier: Modifier = Modifier) {
-    FloatingActionButton(
-        enabled = true,
-        isLoading = false,
-        onClick = {},
-        iconRes = R.drawable.ic_loading
-    )
+fun FloatingActionButtonLight(modifier: Modifier = Modifier) {
+    TudeeTheme(isDarkTheme = false){
+        Column {
+            FloatingActionButton(
+                enabled = true,
+                isLoading = false,
+                onClick = {},
+                iconRes = R.drawable.ic_loading
+            )
+
+            FloatingActionButton(
+                enabled = true,
+                isLoading = true,
+                onClick = {},
+                iconRes = R.drawable.ic_loading
+            )
+
+            FloatingActionButton(
+                enabled = false,
+                isLoading = true,
+                onClick = {},
+                iconRes = R.drawable.ic_loading
+            )
+
+            FloatingActionButton(
+                enabled = false,
+                isLoading = false,
+                onClick = {},
+                iconRes = R.drawable.ic_loading
+            )
+
+
+        }
+    }
+}
+
+
+
+@Preview
+@Composable
+fun FloatingActionButtonDark(modifier: Modifier = Modifier) {
+    TudeeTheme(isDarkTheme = true){
+        Column {
+            FloatingActionButton(
+                enabled = true,
+                isLoading = false,
+                onClick = {},
+                iconRes = R.drawable.ic_loading
+            )
+
+            FloatingActionButton(
+                enabled = true,
+                isLoading = true,
+                onClick = {},
+                iconRes = R.drawable.ic_loading
+            )
+
+            FloatingActionButton(
+                enabled = false,
+                isLoading = true,
+                onClick = {},
+                iconRes = R.drawable.ic_loading
+            )
+
+            FloatingActionButton(
+                enabled = false,
+                isLoading = false,
+                onClick = {},
+                iconRes = R.drawable.ic_loading
+            )
+
+
+        }
+    }
 }

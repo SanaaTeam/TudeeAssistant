@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,8 +18,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sanaa.tudee_assistant.presentation.component.button.utils.ButtonContent
 import com.sanaa.tudee_assistant.presentation.component.button.utils.SpinnerIcon
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
 
 @Composable
@@ -56,27 +59,23 @@ fun PrimaryButton(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
-        Text(
-            text = label,
+
+
+        ButtonContent(
+            label = label,
+            isLoading = isLoading,
             style = Theme.textStyle.label.large
                 .copy(
                     color = when (enabled) {
                         true -> Theme.color.onPrimary
                         false -> Theme.color.stroke
                     }
-                )
+                ),
+            spinnerTint = when (enabled) {
+                true -> Theme.color.onPrimary
+                false -> Theme.color.stroke
+            }
         )
-
-
-        if (isLoading) {
-            SpinnerIcon(
-                tint = when (enabled) {
-                    true -> Theme.color.onPrimary
-                    false -> Theme.color.stroke
-                }
-            )
-        }
-
 
     }
 }
@@ -84,14 +83,88 @@ fun PrimaryButton(
 
 @Preview()
 @Composable
-fun PrimaryButtonP(modifier: Modifier = Modifier) {
-    Box(modifier.padding(top = 8.dp, start = 8.dp)) {
-        PrimaryButton(
-            label = "Submit",
-            isLoading = true,
-            enabled = true,
-            onClick = {},
-        )
+fun PrimaryButtonLight(modifier: Modifier = Modifier) {
+    TudeeTheme (isDarkTheme = false){
+        Column {
+            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+                PrimaryButton(
+                    label = "Submit",
+                    isLoading = true,
+                    enabled = true,
+                    onClick = {},
+                )
+            }
+            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+                PrimaryButton(
+                    label = "Submit",
+                    isLoading = true,
+                    enabled = false,
+                    onClick = {},
+                )
+            }
+            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+                PrimaryButton(
+                    label = "Submit",
+                    isLoading = false,
+                    enabled = true,
+                    onClick = {},
+                )
+            }
+            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+                PrimaryButton(
+                    label = "Submit",
+                    isLoading = false,
+                    enabled = false,
+                    onClick = {},
+                )
+            }
+
+        }
+    }
+
+}
+
+
+
+@Preview()
+@Composable
+fun PrimaryButtonDark(modifier: Modifier = Modifier) {
+    TudeeTheme (isDarkTheme = true){
+        Column {
+            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+                PrimaryButton(
+                    label = "Submit",
+                    isLoading = true,
+                    enabled = true,
+                    onClick = {},
+                )
+            }
+            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+                PrimaryButton(
+                    label = "Submit",
+                    isLoading = true,
+                    enabled = false,
+                    onClick = {},
+                )
+            }
+            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+                PrimaryButton(
+                    label = "Submit",
+                    isLoading = false,
+                    enabled = true,
+                    onClick = {},
+                )
+            }
+            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+                PrimaryButton(
+                    label = "Submit",
+                    isLoading = false,
+                    enabled = false,
+                    onClick = {},
+                )
+            }
+
+        }
     }
 
 }

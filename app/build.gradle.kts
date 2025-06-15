@@ -44,6 +44,9 @@ android {
 
 dependencies {
 
+    // Kotlin Date time 
+    implementation(libs.kotlinx.datetime)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

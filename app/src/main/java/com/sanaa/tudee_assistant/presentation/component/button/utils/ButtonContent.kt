@@ -11,26 +11,20 @@ fun ButtonContent(
     label: String,
     enabled: Boolean = true,
     isLoading: Boolean = false,
-    style:TextStyle = Theme.textStyle.label.large
-        .copy(
-            color = when (enabled) {
-                true -> Theme.color.primary
-                false -> Theme.color.disable
-            }
-        ),
-    spinnerTint: Color = when (enabled) {
+    contentColor: Color =when (enabled) {
         true -> Theme.color.primary
         false -> Theme.color.disable
-    }
+    },
+
 ) {
 
     Text(
         text = label,
-        style = style
+        style = Theme.textStyle.label.large.copy(color = contentColor)
     )
     if (isLoading) {
         SpinnerIcon(
-            tint = spinnerTint
+            tint = contentColor
         )
     }
 }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +14,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.component.button.utils.ButtonContent
-import com.sanaa.tudee_assistant.presentation.component.button.utils.SpinnerIcon
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
@@ -27,17 +25,20 @@ fun SecondaryButton(
     isLoading: Boolean = false,
     onClick: () -> Unit = {}
     ) {
-    val borderColor =when(enabled){
+
+
+    val borderColor = when(enabled){
         true -> Theme.color.stroke
         false -> Theme.color.disable
     }
-    val textColor = when (enabled) {
+    val contentColor = when (enabled) {
         true -> Theme.color.primary
         false -> Theme.color.stroke
     }
-    val spinnerTint = when (enabled) {
-        true -> Theme.color.primary
-        false -> Theme.color.stroke
+
+    val verticalPadding = when(isLoading){
+        true -> 16.dp
+        false -> 18.dp
     }
 
         Row(
@@ -51,7 +52,7 @@ fun SecondaryButton(
                     width = 1.dp,
                     color = borderColor,
                     shape = RoundedCornerShape(100.dp)
-                ).padding(horizontal = 24.dp, vertical = 18.5.dp)
+                ).padding(horizontal = 24.dp, vertical = verticalPadding)
             ,
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
@@ -60,11 +61,8 @@ fun SecondaryButton(
             ButtonContent(
                 label = lable,
                 isLoading = isLoading,
-                style = Theme.textStyle.label.large
-                    .copy(
-                        color = textColor
-                    ),
-                spinnerTint = spinnerTint
+                enabled = enabled,
+                contentColor = contentColor
             )
 
 
@@ -73,10 +71,9 @@ fun SecondaryButton(
     }
 
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun SecondaryButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (isDarkTheme = false){
+private fun SecondaryButtonPreview(modifier: Modifier = Modifier) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             SecondaryButton(
                 lable = "Submit",
@@ -108,7 +105,7 @@ private fun SecondaryButtonLightPreview(modifier: Modifier = Modifier) {
 
 
         }
-    }
+
 
 }
 

@@ -2,24 +2,21 @@ package com.sanaa.tudee_assistant.presentation.component.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.component.button.utils.ButtonContent
-import com.sanaa.tudee_assistant.presentation.component.button.utils.SpinnerIcon
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
@@ -30,10 +27,8 @@ fun PrimaryButton(
     label: String,
     enabled: Boolean = true,
     isLoading: Boolean = false,
-    onClick: () -> Unit = {}
-) {
-
-    val backgroundModifier =  when (enabled) {
+    onClick: () -> Unit = {},
+    backgroundModifier: Modifier = when (enabled) {
         true -> Modifier.background(
             brush = Brush.linearGradient(
                 listOf(
@@ -42,17 +37,19 @@ fun PrimaryButton(
                 )
             )
         )
-        false -> Modifier.background(color = Theme.color.disable)
-    }
-    val textColor = when (enabled) {
-        true -> Theme.color.onPrimary
-        false -> Theme.color.stroke
-    }
-    val spinnerTint = when (enabled) {
-        true -> Theme.color.onPrimary
-        false -> Theme.color.stroke
-    }
 
+        false -> Modifier.background(color = Theme.color.disable)
+    },
+    contentColor: Color = when (enabled) {
+        true -> Theme.color.onPrimary
+        false -> Theme.color.stroke
+    }
+) {
+
+    val verticalPadding = when (isLoading) {
+        true -> 16.dp
+        false -> 18.dp
+    }
 
     Row(
         modifier = modifier
@@ -62,7 +59,7 @@ fun PrimaryButton(
                 onClick = onClick
             )
             .then(backgroundModifier)
-            .padding(horizontal = 24.dp, vertical = 18.5.dp),
+            .padding(horizontal = 24.dp, vertical = verticalPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
@@ -71,11 +68,7 @@ fun PrimaryButton(
         ButtonContent(
             label = label,
             isLoading = isLoading,
-            style = Theme.textStyle.label.large
-                .copy(
-                    color = textColor
-                ),
-            spinnerTint = spinnerTint
+            contentColor = contentColor
         )
 
     }
@@ -85,7 +78,7 @@ fun PrimaryButton(
 @Preview()
 @Composable
 private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (isDarkTheme = false){
+    TudeeTheme(isDarkTheme = false) {
         Column {
             Box(modifier.padding(top = 8.dp, start = 8.dp)) {
                 PrimaryButton(
@@ -126,11 +119,10 @@ private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
 }
 
 
-
 @Preview()
 @Composable
 private fun PrimaryButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (isDarkTheme = true){
+    TudeeTheme(isDarkTheme = true) {
         Column {
             Box(modifier.padding(top = 8.dp, start = 8.dp)) {
                 PrimaryButton(

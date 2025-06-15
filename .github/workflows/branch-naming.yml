@@ -41,13 +41,13 @@ jobs:
           # Ensure no uppercase letters
           if [[ "$BRANCH_NAME" =~ [A-Z] ]]; then
             echo "❌ Branch name '$BRANCH_NAME' contains uppercase letters. Use lowercase only."
-            exit 1
+            exit 2
           fi
 
           # Ensure only allowed characters
           if [[ "$BRANCH_NAME" =~ [^a-z0-9/-] ]]; then
             echo "❌ Branch name '$BRANCH_NAME' contains invalid characters. Use lowercase, numbers, `/`, and `-` only."
-            exit 1
+            exit 3
           fi
 
           echo "✅ Branch name '$BRANCH_NAME' is valid."

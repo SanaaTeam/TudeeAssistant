@@ -68,4 +68,13 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    // Koin
+    implementation(platform(libs.koin.boom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.coroutines)
+    implementation(libs.koin.logging)
+    implementation(libs.koin.core.viewmodel)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
 }

@@ -1,24 +1,15 @@
 package com.sanaa.tudee_assistant.presentation.component.button
 
-import android.graphics.Color
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.component.button.utils.ButtonContent
-import com.sanaa.tudee_assistant.presentation.component.button.utils.SpinnerIcon
-import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
 
@@ -51,7 +42,7 @@ fun TextButton(
 
 @Preview()
 @Composable
-fun TextButtonLight(modifier: Modifier = Modifier) {
+private fun TextButtonLightPreview(modifier: Modifier = Modifier) {
     TudeeTheme (isDarkTheme = false){
         Column (verticalArrangement = Arrangement.spacedBy(8.dp)){
             TextButton(
@@ -92,7 +83,7 @@ fun TextButtonLight(modifier: Modifier = Modifier) {
 
 @Preview()
 @Composable
-fun TextButtonDark(modifier: Modifier = Modifier) {
+private fun TextButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme (isDarkTheme = true){
         Column (verticalArrangement = Arrangement.spacedBy(8.dp)){
             TextButton(

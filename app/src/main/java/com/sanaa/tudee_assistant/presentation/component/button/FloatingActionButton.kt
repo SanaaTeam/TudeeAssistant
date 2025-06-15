@@ -35,41 +35,37 @@ fun FloatingActionButton(
     onClick: () -> Unit = {}
 ) {
 
-    val interactionSource = remember { MutableInteractionSource() }
+    val backgroundModifier =  when (enabled) {
+        true -> Modifier.background(
+            brush = Brush.linearGradient(
+                listOf(
+                    Theme.color.primaryGradientStart,
+                    Theme.color.primaryGradientEnd
+                )
+            )
+        )
+        false -> Modifier.background(color = Theme.color.disable)
+    }
 
     Box(
         modifier = modifier
             .size(64.dp)
+            .clip(RoundedCornerShape(100.dp))
             .clickable(
-                interactionSource = interactionSource,
-                indication = null,
                 enabled = enabled,
                 onClick = onClick
             )
-            .clip(RoundedCornerShape(100.dp))
-            .then(
-                when (enabled) {
-                    true -> Modifier.background(
-                        brush = Brush.linearGradient(
-                            listOf(
-                                Theme.color.primaryGradientStart,
-                                Theme.color.primaryGradientEnd
-                            )
-                        )
-                    )
-
-                    false -> Modifier.background(color = Theme.color.disable)
-                }
-            ),
+            .then(backgroundModifier),
         contentAlignment = Alignment.Center
     ) {
+        val iconColor = if(enabled) Theme.color.onPrimary else Theme.color.stroke
         when(isLoading){
-            true -> SpinnerIcon(tint = if(enabled) Theme.color.onPrimary else Theme.color.stroke)
+            true -> SpinnerIcon(tint = iconColor)
             false -> Icon(
                 modifier = Modifier.size(28.dp),
                 painter = painterResource(iconRes),
                 contentDescription = null,
-                tint = if(enabled) Theme.color.onPrimary else Theme.color.stroke
+                tint = iconColor
             )
         }
     }
@@ -78,7 +74,7 @@ fun FloatingActionButton(
 
 @Preview
 @Composable
-fun FloatingActionButtonLight(modifier: Modifier = Modifier) {
+private fun FloatingActionButtonLightPreview(modifier: Modifier = Modifier) {
     TudeeTheme(isDarkTheme = false){
         Column {
             FloatingActionButton(
@@ -118,7 +114,7 @@ fun FloatingActionButtonLight(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun FloatingActionButtonDark(modifier: Modifier = Modifier) {
+private fun FloatingActionButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme(isDarkTheme = true){
         Column {
             FloatingActionButton(

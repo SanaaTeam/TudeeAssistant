@@ -27,6 +27,18 @@ fun SecondaryButton(
     isLoading: Boolean = false,
     onClick: () -> Unit = {}
     ) {
+    val borderColor =when(enabled){
+        true -> Theme.color.stroke
+        false -> Theme.color.disable
+    }
+    val textColor = when (enabled) {
+        true -> Theme.color.primary
+        false -> Theme.color.stroke
+    }
+    val spinnerTint = when (enabled) {
+        true -> Theme.color.primary
+        false -> Theme.color.stroke
+    }
 
         Row(
             modifier = modifier
@@ -37,10 +49,7 @@ fun SecondaryButton(
                 )
                 .border(
                     width = 1.dp,
-                    color = when(enabled){
-                        true -> Theme.color.stroke
-                        false -> Theme.color.disable
-                    },
+                    color = borderColor,
                     shape = RoundedCornerShape(100.dp)
                 ).padding(horizontal = 24.dp, vertical = 18.5.dp)
             ,
@@ -53,15 +62,9 @@ fun SecondaryButton(
                 isLoading = isLoading,
                 style = Theme.textStyle.label.large
                     .copy(
-                        color = when (enabled) {
-                            true -> Theme.color.primary
-                            false -> Theme.color.stroke
-                        }
+                        color = textColor
                     ),
-                spinnerTint = when (enabled) {
-                        true -> Theme.color.primary
-                        false -> Theme.color.stroke
-                    }
+                spinnerTint = spinnerTint
             )
 
 
@@ -72,7 +75,7 @@ fun SecondaryButton(
 
 @Preview(showBackground = true)
 @Composable
-fun SecondaryButtonLight(modifier: Modifier = Modifier) {
+private fun SecondaryButtonLightPreview(modifier: Modifier = Modifier) {
     TudeeTheme (isDarkTheme = false){
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             SecondaryButton(
@@ -112,7 +115,7 @@ fun SecondaryButtonLight(modifier: Modifier = Modifier) {
 
 @Preview()
 @Composable
-fun SecondaryButtonDark(modifier: Modifier = Modifier) {
+private fun SecondaryButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme (isDarkTheme = true){
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             SecondaryButton(

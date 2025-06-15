@@ -33,6 +33,26 @@ fun PrimaryButton(
     onClick: () -> Unit = {}
 ) {
 
+    val backgroundModifier =  when (enabled) {
+        true -> Modifier.background(
+            brush = Brush.linearGradient(
+                listOf(
+                    Theme.color.primaryGradientStart,
+                    Theme.color.primaryGradientEnd
+                )
+            )
+        )
+        false -> Modifier.background(color = Theme.color.disable)
+    }
+    val textColor = when (enabled) {
+        true -> Theme.color.onPrimary
+        false -> Theme.color.stroke
+    }
+    val spinnerTint = when (enabled) {
+        true -> Theme.color.onPrimary
+        false -> Theme.color.stroke
+    }
+
 
     Row(
         modifier = modifier
@@ -41,20 +61,7 @@ fun PrimaryButton(
                 enabled = enabled,
                 onClick = onClick
             )
-            .then(
-                when (enabled) {
-                    true -> Modifier.background(
-                        brush = Brush.linearGradient(
-                            listOf(
-                                Theme.color.primaryGradientStart,
-                                Theme.color.primaryGradientEnd
-                            )
-                        )
-                    )
-                    false -> Modifier.background(color = Theme.color.disable)
-                }
-            )
-
+            .then(backgroundModifier)
             .padding(horizontal = 24.dp, vertical = 18.5.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
@@ -66,15 +73,9 @@ fun PrimaryButton(
             isLoading = isLoading,
             style = Theme.textStyle.label.large
                 .copy(
-                    color = when (enabled) {
-                        true -> Theme.color.onPrimary
-                        false -> Theme.color.stroke
-                    }
+                    color = textColor
                 ),
-            spinnerTint = when (enabled) {
-                true -> Theme.color.onPrimary
-                false -> Theme.color.stroke
-            }
+            spinnerTint = spinnerTint
         )
 
     }
@@ -83,7 +84,7 @@ fun PrimaryButton(
 
 @Preview()
 @Composable
-fun PrimaryButtonLight(modifier: Modifier = Modifier) {
+private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
     TudeeTheme (isDarkTheme = false){
         Column {
             Box(modifier.padding(top = 8.dp, start = 8.dp)) {
@@ -128,7 +129,7 @@ fun PrimaryButtonLight(modifier: Modifier = Modifier) {
 
 @Preview()
 @Composable
-fun PrimaryButtonDark(modifier: Modifier = Modifier) {
+private fun PrimaryButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme (isDarkTheme = true){
         Column {
             Box(modifier.padding(top = 8.dp, start = 8.dp)) {

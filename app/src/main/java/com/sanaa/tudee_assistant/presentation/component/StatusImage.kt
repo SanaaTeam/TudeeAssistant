@@ -21,10 +21,10 @@ fun StatusImage(imageSize: Dp, status: Status) {
         modifier = Modifier.size(imageSize),
         painter = painterResource(
             id = when (status) {
-                Status.Good -> R.drawable.good_statues
-                Status.Okay -> R.drawable.okay_statues
-                Status.Poor -> R.drawable.poor_statues
-                Status.Bad -> R.drawable.bad_staues
+                Status.GOOD -> R.drawable.good_statues
+                Status.OKAY -> R.drawable.okay_statues
+                Status.POOR -> R.drawable.poor_statues
+                Status.BAD -> R.drawable.bad_staues
             }
         ),
         contentDescription = null,
@@ -39,10 +39,10 @@ private fun Preview() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            StatusImage(24.dp, Status.Good)
-            StatusImage(24.dp, Status.Okay)
-            StatusImage(24.dp, Status.Poor)
-            StatusImage(24.dp,Status.Bad)
+            StatusImage(24.dp, Status.GOOD)
+            StatusImage(24.dp, Status.OKAY)
+            StatusImage(24.dp, Status.POOR)
+            StatusImage(24.dp, Status.BAD)
         }
     }
 }

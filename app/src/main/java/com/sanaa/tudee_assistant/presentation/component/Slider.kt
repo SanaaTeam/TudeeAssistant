@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,10 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,7 +29,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.Status
 
 @Composable
-fun Slider(title: String, description: String, status: Status) {
+fun Slider(title: String, description: String, status: Status, @DrawableRes imageRes: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(
             modifier = Modifier
@@ -55,18 +58,22 @@ fun Slider(title: String, description: String, status: Status) {
 
         HorizontalSpace(12.dp)
 
-        Box(contentAlignment = Alignment.Center) {
-            Image(
-                modifier = Modifier.size(76.dp),
-                painter = painterResource(id = R.drawable.circle_back),
-                contentDescription = null,
+        Box() {
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(Theme.color.primary.copy(alpha = 0.16f))
+                    .align(Alignment.BottomStart)
+                    .padding(bottom = 4.dp)
+                    .size(76.dp),
             )
 
             Image(
                 modifier = Modifier
+                    .padding(start = 3.dp)
                     .width(61.dp)
                     .height(92.dp),
-                painter = painterResource(id = R.drawable.robot1),
+                painter = painterResource(id = imageRes),
                 contentDescription = null,
             )
         }
@@ -76,7 +83,7 @@ fun Slider(title: String, description: String, status: Status) {
 @Preview
 @Composable
 private fun Preview() {
-    TudeeTheme(isDarkTheme = false) {
+    TudeeTheme(isDarkTheme = true) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -87,26 +94,23 @@ private fun Preview() {
             Slider(
                 title = "Stay working!",
                 description = "You've completed 3 out of 10 tasks Keep going!",
-                Status.Okay
+                Status.OKAY,
+                R.drawable.robot1
             )
 
             Slider(
                 title = "Tadaa!",
                 description = "You’re doing amazing!!!\n" +
                         "Tudee is proud of you.",
-                Status.Good
+                Status.GOOD,
+                R.drawable.robot2
             )
 
             Slider(
                 title = "Zero progress?!",
                 description = "You just scrolling, not working. Tudee is watching. back to work!!!",
-                Status.Bad
-            )
-
-            Slider(
-                title = "Nothing on your list…",
-                description = "Fill your day with something awesome.",
-                Status.Poor
+                Status.BAD,
+                R.drawable.robot3
             )
         }
     }

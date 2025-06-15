@@ -35,13 +35,13 @@ fun AppBar(
         modifier = modifier
             .fillMaxWidth()
             .background(Theme.color.primary)
-            .padding(vertical = 12.dp, horizontal = 16.dp),
+            .padding(vertical = Theme.dimension.regular, horizontal = Theme.dimension.medium),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
         ) {
 
             Image(
@@ -73,8 +73,16 @@ fun AppBar(
 
 @Preview(widthDp = 360)
 @Composable
-private fun AppBarPreview() {
+private fun AppBarLightPreview() {
     TudeeTheme(isDarkTheme = false) {
-        AppBar(title = "Tudee", caption = "Your cute Helper for Every Task")
+        AppBar(title = "Tudee", caption = "Your cute Helper for Every Task", isDarkMode = false)
+    }
+}
+
+@Preview(widthDp = 360)
+@Composable
+private fun AppBarDarkPreview() {
+    TudeeTheme(isDarkTheme = true) {
+        AppBar(title = "Tudee", caption = "Your cute Helper for Every Task", isDarkMode = true)
     }
 }

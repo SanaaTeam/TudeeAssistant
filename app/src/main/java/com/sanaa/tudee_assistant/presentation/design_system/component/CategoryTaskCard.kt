@@ -27,20 +27,22 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composables.HorizontalSpace
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.CategoryTask
+import com.sanaa.tudee_assistant.presentation.model.CategoryTaskState
 import com.sanaa.tudee_assistant.presentation.model.Priority
 
 @Composable
 fun CategoryTaskCard(
-    categoryTask: CategoryTask,
+    categoryTask: CategoryTaskState,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(111.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(Theme.color.surfaceHigh)
-            .padding(vertical = 4.dp, horizontal = 12.dp)
+            .padding(start = 4.dp, top = 4.dp, end = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -48,8 +50,7 @@ fun CategoryTaskCard(
         ) {
             Box(modifier = Modifier.size(56.dp), contentAlignment = Alignment.Center) {
                 Image(
-                    modifier = Modifier
-                        .size(32.dp),
+                    modifier = Modifier.size(32.dp),
                     painter = categoryTask.icon,
                     contentDescription = null,
                 )
@@ -59,29 +60,33 @@ fun CategoryTaskCard(
 
             categoryTask.date?.let { DateChip(it) }
 
-            HorizontalSpace(4.dp)
-
             PriorityTag(
-                modifier = Modifier,
+                modifier = Modifier.padding(start = 4.dp),
                 priority = categoryTask.priority
             )
         }
 
-        Text(
-            modifier = Modifier,
-            text = categoryTask.title,
-            color = Theme.color.body,
-            style = Theme.textStyle.label.large,
-            maxLines = 1,
-        )
 
-        Text(
-            modifier = Modifier,
-            text = categoryTask.description,
-            color = Theme.color.hint,
-            style = Theme.textStyle.label.small,
-            maxLines = 1,
-        )
+        Column(
+            modifier = Modifier.padding(start = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            Text(
+                text = categoryTask.title,
+                color = Theme.color.body,
+                style = Theme.textStyle.label.large,
+                maxLines = 1,
+            )
+
+            categoryTask.description?.let {
+                Text(
+                    text = categoryTask.description,
+                    color = Theme.color.hint,
+                    style = Theme.textStyle.label.small,
+                    maxLines = 1,
+                )
+            }
+        }
     }
 }
 
@@ -92,7 +97,8 @@ private fun DateChip(date: String) {
             .clip(RoundedCornerShape(100.dp))
             .background(Theme.color.surface)
             .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Image(
             modifier = Modifier.size(12.dp),
@@ -100,10 +106,7 @@ private fun DateChip(date: String) {
             contentDescription = null,
         )
 
-        HorizontalSpace(2.dp)
-
         Text(
-            modifier = Modifier,
             text = date,
             color = Theme.color.body,
             style = Theme.textStyle.label.small
@@ -116,19 +119,25 @@ private fun DateChip(date: String) {
 private fun Preview() {
     TudeeTheme {
         val items = listOf(
-            CategoryTask(
+            CategoryTaskState(
                 icon = painterResource(R.drawable.birthday_cake),
                 title = "Organize Study Desk",
                 description = "Review cell structure and functions for tomorrow...",
                 date = null,
-                priority = Priority.Medium
+                priority = Priority.MEDIUM
             ),
-            CategoryTask(
+            CategoryTaskState(
+                icon = painterResource(R.drawable.birthday_cake),
+                title = "Organize Study Desk",
+                date = "12-03-2025",
+                priority = Priority.LOW
+            ),
+            CategoryTaskState(
                 icon = painterResource(R.drawable.birthday_cake),
                 title = "Organize Study Desk",
                 description = "Review cell structure and functions for tomorrow...",
                 date = "12-03-2025",
-                priority = Priority.Medium
+                priority = Priority.HIGH
             ),
         )
 

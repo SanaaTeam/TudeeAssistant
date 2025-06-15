@@ -47,9 +47,8 @@ fun CategoryItem(
                 .size(78.dp),
         ) {
             Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.TopEnd
-            ) {
+                modifier = Modifier.align(Alignment.TopEnd),
+                ) {
                 topContent()
             }
             Box(

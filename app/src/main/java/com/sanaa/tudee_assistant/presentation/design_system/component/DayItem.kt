@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.presentation.composables.VerticalSpace
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.util.DateFormater.getShortDayName
@@ -29,8 +28,8 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun DayItem(
     dayDate: LocalDateTime,
-    isSelected: Boolean = false,
     modifier: Modifier = Modifier,
+    isSelected: Boolean = false,
     onClick: () -> Unit = {},
 ) {
     val backgroundBrush = Brush.verticalGradient(
@@ -41,10 +40,7 @@ fun DayItem(
         )
     )
 
-    Box(
-        modifier = modifier
-            .clickable { onClick() },
-    ) {
+    Box(modifier = modifier.clickable { onClick() }) {
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
@@ -54,19 +50,16 @@ fun DayItem(
                     else Modifier.background(Theme.color.surface)
                 )
                 .padding(vertical = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Text(
-                modifier = Modifier,
                 text = dayDate.dayOfMonth.toString(),
                 color = if (isSelected) Theme.color.onPrimary else Theme.color.body,
                 style = Theme.textStyle.title.medium
             )
 
-            VerticalSpace(2.dp)
-
             Text(
-                modifier = Modifier,
                 text = dayDate.getShortDayName(),
                 color = if (isSelected) Theme.color.onPrimaryCaption else Theme.color.hint,
                 style = Theme.textStyle.body.small

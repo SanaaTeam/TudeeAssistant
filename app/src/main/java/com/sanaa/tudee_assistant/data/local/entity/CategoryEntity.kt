@@ -1,11 +1,11 @@
-package com.sanaa.tudee_assistant.data.local.Dto
+package com.sanaa.tudee_assistant.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "categories")
-data class CategoryLocalDto(
+data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
 
     @ColumnInfo(name = "category_id")

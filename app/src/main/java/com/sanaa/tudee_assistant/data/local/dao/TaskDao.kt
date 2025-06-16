@@ -1,23 +1,29 @@
 package com.sanaa.tudee_assistant.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.sanaa.tudee_assistant.data.local.Dto.TaskLocalDto
+import com.sanaa.tudee_assistant.data.local.entity.TaskEntity
 import com.sanaa.tudee_assistant.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 
 @Dao
 interface TaskDao {
+    @Insert
+    fun insert(task: TaskEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTask(task: TaskLocalDto): Long
+    suspend fun insertTask(task: TaskEntity): Long
 
     @Update
-    suspend fun updateTask(task: TaskLocalDto): Int
+    suspend fun updateTask(task: TaskEntity): Int
+
+    @Delete
+    suspend fun deleteTask(task: TaskEntity): Int
 
     @Query("DELETE FROM tasks WHERE task_id = :taskId")
     suspend fun deleteTaskById(taskId: Int): Int
@@ -26,17 +32,17 @@ interface TaskDao {
     suspend fun deleteAllTasks(): Int
 
     @Query("SELECT * FROM tasks WHERE task_id = :taskId")
-    suspend fun getTaskById(taskId: Int): TaskLocalDto?
+    suspend fun getTaskById(taskId: Int): TaskEntity?
 
     @Query("SELECT * FROM tasks WHERE due_date = :date")
-    fun getTasksByDueDate(date: LocalDate): Flow<List<TaskLocalDto>>
+    fun getTasksByDate(date: LocalDate): Flow<List<TaskEntity>>
 
     @Query("SELECT * FROM tasks WHERE category_id = :categoryId")
-    fun getTasksByCategoryId(categoryId: Int): Flow<List<TaskLocalDto>>
+    fun getTasksByCategoryId(categoryId: Int): Flow<List<TaskEntity>>
 
     @Query("SELECT * FROM tasks")
-    fun getAllTasks(): Flow<List<TaskLocalDto>>
+    fun getAllTasks(): Flow<List<TaskEntity>>
 
     @Query("SELECT * FROM tasks WHERE status = :status")
-    fun getTasksByStatus(status: Task.TaskStatus): Flow<List<TaskLocalDto>>
+    fun getTasksByStatus(status: Task.TaskStatus): Flow<List<TaskEntity>>
 }

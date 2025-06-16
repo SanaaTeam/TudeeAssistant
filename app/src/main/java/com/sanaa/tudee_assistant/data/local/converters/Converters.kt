@@ -1,17 +1,17 @@
 import androidx.room.TypeConverter
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.domain.model.Task.TaskStatus
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 
 class Converters {
 
     @TypeConverter
-    fun fromLocalDateTime(value: LocalDateTime?): String? =
+    fun fromLocalDate(value: LocalDate?): String? =
         value?.toString() //  "2025-06-13"
 
     @TypeConverter
-    fun toLocalDateTime(value: String?): LocalDateTime? =
-        value?.let { LocalDateTime.parse(it) }
+    fun toLocalDate(value: String?): LocalDate? =
+        value?.let { LocalDate.parse(it) }
 
     @TypeConverter
     fun fromTaskStatus(status: TaskStatus): String = status.name

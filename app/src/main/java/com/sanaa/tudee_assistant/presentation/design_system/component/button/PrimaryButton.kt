@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.component.button
+package com.sanaa.tudee_assistant.presentation.design_system.component.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.presentation.component.button.utils.ButtonContent
+import com.sanaa.tudee_assistant.presentation.design_system.component.button.utils.ButtonContent
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
@@ -47,7 +47,7 @@ fun PrimaryButton(
 ) {
 
     val verticalPadding = when (isLoading) {
-        true -> 16.dp
+        true -> Theme.dimension.medium
         false -> 18.dp
     }
 
@@ -59,9 +59,12 @@ fun PrimaryButton(
                 onClick = onClick
             )
             .then(backgroundModifier)
-            .padding(horizontal = 24.dp, vertical = verticalPadding),
+            .padding(horizontal = Theme.dimension.large, vertical = verticalPadding),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+        horizontalArrangement = Arrangement.spacedBy(
+            Theme.dimension.small,
+            Alignment.CenterHorizontally
+        )
     ) {
 
 
@@ -80,7 +83,7 @@ fun PrimaryButton(
 private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
     TudeeTheme(isDarkTheme = false) {
         Column {
-            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+            Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(
                     label = "Submit",
                     isLoading = true,
@@ -88,7 +91,7 @@ private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
                     onClick = {},
                 )
             }
-            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+            Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(
                     label = "Submit",
                     isLoading = true,
@@ -96,7 +99,7 @@ private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
                     onClick = {},
                 )
             }
-            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+            Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(
                     label = "Submit",
                     isLoading = false,
@@ -104,7 +107,7 @@ private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
                     onClick = {},
                 )
             }
-            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+            Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(
                     label = "Submit",
                     isLoading = false,
@@ -124,7 +127,7 @@ private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
 private fun PrimaryButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme(isDarkTheme = true) {
         Column {
-            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+            Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(
                     label = "Submit",
                     isLoading = true,
@@ -132,7 +135,7 @@ private fun PrimaryButtonDarkPreview(modifier: Modifier = Modifier) {
                     onClick = {},
                 )
             }
-            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+            Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(
                     label = "Submit",
                     isLoading = true,
@@ -140,7 +143,7 @@ private fun PrimaryButtonDarkPreview(modifier: Modifier = Modifier) {
                     onClick = {},
                 )
             }
-            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+            Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(
                     label = "Submit",
                     isLoading = false,
@@ -148,7 +151,7 @@ private fun PrimaryButtonDarkPreview(modifier: Modifier = Modifier) {
                     onClick = {},
                 )
             }
-            Box(modifier.padding(top = 8.dp, start = 8.dp)) {
+            Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(
                     label = "Submit",
                     isLoading = false,

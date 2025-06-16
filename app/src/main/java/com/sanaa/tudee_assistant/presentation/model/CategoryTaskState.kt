@@ -7,5 +7,5 @@ data class CategoryTaskState(
     val title: String,
     val description: String? = null,
     val date: String?,
-    val priority: Priority,
+    val priority: TaskPriority,
 )

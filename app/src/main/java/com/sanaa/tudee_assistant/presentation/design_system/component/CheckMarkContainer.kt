@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.composables
+package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.data.local.mapper
 
-import com.sanaa.tudee_assistant.data.local.entity.CategoryLocalDto
+import com.sanaa.tudee_assistant.data.local.dto.CategoryLocalDto
 import com.sanaa.tudee_assistant.domain.model.Category
 
 fun CategoryLocalDto.toDomain(): Category = Category(

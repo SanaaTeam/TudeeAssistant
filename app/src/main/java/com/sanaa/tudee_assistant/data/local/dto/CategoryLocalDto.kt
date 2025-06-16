@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.data.local.entity
+package com.sanaa.tudee_assistant.data.local.dto
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

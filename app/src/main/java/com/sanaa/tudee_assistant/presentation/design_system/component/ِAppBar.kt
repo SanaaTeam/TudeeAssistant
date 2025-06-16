@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -29,7 +33,7 @@ fun AppBar(
     caption: String,
     modifier: Modifier = Modifier,
     isDarkMode: Boolean = false,
-    onSwitchClick: (Boolean) -> Unit = {}
+    onDarkThemeSwitchClick: (Boolean) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -67,22 +71,37 @@ fun AppBar(
             }
         }
 
-        DarkThemeSwitch(isDarkMode, onCheckedChange = onSwitchClick)
+        DarkThemeSwitch(isDarkMode, onCheckedChange = onDarkThemeSwitchClick)
     }
 }
 
 @Preview(widthDp = 360)
 @Composable
 private fun AppBarLightPreview() {
-    TudeeTheme(isDarkTheme = false) {
-        AppBar(title = "Tudee", caption = "Your cute Helper for Every Task", isDarkMode = false)
+    var isDarkMode by remember { mutableStateOf(false) }
+    TudeeTheme(isDarkTheme = isDarkMode) {
+
+        AppBar(
+            title = "Tudee",
+            caption = "Your cute Helper for Every Task",
+            isDarkMode = isDarkMode,
+            onDarkThemeSwitchClick = { isDarkMode = !isDarkMode })
     }
 }
 
 @Preview(widthDp = 360)
 @Composable
 private fun AppBarDarkPreview() {
-    TudeeTheme(isDarkTheme = true) {
-        AppBar(title = "Tudee", caption = "Your cute Helper for Every Task", isDarkMode = true)
+
+    var isDarkMode by remember { mutableStateOf(true) }
+
+    TudeeTheme(isDarkTheme = isDarkMode) {
+
+        AppBar(
+            title = "Tudee",
+            caption = "Your cute Helper for Every Task",
+            isDarkMode = isDarkMode,
+            onDarkThemeSwitchClick = { isDarkMode = !isDarkMode }
+        )
     }
 }

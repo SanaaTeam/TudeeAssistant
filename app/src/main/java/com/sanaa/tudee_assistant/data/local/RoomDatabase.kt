@@ -6,11 +6,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.sanaa.tudee_assistant.data.local.dao.CategoryDao
 import com.sanaa.tudee_assistant.data.local.dao.TaskDao
-import com.sanaa.tudee_assistant.data.local.entity.CategoryEntity
-import com.sanaa.tudee_assistant.data.local.entity.TaskEntity
+import com.sanaa.tudee_assistant.data.local.Dto.CategoryLocalDto
+import com.sanaa.tudee_assistant.data.local.Dto.TaskLocalDto
 
 @Database(
-    entities = [TaskEntity::class, CategoryEntity::class],
+    entities = [TaskLocalDto::class, CategoryLocalDto::class],
     version = 1,
     exportSchema = false
 )

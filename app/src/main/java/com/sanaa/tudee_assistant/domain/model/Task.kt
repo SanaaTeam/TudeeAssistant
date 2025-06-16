@@ -1,16 +1,16 @@
 package com.sanaa.tudee_assistant.domain.model
 
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 data class Task(
     val id: Int,
     val title: String,
     val description: String?,
     val status: TaskStatus,
-    val dueDate: LocalDate?,
+    val dueDate: LocalDateTime?,
     val priority: TaskPriority,
     val categoryId: Int,
-    val createdAt: LocalDate,
+    val createdAt: LocalDateTime,
 ) {
     enum class TaskStatus {
         TODO,

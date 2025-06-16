@@ -1,16 +1,16 @@
 package com.sanaa.tudee_assistant.data.local.mapper
 
-import com.sanaa.tudee_assistant.data.local.entity.CategoryEntity
+import com.sanaa.tudee_assistant.data.local.Dto.CategoryLocalDto
 import com.sanaa.tudee_assistant.domain.model.Category
 
-fun CategoryEntity.toDomain(): Category = Category(
+fun CategoryLocalDto.toDomain(): Category = Category(
     id = categoryId,
     name = name,
     imageUrl = imageUrl,
     isDefault = isDefault
 )
 
-fun Category.toEntity(): CategoryEntity = CategoryEntity(
+fun Category.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
     categoryId = id,
     name = name,
     imageUrl = imageUrl,

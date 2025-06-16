@@ -2,7 +2,7 @@ package com.sanaa.tudee_assistant.data.services
 
 import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
-import com.sanaa.tudee_assistant.data.local.mapper.toEntity
+import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.TasksServices
 import kotlinx.coroutines.flow.Flow
@@ -17,13 +17,12 @@ class TasksServiceImpl(
         return taskDao.getAllTasks().map { list -> list.map { it.toDomain() } }
     }
 
-
     override suspend fun addTask(task: Task): Boolean {
-        return taskDao.insertTask(task.toEntity()) != -1L
+        return taskDao.insertTask(task.toLocalDto()) != -1L
     }
 
     override suspend fun updateTask(task: Task): Boolean {
-        return taskDao.updateTask(task.toEntity()) > 0
+        return taskDao.updateTask(task.toLocalDto()) > 0
     }
 
     override suspend fun deleteTaskById(taskId: Int): Boolean {
@@ -48,7 +47,7 @@ class TasksServiceImpl(
     }
 
     override fun getTasksByDueDate(dueDate: LocalDate): Flow<List<Task>> {
-        return taskDao.getTasksByDate(dueDate).map { list -> list.map { it.toDomain() } }
+        return taskDao.getTasksByDueDate(dueDate).map { list -> list.map { it.toDomain() } }
 
     }
 

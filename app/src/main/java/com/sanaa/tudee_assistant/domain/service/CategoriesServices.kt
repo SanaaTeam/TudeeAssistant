@@ -4,9 +4,9 @@ import com.sanaa.tudee_assistant.domain.model.Category
 import kotlinx.coroutines.flow.Flow
 
 interface CategoriesServices {
-    fun getCategoryById(categoryId: Int): Category
-    suspend fun getCategories(): Flow<List<Category>>
-    suspend fun addCategory(category: Category)
+    suspend fun getCategoryById(categoryId: Int): Category?
+     fun getCategories(): Flow<List<Category>>
+    suspend fun addCategory(category: Category): Boolean
     suspend fun updateCategory(category: Category): Boolean
     suspend fun deleteCategoryById(categoryId: Int): Boolean
     suspend fun deleteAllCategories()

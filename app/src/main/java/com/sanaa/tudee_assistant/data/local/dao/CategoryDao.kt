@@ -1,34 +1,30 @@
 package com.sanaa.tudee_assistant.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.sanaa.tudee_assistant.data.local.entity.CategoryEntity
+import com.sanaa.tudee_assistant.data.local.Dto.CategoryLocalDto
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCategory(category: CategoryEntity): Long
+    suspend fun insertCategory(category: CategoryLocalDto): Long
 
     @Update
-    suspend fun updateCategory(category: CategoryEntity): Int
-
-    @Delete
-    suspend fun deleteCategory(category: CategoryEntity): Int
+    suspend fun updateCategory(category: CategoryLocalDto): Int
 
     @Query("DELETE FROM categories WHERE category_id = :categoryId")
     suspend fun deleteCategoryById(categoryId: Int): Int
 
     @Query("DELETE FROM categories")
-    suspend fun deleteAllCategory(): Int
+    suspend fun deleteAllCategories(): Int
 
     @Query("SELECT * FROM categories")
-    fun getAllCategories(): Flow<List<CategoryEntity>>
+    fun getAllCategories(): Flow<List<CategoryLocalDto>>
 
     @Query("SELECT * FROM categories WHERE category_id = :categoryId")
-    suspend fun getCategoryById(categoryId: Int): CategoryEntity?
+    suspend fun getCategoryById(categoryId: Int): CategoryLocalDto?
 }

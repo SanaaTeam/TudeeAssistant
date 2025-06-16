@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.domain.model.Task.TaskStatus
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 @Entity(tableName = "tasks")
 data class TaskEntity(
@@ -14,6 +15,7 @@ data class TaskEntity(
     @ColumnInfo(name = "task_id")
     val taskId: Int = 0,
 
+    @ColumnInfo(name = "title")
     val title: String,
     val description: String? = null,
 
@@ -29,6 +31,6 @@ data class TaskEntity(
     val categoryId: Int,
 
     @ColumnInfo(name = "created_at")
-    val createdAt: LocalDate
+    val createdAt: LocalDateTime
 
 )

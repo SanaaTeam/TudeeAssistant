@@ -11,6 +11,7 @@ data class CategoryEntity(
     @ColumnInfo(name = "category_id")
     val categoryId: Int = 0,
 
+    @ColumnInfo(name = "name")
     val name: String,
 
     @ColumnInfo(name = "image_url")

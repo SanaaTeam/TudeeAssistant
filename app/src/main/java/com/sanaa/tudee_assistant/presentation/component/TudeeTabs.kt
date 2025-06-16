@@ -121,7 +121,7 @@ private fun CustomTab(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(space = 4.dp),
             modifier = Modifier
                 .fillMaxHeight()
                 .padding(12.dp).animateContentSize(

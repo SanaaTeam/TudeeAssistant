@@ -48,7 +48,7 @@ import com.sanaa.tudee_assistant.presentation.util.dropShadow
 import com.sanaa.tudee_assistant.presentation.util.innerShadow
 
 @Composable
-fun DarkThemeSwitch(
+fun DarkModeThemeSwitchButton(
     isDarkMode: Boolean,
     modifier: Modifier = Modifier,
     onCheckedChange: (Boolean) -> Unit = {}
@@ -142,8 +142,8 @@ private fun DarkThemeSwitchPreview() {
 
         var checkedState by remember { mutableStateOf(false) }
 
-        DarkThemeSwitch(checkedState, Modifier.padding(4.dp)) { checkedState = !checkedState }
-        DarkThemeSwitch(!checkedState, Modifier.padding(4.dp)) { checkedState = !checkedState }
+        DarkModeThemeSwitchButton(checkedState, Modifier.padding(4.dp)) { checkedState = !checkedState }
+        DarkModeThemeSwitchButton(!checkedState, Modifier.padding(4.dp)) { checkedState = !checkedState }
     }
 }
 

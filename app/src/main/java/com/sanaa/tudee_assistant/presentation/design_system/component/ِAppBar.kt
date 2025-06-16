@@ -86,7 +86,7 @@ private fun AppBarLightPreview() {
             title = "Tudee",
             caption = "Your cute Helper for Every Task",
             tailComponent = {
-                DarkThemeSwitch(
+                DarkModeThemeSwitchButton(
                     isDarkMode,
                     onCheckedChange = { isDarkMode = !isDarkMode })
             }
@@ -106,7 +106,7 @@ private fun AppBarDarkPreview() {
             title = "Tudee",
             caption = "Your cute Helper for Every Task",
             tailComponent = {
-                DarkThemeSwitch(
+                DarkModeThemeSwitchButton(
                     isDarkMode,
                     onCheckedChange = { isDarkMode = !isDarkMode })
             }

@@ -9,7 +9,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 @Entity(tableName = "tasks")
-data class TaskEntity(
+data class TaskLocalDto(
     @PrimaryKey(autoGenerate = true)
 
     @ColumnInfo(name = "task_id")

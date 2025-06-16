@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">TudeeAssistant</string>
+    <string name="app_name">Tudee Assistant</string>
+    <string name="logoName">Tudee</string>
+    <string name="appBarCaption">Your cute Helper for Every Task</string>
+    <string name="high">High</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
+    <string name="todo_task_status">To-Do</string>
+    <string name="in_progress_task_status">In Progress</string>
+    <string name="done_task_status">Done</string>
+    <string name="snack_bar_error">Some error happened.</string>
+    <string name="snack_bar_success">Successfully.</string>
 </resources>

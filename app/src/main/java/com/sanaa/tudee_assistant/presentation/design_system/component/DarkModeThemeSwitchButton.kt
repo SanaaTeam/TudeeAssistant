@@ -34,7 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
@@ -44,6 +43,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.design_system.theme.moonColor
+import com.sanaa.tudee_assistant.presentation.design_system.theme.sunColor
 import com.sanaa.tudee_assistant.presentation.util.dropShadow
 import com.sanaa.tudee_assistant.presentation.util.innerShadow
 
@@ -176,7 +177,6 @@ private fun BoxScope.AnimatedSun(
         ),
         modifier = Modifier.align(Alignment.CenterStart)
     ) {
-        val sunColor = Brush.linearGradient(listOf(Color(0xFFF2C849), Color(0xFFF49061)))
 
         Box(
             modifier = Modifier
@@ -219,8 +219,6 @@ private fun BoxScope.AnimatedMoon(
         ),
         modifier = Modifier.align(Alignment.CenterEnd)
     ) {
-
-        val moonColor = Brush.linearGradient(listOf(Color(0xFFE9F0FF), Color(0xFFE0E9FE)))
 
         Box(
             modifier = Modifier

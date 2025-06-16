@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,15 +35,25 @@ import com.sanaa.tudee_assistant.presentation.model.Priority.MEDIUM
 fun PriorityTag(
     priority: Priority,
     modifier: Modifier = Modifier,
+    isSelected: Boolean = true,
+    isClickable: Boolean = true,
+    onClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(Theme.dimension.medium))
+            .clickable(enabled = isClickable) {
+                onClick.invoke()
+            }
             .background(
-                when (priority) {
-                    HIGH -> Theme.color.pinkAccent
-                    MEDIUM -> Theme.color.yellowAccent
-                    LOW -> Theme.color.greenAccent
+                if (isSelected) {
+                    when (priority) {
+                        HIGH -> Theme.color.pinkAccent
+                        MEDIUM -> Theme.color.yellowAccent
+                        LOW -> Theme.color.greenAccent
+                    }
+                } else {
+                    Theme.color.surfaceLow
                 }
             )
             .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
@@ -55,7 +70,7 @@ fun PriorityTag(
                 }
             ),
             contentDescription = null,
-            tint = Theme.color.onPrimary
+            tint = if (isSelected) Theme.color.onPrimary else Theme.color.hint
         )
 
         Text(
@@ -64,7 +79,7 @@ fun PriorityTag(
                 MEDIUM -> stringResource(R.string.medium)
                 LOW -> stringResource(R.string.low)
             },
-            color = Theme.color.onPrimary,
+            color = if (isSelected) Theme.color.onPrimary else Theme.color.hint,
             style = Theme.textStyle.label.small
         )
     }
@@ -72,8 +87,9 @@ fun PriorityTag(
 
 @Preview
 @Composable
-private fun Preview() {
+private fun PreviewPriorityTag() {
     TudeeTheme(isDarkTheme = false) {
+        var isSelected by remember { mutableStateOf(true) }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -81,8 +97,20 @@ private fun Preview() {
                 .padding(Theme.dimension.medium)
         ) {
             PriorityTag(modifier = Modifier.padding(10.dp), priority = HIGH)
-            PriorityTag(modifier = Modifier.padding(10.dp), priority = MEDIUM)
-            PriorityTag(modifier = Modifier.padding(10.dp), priority = LOW)
+            PriorityTag(modifier = Modifier.padding(10.dp), priority = MEDIUM, isClickable = false)
+            PriorityTag(modifier = Modifier.padding(10.dp), priority = LOW, isClickable = true) {}
+            PriorityTag(
+                modifier = Modifier.padding(10.dp),
+                priority = LOW,
+                isSelected = isSelected
+            ) {
+                isSelected = !isSelected
+            }
+            PriorityTag(
+                modifier = Modifier.padding(10.dp),
+                priority = LOW,
+                isSelected = false,
+            )
         }
     }
 }

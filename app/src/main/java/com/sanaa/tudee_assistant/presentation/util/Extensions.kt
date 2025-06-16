@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.dp
 fun Modifier.innerShadow(
     shape: Shape,
     color: Color = Color.Black,
-    blur: Dp = 4.dp,
+    blur: Dp,
     offsetX: Dp = 2.dp,
     offsetY: Dp = 2.dp,
-    spread: Dp = 0.dp
+    spread: Dp = 0.dp,
 ) = this.drawWithContent {
     drawContent()
 
@@ -53,7 +53,7 @@ fun Modifier.innerShadow(
 fun Modifier.dropShadow(
     shape: Shape = CircleShape,
     color: Color = Color.Black.copy(0.25f),
-    blur: Dp = 4.dp,
+    blur: Dp,
     offsetY: Dp = 4.dp,
     offsetX: Dp = 0.dp,
     spread: Dp = 0.dp,

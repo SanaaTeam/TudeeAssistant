@@ -1,23 +1,23 @@
 package com.sanaa.tudee_assistant.presentation.design_system.util
 
 import android.graphics.BlurMaskFilter
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.graphics.drawOutline
 
 fun Modifier.dropShadow(
     shape: Shape = CircleShape,
     color: Color = Color.Black.copy(0.25f),
-    blur: Dp = 4.dp,
-    offsetY: Dp = 4.dp,
+    blur: Dp,
+    offsetY: Dp,
     offsetX: Dp = 0.dp,
     spread: Dp = 0.dp,
     scaleX: Float = 1f,

@@ -124,7 +124,7 @@ fun DarkModeThemeSwitchButton(
                 }
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(Theme.dimension.extraLarge)
                         .align(Alignment.CenterEnd)
                 ) {
                     MoonLargeCircle()
@@ -143,8 +143,14 @@ private fun DarkModeThemeSwitchButtonPreview() {
 
         var checkedState by remember { mutableStateOf(false) }
 
-        DarkModeThemeSwitchButton(checkedState, Modifier.padding(4.dp)) { checkedState = !checkedState }
-        DarkModeThemeSwitchButton(!checkedState, Modifier.padding(4.dp)) { checkedState = !checkedState }
+        DarkModeThemeSwitchButton(
+            checkedState,
+            Modifier.padding(Theme.dimension.extraSmall)
+        ) { checkedState = !checkedState }
+        DarkModeThemeSwitchButton(
+            !checkedState,
+            Modifier.padding(Theme.dimension.extraSmall)
+        ) { checkedState = !checkedState }
     }
 }
 
@@ -180,7 +186,7 @@ private fun BoxScope.AnimatedSun(
 
         Box(
             modifier = Modifier
-                .size(32.dp)
+                .size(Theme.dimension.extraLarge)
                 .dropShadow(
                     offsetX = 1.dp,
                     offsetY = (-1).dp,
@@ -222,7 +228,7 @@ private fun BoxScope.AnimatedMoon(
 
         Box(
             modifier = Modifier
-                .size(32.dp)
+                .size(Theme.dimension.extraLarge)
                 .dropShadow(
                     offsetX = (-1).dp,
                     offsetY = 1.dp,
@@ -238,7 +244,7 @@ private fun BoxScope.AnimatedMoon(
 private fun BoxScope.MoonSmallCircle() {
     Box(
         modifier = Modifier
-            .size(4.dp)
+            .size(Theme.dimension.extraSmall)
             .align(Alignment.BottomEnd)
             .offset(x = (-9).dp, y = (-4).dp)
             .clip(CircleShape)
@@ -247,7 +253,7 @@ private fun BoxScope.MoonSmallCircle() {
             .innerShadow(
                 shape = CircleShape,
                 color = Color(0xFFBFD2FF),
-                blur = 4.dp,
+                blur = Theme.dimension.extraSmall,
                 offsetX = 1.dp,
                 offsetY = 1.dp
             )
@@ -260,13 +266,13 @@ private fun BoxScope.MoonLargeCircle() {
         modifier = Modifier
             .size(14.dp)
             .align(Alignment.BottomStart)
-            .offset(x = 4.dp, y = (-6).dp)
+            .offset(x = Theme.dimension.extraSmall, y = (-6).dp)
             .clip(CircleShape)
             .background(Color(0xFFE9EFFF))
             .innerShadow(
                 shape = CircleShape,
                 color = Color(0xFFBFD2FF),
-                blur = 4.dp,
+                blur = Theme.dimension.extraSmall,
                 offsetX = 1.dp,
                 offsetY = 1.dp
             )
@@ -318,11 +324,11 @@ private fun BoxScope.TransformingWhiteCloud(
         ),
         modifier = Modifier
             .align(Alignment.BottomEnd)
-            .offset(x = (-12).dp, y = 4.dp)
+            .offset(x = (-12).dp, y = Theme.dimension.extraSmall)
     ) {
         Box(
             modifier = Modifier
-                .size(14.dp, 16.dp)
+                .size(14.dp, Theme.dimension.medium)
                 .background(Color.White, RoundedCornerShape(100.dp))
 
         )
@@ -334,10 +340,10 @@ private fun BoxScope.FirstWhiteCloud(isDarkMode: Boolean) {
     AnimatedCircle(
         isDarkMode,
         modifier = Modifier.align(Alignment.BottomEnd),
-        size = 16.dp,
+        size = Theme.dimension.medium,
         startOffsetX = 1.dp,
         clickedOffsetX = 50.dp,
-        startOffsetY = 4.dp,
+        startOffsetY = Theme.dimension.extraSmall,
         clickedOffsetY = 50.dp
     )
 }
@@ -347,10 +353,10 @@ private fun BoxScope.SecondGreyCloud(isDarkMode: Boolean) {
     AnimatedCircle(
         isClicked = isDarkMode,
         modifier = Modifier.align(Alignment.BottomEnd),
-        size = 24.dp,
+        size = Theme.dimension.large,
         startOffsetX = (-6).dp,
         clickedOffsetX = 50.dp,
-        startOffsetY = 8.dp,
+        startOffsetY = Theme.dimension.small,
         clickedOffsetY = 50.dp,
         color = Color(0xFFF0F0F0),
     )
@@ -361,7 +367,7 @@ private fun BoxScope.FirstGreyCloud(isDarkMode: Boolean) {
     AnimatedCircle(
         isClicked = isDarkMode,
         modifier = Modifier.align(Alignment.TopEnd),
-        size = 32.dp,
+        size = Theme.dimension.extraLarge,
         startOffsetX = 14.dp,
         clickedOffsetX = 50.dp,
         startOffsetY = (-4).dp,
@@ -377,7 +383,7 @@ private fun BoxScope.AnimatedTransformingMoonCircle(
 ) {
 
     val moonCircleSize by animateDpAsState(
-        targetValue = if (isDarkMode) 8.dp else 29.dp,
+        targetValue = if (isDarkMode) Theme.dimension.small else 29.dp,
         animationSpec = tween(durationMillis = animationSpecDurationMillis, easing = EaseOut)
     )
 
@@ -392,7 +398,7 @@ private fun BoxScope.AnimatedTransformingMoonCircle(
         startOffsetX = (15).dp,
         clickedOffsetX = (-14).dp,
         startOffsetY = (-2).dp,
-        clickedOffsetY = 4.dp,
+        clickedOffsetY = Theme.dimension.extraSmall,
         color = circleColor,
         hasInnerShadow = true,
     )
@@ -436,7 +442,7 @@ private fun AnimatedCircle(
                 if (hasInnerShadow) Modifier.innerShadow(
                     shape = CircleShape,
                     color = innerShadowColor,
-                    blur = 4.dp,
+                    blur = Theme.dimension.extraSmall,
                     offsetX = 1.dp,
                     offsetY = 1.dp
                 ) else Modifier

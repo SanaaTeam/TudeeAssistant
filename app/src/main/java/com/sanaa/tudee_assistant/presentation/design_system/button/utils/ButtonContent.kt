@@ -1,9 +1,8 @@
-package com.sanaa.tudee_assistant.presentation.component.button.utils
+package com.sanaa.tudee_assistant.presentation.design_system.button.utils
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 
 @Composable

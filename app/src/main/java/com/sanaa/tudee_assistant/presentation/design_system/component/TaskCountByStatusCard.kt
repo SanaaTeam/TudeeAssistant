@@ -157,8 +157,8 @@ private fun Preview() {
             Modifier
                 .fillMaxSize()
                 .background(Theme.color.surface)
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(Theme.dimension.medium),
+            horizontalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             TaskCountByStatusCard(TaskStatus.DONE, 2)
             TaskCountByStatusCard(TaskStatus.IN_PROGRESS, 16)

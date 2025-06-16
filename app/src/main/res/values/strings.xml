@@ -10,4 +10,5 @@
     <string name="done_task_status">Done</string>
     <string name="snack_bar_error">Some error happened.</string>
     <string name="snack_bar_success">Successfully.</string>
+    <string name="loading_spinner">Loading spinner</string>
 </resources>

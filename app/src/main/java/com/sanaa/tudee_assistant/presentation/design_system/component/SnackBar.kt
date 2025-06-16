@@ -33,25 +33,32 @@ fun SnackBar(
         modifier = modifier
             .width(328.dp)
             .height(56.dp)
-            .dropShadow(blur = 16.dp, offsetY = 4.dp, color = Color.Black.copy(0.12f))
-            .background(color = Theme.color.surfaceHigh, shape = RoundedCornerShape(16.dp))
-            .padding(8.dp),
+            .dropShadow(
+                blur = Theme.dimension.medium,
+                offsetY = Theme.dimension.extraSmall,
+                color = Color.Black.copy(0.12f)
+            )
+            .background(
+                color = Theme.color.surfaceHigh,
+                shape = RoundedCornerShape(Theme.dimension.medium)
+            )
+            .padding(Theme.dimension.small),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
                 .background(
                     color = if (snackBarStatus == SnackBarStatus.ERROR) Theme.color.errorVariant else Theme.color.greenVariant,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(Theme.dimension.regular)
                 )
-                .padding(8.dp)
+                .padding(Theme.dimension.small)
         ) {
             Image(
                 painter = painterResource(
                     id = if (snackBarStatus == SnackBarStatus.ERROR) R.drawable.snack_bar_error else R.drawable.snack_bar_success
                 ),
                 contentDescription = message,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(Theme.dimension.large),
 
                 )
         }
@@ -60,7 +67,7 @@ fun SnackBar(
             text = message,
             color = Theme.color.body,
             style = Theme.textStyle.body.medium,
-            modifier = Modifier.padding(start = 12.dp)
+            modifier = Modifier.padding(start = Theme.dimension.regular)
 
         )
     }
@@ -73,7 +80,7 @@ private fun SnackBarDarkPreview() {
         Box(
             modifier = Modifier
                 .background(color = Theme.color.surface)
-                .padding(4.dp)
+                .padding(Theme.dimension.extraSmall)
         ) {
             SnackBar(message = "Success")
         }
@@ -87,7 +94,7 @@ private fun SnackBarLightPreview() {
         Box(
             modifier = Modifier
                 .background(color = Theme.color.surface)
-                .padding(4.dp)
+                .padding(Theme.dimension.extraSmall)
         ) {
             SnackBar(snackBarStatus = SnackBarStatus.ERROR, message = "Something went wrong")
         }

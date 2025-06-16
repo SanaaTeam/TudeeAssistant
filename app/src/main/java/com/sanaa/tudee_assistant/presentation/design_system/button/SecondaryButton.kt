@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.component.button
+package com.sanaa.tudee_assistant.presentation.design_system.button
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.presentation.component.button.utils.ButtonContent
+import com.sanaa.tudee_assistant.presentation.design_system.button.utils.ButtonContent
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
@@ -37,7 +37,7 @@ fun SecondaryButton(
     }
 
     val verticalPadding = when(isLoading){
-        true -> 16.dp
+        true -> Theme.dimension.medium
         false -> 18.dp
     }
 
@@ -52,10 +52,14 @@ fun SecondaryButton(
                     width = 1.dp,
                     color = borderColor,
                     shape = RoundedCornerShape(100.dp)
-                ).padding(horizontal = 24.dp, vertical = verticalPadding)
+                )
+                .padding(horizontal = Theme.dimension.large, vertical = verticalPadding)
             ,
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+            horizontalArrangement = Arrangement.spacedBy(
+                Theme.dimension.small,
+                Alignment.CenterHorizontally
+            )
         ) {
 
             ButtonContent(
@@ -74,7 +78,7 @@ fun SecondaryButton(
 @Preview
 @Composable
 private fun SecondaryButtonPreview(modifier: Modifier = Modifier) {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             SecondaryButton(
                 lable = "Submit",
                 enabled = true,
@@ -114,7 +118,7 @@ private fun SecondaryButtonPreview(modifier: Modifier = Modifier) {
 @Composable
 private fun SecondaryButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme (isDarkTheme = true){
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             SecondaryButton(
                 lable = "Submit",
                 enabled = true,

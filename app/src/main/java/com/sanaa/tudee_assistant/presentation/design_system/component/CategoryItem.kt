@@ -57,7 +57,7 @@ fun CategoryItem(
                 Icon(
                     painter = category.categoryPainter,
                     contentDescription = null,
-                    modifier = Modifier.size(32.dp),
+                    modifier = Modifier.size(Theme.dimension.extraLarge),
                     tint = category.tint
                 )
             }

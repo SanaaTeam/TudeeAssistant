@@ -32,8 +32,7 @@ fun AppBar(
     title: String,
     caption: String,
     modifier: Modifier = Modifier,
-    isDarkMode: Boolean = false,
-    onDarkThemeSwitchClick: (Boolean) -> Unit
+    tailComponent: @Composable () -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -71,21 +70,27 @@ fun AppBar(
             }
         }
 
-        DarkThemeSwitch(isDarkMode, onCheckedChange = onDarkThemeSwitchClick)
+        tailComponent()
     }
 }
 
 @Preview(widthDp = 360)
 @Composable
 private fun AppBarLightPreview() {
+
     var isDarkMode by remember { mutableStateOf(false) }
+
     TudeeTheme(isDarkTheme = isDarkMode) {
 
         AppBar(
             title = "Tudee",
             caption = "Your cute Helper for Every Task",
-            isDarkMode = isDarkMode,
-            onDarkThemeSwitchClick = { isDarkMode = !isDarkMode })
+            tailComponent = {
+                DarkThemeSwitch(
+                    isDarkMode,
+                    onCheckedChange = { isDarkMode = !isDarkMode })
+            }
+        )
     }
 }
 
@@ -100,8 +105,11 @@ private fun AppBarDarkPreview() {
         AppBar(
             title = "Tudee",
             caption = "Your cute Helper for Every Task",
-            isDarkMode = isDarkMode,
-            onDarkThemeSwitchClick = { isDarkMode = !isDarkMode }
+            tailComponent = {
+                DarkThemeSwitch(
+                    isDarkMode,
+                    onCheckedChange = { isDarkMode = !isDarkMode })
+            }
         )
     }
 }

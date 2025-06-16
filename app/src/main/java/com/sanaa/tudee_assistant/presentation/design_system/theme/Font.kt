@@ -13,3 +13,7 @@ val Nunito = FontFamily(
     Font(R.font.nunito_semi_bold, weight = FontWeight.SemiBold),
     Font(R.font.nunito_bold, weight = FontWeight.Bold),
 )
+
+val CherryBomb = FontFamily(
+    Font(R.font.cherry_bomb_one_regular, weight = FontWeight.Normal)
+)

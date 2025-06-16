@@ -137,7 +137,7 @@ fun DarkModeThemeSwitchButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun DarkThemeSwitchPreview() {
+private fun DarkModeThemeSwitchButtonPreview() {
     Column {
 
         var checkedState by remember { mutableStateOf(false) }

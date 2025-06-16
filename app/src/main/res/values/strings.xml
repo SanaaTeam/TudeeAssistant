@@ -3,7 +3,7 @@
     <string name="high">High</string>
     <string name="medium">Medium</string>
     <string name="low">Low</string>
-    <string name="todo">To-Do</string>
-    <string name="in_progress_task">In Progress</string>
-    <string name="done">Done</string>
+    <string name="todo_task_status">To-Do</string>
+    <string name="in_progress_task_status">In Progress</string>
+    <string name="done_task_status">Done</string>
 </resources>

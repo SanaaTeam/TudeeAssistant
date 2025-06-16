@@ -2,6 +2,7 @@ import androidx.room.TypeConverter
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.domain.model.Task.TaskStatus
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 class Converters {
 
@@ -24,4 +25,14 @@ class Converters {
 
     @TypeConverter
     fun toTaskPriority(value: String): TaskPriority = TaskPriority.valueOf(value)
+
+    @TypeConverter
+    fun fromLocalDateTime(value: LocalDateTime?): String? {
+        return value?.toString()
+    }
+
+    @TypeConverter
+    fun toLocalDateTime(value: String?): LocalDateTime? {
+        return value?.let { LocalDateTime.parse(it) }
+    }
 }

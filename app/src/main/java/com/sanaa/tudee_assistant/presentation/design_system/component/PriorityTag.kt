@@ -36,13 +36,13 @@ fun PriorityTag(
     priority: Priority,
     modifier: Modifier = Modifier,
     isSelected: Boolean = true,
-    isClickable: Boolean = true,
+    enabled: Boolean = true,
     onClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(Theme.dimension.medium))
-            .clickable(enabled = isClickable) {
+            .clickable(enabled = enabled) {
                 onClick.invoke()
             }
             .background(
@@ -97,8 +97,8 @@ private fun PreviewPriorityTag() {
                 .padding(Theme.dimension.medium)
         ) {
             PriorityTag(modifier = Modifier.padding(10.dp), priority = HIGH)
-            PriorityTag(modifier = Modifier.padding(10.dp), priority = MEDIUM, isClickable = false)
-            PriorityTag(modifier = Modifier.padding(10.dp), priority = LOW, isClickable = true) {}
+            PriorityTag(modifier = Modifier.padding(10.dp), priority = MEDIUM, enabled = false)
+            PriorityTag(modifier = Modifier.padding(10.dp), priority = LOW, enabled = true) {}
             PriorityTag(
                 modifier = Modifier.padding(10.dp),
                 priority = LOW,

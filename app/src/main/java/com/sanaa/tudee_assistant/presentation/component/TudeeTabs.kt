@@ -16,7 +16,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.presentation.composables.HorizontalSpace
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
@@ -41,11 +40,11 @@ fun TudeeScrollableTabs(
     }
 
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         TabRow(
             selectedTabIndex = selectedTabIndex,
-            modifier = Modifier.fillMaxWidth(),
             containerColor = Theme.color.surfaceHigh,
             contentColor = Theme.color.title,
             indicator = { tabPositions ->
@@ -56,6 +55,13 @@ fun TudeeScrollableTabs(
                     )
                 }
             },
+            divider = {
+                Box (
+                    modifier = Modifier
+                        .height(1.dp)
+                        .background(color = Theme.color.stroke)
+                )
+            }
 
         ) {
             tabs.forEachIndexed { index, tabItem ->
@@ -91,7 +97,7 @@ private fun CustomTabIndicator(
                 x = tabPosition.left + (tabPosition.width - textWidth) / 2
             )
             .width(textWidth)
-            .height(3.dp)
+            .height(4.dp)
             .background(
                 color = Theme.color.secondary,
                 shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
@@ -104,56 +110,48 @@ private fun CustomTab(
     tabItem: TabItem,
     isSelected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val animatedColor by animateColorAsState(
         targetValue = if (isSelected) Theme.color.title else Theme.color.hint,
-        animationSpec = tween(300),
+        animationSpec = tween(200),
     )
 
     Tab(
         selected = isSelected,
         onClick = onClick,
-        modifier = modifier.padding(vertical = 4.dp)
     ) {
-        Box {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Text(
+                text = tabItem.label,
+                style = Theme.textStyle.body.small,
+                color = animatedColor
+            )
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.width(28.dp),
             ) {
-                Text(
-                    text = tabItem.label,
-                    style = Theme.textStyle.body.small,
-                    color = animatedColor
-                )
-
-                Row(
-                    modifier = modifier.size(28.dp),
+                AnimatedVisibility(
+                    visible = isSelected,
+                    enter = fadeIn(animationSpec = tween(200)),
+                    exit = fadeOut(animationSpec = tween(200))
                 ) {
-                    AnimatedVisibility(
-                        visible = isSelected,
-                        enter = fadeIn(animationSpec = tween(300)),
-                        exit = fadeOut(animationSpec = tween(300))
+                    Box(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .background(
+                                color = Theme.color.surface,
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Row {
-                            HorizontalSpace(8.dp)
-                            Box(
-                                modifier = modifier
-                                    .size(28.dp)
-                                    .background(
-                                        color = Theme.color.surface,
-                                        shape = CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = tabItem.count.toString(),
-                                    style = Theme.textStyle.label.small,
-                                    color = Theme.color.body,
-                                )
-                            }
-                        }
+                        Text(
+                            text = tabItem.count.toString(),
+                            style = Theme.textStyle.label.small,
+                            color = Theme.color.body,
+                        )
                     }
                 }
             }

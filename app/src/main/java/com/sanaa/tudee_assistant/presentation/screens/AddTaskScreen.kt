@@ -27,107 +27,108 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryItem
+import com.sanaa.tudee_assistant.presentation.design_system.component.CheckMarkContainer
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTextField
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.component.PriorityTag
-import com.sanaa.tudee_assistant.presentation.composables.CheckMarkContainer
-import com.sanaa.tudee_assistant.presentation.model.CategoryUIInfo
-import com.sanaa.tudee_assistant.presentation.model.Priority
-import com.sanaa.tudee_assistant.presentation.component.button.PrimaryButton
-import com.sanaa.tudee_assistant.presentation.component.button.SecondaryButton
+import com.sanaa.tudee_assistant.presentation.design_system.component.button.PrimaryButton
+import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
+import com.sanaa.tudee_assistant.presentation.model.CategoryState
+import com.sanaa.tudee_assistant.presentation.model.TaskPriority
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskScreen() {
     val categories = listOf(
-        CategoryUIInfo(
+        CategoryState(
             title = "Education",
             categoryPainter = painterResource(R.drawable.education_cat),
             tint = Theme.color.purpleAccent
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Shopping",
             categoryPainter = painterResource(R.drawable.shopping_cat),
             tint = Theme.color.secondary
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Medical",
             categoryPainter = painterResource(R.drawable.medical_cat),
             tint = Theme.color.primary
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Gym",
             categoryPainter = painterResource(R.drawable.gym_cat),
             tint = Theme.color.primary
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Entertainment",
             categoryPainter = painterResource(R.drawable.entertainment_cat),
             tint = Theme.color.yellowAccent
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Cooking",
             categoryPainter = painterResource(R.drawable.cooking_cat),
             tint = Theme.color.pinkAccent
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Family & friend",
             categoryPainter = painterResource(R.drawable.family_friend_cat),
             tint = Theme.color.secondary
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Traveling",
             categoryPainter = painterResource(R.drawable.traveling_cat),
             tint = Theme.color.yellowAccent
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Agriculture",
             categoryPainter = painterResource(R.drawable.agriculture_cat),
             tint = Theme.color.greenAccent
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Coding",
             categoryPainter = painterResource(R.drawable.coding_cat),
             tint = Theme.color.purpleAccent
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Adoration",
             categoryPainter = painterResource(R.drawable.adoration_cat),
             tint = Theme.color.primary
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Fixing bugs",
             categoryPainter = painterResource(R.drawable.fixing_bugs_cat),
             tint = Theme.color.secondary
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Cleaning",
             categoryPainter = painterResource(R.drawable.cleaning_cat),
             tint = Theme.color.greenAccent
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Work",
             categoryPainter = painterResource(R.drawable.work_cat),
             tint = Theme.color.secondary
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Budgeting",
             categoryPainter = painterResource(R.drawable.budgeting_cat),
             tint = Theme.color.purpleAccent
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Self-care",
             categoryPainter = painterResource(R.drawable.self_care_cat),
             tint = Theme.color.yellowAccent
         ),
-        CategoryUIInfo(
+        CategoryState(
             title = "Event",
             categoryPainter = painterResource(R.drawable.event_cat),
             tint = Theme.color.pinkAccent
         )
     )
     var showBottomSheet by remember { mutableStateOf(true) }
-    var selectedCategory by remember { mutableStateOf<CategoryUIInfo?>(null) }
+    var selectedCategory by remember { mutableStateOf<CategoryState?>(null) }
 
     if (showBottomSheet) {
         BaseBottomSheet(
@@ -185,9 +186,9 @@ fun AddTaskScreen() {
                             modifier = Modifier.padding(bottom = Theme.dimension.medium),
                             horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
                         ) {
-                            PriorityTag(priority = Priority.HIGH)
-                            PriorityTag(priority = Priority.MEDIUM)
-                            PriorityTag(priority = Priority.LOW)
+                            PriorityTag(priority = TaskPriority.HIGH)
+                            PriorityTag(priority = TaskPriority.MEDIUM)
+                            PriorityTag(priority = TaskPriority.LOW)
                         }
 
                         Text(

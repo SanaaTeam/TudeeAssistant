@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.sanaa.tudee_assistant.data.local.Dto.TaskLocalDto
+import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate

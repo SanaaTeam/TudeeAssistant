@@ -1,11 +1,10 @@
-package com.sanaa.tudee_assistant.data.local.Dto
+package com.sanaa.tudee_assistant.data.local.dto
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.domain.model.Task.TaskStatus
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 @Entity(tableName = "tasks")

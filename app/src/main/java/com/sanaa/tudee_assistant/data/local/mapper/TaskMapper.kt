@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.data.local.mapper
 
-import com.sanaa.tudee_assistant.data.local.Dto.TaskLocalDto
+import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.domain.model.Task
 
 fun TaskLocalDto.toDomain(): Task = Task(

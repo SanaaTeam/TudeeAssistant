@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.design_system.component
 
+import com.sanaa.tudee_assistant.R
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -164,7 +166,7 @@ private fun CustomTab(
 fun TudeeScrollableTabsPreview() {
     val tabs = listOf(
         TabItem(
-            label = "In progress",
+            label = stringResource(R.string.in_progress_task_status),
             count = 14
         ){
             Box(
@@ -177,7 +179,7 @@ fun TudeeScrollableTabsPreview() {
             }
         },
         TabItem(
-            label = "To Do",
+            label = stringResource(R.string.in_progress_task_status),
             count = 0
         ) {
             Box(
@@ -191,7 +193,7 @@ fun TudeeScrollableTabsPreview() {
         },
 
         TabItem(
-            label = "Done",
+            label = stringResource(R.string.todo_task_status),
             count = 0
         ) {
             Box(

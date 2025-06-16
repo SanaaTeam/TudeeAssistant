@@ -50,6 +50,24 @@ koin-core-viewmodel = { module = "io.insert-koin:koin-core-viewmodel" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
 koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation" }
 
+
+
+[bundles]
+room = [
+    "androidx-room-runtime",
+    "androidx-room-ktx",
+    "androidx-room-testing"
+]
+koin = [
+    "koin-core",
+    "koin-android",
+    "koin-coroutines",
+    "koin-logging",
+    "koin-core-viewmodel",
+    "koin-androidx-compose",
+    "koin-androidx-compose-navigation"
+]
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

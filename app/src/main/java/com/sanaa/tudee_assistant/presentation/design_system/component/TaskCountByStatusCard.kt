@@ -54,33 +54,29 @@ fun RowScope.TaskCountByStatusCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(Theme.dimension.regular),
         ) {
             StatusImage(taskStatus)
 
             Text(
-                modifier = Modifier.padding(top = 4.dp),
+                modifier = Modifier.padding(top = Theme.dimension.extraSmall),
                 text = count.toString(),
                 color = Theme.color.onPrimary,
                 style = Theme.textStyle.headline.medium
             )
 
             Text(
-                modifier = Modifier,
                 text = when (taskStatus) {
-                    TaskStatus.TODO -> stringResource(R.string.todo)
-                    TaskStatus.IN_PROGRESS -> stringResource(
-                        R.string.in_progress_task
-                    )
-
-                    TaskStatus.DONE -> stringResource(R.string.done)
+                    TaskStatus.TODO -> stringResource(R.string.todo_task_status)
+                    TaskStatus.IN_PROGRESS -> stringResource(R.string.in_progress_task_status)
+                    TaskStatus.DONE -> stringResource(R.string.done_task_status)
                 },
                 color = Theme.color.onPrimaryCaption,
                 style = Theme.textStyle.label.small
             )
         }
 
-        CardDecoration(
+        CardTopEndDecoration(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .offset(x = 40.dp, y = (-41).dp)
@@ -93,13 +89,17 @@ private fun StatusImage(taskStatus: TaskStatus) {
     Box(
         modifier = Modifier
             .size(40.dp)
-            .border(1.dp, Color.White.copy(alpha = 0.12f), RoundedCornerShape(12.dp))
-            .clip(RoundedCornerShape(12.dp))
+            .border(
+                1.dp,
+                Color.White.copy(alpha = 0.12f),
+                RoundedCornerShape(Theme.dimension.regular)
+            )
+            .clip(RoundedCornerShape(Theme.dimension.regular))
             .background(Color.White.copy(alpha = 0.12f)),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(Theme.dimension.large),
             painter = painterResource(
                 id = when (taskStatus) {
                     TaskStatus.TODO -> R.drawable.status_view_to_do
@@ -113,7 +113,7 @@ private fun StatusImage(taskStatus: TaskStatus) {
 }
 
 @Composable
-private fun CardDecoration(modifier: Modifier = Modifier) {
+private fun CardTopEndDecoration(modifier: Modifier = Modifier) {
     Box(modifier = modifier.alpha(0.16f)) {
         Box(
             modifier = Modifier

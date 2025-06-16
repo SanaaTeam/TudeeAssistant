@@ -59,7 +59,6 @@ fun PriorityTag(
         )
 
         Text(
-            modifier = Modifier,
             text = when (priority) {
                 HIGH -> stringResource(R.string.high)
                 MEDIUM -> stringResource(R.string.medium)

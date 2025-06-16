@@ -1,9 +1,9 @@
 package com.sanaa.tudee_assistant.data.local
 
+import Converters
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.sanaa.tudee_assistant.data.local.converters.Converters
 import com.sanaa.tudee_assistant.data.local.dao.CategoryDao
 import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import com.sanaa.tudee_assistant.data.local.entity.CategoryEntity

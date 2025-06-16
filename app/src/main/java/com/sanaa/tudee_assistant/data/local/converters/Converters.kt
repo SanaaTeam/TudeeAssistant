@@ -1,18 +1,27 @@
-package com.sanaa.tudee_assistant.data.local.converters
-
 import androidx.room.TypeConverter
-import java.util.Date
+import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
+import com.sanaa.tudee_assistant.domain.model.Task.TaskStatus
+import kotlinx.datetime.LocalDate
 
 class Converters {
-    @TypeConverter
-    fun fromTimestamp(value: Long?): Date? {
-        return value?.let { Date(it) }
-    }
 
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
-    }
+    fun fromLocalDate(value: LocalDate?): String? =
+        value?.toString() //  "2025-06-13"
 
-    // Add other converter functions here
+    @TypeConverter
+    fun toLocalDate(value: String?): LocalDate? =
+        value?.let { LocalDate.parse(it) }
+
+    @TypeConverter
+    fun fromTaskStatus(status: TaskStatus): String = status.name
+
+    @TypeConverter
+    fun toTaskStatus(value: String): TaskStatus = TaskStatus.valueOf(value)
+
+    @TypeConverter
+    fun fromTaskPriority(priority: TaskPriority): String = priority.name
+
+    @TypeConverter
+    fun toTaskPriority(value: String): TaskPriority = TaskPriority.valueOf(value)
 }

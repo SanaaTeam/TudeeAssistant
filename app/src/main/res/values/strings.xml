@@ -5,4 +5,13 @@
     <string name="high">High</string>
     <string name="medium">Medium</string>
     <string name="low">Low</string>
+    <string name="add_new_task">Add new task</string>
+    <string name="task_title">Task title</string>
+    <string name="description">Description</string>
+    <string name="date_placeholder">22-6-2025</string>
+    <string name="priority">Priority</string>
+    <string name="category">Category</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel\n</string>
+
 </resources>

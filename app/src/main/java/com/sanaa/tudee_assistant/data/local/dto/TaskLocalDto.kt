@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.domain.model.Task.TaskStatus
-import kotlinx.datetime.LocalDate
+
 import kotlinx.datetime.LocalDateTime
 
 @Entity(tableName = "tasks")
@@ -26,7 +26,8 @@ data class TaskLocalDto(
 
     @ColumnInfo(name = "due_date")
     val dueDate: LocalDate? = null,
-
+  
+    @ColumnInfo(name = "priority")
     val priority: TaskPriority = TaskPriority.MEDIUM,
 
     @ColumnInfo(name = "category_id")

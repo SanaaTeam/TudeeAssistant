@@ -11,6 +11,7 @@ data class CategoryLocalDto(
     @ColumnInfo(name = "category_id")
     val categoryId: Int = 0,
 
+
     @ColumnInfo(name = "name")
     val name: String,
 

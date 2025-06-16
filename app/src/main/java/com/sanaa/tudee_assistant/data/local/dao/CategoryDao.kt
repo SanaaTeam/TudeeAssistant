@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -16,11 +17,14 @@ interface CategoryDao {
     @Update
     suspend fun updateCategory(category: CategoryLocalDto): Int
 
+    @Delete
+    suspend fun deleteCategory(category: CategoryLocalDto): Int
+
     @Query("DELETE FROM categories WHERE category_id = :categoryId")
     suspend fun deleteCategoryById(categoryId: Int): Int
 
     @Query("DELETE FROM categories")
-    suspend fun deleteAllCategories(): Int
+    suspend fun deleteAllCategory(): Int
 
     @Query("SELECT * FROM categories")
     fun getAllCategories(): Flow<List<CategoryLocalDto>>

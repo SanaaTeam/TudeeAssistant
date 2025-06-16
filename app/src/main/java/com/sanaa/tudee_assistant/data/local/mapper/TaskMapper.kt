@@ -14,7 +14,7 @@ fun TaskLocalDto.toDomain(): Task = Task(
     createdAt = createdAt
 )
 
-fun Task.toLocalDto(): TaskLocalDto = TaskLocalDto(
+fun Task.toEntity(): TaskLocalDto = TaskLocalDto(
     taskId = id,
     title = title,
     description = description,

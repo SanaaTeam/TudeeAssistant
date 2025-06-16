@@ -16,7 +16,6 @@ internal fun provideDatabase(context: Context): AppDatabase {
         AppDatabase::class.java,
         DATABASE_NAME
     )
-        .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
 }
 

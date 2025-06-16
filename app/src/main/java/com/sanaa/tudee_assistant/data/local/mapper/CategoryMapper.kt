@@ -10,7 +10,7 @@ fun CategoryLocalDto.toDomain(): Category = Category(
     isDefault = isDefault
 )
 
-fun Category.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
+fun Category.toEntity(): CategoryLocalDto = CategoryLocalDto(
     categoryId = id,
     name = name,
     imageUrl = imageUrl,

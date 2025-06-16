@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -12,12 +13,17 @@ import kotlinx.datetime.LocalDate
 
 @Dao
 interface TaskDao {
+    @Insert
+    fun insert(task: TaskLocalDto)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: TaskLocalDto): Long
 
     @Update
     suspend fun updateTask(task: TaskLocalDto): Int
+
+    @Delete
+    suspend fun deleteTask(task: TaskLocalDto): Int
 
     @Query("DELETE FROM tasks WHERE task_id = :taskId")
     suspend fun deleteTaskById(taskId: Int): Int
@@ -29,7 +35,7 @@ interface TaskDao {
     suspend fun getTaskById(taskId: Int): TaskLocalDto?
 
     @Query("SELECT * FROM tasks WHERE due_date = :date")
-    fun getTasksByDueDate(date: LocalDate): Flow<List<TaskLocalDto>>
+    fun getTasksByDate(date: LocalDate): Flow<List<TaskLocalDto>>
 
     @Query("SELECT * FROM tasks WHERE category_id = :categoryId")
     fun getTasksByCategoryId(categoryId: Int): Flow<List<TaskLocalDto>>

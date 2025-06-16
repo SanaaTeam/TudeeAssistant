@@ -27,7 +27,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.CategoryTaskState
-import com.sanaa.tudee_assistant.presentation.model.Priority
+import com.sanaa.tudee_assistant.presentation.model.TaskPriority
 
 @Composable
 fun CategoryTaskCard(
@@ -130,20 +130,20 @@ private fun Preview() {
                 title = "Organize Study Desk",
                 description = "Review cell structure and functions for tomorrow...",
                 date = null,
-                priority = Priority.MEDIUM
+                priority = TaskPriority.MEDIUM
             ),
             CategoryTaskState(
                 icon = painterResource(R.drawable.birthday_cake),
                 title = "Organize Study Desk",
                 date = "12-03-2025",
-                priority = Priority.LOW
+                priority = TaskPriority.LOW
             ),
             CategoryTaskState(
                 icon = painterResource(R.drawable.birthday_cake),
                 title = "Organize Study Desk",
                 description = "Review cell structure and functions for tomorrow...",
                 date = "12-03-2025",
-                priority = Priority.HIGH
+                priority = TaskPriority.HIGH
             ),
         )
 

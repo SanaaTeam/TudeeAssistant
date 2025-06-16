@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.design_system.button
+package com.sanaa.tudee_assistant.presentation.design_system.component.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.presentation.design_system.button.utils.ButtonContent
+import com.sanaa.tudee_assistant.presentation.design_system.component.button.utils.ButtonContent
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 

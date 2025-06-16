@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.design_system.button
+package com.sanaa.tudee_assistant.presentation.design_system.component.button
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.design_system.button.utils.SpinnerIcon
+import com.sanaa.tudee_assistant.presentation.design_system.component.button.utils.SpinnerIcon
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 

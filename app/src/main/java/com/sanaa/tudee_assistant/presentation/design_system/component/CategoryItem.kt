@@ -19,16 +19,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composables.CategoryCount
-import com.sanaa.tudee_assistant.presentation.composables.CheckMarkContainer
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.CategoryUIInfo
+import com.sanaa.tudee_assistant.presentation.model.CategoryState
 
 @Composable
 fun CategoryItem(
     modifier: Modifier = Modifier,
-    category: CategoryUIInfo,
+    category: CategoryState,
     onClick: () -> Unit,
     topContent: @Composable () -> Unit = {},
 ) {
@@ -82,7 +80,7 @@ fun CategoryItem(
 private fun CategoryDarkPreview() {
     TudeeTheme(isDarkTheme = true) {
         CategoryItem(
-            category = CategoryUIInfo(
+            category = CategoryState(
                 "Education",
                 painterResource(R.drawable.education_cat),
                 Theme.color.purpleAccent
@@ -100,7 +98,7 @@ private fun CategoryDarkPreview() {
 private fun CategoryLightPreview() {
     TudeeTheme(isDarkTheme = false) {
         CategoryItem(
-            category = CategoryUIInfo(
+            category = CategoryState(
                 "Education",
                 painterResource(R.drawable.education_cat),
                 Theme.color.purpleAccent

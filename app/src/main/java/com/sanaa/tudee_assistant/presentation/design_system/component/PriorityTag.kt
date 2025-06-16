@@ -26,14 +26,14 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.Priority
-import com.sanaa.tudee_assistant.presentation.model.Priority.HIGH
-import com.sanaa.tudee_assistant.presentation.model.Priority.LOW
-import com.sanaa.tudee_assistant.presentation.model.Priority.MEDIUM
+import com.sanaa.tudee_assistant.presentation.model.TaskPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskPriority.HIGH
+import com.sanaa.tudee_assistant.presentation.model.TaskPriority.LOW
+import com.sanaa.tudee_assistant.presentation.model.TaskPriority.MEDIUM
 
 @Composable
 fun PriorityTag(
-    priority: Priority,
+    priority: TaskPriority,
     modifier: Modifier = Modifier,
     isSelected: Boolean = true,
     enabled: Boolean = true,

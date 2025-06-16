@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.design_system.button
+package com.sanaa.tudee_assistant.presentation.design_system.component.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

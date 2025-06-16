@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.Status
+import com.sanaa.tudee_assistant.presentation.model.TudeeStatus
 
 @Composable
-fun Slider(title: String, description: String, status: Status, @DrawableRes imageRes: Int) {
+fun Slider(title: String, description: String, status: TudeeStatus, @DrawableRes imageRes: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Theme.dimension.regular)
@@ -92,7 +92,7 @@ private fun Preview() {
             Slider(
                 title = "Stay working!",
                 description = "You've completed 3 out of 10 tasks Keep going!",
-                Status.OKAY,
+                TudeeStatus.OKAY,
                 R.drawable.robot1
             )
 
@@ -100,14 +100,14 @@ private fun Preview() {
                 title = "Tadaa!",
                 description = "You’re doing amazing!!!\n" +
                         "Tudee is proud of you.",
-                Status.GOOD,
+                TudeeStatus.GOOD,
                 R.drawable.robot2
             )
 
             Slider(
                 title = "Zero progress?!",
                 description = "You just scrolling, not working. Tudee is watching. back to work!!!",
-                Status.BAD,
+                TudeeStatus.BAD,
                 R.drawable.robot3
             )
         }

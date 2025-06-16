@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.util
+package com.sanaa.tudee_assistant.presentation.utils
 
 import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff

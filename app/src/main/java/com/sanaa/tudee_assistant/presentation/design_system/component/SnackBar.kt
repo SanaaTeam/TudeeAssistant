@@ -21,7 +21,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
-import com.sanaa.tudee_assistant.presentation.util.dropShadow
+import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 
 @Composable
 fun SnackBar(

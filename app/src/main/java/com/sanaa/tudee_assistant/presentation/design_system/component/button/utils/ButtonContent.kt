@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.design_system.button.utils
+package com.sanaa.tudee_assistant.presentation.design_system.component.button.utils
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

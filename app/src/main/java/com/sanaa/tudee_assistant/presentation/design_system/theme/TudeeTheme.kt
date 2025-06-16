@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.design_system.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.sanaa.tudee_assistant.presentation.design_system.color.LocalTudeeColors
@@ -20,5 +21,6 @@ fun TudeeTheme(
         LocalTudeeTextStyle provides defaultTextStyle
     ) {
         content()
+        MaterialTheme.shapes.small
     }
 }

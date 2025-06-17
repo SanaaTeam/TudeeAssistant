@@ -43,7 +43,7 @@ fun BaseBottomSheet(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .height(Theme.dimension.extraSmall)
                         .width(Theme.dimension.extraLarge)
                         .alpha(0.4f)

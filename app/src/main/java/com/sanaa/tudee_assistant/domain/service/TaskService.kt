@@ -3,7 +3,7 @@ package com.sanaa.tudee_assistant.domain.service
 import com.sanaa.tudee_assistant.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 
-interface TasksServices {
+interface TaskService {
     fun getTasks(): Flow<List<Task>>
     suspend fun addTask(task: Task)
     suspend fun updateTask(task: Task): Boolean

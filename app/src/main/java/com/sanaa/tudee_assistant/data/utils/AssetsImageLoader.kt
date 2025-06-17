@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.data.local.utils
+package com.sanaa.tudee_assistant.data.utils
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -15,3 +15,4 @@ fun getAssetsImagePainter(context: Context, imagePath: String): AsyncImagePainte
             .error(R.drawable.ic_not_found)
             .build()
     )
+

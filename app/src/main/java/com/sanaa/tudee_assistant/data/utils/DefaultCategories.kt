@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.data.local.utils
+package com.sanaa.tudee_assistant.data.utils
 
 import com.sanaa.tudee_assistant.data.local.dto.CategoryLocalDto
 

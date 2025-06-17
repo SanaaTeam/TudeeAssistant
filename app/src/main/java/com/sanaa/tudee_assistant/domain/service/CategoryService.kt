@@ -9,5 +9,4 @@ interface CategoryService {
     suspend fun addCategory(category: Category)
     suspend fun updateCategory(category: Category)
     suspend fun deleteCategoryById(categoryId: Int)
-    suspend fun deleteAllCategories()
 }

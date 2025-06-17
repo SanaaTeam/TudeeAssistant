@@ -69,4 +69,6 @@ dependencies {
     // Koin
     implementation(platform(libs.koin.boom))
     implementation(libs.bundles.koin)
+
+    implementation(libs.coil.compose)
 }

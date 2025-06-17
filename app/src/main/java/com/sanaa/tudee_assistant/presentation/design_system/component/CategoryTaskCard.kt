@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
@@ -90,6 +91,7 @@ fun CategoryTaskCard(
                     color = Theme.color.hint,
                     style = Theme.textStyle.label.small,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
@@ -141,7 +143,7 @@ private fun Preview() {
             CategoryTaskState(
                 icon = painterResource(R.drawable.birthday_cake),
                 title = "Organize Study Desk",
-                description = "Review cell structure and functions for tomorrow...",
+                description = "Review cell structure and functions for tomorrow morning...",
                 date = "12-03-2025",
                 priority = TaskPriority.HIGH
             ),

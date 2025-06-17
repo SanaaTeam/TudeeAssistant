@@ -6,13 +6,13 @@ import com.sanaa.tudee_assistant.domain.model.Category
 fun CategoryLocalDto.toDomain(): Category = Category(
     id = categoryId,
     name = name,
-    imageUrl = imageUrl,
+    imageUrl = imagePath,
     isDefault = isDefault
 )
 
 fun Category.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
     categoryId = id,
     name = name,
-    imageUrl = imageUrl,
+    imagePath = imageUrl,
     isDefault = isDefault
 )

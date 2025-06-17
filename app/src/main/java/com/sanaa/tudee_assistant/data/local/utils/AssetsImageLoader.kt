@@ -12,6 +12,6 @@ fun getAssetsImagePainter(context: Context, imagePath: String): AsyncImagePainte
     rememberAsyncImagePainter(
         ImageRequest.Builder(context)
             .data(imagePath)
-            .error(R.drawable.ic_not_found) // Show if load fails
+            .error(R.drawable.ic_not_found)
             .build()
     )

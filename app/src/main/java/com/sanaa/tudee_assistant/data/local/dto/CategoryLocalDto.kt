@@ -16,7 +16,7 @@ data class CategoryLocalDto(
     val name: String,
 
     @ColumnInfo(name = "image_url")
-    val imageUrl: String,
+    val imagePath: String,
 
     @ColumnInfo(name = "is_default")
     val isDefault: Boolean = false

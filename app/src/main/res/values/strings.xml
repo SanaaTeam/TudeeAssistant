@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TudeeAssistant</string>
+    <string name="skip">Skip</string>
+
 </resources>

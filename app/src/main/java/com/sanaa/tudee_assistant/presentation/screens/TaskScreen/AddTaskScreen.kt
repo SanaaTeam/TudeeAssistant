@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screens
+package com.sanaa.tudee_assistant.presentation.screens.TaskScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

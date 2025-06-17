@@ -50,7 +50,7 @@ fun AddNewCategory(
                     Column(
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
-                            .padding(Theme.dimension.medium)
+                            .padding(horizontal = Theme.dimension.medium)
                             .background(color = Theme.color.surface)
                     ) {
                         Text(

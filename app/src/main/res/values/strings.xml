@@ -11,4 +11,9 @@
     <string name="snack_bar_error">Some error happened.</string>
     <string name="snack_bar_success">Successfully.</string>
     <string name="loading_spinner">Loading spinner</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="category_title">Category title</string>
+    <string name="category_image">Category image</string>
+    <string name="add_new_category">Add new category</string>
 </resources>

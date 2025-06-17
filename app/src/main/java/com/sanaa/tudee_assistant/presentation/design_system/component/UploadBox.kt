@@ -41,7 +41,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 @Composable
 fun UploadBox(
     modifier: Modifier = Modifier,
-    onImageSelected: (Uri?) -> Unit
+    onImageSelected: (Uri?) -> Unit,
 ) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -62,8 +62,8 @@ fun UploadBox(
             .clip(RoundedCornerShape(16.dp))
             .drawBehind {
                 val stroke = Stroke(
-                    width = 1f,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 12f), 0f)
+                    width = 2f,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(11f, 11f), 0f)
                 )
                 drawRoundRect(
                     color = strokeColor,
@@ -92,11 +92,23 @@ fun UploadBox(
                 )
             }
         } else {
-
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
+                modifier = Modifier
+                    .fillMaxSize()
+                    .drawBehind {
+                        val stroke = Stroke(
+                            width = 2f,
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(11f, 11f), 0f)
+                        )
+                        drawRoundRect(
+                            color = strokeColor,
+                            style = stroke,
+                            cornerRadius = CornerRadius(16.dp.toPx())
+                        )
+                    },
+                contentAlignment = Alignment.Center,
+
+                ) {
                 AsyncImage(
                     model = imageUri,
                     contentDescription = "Selected Image",

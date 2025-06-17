@@ -2,8 +2,9 @@ package com.sanaa.tudee_assistant.domain.service
 
 import com.sanaa.tudee_assistant.domain.model.Task
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.LocalDate
 
-interface TasksServices {
+interface TaskService {
     fun getAllTasks(): Flow<List<Task>>
     suspend fun addTask(task: Task): Boolean
     suspend fun updateTask(task: Task): Boolean

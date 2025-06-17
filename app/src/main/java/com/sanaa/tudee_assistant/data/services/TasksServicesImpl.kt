@@ -4,14 +4,14 @@ import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
 import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
 import com.sanaa.tudee_assistant.domain.model.Task
-import com.sanaa.tudee_assistant.domain.service.TasksServices
+import com.sanaa.tudee_assistant.domain.service.TaskService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 
 class TasksServiceImpl(
     private val taskDao: TaskDao
-) : TasksServices {
+) : TaskService {
 
     override fun getAllTasks(): Flow<List<Task>> {
         return taskDao.getAllTasks().map { list -> list.map { it.toDomain() } }
@@ -49,7 +49,6 @@ class TasksServiceImpl(
 
     override fun getTasksByDueDate(dueDate: LocalDate): Flow<List<Task>> {
         return taskDao.getTasksByDate(dueDate).map { list -> list.map { it.toDomain() } }
-
     }
 
 }

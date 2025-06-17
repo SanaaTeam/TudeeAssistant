@@ -40,9 +40,7 @@ android {
 }
 
 dependencies {
-
-    // Kotlin Date time 
-    implementation(libs.kotlinx.datetime)
+  //
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -60,4 +58,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
 }

@@ -42,6 +42,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 fun UploadBox(
     modifier: Modifier = Modifier,
     onImageSelected: (Uri?) -> Unit,
+    strokeColor: Color = Theme.color.stroke
 ) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -51,7 +52,6 @@ fun UploadBox(
         imageUri = uri
         onImageSelected(uri)
     }
-    val strokeColor = Theme.color.stroke
 
     Box(
         modifier = modifier
@@ -62,8 +62,11 @@ fun UploadBox(
             .clip(RoundedCornerShape(16.dp))
             .drawBehind {
                 val stroke = Stroke(
-                    width = 2f,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(11f, 11f), 0f)
+                    width = 2.dp.toPx(),
+                    pathEffect = PathEffect.dashPathEffect(
+                        floatArrayOf(6.dp.toPx(), 6.dp.toPx()),
+                        6.dp.toPx()
+                    )
                 )
                 drawRoundRect(
                     color = strokeColor,
@@ -97,8 +100,11 @@ fun UploadBox(
                     .fillMaxSize()
                     .drawBehind {
                         val stroke = Stroke(
-                            width = 2f,
-                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(11f, 11f), 0f)
+                            width = 2.dp.toPx(),
+                            pathEffect = PathEffect.dashPathEffect(
+                                floatArrayOf(6.dp.toPx(), 6.dp.toPx()),
+                                6.dp.toPx()
+                            )
                         )
                         drawRoundRect(
                             color = strokeColor,

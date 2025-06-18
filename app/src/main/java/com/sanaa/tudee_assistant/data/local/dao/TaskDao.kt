@@ -43,4 +43,7 @@ interface TaskDao {
 
     @Query("SELECT * FROM tasks WHERE status = :status")
     fun getTasksByStatus(status: Task.TaskStatus): Flow<List<TaskLocalDto>>
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE category_id = :categoryId")
+    fun getTaskCountByCategoryId(categoryId: Int): Flow<Int>
 }

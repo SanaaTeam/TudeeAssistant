@@ -21,8 +21,8 @@ class TasksServiceImpl(
 
     override fun getAllTasks(): Flow<List<Task>> {
         return taskDao.getAllTasks()
-            .map {
-                list -> list.map { it.toDomain() }
+            .map { list ->
+                list.map { it.toDomain() }
             }.catch {
                 throw DatabaseFailureException(
                     message = "Failed to load all Tasks from database duo to database error details :${it.message} ",
@@ -86,6 +86,10 @@ class TasksServiceImpl(
         }.catch {
             throw DatabaseFailureException("database failure", it)
         }
+    }
+
+    override fun getTaskCountByCategoryId(taskId: Int): Flow<Int> {
+        return taskDao.getTaskCountByCategoryId(taskId)
     }
 
 }

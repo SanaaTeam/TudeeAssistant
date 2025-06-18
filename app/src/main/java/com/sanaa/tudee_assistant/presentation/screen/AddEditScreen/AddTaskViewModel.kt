@@ -1,9 +1,10 @@
-package com.sanaa.tudee_assistant.presentation.screens.TaskScreen
+package com.sanaa.tudee_assistant.presentation.screen.AddEditScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,16 +12,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.todayIn
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class TaskViewModel(
-    private val taskService: TaskService
+class AddTaskViewModel(
+    private val taskService: TaskService,
+    private val categoryService: CategoryService
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TaskUiState())
@@ -93,5 +93,5 @@ class TaskViewModel(
 }
 
 val addTaskViewModelModule = module {
-    viewModel { TaskViewModel(get()) }
+    viewModel { AddTaskViewModel(get(),get()) }
 }

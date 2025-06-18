@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 data class Task(
-    val id: Int,
+    val id: Int? = null,
     val title: String,
     val description: String?,
     val status: TaskStatus,

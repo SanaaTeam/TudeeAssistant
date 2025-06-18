@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.taskScreen
+package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
 import android.os.Build
 import androidx.annotation.RequiresApi

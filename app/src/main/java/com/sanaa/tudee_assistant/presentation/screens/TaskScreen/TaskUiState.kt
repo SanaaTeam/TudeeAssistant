@@ -2,12 +2,12 @@ package com.sanaa.tudee_assistant.presentation.screens.TaskScreen
 
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.Task
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 data class TaskUiState(
     val title: String = "",
     val description: String = "",
-    val selectedDate: LocalDate? = null,
+    val selectedDate: LocalDateTime? = null,
     val selectedPriority: Task.TaskPriority? = null,
     val selectedCategory: Category? = null,
     val isAddTaskButtonEnabled: Boolean = false,

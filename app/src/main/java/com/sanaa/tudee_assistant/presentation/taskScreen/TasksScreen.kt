@@ -56,7 +56,7 @@ fun TasksScreen(
     var showDialog by remember { mutableStateOf(false) }
 
     var daysInMonth by
-    remember { mutableStateOf(getLocalDatesInMonth(selectedDate.year, selectedDate.monthNumber)) }
+    remember { mutableStateOf(DateFormater.getLocalDatesInMonth(selectedDate.year, selectedDate.monthNumber)) }
 
 
     val tabs = listOf(
@@ -195,7 +195,7 @@ fun TasksScreen(
                     selectedDateMillis?.let {
                         val date = DateFormater.formatLongToDate(selectedDateMillis)
                         onDateSelected(date)
-                        daysInMonth = (getLocalDatesInMonth(date.year, date.monthNumber))
+                        daysInMonth = (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
                     }
                 },
                 onDismiss = { showDialog = false },
@@ -229,34 +229,4 @@ private fun TasksScreenPreview() {
         onDaySelected = { date -> selectedDate = date },
         onDateSelected = { date -> selectedDate = date }
     )
-}
-
-
-fun getLocalDatesInMonth(year: Int, month: Int): List<LocalDate> {
-    val totalDays = when (month) {
-        1, 3, 5, 7, 8, 10, 12 -> 31
-        4, 6, 9, 11 -> 30
-        2 -> if (isLeapYear(year)) 29 else 28
-        else -> throw IllegalArgumentException("Invalid month")
-    }
-
-    return List(totalDays) { day ->
-        LocalDate(year, month, day + 1)
-    }
-}
-
-
-// Determine number of days in the month
-fun getDaysInMonth(month: Int, year: Int): Int {
-    return when (month) {
-        1, 3, 5, 7, 8, 10, 12 -> 31
-        4, 6, 9, 11 -> 30
-        2 -> if (isLeapYear(year)) 29 else 28
-        else -> 0
-    }
-}
-
-// Leap year calculation
-fun isLeapYear(year: Int): Boolean {
-    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
 }

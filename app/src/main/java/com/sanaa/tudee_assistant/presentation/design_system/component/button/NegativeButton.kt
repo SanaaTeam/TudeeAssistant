@@ -36,6 +36,7 @@ fun NegativeButton(
             onClick = onClick,
             backgroundModifier = backgroundModifier,
             contentColor = contentColor,
+            modifier = modifier
         )
     }
 }

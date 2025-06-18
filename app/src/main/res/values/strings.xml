@@ -11,4 +11,10 @@
     <string name="snack_bar_error">Some error happened.</string>
     <string name="snack_bar_success">Successfully.</string>
     <string name="loading_spinner">Loading spinner</string>
+    <string name="delete_task_title">Delete task</string>
+    <string name="delete_task_subtitle">Are you sure to continue?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
+
 </resources>

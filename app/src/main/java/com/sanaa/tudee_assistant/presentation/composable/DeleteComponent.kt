@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,14 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.NegativeButton
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.dropShadowColor
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 
@@ -30,17 +29,19 @@ import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 @Composable
 fun DeleteComponent(
     modifier: Modifier = Modifier,
+    sheetState: SheetState,
     onDismiss: () -> Unit,
     onDeleteClicked: () -> Unit,
-    title: String = stringResource(R.string.delete_task_title),
+    title: String,
     subtitle: String = stringResource(R.string.delete_task_subtitle),
 ) {
     BaseBottomSheet(
+        sheetState = sheetState,
         onDismiss = onDismiss,
         content = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(Theme.dimension.large),
-                modifier = modifier.background(color = Theme.color.surface)
+                modifier = modifier
             ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(Theme.dimension.regular),
@@ -97,15 +98,4 @@ fun DeleteComponent(
             }
         }
     )
-}
-
-@Preview
-@Composable
-private fun PreviewDeleteButton() {
-    TudeeTheme {
-        DeleteComponent(
-            onDismiss = {},
-            onDeleteClicked = {}
-        )
-    }
 }

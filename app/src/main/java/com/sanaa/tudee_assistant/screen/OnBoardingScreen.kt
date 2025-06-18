@@ -52,9 +52,11 @@ fun OnBoardingScreen(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = R.drawable.boarding_screen000),
             contentDescription = null,
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
+                .align(Alignment.TopCenter)
+
         )
 
         val pagerState = rememberPagerState(pageCount = { 3 }, initialPage = 0)
@@ -186,7 +188,6 @@ fun DialogContainer(
                 textAlign = TextAlign.Center,
             )
         }
-
         val coroutineScope = rememberCoroutineScope()
         FloatingActionButton(
             enabled = true,

@@ -3,7 +3,7 @@ package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.TaskService
-import com.sanaa.tudee_assistant.presentation.model.TaskStatus
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +34,7 @@ class TaskViewModel(
                         it.copy(
                             currentDateTasks = taskList.map { task ->
                                 task.toUiModel(
-                                    path = "task.category.imagePath"
+                                    categoryImagePath = "task.category.imagePath"
                                 )
                             },
                             isLoading = false
@@ -44,8 +44,8 @@ class TaskViewModel(
         }
     }
 
-    fun onTaskStatusSelectedChange(taskStatus: TaskStatus) {
-        _state.update { it.copy(selectedTaskStatus = taskStatus) }
+    fun onTaskStatusSelectedChange(taskStatus: TaskUiStatus) {
+        _state.update { it.copy(selectedTaskUiStatus = taskStatus) }
     }
 
     fun onTaskSelected(task: TaskUiModel) {

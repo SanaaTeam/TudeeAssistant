@@ -21,8 +21,8 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.PriorityTa
 import com.sanaa.tudee_assistant.presentation.design_system.component.TaskStatusCard
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskStatus
+import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,9 +76,9 @@ fun TaskViewDetails(modifier: Modifier = Modifier) {
                     ),
                     horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
                 ) {
-                    TaskStatusCard(taskStatus = TaskStatus.IN_PROGRESS)
+                    TaskStatusCard(taskUiStatus = TaskUiStatus.IN_PROGRESS)
                     PriorityTag(
-                        priority = TaskPriority.HIGH,
+                        priority = TaskUiPriority.HIGH,
                     )
                 }
             }

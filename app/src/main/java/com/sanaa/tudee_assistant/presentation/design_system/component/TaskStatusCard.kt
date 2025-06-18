@@ -18,22 +18,22 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskStatus
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 
 @Composable
 fun TaskStatusCard(
     modifier: Modifier = Modifier,
-    taskStatus: TaskStatus
+    taskUiStatus: TaskUiStatus
 ) {
-    val backgroundColor = when (taskStatus) {
-        TaskStatus.TODO -> Theme.color.yellowVariant
-        TaskStatus.IN_PROGRESS -> Theme.color.purpleVariant
-        TaskStatus.DONE -> Theme.color.greenVariant
+    val backgroundColor = when (taskUiStatus) {
+        TaskUiStatus.TODO -> Theme.color.yellowVariant
+        TaskUiStatus.IN_PROGRESS -> Theme.color.purpleVariant
+        TaskUiStatus.DONE -> Theme.color.greenVariant
     }
-    val textColor = when (taskStatus) {
-        TaskStatus.TODO -> Theme.color.yellowAccent
-        TaskStatus.IN_PROGRESS -> Theme.color.purpleAccent
-        TaskStatus.DONE -> Theme.color.greenVariant
+    val textColor = when (taskUiStatus) {
+        TaskUiStatus.TODO -> Theme.color.yellowAccent
+        TaskUiStatus.IN_PROGRESS -> Theme.color.purpleAccent
+        TaskUiStatus.DONE -> Theme.color.greenVariant
     }
 
     Row(
@@ -52,10 +52,10 @@ fun TaskStatusCard(
                 .background(color = textColor, shape = CircleShape)
         )
         Text(
-            text = when (taskStatus) {
-                TaskStatus.TODO -> stringResource(R.string.todo_task_status)
-                TaskStatus.IN_PROGRESS -> stringResource(R.string.in_progress_task_status)
-                TaskStatus.DONE -> stringResource(R.string.done_task_status)
+            text = when (taskUiStatus) {
+                TaskUiStatus.TODO -> stringResource(R.string.todo_task_status)
+                TaskUiStatus.IN_PROGRESS -> stringResource(R.string.in_progress_task_status)
+                TaskUiStatus.DONE -> stringResource(R.string.done_task_status)
             },
             color = textColor,
             style = Theme.textStyle.label.small
@@ -68,6 +68,6 @@ fun TaskStatusCard(
 @Composable
 private fun PreviewTaskStatusCard() {
     TudeeTheme {
-        TaskStatusCard(taskStatus = TaskStatus.TODO)
+        TaskStatusCard(taskUiStatus = TaskUiStatus.TODO)
     }
 }

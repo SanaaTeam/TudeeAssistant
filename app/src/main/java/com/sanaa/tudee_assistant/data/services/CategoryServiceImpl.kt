@@ -5,6 +5,7 @@ import com.sanaa.tudee_assistant.data.local.mapper.toDomain
 import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
 import com.sanaa.tudee_assistant.domain.exceptions.CategoryNotFoundException
 import com.sanaa.tudee_assistant.domain.exceptions.DatabaseFailureException
+import com.sanaa.tudee_assistant.domain.exceptions.DefaultCategoryException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddCategoryException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteCategoryException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateCategoryException
@@ -46,6 +47,11 @@ class CategoryServiceImpl(
     }
 
     override suspend fun deleteCategoryById(categoryId: Int) {
+        val category = categoryDao.getCategoryById(categoryId)
+            ?: throw CategoryNotFoundException()
+        if (category.isDefault) {
+            throw DefaultCategoryException()
+        }
         if (categoryDao.deleteCategoryById(categoryId) <= 0) {
             throw FailedToDeleteCategoryException()
         }

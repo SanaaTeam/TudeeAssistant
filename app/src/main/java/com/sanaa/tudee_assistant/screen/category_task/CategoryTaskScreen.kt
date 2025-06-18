@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.screen
+package com.sanaa.tudee_assistant.screen.category_task
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -41,124 +42,46 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.CategoryTaskState
 import com.sanaa.tudee_assistant.presentation.model.TaskPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskStatus
 
 @Composable
 fun CategoryTaskScreen(
+    viewModel: CategoryTaskViewModel,
+) {
+    val state by viewModel.state.collectAsState()
+
+    CategoryTaskScreenContent(
+        state = state,
+        onBackClick = {},
+    )
+}
+
+@Composable
+fun CategoryTaskScreenContent(
+    state: CategoryTaskUiState,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    categoryName: String = "Coding"
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    val inProgressTasks = listOf(
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            date = "12-03-2025",
-            priority = TaskPriority.MEDIUM
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = null,
-            date = "12-03-2025",
-            priority = TaskPriority.LOW
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            date = "12-03-2025",
-            priority = TaskPriority.HIGH
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            date = "12-03-2025",
-            priority = TaskPriority.HIGH
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            date = "12-03-2025",
-            priority = TaskPriority.MEDIUM
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            date = "12-03-2025",
-            priority = TaskPriority.MEDIUM
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            date = "12-03-2025",
-            priority = TaskPriority.MEDIUM
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            date = "12-03-2025",
-            priority = TaskPriority.MEDIUM
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            date = "12-03-2025",
-            priority = TaskPriority.MEDIUM
-        ),
-    )
-
-    val todoTasks = listOf(
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Plan Weekend Activities",
-            description = "Organize fun activities for the weekend",
-            date = "15-03-2025",
-            priority = TaskPriority.LOW
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Grocery Shopping",
-            description = null,
-            date = "14-03-2025",
-            priority = TaskPriority.MEDIUM
-        )
-    )
-    val doneTasks = listOf(
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Complete Assignment",
-            description = "Finished the math homework",
-            date = "10-03-2025",
-            priority = TaskPriority.HIGH
-        )
-    )
     val tabs = listOf(
         TabItem(
             label = stringResource(R.string.in_progress_task_status),
-            count = inProgressTasks.size
+            count = state.tasks.filter { it.taskStatus == TaskStatus.IN_PROGRESS }.size
         ) {
-            TaskList(tasks = inProgressTasks)
+            TasksList(tasks = state.tasks.filter { it.taskStatus == TaskStatus.IN_PROGRESS })
         },
         TabItem(
             label = stringResource(R.string.todo_task_status),
-            count = todoTasks.size
+            count = state.tasks.filter { it.taskStatus == TaskStatus.TODO }.size
         ) {
-            TaskList(tasks = todoTasks)
+            TasksList(tasks = state.tasks.filter { it.taskStatus == TaskStatus.TODO })
         },
         TabItem(
             label = stringResource(R.string.done_task_status),
-            count = doneTasks.size
+            count = state.tasks.filter { it.taskStatus == TaskStatus.DONE }.size
         ) {
-            TaskList(tasks = doneTasks)
+            TasksList(tasks = state.tasks.filter { it.taskStatus == TaskStatus.DONE })
         }
     )
 
@@ -166,9 +89,9 @@ fun CategoryTaskScreen(
         modifier = modifier
             .fillMaxSize()
             .background(Theme.color.surface)
-            .windowInsetsPadding(WindowInsets.statusBars) 
+            .windowInsetsPadding(WindowInsets.statusBars)
     ) {
-        
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -181,7 +104,7 @@ fun CategoryTaskScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                
+
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -190,7 +113,7 @@ fun CategoryTaskScreen(
                         .clickable { onBackClick() },
                     contentAlignment = Alignment.Center
                 ) {
-                    
+
                     Icon(
                         painter = painterResource(R.drawable.arrow_left),
                         contentDescription = "Back",
@@ -200,14 +123,14 @@ fun CategoryTaskScreen(
                 }
 
                 Text(
-                    text = categoryName,
+                    text = state.categoryName,
                     style = Theme.textStyle.title.large,
                     color = Theme.color.title
                 )
             }
         }
 
-        
+
         TudeeScrollableTabs(
             tabs = tabs,
             selectedTabIndex = selectedTabIndex,
@@ -218,7 +141,7 @@ fun CategoryTaskScreen(
 }
 
 @Composable
-private fun TaskList(
+private fun TasksList(
     tasks: List<CategoryTaskState>,
     modifier: Modifier = Modifier
 ) {
@@ -239,20 +162,108 @@ private fun TaskList(
 @Composable
 private fun CategoryTaskScreenPreview() {
     TudeeTheme(isDarkTheme = false) {
-        CategoryTaskScreen(
+        val state = fakeDate()
+        CategoryTaskScreenContent(
+            state = state,
             onBackClick = {},
-            categoryName = "Coding"
         )
     }
+}
+
+@Composable
+private fun fakeDate(): CategoryTaskUiState {
+    val fakeTasksList = listOf(
+        CategoryTaskState(
+            icon = painterResource(R.drawable.birthday_cake),
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            date = "12-03-2025",
+            priority = TaskPriority.MEDIUM,
+            taskStatus = TaskStatus.TODO
+        ),
+        CategoryTaskState(
+            icon = painterResource(R.drawable.birthday_cake),
+            title = "Organize Study Desk",
+            description = null,
+            date = "12-03-2025",
+            priority = TaskPriority.LOW,
+            taskStatus = TaskStatus.TODO
+
+        ),
+        CategoryTaskState(
+            icon = painterResource(R.drawable.birthday_cake),
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            date = "12-03-2025",
+            priority = TaskPriority.HIGH,
+            taskStatus = TaskStatus.IN_PROGRESS
+
+        ),
+        CategoryTaskState(
+            icon = painterResource(R.drawable.birthday_cake),
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            date = "12-03-2025",
+            priority = TaskPriority.HIGH,
+            taskStatus = TaskStatus.IN_PROGRESS
+
+        ),
+        CategoryTaskState(
+            icon = painterResource(R.drawable.birthday_cake),
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            date = "12-03-2025",
+            priority = TaskPriority.MEDIUM,
+            taskStatus = TaskStatus.DONE
+
+        ),
+        CategoryTaskState(
+            icon = painterResource(R.drawable.birthday_cake),
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            date = "12-03-2025",
+            priority = TaskPriority.MEDIUM,
+            taskStatus = TaskStatus.DONE
+
+        ),
+        CategoryTaskState(
+            icon = painterResource(R.drawable.birthday_cake),
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            date = "12-03-2025",
+            priority = TaskPriority.MEDIUM,
+            taskStatus = TaskStatus.TODO
+
+        ),
+        CategoryTaskState(
+            icon = painterResource(R.drawable.birthday_cake),
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            date = "12-03-2025",
+            priority = TaskPriority.MEDIUM,
+            taskStatus = TaskStatus.TODO
+
+        ),
+        CategoryTaskState(
+            icon = painterResource(R.drawable.birthday_cake),
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            date = "12-03-2025",
+            priority = TaskPriority.MEDIUM,
+            taskStatus = TaskStatus.IN_PROGRESS
+
+        ),
+    )
+    return CategoryTaskUiState(tasks = fakeTasksList, categoryName = "Coding")
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun CategoryTaskScreenDarkPreview() {
     TudeeTheme(isDarkTheme = true) {
-        CategoryTaskScreen(
+        CategoryTaskScreenContent(
+            state = fakeDate(),
             onBackClick = {},
-            categoryName = "Coding"
         )
     }
 }

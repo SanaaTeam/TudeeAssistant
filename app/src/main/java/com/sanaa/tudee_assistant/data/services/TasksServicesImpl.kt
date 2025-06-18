@@ -88,8 +88,8 @@ class TasksServiceImpl(
         }
     }
 
-    override fun getTaskCountByCategoryId(taskId: Int): Flow<Int> {
-        return taskDao.getTaskCountByCategoryId(taskId)
+    override fun getTaskCountByCategoryId(categoryId: Int): Flow<Int> {
+        return taskDao.getTaskCountByCategoryId(categoryId)
     }
 
 }

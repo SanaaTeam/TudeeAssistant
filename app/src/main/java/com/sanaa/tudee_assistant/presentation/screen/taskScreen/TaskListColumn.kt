@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -25,12 +26,12 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.model.CategoryTaskState
-import com.sanaa.tudee_assistant.presentation.model.TaskPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 
 @Composable
 fun TaskListColumn(
-    taskList: List<CategoryTaskState>,
+    taskList: List<TaskUiModel>,
     onTaskSwipe: (Int) -> Boolean = { true }
 ) {
 
@@ -48,7 +49,7 @@ fun TaskListColumn(
             val dismissState = rememberSwipeToDismissBoxState(
                 confirmValueChange = { dismissValue ->
                     if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
-                        onTaskSwipe(index)
+                        onTaskSwipe(task.id!!)
                     } else false
                 }
             )
@@ -61,7 +62,10 @@ fun TaskListColumn(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Theme.color.errorVariant)
+                            .background(
+                                Theme.color.errorVariant,
+                                RoundedCornerShape(Theme.dimension.medium)
+                            )
                             .padding(horizontal = 20.dp),
                         contentAlignment = Alignment.CenterEnd
                     ) {
@@ -84,32 +88,39 @@ fun TaskListColumn(
 @Composable
 private fun TaskListColumnPreview() {
     val items = listOf(
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
+        TaskUiModel(
+            id = 1,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            date = null,
-            priority = TaskPriority.MEDIUM
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.MEDIUM,
+            status = TaskUiStatus.IN_PROGRESS
         ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
+        TaskUiModel(
+            id = 2,
             title = "Organize Study Desk",
-            date = "12-03-2025",
-            priority = TaskPriority.LOW
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.MEDIUM,
+            status = TaskUiStatus.IN_PROGRESS
         ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
+        TaskUiModel(
+            id = 3,
             title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow morning...",
-            date = "12-03-2025",
-            priority = TaskPriority.HIGH
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.MEDIUM,
+            status = TaskUiStatus.IN_PROGRESS
         ),
     )
     var itemsState by remember { mutableStateOf(items) }
 
-    TaskListColumn(itemsState, onTaskSwipe = { index ->
-        itemsState = itemsState.filterNot { item -> item == itemsState[index] }
-         false
+    TaskListColumn(itemsState, onTaskSwipe = { id ->
+        itemsState = itemsState.filterNot { item -> item.id == id }
+        false
     }
     )
 }

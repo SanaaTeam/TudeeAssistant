@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,67 +39,77 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.TabItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTabs
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.koin.androidx.compose.koinViewModel
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TasksScreen(
-    selectedDate: LocalDate,
+    modifier: Modifier = Modifier,
+    viewModel: TaskViewModel = koinViewModel<TaskViewModel>()
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    TasksScreenContent(
+        state = state,
+        onDateSelected = { viewModel::onDueDateChange },
+        onTaskSwipe = { index ->
+            viewModel::onTaskSwipeToDelete
+            false
+        },
+        modifier = modifier
+    )
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun TasksScreenContent(
+    state: TasksScreenUiState,
+    onTaskSwipe: (Int) -> Boolean,
     modifier: Modifier = Modifier,
     onDateSelected: (LocalDate) -> Unit = {},
-    onDaySelected: (LocalDate) -> Unit = {},
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
 
     var daysInMonth by
-    remember { mutableStateOf(DateFormater.getLocalDatesInMonth(selectedDate.year, selectedDate.monthNumber)) }
+    remember {
+        mutableStateOf(
+            DateFormater.getLocalDatesInMonth(
+                state.selectedDate.year,
+                state.selectedDate.monthNumber
+            )
+        )
+    }
 
 
     val tabs = listOf(
         TabItem(
             label = stringResource(R.string.in_progress_task_status),
-            count = 14
+            count = state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.color.surface),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("In Progress Content", color = Theme.color.title)
-            }
+            TaskListColumn(state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS }, onTaskSwipe = { id -> onTaskSwipe(id) })
         },
         TabItem(
             label = stringResource(R.string.todo_task_status),
-            count = 0
+            count = state.currentDateTasks.filter { it.status == TaskUiStatus.TODO }.size
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.color.surface),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("To Do Content", color = Theme.color.title)
-            }
+            TaskListColumn(state.currentDateTasks.filter { it.status == TaskUiStatus.TODO }, onTaskSwipe = { id -> onTaskSwipe(id) })
         },
 
         TabItem(
             label = stringResource(R.string.done_task_status),
-            count = 0
+            count = state.currentDateTasks.filter { it.status == TaskUiStatus.DONE }.size
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.color.surface),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Done Content", color = Theme.color.title)
-            }
+            TaskListColumn(state.currentDateTasks.filter { it.status == TaskUiStatus.DONE }, onTaskSwipe = { id -> onTaskSwipe(id) })
         }
     )
 
@@ -143,7 +154,7 @@ fun TasksScreen(
                 }
             ) {
                 Text(
-                    text = "${selectedDate.month}, ${selectedDate.year}",
+                    text = "${state.selectedDate.month}, ${state.selectedDate.year}",
                     color = Theme.color.body,
                     style = Theme.textStyle.label.medium
                 )
@@ -176,15 +187,17 @@ fun TasksScreen(
         }
 
         LazyRow(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
             items(daysInMonth) { date ->
                 DayItem(
                     dayDate = date,
-                    isSelected = date == selectedDate,
-                    onClick = { onDaySelected(date) }
+                    isSelected = date == state.selectedDate,
+                    onClick = { onDateSelected(date) }
                 )
             }
         }
@@ -195,21 +208,29 @@ fun TasksScreen(
                     selectedDateMillis?.let {
                         val date = DateFormater.formatLongToDate(selectedDateMillis)
                         onDateSelected(date)
-                        daysInMonth = (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
+                        daysInMonth =
+                            (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
                     }
                 },
                 onDismiss = { showDialog = false },
-                initialSelectedDate = selectedDate
+                initialSelectedDate = state.selectedDate
             )
         }
 
-        var selectedTab by remember { mutableIntStateOf(0) }
+        var selectedTab by remember { mutableIntStateOf(
+            when (state.selectedTaskUiStatus) {
+                TaskUiStatus.IN_PROGRESS -> 0
+                TaskUiStatus.TODO -> 1
+                TaskUiStatus.DONE -> 2
+            }
+        ) }
 
         TudeeTabs(
             tabs,
             selectedTabIndex = selectedTab,
             onTabSelected = { selectedTab = it },
-            modifier = Modifier.fillMaxSize())
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
@@ -218,15 +239,82 @@ fun TasksScreen(
 @Composable
 private fun TasksScreenPreview() {
 
-    var selectedDate by remember {
-        mutableStateOf(
-            Clock.System.now().toLocalDateTime(TimeZone.UTC).date
-        )
-    }
+    val tasks = listOf(
+        TaskUiModel(
+            id = 1,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.MEDIUM,
+            status = TaskUiStatus.IN_PROGRESS
+        ),
+        TaskUiModel(
+            id = 2,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.LOW,
+            status = TaskUiStatus.DONE
+        ),
+        TaskUiModel(
+            id = 3,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.MEDIUM,
+            status = TaskUiStatus.DONE
+        ),
+        TaskUiModel(
+            id = 4,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.HIGH,
+            status = TaskUiStatus.TODO
+        ),
+        TaskUiModel(
+            id = 5,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.LOW,
+            status = TaskUiStatus.IN_PROGRESS
+        ),
+        TaskUiModel(
+            id = 6,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.LOW,
+            status = TaskUiStatus.TODO
+        ),
+    )
+    var tasksState by remember { mutableStateOf(TasksScreenUiState(
+        currentDateTasks = tasks,
+        isLoading = false,
+        errorMessage = null,
+        successMessage = null,
+        showAddTaskDialog = false,
+        showEditDialog = false,
+        showTaskDetailsDialog = false,
+        showDeleteDialog = false,
+        selectedTaskUiStatus = TaskUiStatus.DONE,
+        selectedTask = null,
+        selectedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+    )) }
 
-    TasksScreen(
-        selectedDate,
-        onDaySelected = { date -> selectedDate = date },
-        onDateSelected = { date -> selectedDate = date }
+    TasksScreenContent(
+        tasksState,
+        onDateSelected = { date -> tasksState = tasksState.copy(selectedDate = date) },
+        onTaskSwipe = { id ->
+            tasksState = tasksState.copy(currentDateTasks = tasksState.currentDateTasks.filterNot { item -> item.id == id })
+            false
+        }
     )
 }

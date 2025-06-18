@@ -3,6 +3,7 @@ package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,19 +25,71 @@ class TaskViewModel(
         getTasksByDueDate()
     }
 
+    val tasks = listOf(
+        TaskUiModel(
+            id = 1,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.MEDIUM,
+            status = TaskUiStatus.IN_PROGRESS
+        ),
+        TaskUiModel(
+            id = 2,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.LOW,
+            status = TaskUiStatus.DONE
+        ),
+        TaskUiModel(
+            id = 3,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.MEDIUM,
+            status = TaskUiStatus.DONE
+        ),
+        TaskUiModel(
+            id = 1,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.HIGH,
+            status = TaskUiStatus.TODO
+        ),
+        TaskUiModel(
+            id = 2,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.LOW,
+            status = TaskUiStatus.IN_PROGRESS
+        ),
+        TaskUiModel(
+            id = 3,
+            title = "Organize Study Desk",
+            description = "Review cell structure and functions for tomorrow...",
+            dueDate = null,
+            categoryImagePath = "file:///android_asset/categories/agriculture.png",
+            priority = TaskUiPriority.LOW,
+            status = TaskUiStatus.TODO
+        ),
+    )
+
     private fun getTasksByDueDate() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-
             taskService.getTasksByDueDate(_state.value.selectedDate)
                 .collect { taskList ->
                     _state.update {
                         it.copy(
-                            currentDateTasks = taskList.map { task ->
-                                task.toUiModel(
-                                    categoryImagePath = "task.category.imagePath"
-                                )
-                            },
+                            currentDateTasks = tasks,
                             isLoading = false
                         )
                     }
@@ -44,8 +97,8 @@ class TaskViewModel(
         }
     }
 
-    fun onTaskStatusSelectedChange(taskStatus: TaskUiStatus) {
-        _state.update { it.copy(selectedTaskUiStatus = taskStatus) }
+    fun onTaskStatusSelectedChange(taskUiStatus: TaskUiStatus) {
+        _state.update { it.copy(selectedTaskUiStatus = taskUiStatus) }
     }
 
     fun onTaskSelected(task: TaskUiModel) {
@@ -97,5 +150,9 @@ class TaskViewModel(
 
     fun onShowEditDialogChange(show: Boolean) {
         _state.update { it.copy(showEditDialog = show) }
+    }
+
+    fun onTaskSwipeToDelete(id: Int) {
+        _state.update { it.copy(currentDateTasks = it.currentDateTasks.filterNot { item -> item.id == id }) }
     }
 }

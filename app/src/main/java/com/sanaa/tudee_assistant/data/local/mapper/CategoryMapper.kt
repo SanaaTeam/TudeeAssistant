@@ -11,7 +11,7 @@ fun CategoryLocalDto.toDomain(): Category = Category(
 )
 
 fun Category.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
-    categoryId = id,
+    categoryId = id?:0,
     name = name,
     imagePath = imagePath,
     isDefault = isDefault

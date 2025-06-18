@@ -13,8 +13,6 @@ import kotlinx.datetime.LocalDate
 
 @Dao
 interface TaskDao {
-    @Insert
-    fun insert(task: TaskLocalDto)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: TaskLocalDto): Long

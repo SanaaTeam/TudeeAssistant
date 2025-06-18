@@ -1,12 +1,13 @@
 package com.sanaa.tudee_assistant.presentation.utils
 
-import android.icu.text.SimpleDateFormat
-import kotlinx.datetime.LocalDateTime
-import java.util.Calendar
-import java.util.Locale
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
 
 object DateFormater {
-    fun LocalDateTime.getShortDayName(): String {
+    fun LocalDate.getShortDayName(): String {
         val dayOfWeek = this.dayOfWeek
 
         return dayOfWeek.name.take(3)
@@ -14,18 +15,13 @@ object DateFormater {
             .replaceFirstChar { it.uppercase() }
     }
 
-    fun formatLongToDate(millis: Long, pattern:String): String {
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = millis
+    fun formatLongToDate(timestampMillis: Long): LocalDate {
+        val instant = Instant.fromEpochMilliseconds(timestampMillis)
+        return instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+    }
+
+    fun localDateToEpochMillis(date: LocalDate?): Long? {
+            val dateTime = date?.atStartOfDayIn(TimeZone.UTC)
+            return dateTime?.toEpochMilliseconds()
         }
-        val formatter = SimpleDateFormat(pattern, Locale.getDefault())
-        return formatter.format(calendar.time)
-    }
-
-    fun formatDateToLong(date: LocalDateTime): Long {
-        return Calendar.getInstance().apply {
-            set(date.year, date.monthNumber, date.dayOfMonth) // Set your desired initial date
-        }.timeInMillis
-    }
-
 }

@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.component
+package com.sanaa.tudee_assistant.presentation.screen.taskDetalis
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +26,7 @@ import com.sanaa.tudee_assistant.presentation.model.TaskStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateTaskStatus(modifier: Modifier = Modifier) {
+fun TaskViewDetails(modifier: Modifier = Modifier) {
     BaseBottomSheet(
         onDismiss = {},
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -90,6 +90,6 @@ fun UpdateTaskStatus(modifier: Modifier = Modifier) {
 @Composable
 private fun PreviewUpdateTaskStatus() {
     TudeeTheme {
-        UpdateTaskStatus()
+        TaskViewDetails()
     }
 }

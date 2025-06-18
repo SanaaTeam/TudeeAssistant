@@ -13,4 +13,21 @@
     <string name="loading_spinner">Loading spinner</string>
     <string name="no_task_today" translatable="false">No tasks for today!</string>
     <string name="tap_to_add_task" translatable="false">Tap the + button to add your\nfirst one.</string>
+    <string name="today">today</string>
+    <string name="overview">Overview</string>
+
+    <string-array name="month_abbreviations">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
 </resources>

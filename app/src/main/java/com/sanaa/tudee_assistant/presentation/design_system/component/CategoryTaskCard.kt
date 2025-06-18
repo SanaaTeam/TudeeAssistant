@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,12 +10,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,19 +27,20 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.CategoryTaskState
 import com.sanaa.tudee_assistant.presentation.model.TaskPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskStatus
+import com.sanaa.tudee_assistant.presentation.state.CategoryTaskState
 
 @Composable
 fun CategoryTaskCard(
     categoryTask: CategoryTaskState,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .height(111.dp)
             .clip(RoundedCornerShape(Theme.dimension.medium))
+            .clickable { onClick() }
             .background(Theme.color.surfaceHigh)
             .padding(
                 start = Theme.dimension.extraSmall,
@@ -62,7 +64,6 @@ fun CategoryTaskCard(
             }
 
             Row {
-
                 categoryTask.date?.let { DateChip(it) }
 
                 PriorityTag(
@@ -86,6 +87,7 @@ fun CategoryTaskCard(
 
             categoryTask.description?.let {
                 Text(
+                    modifier = Modifier.padding(bottom = Theme.dimension.regular),
                     text = categoryTask.description,
                     color = Theme.color.hint,
                     style = Theme.textStyle.label.small,
@@ -106,10 +108,11 @@ private fun DateChip(date: String) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        Image(
+        Icon(
             modifier = Modifier.size(Theme.dimension.regular),
             painter = painterResource(id = R.drawable.calendar_favorite_01),
             contentDescription = null,
+            tint = Theme.color.body
         )
 
         Text(
@@ -130,20 +133,23 @@ private fun Preview() {
                 title = "Organize Study Desk",
                 description = "Review cell structure and functions for tomorrow...",
                 date = null,
-                priority = TaskPriority.MEDIUM
+                priority = TaskPriority.MEDIUM,
+                status = TaskStatus.DONE,
             ),
             CategoryTaskState(
                 icon = painterResource(R.drawable.birthday_cake),
                 title = "Organize Study Desk",
                 date = "12-03-2025",
-                priority = TaskPriority.LOW
+                priority = TaskPriority.LOW,
+                status = TaskStatus.DONE,
             ),
             CategoryTaskState(
                 icon = painterResource(R.drawable.birthday_cake),
                 title = "Organize Study Desk",
                 description = "Review cell structure and functions for tomorrow...",
                 date = "12-03-2025",
-                priority = TaskPriority.HIGH
+                priority = TaskPriority.HIGH,
+                status = TaskStatus.DONE,
             ),
         )
 

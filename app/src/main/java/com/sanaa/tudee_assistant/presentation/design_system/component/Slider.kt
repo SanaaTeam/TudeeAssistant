@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.design_system.component
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,32 +24,37 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TudeeStatus
+import com.sanaa.tudee_assistant.presentation.state.SliderState
 
 @Composable
-fun Slider(title: String, description: String, status: TudeeStatus, @DrawableRes imageRes: Int) {
+fun Slider(
+    sliderState: SliderState,
+    modifier: Modifier = Modifier,
+) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Theme.dimension.regular)
     ) {
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
+            verticalArrangement = Arrangement.spacedBy(Theme.dimension.small),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
             ) {
                 Text(
-                    text = title,
+                    text = sliderState.title,
                     style = Theme.textStyle.title.small,
                     color = Theme.color.title
                 )
 
-                StatusImage(20.dp, status)
+                StatusImage(20.dp, sliderState.status)
             }
 
             Text(
-                text = description,
+                text = sliderState.description,
                 style = Theme.textStyle.body.small,
                 color = Theme.color.body
             )
@@ -71,7 +75,14 @@ fun Slider(title: String, description: String, status: TudeeStatus, @DrawableRes
                     .padding(start = 3.dp)
                     .width(61.dp)
                     .height(92.dp),
-                painter = painterResource(id = imageRes),
+                painter = painterResource(
+                    id = when (sliderState.status) {
+                        TudeeStatus.OKAY -> R.drawable.robot1
+                        TudeeStatus.GOOD -> R.drawable.robot2
+                        TudeeStatus.BAD -> R.drawable.robot3
+                        TudeeStatus.POOR -> R.drawable.robot1
+                    }
+                ),
                 contentDescription = null,
             )
         }
@@ -90,25 +101,28 @@ private fun Preview() {
             verticalArrangement = Arrangement.spacedBy(21.dp)
         ) {
             Slider(
-                title = "Stay working!",
-                description = "You've completed 3 out of 10 tasks Keep going!",
-                TudeeStatus.OKAY,
-                R.drawable.robot1
+                SliderState(
+                    title = "Stay working!",
+                    description = "You've completed 3 out of 10 tasks Keep going!",
+                    TudeeStatus.OKAY,
+                )
             )
 
             Slider(
-                title = "Tadaa!",
-                description = "You’re doing amazing!!!\n" +
-                        "Tudee is proud of you.",
-                TudeeStatus.GOOD,
-                R.drawable.robot2
+                SliderState(
+                    title = "Tadaa!",
+                    description = "You’re doing amazing!!!\n" +
+                            "Tudee is proud of you.",
+                    TudeeStatus.GOOD,
+                )
             )
 
             Slider(
-                title = "Zero progress?!",
-                description = "You just scrolling, not working. Tudee is watching. back to work!!!",
-                TudeeStatus.BAD,
-                R.drawable.robot3
+                SliderState(
+                    title = "Zero progress?!",
+                    description = "You just scrolling, not working. Tudee is watching. back to work!!!",
+                    TudeeStatus.BAD,
+                )
             )
         }
     }

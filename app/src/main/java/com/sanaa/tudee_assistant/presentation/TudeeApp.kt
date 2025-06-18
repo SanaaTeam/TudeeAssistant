@@ -5,12 +5,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sanaa.navigationtry.route.CategoriesScreenRoute
-import com.sanaa.navigationtry.route.CategoryTasksRoute
+import com.sanaa.navigationtry.route.CategoryTasksScreenRoute
 import com.sanaa.navigationtry.route.HomeScreenRoute
 import com.sanaa.navigationtry.route.MainScreenRoute
 import com.sanaa.navigationtry.route.OnBoardingScreenRoute
 import com.sanaa.navigationtry.route.SplashScreenRoute
-import com.sanaa.navigationtry.route.TasksRoute
+import com.sanaa.navigationtry.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.composable
@@ -41,7 +41,7 @@ fun TudeeApp() {
                 }
 
                 composable(
-                    route = TasksRoute,
+                    route = TasksScreenRoute,
                     iconRes = R.drawable.profile,
                     selectedIconRes = R.drawable.profile_fill,
                 ) {
@@ -58,7 +58,7 @@ fun TudeeApp() {
             }
         }
 
-        composable<CategoryTasksRoute> {
+        composable<CategoryTasksScreenRoute> {
 
         }
     }

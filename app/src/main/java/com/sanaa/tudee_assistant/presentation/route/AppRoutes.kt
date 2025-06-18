@@ -12,4 +12,4 @@ object OnBoardingScreenRoute
 object MainScreenRoute
 
 @Serializable
-object CategoryTasksRoute
+object CategoryTasksScreenRoute

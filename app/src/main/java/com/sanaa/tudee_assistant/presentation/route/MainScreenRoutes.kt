@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 object HomeScreenRoute
 
 @Serializable
-object TasksRoute
+object TasksScreenRoute
 
 @Serializable
 object CategoriesScreenRoute

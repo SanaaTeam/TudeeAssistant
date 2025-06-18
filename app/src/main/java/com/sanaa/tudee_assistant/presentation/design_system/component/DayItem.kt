@@ -21,13 +21,13 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortDayName
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun DayItem(
-    dayDate: LocalDateTime,
+    dayDate: LocalDate,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     onClick: () -> Unit = {},
@@ -81,11 +81,11 @@ private fun Preview() {
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             DayItem(
-                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
                 isSelected = true
             ) {}
             DayItem(
-                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
                 isSelected = false
             ) {}
         }

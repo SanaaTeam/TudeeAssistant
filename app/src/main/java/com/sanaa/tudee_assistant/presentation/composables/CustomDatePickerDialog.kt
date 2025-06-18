@@ -1,5 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.composables
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,15 +29,18 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Tex
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
+import kotlinx.datetime.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDatePickerDialog(
     modifier: Modifier = Modifier,
     onDateSelected: (Long?) -> Unit = {},
-    initialSelectedDateMillis: Long? = null,
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
+    initialSelectedDate: LocalDate? = null,
 ) {
+    val initialSelectedDateMillis = DateFormater.localDateToEpochMillis(initialSelectedDate)
     val datePickerState =
         rememberDatePickerState(initialSelectedDateMillis = initialSelectedDateMillis)
 
@@ -44,7 +49,7 @@ fun CustomDatePickerDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onDateSelected(datePickerState.selectedDateMillis)
+                    onDateSelected(datePickerState.selectedDateMillis!!)
                     onDismiss()
                 },
                 label = "OK",
@@ -115,6 +120,7 @@ fun CustomDatePickerDialog(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 private fun CustomDatePickerDialogPreview() {
@@ -137,7 +143,7 @@ private fun CustomDatePickerDialogPreview() {
                 CustomDatePickerDialog(
                     onDateSelected = { selectedDateMillis: Long? ->
                         selectedDateMillis?.let {
-                            selectedDateText = DateFormater.formatLongToDate(it, "dd-MM-yyyy")
+                            selectedDateText = DateFormater.formatLongToDate(it).toString()
                         }
                     },
                     onDismiss = { showDialog = false },

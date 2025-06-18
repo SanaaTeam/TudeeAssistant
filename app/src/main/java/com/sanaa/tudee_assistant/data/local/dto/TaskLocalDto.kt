@@ -11,7 +11,6 @@ import kotlinx.datetime.LocalDate
 @Entity(tableName = "tasks")
 data class TaskLocalDto(
     @PrimaryKey(autoGenerate = true)
-
     @ColumnInfo(name = "task_id")
     val taskId: Int = 0,
 

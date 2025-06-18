@@ -1,7 +1,6 @@
 package com.sanaa.tudee_assistant
 
 import android.app.Application
-import com.sanaa.tudee_assistant.presentation.screens.TaskScreen.addTaskViewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -11,7 +10,7 @@ class TudeeApplication : Application() {
 
         startKoin {
             androidContext(this@TudeeApplication)
-            modules(addTaskViewModelModule)
+            modules()
         }
     }
 }

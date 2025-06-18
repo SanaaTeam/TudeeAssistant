@@ -31,7 +31,6 @@ class Converters {
         return value?.toString()
     }
 
-    //Todo
     @TypeConverter
     fun toLocalDateTime(value: String?): LocalDateTime? {
         return value?.let { LocalDateTime.parse(it) }

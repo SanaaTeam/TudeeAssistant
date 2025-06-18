@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -64,4 +65,14 @@ dependencies {
 
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+
+    // Room
+    implementation(libs.bundles.room)
+    ksp(libs.androidx.room.compiler)
+
+    // Koin
+    implementation(platform(libs.koin.boom))
+    implementation(libs.bundles.koin)
+
+    implementation(libs.coil.compose)
 }

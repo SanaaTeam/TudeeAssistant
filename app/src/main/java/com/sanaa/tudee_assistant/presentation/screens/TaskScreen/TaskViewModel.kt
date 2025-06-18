@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.Task
-import com.sanaa.tudee_assistant.domain.service.TasksServices
+import com.sanaa.tudee_assistant.domain.service.TaskService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,13 +12,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 class TaskViewModel(
-    private val tasksServices: TasksServices
+    private val taskService: TaskService
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TaskUiState())
@@ -33,7 +35,7 @@ class TaskViewModel(
         _uiState.update { it.copy(description = description) }
     }
 
-    fun onDateSelected(date: LocalDate) {
+    fun onDateSelected(date: LocalDateTime) {
         _uiState.update { it.copy(selectedDate =  date) }
         validateInputs()
     }
@@ -60,11 +62,11 @@ class TaskViewModel(
                     description = currentState.description.takeIf { it.isNotBlank() },
                     status = Task.TaskStatus.TODO,
                     dueDate = currentState.selectedDate,
-                    priority = currentState.selectedPriority?: Task.TaskPriority.LOW,
+                    priority = currentState.selectedPriority ?: Task.TaskPriority.LOW,
                     categoryId = currentState.selectedCategory?.id ?: 0,
-                    createdAt = Clock.System.todayIn(TimeZone.currentSystemDefault())
+                    createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                 )
-                tasksServices.addTask(task)
+                taskService.addTask(task)
                 _uiState.update { it.copy(taskAddedSuccessfully = true, isLoading = false) }
             } catch (e: Exception) {
                 _uiState.update {

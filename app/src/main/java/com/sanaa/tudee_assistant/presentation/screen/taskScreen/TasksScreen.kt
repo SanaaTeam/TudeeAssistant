@@ -1,7 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -49,7 +47,6 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TasksScreen(
     modifier: Modifier = Modifier,
@@ -69,7 +66,6 @@ fun TasksScreen(
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TasksScreenContent(
     state: TasksScreenUiState,
@@ -234,7 +230,6 @@ fun TasksScreenContent(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun TasksScreenPreview() {

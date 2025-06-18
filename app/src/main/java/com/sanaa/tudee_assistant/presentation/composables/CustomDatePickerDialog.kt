@@ -1,7 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.composables
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +31,6 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDatePickerDialog(
@@ -122,7 +119,6 @@ fun CustomDatePickerDialog(
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(widthDp = 360, locale = "ar")
 @Composable
 private fun CustomDatePickerDialogPreview() {
@@ -139,7 +135,8 @@ private fun CustomDatePickerDialogPreview() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = selectedDateText
+                text = selectedDateText,
+                color = Theme.color.primary
             )
             if (showDialog) {
                 CustomDatePickerDialog(

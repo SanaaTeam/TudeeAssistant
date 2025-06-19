@@ -85,7 +85,7 @@ fun CategoryScreen(
                     CategoryItem(
                         category = CategoryState(
                             category.name,
-                            rememberAsyncImagePainter(category.imageUrl),
+                            rememberAsyncImagePainter(category.imagePath),
                             Color.Unspecified
                         ),
                         onClick = {},
@@ -131,22 +131,17 @@ fun CategoryScreen(
             onAddClick = { title, imageUri ->
                 val newCategory = CategoryUiModel(
                     name = title,
-
-                    imageUrl = imageUri?.toString() ?: "",
+                    imagePath = imageUri.toString(),
                     isDefault = false,
                     tasksCount = 0
                 )
-
                 viewModel.addNewCategory(newCategory)
-
                 showBottomSheet.value = false
             },
             onDismiss = {
                 showBottomSheet.value = false
             },
-            onImageSelected = {uri->
-//                viewModel.onImageSelected(uri)
-            }
+            onImageSelected = { uri -> }
         )
     }
 }

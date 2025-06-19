@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
+import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
@@ -94,125 +94,132 @@ fun TasksScreenContent(
             )
         )
     }
-
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Theme.color.surfaceHigh),
     ) {
-        Text(
-            text = "Tasks",
-            style = Theme.textStyle.title.large,
-            color = Theme.color.title,
-            modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp)
-        )
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Theme.color.surfaceHigh),
         ) {
-            Box(
-                modifier = Modifier
-                    .border(1.dp, Theme.color.stroke, CircleShape)
-                    .padding(6.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.icon_left_arrow),
-                    contentDescription = "back",
-                    tint = Theme.color.body,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-
+            Text(
+                text = "Tasks",
+                style = Theme.textStyle.title.large,
+                color = Theme.color.title,
+                modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp)
+            )
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "${state.selectedDate.month}, ${state.selectedDate.year}",
-                    color = Theme.color.body,
-                    style = Theme.textStyle.label.medium
-                )
-                Icon(
-                    painter = painterResource(R.drawable.icon_left_arrow),
-                    contentDescription = "next",
-                    tint = Theme.color.body,
+                Box(
                     modifier = Modifier
-                        .size(16.dp)
-                        .rotate(-90f)
-                        .clickable {
-                            showDialog = true
-                        }
-                )
+                        .border(1.dp, Theme.color.stroke, CircleShape)
+                        .padding(6.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_left_arrow),
+                        contentDescription = "back",
+                        tint = Theme.color.body,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "${state.selectedDate.month}, ${state.selectedDate.year}",
+                        color = Theme.color.body,
+                        style = Theme.textStyle.label.medium
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.icon_left_arrow),
+                        contentDescription = "next",
+                        tint = Theme.color.body,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .rotate(-90f)
+                            .clickable {
+                                showDialog = true
+                            }
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, Theme.color.stroke, CircleShape)
+                        .padding(6.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_left_arrow),
+                        contentDescription = "next",
+                        tint = Theme.color.body,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .rotate(180f)
+                    )
+                }
+
             }
 
-            Box(
+            LazyRow(
                 modifier = Modifier
-                    .border(1.dp, Theme.color.stroke, CircleShape)
-                    .padding(6.dp),
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                contentPadding = PaddingValues(horizontal = 24.dp)
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.icon_left_arrow),
-                    contentDescription = "next",
-                    tint = Theme.color.body,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .rotate(180f)
+                items(daysInMonth) { date ->
+                    DayItem(
+                        dayDate = date,
+                        isSelected = date == state.selectedDate,
+                        onClick = { onDateSelected(date) }
+                    )
+                }
+            }
+
+            if (showDialog) {
+                CustomDatePickerDialog(
+                    onDateSelected = { selectedDateMillis: Long? ->
+                        selectedDateMillis?.let {
+                            val date = DateFormater.formatLongToDate(selectedDateMillis)
+                            onDateSelected(date)
+                            daysInMonth =
+                                (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
+                        }
+                    },
+                    onDismiss = { showDialog = false },
+                    initialSelectedDate = state.selectedDate
                 )
             }
 
-        }
+            TaskStatusTabs(state, onTaskSwipe, onTaskClick)
 
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            contentPadding = PaddingValues(horizontal = 24.dp)
-        ) {
-            items(daysInMonth) { date ->
-                DayItem(
-                    dayDate = date,
-                    isSelected = date == state.selectedDate,
-                    onClick = { onDateSelected(date) }
+            if (state.showTaskDetailsDialog && state.selectedTask != null) {
+
+                TaskViewDetails(
+                    state.selectedTask,
+                    onDismissTaskViewDetails,
+                    onEditClick = onEditTaskViewDetails,
+                    onMoveToClicked = onMoveToTaskViewDetails,
+//                    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
                 )
             }
         }
 
-        if (showDialog) {
-            CustomDatePickerDialog(
-                onDateSelected = { selectedDateMillis: Long? ->
-                    selectedDateMillis?.let {
-                        val date = DateFormater.formatLongToDate(selectedDateMillis)
-                        onDateSelected(date)
-                        daysInMonth =
-                            (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
-                    }
-                },
-                onDismiss = { showDialog = false },
-                initialSelectedDate = state.selectedDate
-            )
-        }
-
-        TaskStatusTabs(state, onTaskSwipe, onTaskClick)
-
-        if (state.showTaskDetailsDialog) {
-            TaskViewDetails(
-                state.selectedTask!!,
-                onDismissTaskViewDetails,
-                onEditClick = onEditTaskViewDetails,
-                onMoveToClicked = onMoveToTaskViewDetails,
-                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            )
-        }
+        FloatingActionButton(enabled = true, modifier = Modifier.align(Alignment.BottomEnd).padding(end = 10.dp, bottom = 12.dp))
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, locale = "ar")
 @Composable
 private fun TasksScreenPreview() {
 
@@ -246,9 +253,8 @@ private fun TasksScreenPreview() {
             false
         },
         onTaskClick = { task ->
-
             tasksState = tasksState.copy(selectedTask = task, showTaskDetailsDialog = true)
-                      },
+        },
         onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsDialog = false) },
         onEditTaskViewDetails = {},
         onMoveToTaskViewDetails = {},

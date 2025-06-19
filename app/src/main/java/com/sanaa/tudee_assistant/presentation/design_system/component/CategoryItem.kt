@@ -33,9 +33,7 @@ fun CategoryItem(
     Column(
         modifier = modifier
             .width(104.dp)
-            .height(102.dp)
-            .clickable { onClick() },
-        horizontalAlignment = Alignment.CenterHorizontally
+            .height(102.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Box(
@@ -49,7 +47,9 @@ fun CategoryItem(
                 topContent()
             }
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { onClick() },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

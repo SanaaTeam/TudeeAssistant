@@ -8,7 +8,7 @@ data class Task(
     val title: String,
     val description: String?,
     val status: TaskStatus,
-    val dueDate: LocalDateTime?,
+    val dueDate: LocalDate?,
     val priority: TaskPriority,
     val categoryId: Int,
     val createdAt: LocalDateTime,

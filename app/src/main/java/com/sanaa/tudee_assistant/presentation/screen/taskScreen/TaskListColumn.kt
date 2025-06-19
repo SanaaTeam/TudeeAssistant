@@ -27,8 +27,6 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 
 @Composable
 fun TaskListColumn(
@@ -89,40 +87,10 @@ fun TaskListColumn(
 @Preview
 @Composable
 private fun TaskListColumnPreview() {
-    val items = listOf(
-        TaskUiModel(
-            id = 1,
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
-            categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.MEDIUM,
-            status = TaskUiStatus.IN_PROGRESS
-        ),
-        TaskUiModel(
-            id = 2,
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
-            categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.LOW,
-            status = TaskUiStatus.IN_PROGRESS
-        ),
-        TaskUiModel(
-            id = 3,
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
-            categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.HIGH,
-            status = TaskUiStatus.IN_PROGRESS
-        ),
-    )
 
-    var itemsState by remember { mutableStateOf(items) }
+    var itemsState by remember { mutableStateOf(DataProvider.getTasksSample()) }
 
     TudeeTheme(isDarkTheme = true) {
-
 
         TaskListColumn(itemsState, onTaskSwipe = { task ->
             itemsState = itemsState.filterNot { item -> item == task }

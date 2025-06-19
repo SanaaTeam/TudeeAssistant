@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,16 +27,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composables.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
-import com.sanaa.tudee_assistant.presentation.design_system.component.TabItem
-import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTabs
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
@@ -86,37 +81,6 @@ fun TasksScreenContent(
             )
         )
     }
-
-
-    val tabs = listOf(
-        TabItem(
-            label = stringResource(R.string.in_progress_task_status),
-            count = state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size
-        ) {
-            TaskListColumn(
-                state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
-                onTaskSwipe = { task -> onTaskSwipe(task) },
-                onTaskClick = { onTaskClick }
-            )
-        },
-        TabItem(
-            label = stringResource(R.string.todo_task_status),
-            count = state.currentDateTasks.filter { it.status == TaskUiStatus.TODO }.size
-        ) {
-            TaskListColumn(
-                state.currentDateTasks.filter { it.status == TaskUiStatus.TODO },
-                onTaskSwipe = { task -> onTaskSwipe(task) })
-        },
-
-        TabItem(
-            label = stringResource(R.string.done_task_status),
-            count = state.currentDateTasks.filter { it.status == TaskUiStatus.DONE }.size
-        ) {
-            TaskListColumn(
-                state.currentDateTasks.filter { it.status == TaskUiStatus.DONE },
-                onTaskSwipe = { task -> onTaskSwipe(task) })
-        }
-    )
 
     Column(
         modifier = modifier
@@ -222,22 +186,7 @@ fun TasksScreenContent(
             )
         }
 
-        var selectedTab by remember {
-            mutableIntStateOf(
-                when (state.selectedTaskUiStatus) {
-                    TaskUiStatus.IN_PROGRESS -> 0
-                    TaskUiStatus.TODO -> 1
-                    TaskUiStatus.DONE -> 2
-                }
-            )
-        }
-
-        TudeeTabs(
-            tabs,
-            selectedTabIndex = selectedTab,
-            onTabSelected = { selectedTab = it },
-            modifier = Modifier.fillMaxSize()
-        )
+        TaskStatusTabs(state, onTaskSwipe, onTaskClick)
     }
 }
 
@@ -245,66 +194,10 @@ fun TasksScreenContent(
 @Composable
 private fun TasksScreenPreview() {
 
-    val tasks = listOf(
-        TaskUiModel(
-            id = 1,
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
-            categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.MEDIUM,
-            status = TaskUiStatus.IN_PROGRESS
-        ),
-        TaskUiModel(
-            id = 2,
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
-            categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.LOW,
-            status = TaskUiStatus.DONE
-        ),
-        TaskUiModel(
-            id = 3,
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
-            categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.MEDIUM,
-            status = TaskUiStatus.DONE
-        ),
-        TaskUiModel(
-            id = 4,
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
-            categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.HIGH,
-            status = TaskUiStatus.TODO
-        ),
-        TaskUiModel(
-            id = 5,
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
-            categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.LOW,
-            status = TaskUiStatus.IN_PROGRESS
-        ),
-        TaskUiModel(
-            id = 6,
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
-            categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.LOW,
-            status = TaskUiStatus.TODO
-        ),
-    )
     var tasksState by remember {
         mutableStateOf(
             TasksScreenUiState(
-                currentDateTasks = tasks,
+                currentDateTasks = DataProvider.getTasksSample(),
                 isLoading = false,
                 errorMessage = null,
                 successMessage = null,
@@ -323,7 +216,7 @@ private fun TasksScreenPreview() {
         tasksState,
         onDateSelected = { date ->
             tasksState = tasksState.copy(selectedDate = date)
-            tasksState = tasksState.copy(currentDateTasks = tasks)
+            tasksState = tasksState.copy(currentDateTasks = DataProvider.getTasksSample())
         },
         onTaskSwipe = { task ->
             tasksState =

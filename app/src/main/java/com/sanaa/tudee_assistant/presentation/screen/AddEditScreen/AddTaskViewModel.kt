@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.screen.AddEditScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddTaskException
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
@@ -12,19 +13,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
 
 class AddTaskViewModel(
     private val taskService: TaskService,
-    private val categoryService: CategoryService
+    val categoryService: CategoryService
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(TaskUiState())
-    val uiState: StateFlow<TaskUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(AddTaskUiState())
+    val uiState: StateFlow<AddTaskUiState> = _uiState.asStateFlow()
 
     fun onTitleChange(title: String) {
         _uiState.update { it.copy(title = title) }
@@ -35,8 +35,8 @@ class AddTaskViewModel(
         _uiState.update { it.copy(description = description) }
     }
 
-    fun onDateSelected(date: LocalDateTime) {
-        _uiState.update { it.copy(selectedDate =  date) }
+    fun onDateSelected(date: LocalDate) {
+        _uiState.update { it.copy(selectedDate = date) }
         validateInputs()
     }
 
@@ -57,13 +57,13 @@ class AddTaskViewModel(
                 _uiState.update { it.copy(isLoading = true, error = null) }
                 val currentState = _uiState.value
                 val task = Task(
-                    id = 0,
+                    id = null,
                     title = currentState.title,
                     description = currentState.description.takeIf { it.isNotBlank() },
                     status = Task.TaskStatus.TODO,
                     dueDate = currentState.selectedDate,
                     priority = currentState.selectedPriority ?: Task.TaskPriority.LOW,
-                    categoryId = currentState.selectedCategory?.id ?: 0,
+                    categoryId = currentState.selectedCategory?.id ?: throw FailedToAddTaskException(),
                     createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                 )
                 taskService.addTask(task)
@@ -90,8 +90,4 @@ class AddTaskViewModel(
             )
         }
     }
-}
-
-val addTaskViewModelModule = module {
-    viewModel { AddTaskViewModel(get(),get()) }
 }

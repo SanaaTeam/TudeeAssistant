@@ -30,20 +30,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
+import com.sanaa.tudee_assistant.presentation.composable.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
 import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -66,10 +70,12 @@ fun TasksScreen(
             viewModel.onTaskSwipeToDelete(task)
             false
         },
-        onTaskClick = { task -> viewModel.onTaskClick(task) },
+        onTaskClick = viewModel::onTaskClick,
         onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
         onEditTaskViewDetails = { TODO() },
-        onMoveToTaskViewDetails = { TODO() },
+        onMoveToTaskViewDetails = viewModel::onMoveTaskToAnotherStatus,
+        onDeleteClick = viewModel::onTaskDeleted,
+        onDeleteDismiss = viewModel::onTaskDeletedDismiss,
         modifier = modifier,
     )
 }
@@ -85,6 +91,8 @@ fun TasksScreenContent(
     onDismissTaskViewDetails: () -> Unit,
     onEditTaskViewDetails: (TaskUiModel) -> Unit,
     onMoveToTaskViewDetails: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onDeleteDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -206,45 +214,49 @@ fun TasksScreenContent(
                     initialSelectedDate = state.selectedDate
                 )
             }
-
             TaskStatusTabs(state, onTaskSwipe, onTaskClick)
-
-            if (state.showTaskDetailsDialog && state.selectedTask != null) {
-
+            if (state.selectedTask != null && state.showTaskDetailsDialog)
                 TaskViewDetails(
-                    state.selectedTask,
-                    onDismissTaskViewDetails,
-                    onEditClick = onEditTaskViewDetails,
+                    task = state.selectedTask,
+                    onDismiss = onDismissTaskViewDetails,
+                    onEditClick = { task -> onEditTaskViewDetails(task) },
                     onMoveToClicked = onMoveToTaskViewDetails,
-//                    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
-            }
+            if (state.selectedTask != null && state.showDeleteDialog)
+                DeleteComponent(
+                    onDismiss = onDeleteDismiss,
+                    onDeleteClicked = onDeleteClick,
+                    title = stringResource(R.string.delete_task_title),
+                )
 
-            if (showAddTaskBottomSheet) {
-                TaskScreen(
-                    isEditMode = false,
-                    initialTask = null,
-                    onDismiss = { showAddTaskBottomSheet = false },
-                    onSuccess = {
-                        showAddTaskBottomSheet = false
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = "Task added successfully",
-                                withDismissAction = true
-                            )
-                        }
-                    },
-                    onError = { errorMessage ->
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = errorMessage,
-                                withDismissAction = true
-                            )
-                        }
+        if (showAddTaskBottomSheet) {
+            TaskScreen(
+                isEditMode = false,
+                initialTask = null,
+                onDismiss = { showAddTaskBottomSheet = false },
+                onSuccess = {
+                    showAddTaskBottomSheet = false
+                    coroutineScope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = "Task added successfully",
+                            withDismissAction = true
+                        )
                     }
-                )
-            }
+                },
+                onError = { errorMessage ->
+                    coroutineScope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = errorMessage,
+                            withDismissAction = true
+                        )
+                    }
+                }
+            )
         }
+    }
+
+
 
         FloatingActionButton(
             enabled = true,
@@ -305,5 +317,7 @@ private fun TasksScreenPreview() {
         onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsDialog = false) },
         onEditTaskViewDetails = {},
         onMoveToTaskViewDetails = {},
+        onDeleteClick = {},
+        onDeleteDismiss = {},
     )
 }

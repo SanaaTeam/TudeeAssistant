@@ -34,7 +34,7 @@ import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 fun TaskListColumn(
     taskList: List<TaskUiModel>,
     onTaskSwipe: (TaskUiModel) -> Boolean = { true },
-    onTaskClick: (TaskUiModel) -> Unit = {},
+    onTaskClick: (TaskUiModel) -> Unit,
 ) {
 
     LazyColumn(
@@ -49,10 +49,12 @@ fun TaskListColumn(
     ) {
         itemsIndexed(taskList, key = { _, item -> item.hashCode() }) { _, task ->
             val dismissState = rememberSwipeToDismissBoxState(
-                confirmValueChange = { onTaskSwipe(task) },
+                confirmValueChange = {
+                    onTaskSwipe(task)
+                },
                 positionalThreshold = { it * 20f }
             )
-
+            Modifier
             SwipeToDismissBox(
                 state = dismissState,
                 enableDismissFromEndToStart = true,
@@ -76,11 +78,14 @@ fun TaskListColumn(
                     }
                 },
                 content = {
-                    CategoryTaskCard(task, onClick = { onTaskClick })
+                    CategoryTaskCard(task, onClick = {
+                        onTaskClick(task)
+                    })
                 },
                 modifier = Modifier
                     .clip(RoundedCornerShape(Theme.dimension.medium))
                     .animateItem(fadeInSpec = null, fadeOutSpec = null)
+
             )
         }
     }
@@ -94,10 +99,14 @@ private fun TaskListColumnPreview() {
 
     TudeeTheme(isDarkTheme = true) {
 
-        TaskListColumn(itemsState, onTaskSwipe = { task ->
-            itemsState = itemsState.filterNot { item -> item == task }
-            false
-        }
+        TaskListColumn(
+            itemsState, onTaskSwipe = { task ->
+                itemsState = itemsState.filterNot { item -> item == task }
+                false
+
+            },
+            {}
         )
+
     }
 }

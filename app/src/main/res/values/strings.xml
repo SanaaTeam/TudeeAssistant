@@ -14,10 +14,10 @@
     <string name="delete_task_title">Delete task</string>
     <string name="delete_subtitle">Are you sure to continue?</string>
     <string name="delete">Delete</string>
-    <string name="cancel">Cancel</string>
     <string name="no_task_today" translatable="false">No tasks for today!</string>
     <string name="tap_to_add_task" translatable="false">Tap the + button to add your\nfirst one.</string>
     <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
     <string name="category_title">Category title</string>
     <string name="category_image">Category image</string>
     <string name="add_new_category">Add new category</string>

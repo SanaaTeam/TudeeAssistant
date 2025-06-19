@@ -41,6 +41,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun EmptyScreen(
     modifier: Modifier = Modifier,
+    title: String = stringResource(R.string.no_task_today),
+    caption: String = stringResource(R.string.tap_to_add_task),
 ) {
 
     var visibleCircular1 by remember { mutableStateOf(false) }
@@ -77,7 +79,7 @@ fun EmptyScreen(
             AnimatedVisibility(
                 visible = visibleMessageBox, enter = fadeIn(animationSpec = tween(600))
             ) {
-                MessageBox(modifier = Modifier.align(Alignment.TopEnd))
+                MessageBox(modifier = Modifier.align(Alignment.TopEnd), title = title, caption = caption)
             }
 
         }
@@ -179,7 +181,11 @@ fun CircularContainer(
 }
 
 @Composable
-fun MessageBox(modifier: Modifier = Modifier) {
+fun MessageBox(
+    title: String,
+    caption: String,
+    modifier: Modifier = Modifier
+) {
 
     Box(
         modifier = modifier
@@ -202,13 +208,13 @@ fun MessageBox(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = stringResource(R.string.no_task_today),
+                text = title,
                 style = Theme.textStyle.title.small,
                 color = Theme.color.body,
                 modifier = Modifier.padding(start = 12.dp, top = 8.dp)
             )
             Text(
-                text = stringResource(R.string.tap_to_add_task),
+                text = caption,
                 style = Theme.textStyle.body.small,
                 color = Theme.color.hint,
                 modifier = Modifier.padding(start = 12.dp, top = 4.dp)
@@ -217,11 +223,11 @@ fun MessageBox(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview()
 @Composable
 fun PreviewEmptyScreen() {
-    TudeeTheme(isDarkTheme = false) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    TudeeTheme(isDarkTheme = true) {
+        Box(modifier = Modifier.fillMaxSize().background(Theme.color.surface), contentAlignment = Alignment.Center) {
             EmptyScreen()
         }
     }

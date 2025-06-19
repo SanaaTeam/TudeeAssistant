@@ -76,7 +76,7 @@ fun TaskListColumn(
                     }
                 },
                 content = {
-                    CategoryTaskCard(task, onClick = { onTaskClick })
+                    CategoryTaskCard(task, onClick = { onTaskClick(task) })
                 },
                 modifier = Modifier
                     .clip(RoundedCornerShape(Theme.dimension.medium))
@@ -94,10 +94,12 @@ private fun TaskListColumnPreview() {
 
     TudeeTheme(isDarkTheme = true) {
 
-        TaskListColumn(itemsState, onTaskSwipe = { task ->
-            itemsState = itemsState.filterNot { item -> item == task }
-            false
-        }
+        TaskListColumn(
+            itemsState,
+            onTaskSwipe = { task ->
+                itemsState = itemsState.filterNot { item -> item == task }
+                false
+            },
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.screen
+package com.sanaa.tudee_assistant.presentation.screen
 
 import android.app.Activity
 import android.view.WindowManager
@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -16,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
@@ -25,14 +25,45 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import kotlinx.coroutines.launch
 
+data class OnBoardingContent(
+    val title: String, val description: String, val imageRes: Int
+)
+
 @Composable
-fun OnBoardingScreen(modifier: Modifier = Modifier) {
+fun getOnBoardingContent(page: Int): OnBoardingContent {
+    return when (page) {
+        0 -> OnBoardingContent(
+            title = stringResource(R.string.onboarding_title_0),
+            description = stringResource(R.string.onboarding_desc_0),
+            imageRes = R.drawable.boarding_screen1
+        )
+
+        1 -> OnBoardingContent(
+            title = stringResource(R.string.onboarding_title_1),
+            description = stringResource(R.string.onboarding_desc_1),
+            imageRes = R.drawable.boarding_screen2
+        )
+
+        else -> OnBoardingContent(
+            title = stringResource(R.string.onboarding_title_2),
+            description = stringResource(R.string.onboarding_desc_2),
+            imageRes = R.drawable.boarding_screen3
+        )
+    }
+}
+
+@Composable
+fun OnBoardingScreen(
+    modifier: Modifier = Modifier, navController: NavController
+) {
     val isInPreview = LocalView.current.isInEditMode
 
     if (!isInPreview) {
@@ -44,6 +75,9 @@ fun OnBoardingScreen(modifier: Modifier = Modifier) {
             )
         }
     }
+
+    val pagerState = rememberPagerState(pageCount = { 3 }, initialPage = 0)
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -56,62 +90,57 @@ fun OnBoardingScreen(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.TopCenter)
-
         )
 
-        val pagerState = rememberPagerState(pageCount = { 3 }, initialPage = 0)
-
-        if (pagerState.currentPage != 2) {
-            Text(
-                text = stringResource(R.string.skip),
-                color = Theme.color.primary,
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .padding(top = 16.dp, start = 16.dp)
-                    .systemBarsPadding()
-            )
-        }
-
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 32.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.weight(1f)
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    when (it) {
-                        0 -> DialogContainer(
-                            title = "Overwhelmed with tasks?",
-                            description = "Let’s bring some order to the chaos.\nTudee is here to help you sort, plan, and\nbreathe easier.",
-                            painter = painterResource(id = R.drawable.boarding_screen1),
-                            pagerState = pagerState
-
-                        )
-
-                        1 -> DialogContainer(
-                            title = "Uh-oh! Procrastinating again",
-                            description = "Tudee not mad… just a little \ndisappointed, Let’s get back on track \ntogether.",
-                            painter = painterResource(id = R.drawable.boarding_screen2),
-                            pagerState = pagerState
-
-                        )
-
-                        2 -> DialogContainer(
-                            title = "Let’s complete task and celebrate\ntogether.",
-                            description = "Progress is progress. Tudee will celebrate you on for every win, big or small.",
-                            painter = painterResource(id = R.drawable.boarding_screen3),
-                            pagerState = pagerState
-
-                        )
-                    }
+            Box(Modifier.fillMaxWidth()) {
+                if (pagerState.currentPage != 2) {
+                    Text(
+                        text = stringResource(R.string.skip),
+                        color = Theme.color.primary,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 16.dp)
+                            .clickable {
+                                navController.navigate("login") {
+                                    popUpTo("onboarding") { inclusive = true }
+                                }
+                            })
                 }
             }
-            PageIndicator(currentPage = pagerState.currentPage, pageCount = pagerState.pageCount)
+
+            OnBoardingPager(pagerState = pagerState)
+
+            PageIndicator(
+                currentPage = pagerState.currentPage, pageCount = pagerState.pageCount
+            )
+        }
+    }
+}
+
+@Composable
+fun OnBoardingPager(pagerState: PagerState) {
+    HorizontalPager(
+        state = pagerState, modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.97f)
+    ) { page ->
+        val content = getOnBoardingContent(page)
+
+        Box(
+            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter
+        ) {
+            DialogContainer(
+                title = content.title,
+                description = content.description,
+                painter = painterResource(id = content.imageRes),
+                pagerState = pagerState
+            )
         }
     }
 }
@@ -121,20 +150,20 @@ fun PageIndicator(currentPage: Int, pageCount: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
+            .height(40.dp)
             .padding(bottom = 16.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         repeat(pageCount) { index ->
             val animatedColor by animateColorAsState(
-                targetValue = if (index == currentPage) Theme.color.primary else Color(0xFFEFF9FE),
+                targetValue = if (index == currentPage) Theme.color.primary else Theme.color.primaryVariant,
                 animationSpec = tween(durationMillis = 100),
                 label = ""
             )
 
             Box(
                 modifier = Modifier
-                    .padding(horizontal = 4.dp, vertical = 24.dp)
+                    .padding(horizontal = 4.dp)
                     .size(width = 100.dp, height = 5.dp)
                     .background(animatedColor, shape = RoundedCornerShape(2.dp))
             )
@@ -180,7 +209,6 @@ fun DialogContainer(
                 color = Theme.color.title,
                 textAlign = TextAlign.Center,
             )
-            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = description,
                 style = Theme.textStyle.body.medium,
@@ -188,6 +216,7 @@ fun DialogContainer(
                 textAlign = TextAlign.Center,
             )
         }
+
         val coroutineScope = rememberCoroutineScope()
         FloatingActionButton(
             enabled = true,
@@ -201,7 +230,7 @@ fun DialogContainer(
                 }
             },
             iconRes = R.drawable.icon_arrow_right_double,
-            modifier = Modifier.offset(y = (-70).dp)
+            modifier = Modifier.offset(y = (-68).dp)
         )
     }
 }
@@ -215,7 +244,7 @@ private fun BoardingScreenPreview() {
                 .fillMaxSize()
                 .background(Theme.color.surface)
         ) {
-            OnBoardingScreen()
+            OnBoardingScreen(navController = rememberNavController())
         }
     }
 }

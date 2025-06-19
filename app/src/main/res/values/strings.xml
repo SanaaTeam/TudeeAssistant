@@ -12,6 +12,12 @@
     <string name="snack_bar_success">Successfully.</string>
     <string name="loading_spinner">Loading spinner</string>
     <string name="skip">Skip</string>
+    <string name="onboarding_title_0">Overwhelmed with tasks?\n</string>
+    <string name="onboarding_desc_0">Let’s bring some order to the chaos.\nTudee is here to help you sort, plan, and\nbreathe easier.</string>
+    <string name="onboarding_title_1">Uh-oh! Procrastinating again\n</string>
+    <string name="onboarding_desc_1">Tudee not mad… just a little \ndisappointed, Let’s get back on track \ntogether.</string>
+    <string name="onboarding_title_2">Let’s complete task and celebrate\ntogether.</string>
+    <string name="onboarding_desc_2">Progress is progress. Tudee will celebrate you on for every win, big or small.</string>
     <string name="no_task_today" translatable="false">No tasks for today!</string>
     <string name="tap_to_add_task" translatable="false">Tap the + button to add your\nfirst one.</string>
 </resources>

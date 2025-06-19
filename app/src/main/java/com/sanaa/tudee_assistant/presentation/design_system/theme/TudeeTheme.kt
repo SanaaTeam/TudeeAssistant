@@ -19,16 +19,9 @@ import org.koin.compose.koinInject
 
 @Composable
 fun TudeeTheme(
-    themeManager: ThemeManager= koinInject(),
+    isDark: Boolean,
     content: @Composable () -> Unit,
 ) {
-    var isDark by remember { mutableStateOf(false) }
-    LaunchedEffect(themeManager) {
-        themeManager.isDarkTheme.collect {
-            isDark = it
-        }
-    }
-
     val theme = if (isDark) darkSchemaColors else lightSchemaColors
 
     CompositionLocalProvider(

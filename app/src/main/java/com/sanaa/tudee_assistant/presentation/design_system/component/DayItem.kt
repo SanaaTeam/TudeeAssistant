@@ -72,7 +72,7 @@ fun DayItem(
 @Preview
 @Composable
 private fun Preview() {
-    TudeeTheme() {
+    TudeeTheme(false) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

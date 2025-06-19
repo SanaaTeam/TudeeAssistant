@@ -189,7 +189,7 @@ private fun CustomTab(
 
 @Preview(showBackground = true)
 @Composable
-fun TudeeScrollableTabsPreview() {
+private fun TudeeScrollableTabsPreview() {
     val tabs = listOf(
         TabItem(
             label = stringResource(R.string.in_progress_task_status),
@@ -235,7 +235,7 @@ fun TudeeScrollableTabsPreview() {
 
     var selectedTab by remember { mutableIntStateOf(0) }
 
-    TudeeTheme() {
+    TudeeTheme(false) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

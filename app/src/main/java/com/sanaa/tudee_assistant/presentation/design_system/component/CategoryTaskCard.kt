@@ -123,7 +123,7 @@ private fun DateChip(date: String) {
 @Preview(widthDp = 360)
 @Composable
 private fun Preview() {
-    TudeeTheme {
+    TudeeTheme(false) {
         val items = listOf(
             CategoryTaskState(
                 icon = painterResource(R.drawable.birthday_cake),

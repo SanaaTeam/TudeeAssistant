@@ -25,7 +25,7 @@ fun CheckMarkContainer(modifier: Modifier = Modifier) {
 @Preview()
 @Composable
 private fun CheckMarkContainerPreview() {
-    TudeeTheme() {
+    TudeeTheme(false) {
         CheckMarkContainer()
     }
 }

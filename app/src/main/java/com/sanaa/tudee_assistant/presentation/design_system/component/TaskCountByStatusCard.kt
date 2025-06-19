@@ -152,7 +152,7 @@ private fun CardTopEndDecoration(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun Preview() {
-    TudeeTheme() {
+    TudeeTheme(false) {
         Row(
             Modifier
                 .fillMaxSize()

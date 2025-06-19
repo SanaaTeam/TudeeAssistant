@@ -117,7 +117,7 @@ private fun SecondaryButtonPreview(modifier: Modifier = Modifier) {
 @Preview()
 @Composable
 private fun SecondaryButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (){
+    TudeeTheme (true){
         Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             SecondaryButton(
                 lable = "Submit",

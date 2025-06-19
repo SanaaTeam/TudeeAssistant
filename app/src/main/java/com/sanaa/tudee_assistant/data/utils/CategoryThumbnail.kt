@@ -19,7 +19,7 @@ fun CategoryThumbnail(
     AsyncImage(
         model = imagePath ,
         contentDescription = "category image",
-        modifier = modifier.size(32.dp).clip(CircleShape),
+        modifier = modifier,
         error = painterResource(R.drawable.ic_not_found),
     )
 }

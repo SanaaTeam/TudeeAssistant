@@ -12,7 +12,6 @@
     <string name="priority">Priority</string>
     <string name="category">Category</string>
     <string name="add">Add</string>
-    <string name="cancel">Cancel</string>
     <string name="clear">Clear</string>
     <string name="ok">OK</string>
 
@@ -22,6 +21,12 @@
     <string name="snack_bar_error">Some error happened.</string>
     <string name="snack_bar_success">Successfully.</string>
     <string name="loading_spinner">Loading spinner</string>
+    <string name="delete_task_title">Delete task</string>
+    <string name="delete_subtitle">Are you sure to continue?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_task_today" translatable="false">No tasks for today!</string>
+    <string name="tap_to_add_task" translatable="false">Tap the + button to add your\nfirst one.</string>
     <string name="task_details">"Task Details"</string>
     <string name="mark_as_done">"Move to done"</string>
     <string name="mark_as_in_progress">"Move to in progress"</string>

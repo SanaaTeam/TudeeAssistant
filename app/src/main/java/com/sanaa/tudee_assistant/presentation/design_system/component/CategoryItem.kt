@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.design_system.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,10 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.data.utils.getAssetsImagePainter
+import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.CategoryState
@@ -26,10 +30,12 @@ import com.sanaa.tudee_assistant.presentation.model.CategoryState
 @Composable
 fun CategoryItem(
     modifier: Modifier = Modifier,
-    category: CategoryState,
+    category: Category,
     onClick: () -> Unit,
     topContent: @Composable () -> Unit = {},
 ) {
+    val context = LocalContext.current
+    val painter = getAssetsImagePainter(context, category.imagePath)
     Column(
         modifier = modifier
             .width(104.dp)
@@ -52,11 +58,10 @@ fun CategoryItem(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(
-                    painter = category.categoryPainter,
+                Image(
+                    painter = painter,
                     contentDescription = null,
                     modifier = Modifier.size(Theme.dimension.extraLarge),
-                    tint = category.tint
                 )
             }
         }
@@ -66,7 +71,7 @@ fun CategoryItem(
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
-                text = category.title,
+                text = category.name,
                 style = Theme.textStyle.label.small,
                 color = Theme.color.body,
                 modifier = Modifier.align(Alignment.BottomCenter)
@@ -80,10 +85,10 @@ fun CategoryItem(
 private fun CategoryDarkPreview() {
     TudeeTheme(isDarkTheme = true) {
         CategoryItem(
-            category = CategoryState(
-                "Education",
-                painterResource(R.drawable.education_cat),
-                Theme.color.purpleAccent
+            category = Category(
+                name = "Education",
+                imagePath = "file:///android_asset/categories/education.png",
+                isDefault = true
             ),
             onClick = {},
             topContent = { CheckMarkContainer(modifier = Modifier.padding(2.dp)) },
@@ -98,10 +103,10 @@ private fun CategoryDarkPreview() {
 private fun CategoryLightPreview() {
     TudeeTheme(isDarkTheme = false) {
         CategoryItem(
-            category = CategoryState(
-                "Education",
-                painterResource(R.drawable.education_cat),
-                Theme.color.purpleAccent
+            category = Category(
+                name = "Education",
+                imagePath = "file:///android_asset/categories/education.png",
+                isDefault = true
             ),
             onClick = {},
             topContent = { CategoryCount("16") },

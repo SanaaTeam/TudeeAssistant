@@ -1,31 +1,34 @@
 package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.domain.model.Category
+import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
 
 class TaskViewModel(
-    private val taskService: TaskService
-) : ViewModel() {
+    private val taskService: TaskService,
+    private val categoryService: CategoryService,
+) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()) {
 
-    private val _state = MutableStateFlow(TasksScreenUiState())
-    val uiState: StateFlow<TasksScreenUiState> = _state.asStateFlow()
-
+    lateinit var categories: List<Category>
 
     init {
+        viewModelScope.launch {
+            categoryService.getCategories().collect { categoryList ->
+                categories = categoryList
+            }
+        }
         getTasksByDueDate()
     }
 
-    val tasks = listOf(
+    val fakeTasks = listOf(
         TaskUiModel(
             id = 1,
             title = "Organize Study Desk",
@@ -54,7 +57,7 @@ class TaskViewModel(
             status = TaskUiStatus.DONE
         ),
         TaskUiModel(
-            id = 1,
+            id = 4,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
             dueDate = null,
@@ -63,7 +66,7 @@ class TaskViewModel(
             status = TaskUiStatus.TODO
         ),
         TaskUiModel(
-            id = 2,
+            id = 5,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
             dueDate = null,
@@ -72,7 +75,7 @@ class TaskViewModel(
             status = TaskUiStatus.IN_PROGRESS
         ),
         TaskUiModel(
-            id = 3,
+            id = 6,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
             dueDate = null,
@@ -85,11 +88,18 @@ class TaskViewModel(
     private fun getTasksByDueDate() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
+
             taskService.getTasksByDueDate(_state.value.selectedDate)
                 .collect { taskList ->
                     _state.update {
                         it.copy(
-                            currentDateTasks = tasks,
+                            currentDateTasks = taskList.map { task ->
+                                task.toUiModel(
+                                    categories.firstOrNull { category ->
+                                        category.id == task.categoryId
+                                    }?.imagePath ?: ""
+                                )
+                            },
                             isLoading = false
                         )
                     }
@@ -104,30 +114,35 @@ class TaskViewModel(
     fun onTaskSelected(task: TaskUiModel) {
         _state.update { it.copy(selectedTask = task) }
     }
+    fun onTaskClick(task: TaskUiModel) {
+        onTaskSelected(task)
+        onShowTaskDetailsDialogChange(true)
+    }
 
     fun onTaskDeleted() {
-        val selectedTask = _state.value.selectedTask ?: return
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            runCatching {
-                if (selectedTask.id == null) return@launch
-                taskService.deleteTaskById(selectedTask.id)
-            }.onSuccess {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        showDeleteDialog = false,
-                        selectedTask = null,
-                    )
-                }
-                getTasksByDueDate()
-            }.onFailure {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        showDeleteDialog = false,
-                        selectedTask = null,
-                    )
+        _state.value.selectedTask.let {
+            viewModelScope.launch {
+                _state.update { it.copy(isLoading = true) }
+                runCatching {
+                    if (it?.id == null) return@launch
+                    taskService.deleteTaskById(it.id)
+                }.onSuccess {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            showDeleteDialog = false,
+                            selectedTask = null,
+                        )
+                    }
+                    getTasksByDueDate()
+                }.onFailure {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            showDeleteDialog = false,
+                            selectedTask = null,
+                        )
+                    }
                 }
             }
         }
@@ -152,7 +167,8 @@ class TaskViewModel(
         _state.update { it.copy(showEditDialog = show) }
     }
 
-    fun onTaskSwipeToDelete(id: Int) {
-        _state.update { it.copy(currentDateTasks = it.currentDateTasks.filterNot { item -> item.id == id }) }
+    fun onTaskSwipeToDelete(task: TaskUiModel) {
+        onTaskSelected(task)
+        onShowDeleteDialogChange(true)
     }
 }

@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,19 +19,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 
 @Composable
 fun TaskListColumn(
     taskList: List<TaskUiModel>,
-    onTaskSwipe: (Int) -> Boolean = { true }
+    onTaskSwipe: (TaskUiModel) -> Boolean = { true },
+    onTaskClick: (TaskUiModel) -> Unit = {},
 ) {
 
     LazyColumn(
@@ -45,13 +47,10 @@ fun TaskListColumn(
         ),
         verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
     ) {
-        itemsIndexed(taskList) { index, task ->
+        itemsIndexed(taskList, key = { _, item -> item.hashCode() }) { _, task ->
             val dismissState = rememberSwipeToDismissBoxState(
-                confirmValueChange = { dismissValue ->
-                    if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
-                        onTaskSwipe(task.id!!)
-                    } else false
-                }
+                confirmValueChange = { onTaskSwipe(task) },
+                positionalThreshold = { it * 20f }
             )
 
             SwipeToDismissBox(
@@ -77,8 +76,11 @@ fun TaskListColumn(
                     }
                 },
                 content = {
-                    CategoryTaskCard(task)
-                }
+                    CategoryTaskCard(task, onClick = { onTaskClick })
+                },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(Theme.dimension.medium))
+                    .animateItem(fadeInSpec = null, fadeOutSpec = null)
             )
         }
     }
@@ -103,7 +105,7 @@ private fun TaskListColumnPreview() {
             description = "Review cell structure and functions for tomorrow...",
             dueDate = null,
             categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.MEDIUM,
+            priority = TaskUiPriority.LOW,
             status = TaskUiStatus.IN_PROGRESS
         ),
         TaskUiModel(
@@ -112,15 +114,20 @@ private fun TaskListColumnPreview() {
             description = "Review cell structure and functions for tomorrow...",
             dueDate = null,
             categoryImagePath = "file:///android_asset/categories/agriculture.png",
-            priority = TaskUiPriority.MEDIUM,
+            priority = TaskUiPriority.HIGH,
             status = TaskUiStatus.IN_PROGRESS
         ),
     )
+
     var itemsState by remember { mutableStateOf(items) }
 
-    TaskListColumn(itemsState, onTaskSwipe = { id ->
-        itemsState = itemsState.filterNot { item -> item.id == id }
-        false
+    TudeeTheme(isDarkTheme = true) {
+
+
+        TaskListColumn(itemsState, onTaskSwipe = { task ->
+            itemsState = itemsState.filterNot { item -> item == task }
+            false
+        }
+        )
     }
-    )
 }

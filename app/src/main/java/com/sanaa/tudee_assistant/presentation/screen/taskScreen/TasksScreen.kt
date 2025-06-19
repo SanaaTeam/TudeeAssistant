@@ -52,15 +52,15 @@ fun TasksScreen(
     modifier: Modifier = Modifier,
     viewModel: TaskViewModel = koinViewModel<TaskViewModel>()
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     TasksScreenContent(
         state = state,
         onDateSelected = { viewModel::onDueDateChange },
-        onTaskSwipe = { index ->
+        onTaskSwipe = {
             viewModel::onTaskSwipeToDelete
             false
-        },
+        }, onTaskClick = { viewModel::onTaskClick },
         modifier = modifier
     )
 }
@@ -69,9 +69,10 @@ fun TasksScreen(
 @Composable
 fun TasksScreenContent(
     state: TasksScreenUiState,
-    onTaskSwipe: (Int) -> Boolean,
+    onTaskSwipe: (TaskUiModel) -> Boolean,
+    onDateSelected: (LocalDate) -> Unit,
+    onTaskClick: (TaskUiModel) -> Unit,
     modifier: Modifier = Modifier,
-    onDateSelected: (LocalDate) -> Unit = {},
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
@@ -92,20 +93,28 @@ fun TasksScreenContent(
             label = stringResource(R.string.in_progress_task_status),
             count = state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size
         ) {
-            TaskListColumn(state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS }, onTaskSwipe = { id -> onTaskSwipe(id) })
+            TaskListColumn(
+                state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
+                onTaskSwipe = { task -> onTaskSwipe(task) },
+                onTaskClick = { onTaskClick }
+            )
         },
         TabItem(
             label = stringResource(R.string.todo_task_status),
             count = state.currentDateTasks.filter { it.status == TaskUiStatus.TODO }.size
         ) {
-            TaskListColumn(state.currentDateTasks.filter { it.status == TaskUiStatus.TODO }, onTaskSwipe = { id -> onTaskSwipe(id) })
+            TaskListColumn(
+                state.currentDateTasks.filter { it.status == TaskUiStatus.TODO },
+                onTaskSwipe = { task -> onTaskSwipe(task) })
         },
 
         TabItem(
             label = stringResource(R.string.done_task_status),
             count = state.currentDateTasks.filter { it.status == TaskUiStatus.DONE }.size
         ) {
-            TaskListColumn(state.currentDateTasks.filter { it.status == TaskUiStatus.DONE }, onTaskSwipe = { id -> onTaskSwipe(id) })
+            TaskListColumn(
+                state.currentDateTasks.filter { it.status == TaskUiStatus.DONE },
+                onTaskSwipe = { task -> onTaskSwipe(task) })
         }
     )
 
@@ -145,9 +154,6 @@ fun TasksScreenContent(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable {
-                    showDialog = true
-                }
             ) {
                 Text(
                     text = "${state.selectedDate.month}, ${state.selectedDate.year}",
@@ -156,11 +162,14 @@ fun TasksScreenContent(
                 )
                 Icon(
                     painter = painterResource(R.drawable.icon_left_arrow),
-                    contentDescription = "back",
+                    contentDescription = "next",
                     tint = Theme.color.body,
                     modifier = Modifier
                         .size(16.dp)
                         .rotate(-90f)
+                        .clickable {
+                            showDialog = true
+                        }
                 )
             }
 
@@ -213,13 +222,15 @@ fun TasksScreenContent(
             )
         }
 
-        var selectedTab by remember { mutableIntStateOf(
-            when (state.selectedTaskUiStatus) {
-                TaskUiStatus.IN_PROGRESS -> 0
-                TaskUiStatus.TODO -> 1
-                TaskUiStatus.DONE -> 2
-            }
-        ) }
+        var selectedTab by remember {
+            mutableIntStateOf(
+                when (state.selectedTaskUiStatus) {
+                    TaskUiStatus.IN_PROGRESS -> 0
+                    TaskUiStatus.TODO -> 1
+                    TaskUiStatus.DONE -> 2
+                }
+            )
+        }
 
         TudeeTabs(
             tabs,
@@ -290,26 +301,35 @@ private fun TasksScreenPreview() {
             status = TaskUiStatus.TODO
         ),
     )
-    var tasksState by remember { mutableStateOf(TasksScreenUiState(
-        currentDateTasks = tasks,
-        isLoading = false,
-        errorMessage = null,
-        successMessage = null,
-        showAddTaskDialog = false,
-        showEditDialog = false,
-        showTaskDetailsDialog = false,
-        showDeleteDialog = false,
-        selectedTaskUiStatus = TaskUiStatus.DONE,
-        selectedTask = null,
-        selectedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-    )) }
+    var tasksState by remember {
+        mutableStateOf(
+            TasksScreenUiState(
+                currentDateTasks = tasks,
+                isLoading = false,
+                errorMessage = null,
+                successMessage = null,
+                showAddTaskDialog = false,
+                showEditDialog = false,
+                showTaskDetailsDialog = false,
+                showDeleteDialog = false,
+                selectedTaskUiStatus = TaskUiStatus.DONE,
+                selectedTask = null,
+                selectedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+            )
+        )
+    }
 
     TasksScreenContent(
         tasksState,
-        onDateSelected = { date -> tasksState = tasksState.copy(selectedDate = date) },
-        onTaskSwipe = { id ->
-            tasksState = tasksState.copy(currentDateTasks = tasksState.currentDateTasks.filterNot { item -> item.id == id })
+        onDateSelected = { date ->
+            tasksState = tasksState.copy(selectedDate = date)
+            tasksState = tasksState.copy(currentDateTasks = tasks)
+        },
+        onTaskSwipe = { task ->
+            tasksState =
+                tasksState.copy(currentDateTasks = tasksState.currentDateTasks.filterNot { item -> item == task })
             false
-        }
+        },
+        onTaskClick = {  },
     )
 }

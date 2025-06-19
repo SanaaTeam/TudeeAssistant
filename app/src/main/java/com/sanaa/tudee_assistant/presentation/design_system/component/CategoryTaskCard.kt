@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,12 +38,14 @@ import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TaskUiModel
 fun CategoryTaskCard(
     task: TaskUiModel,
     modifier: Modifier = Modifier,
+    onClick: (TaskUiModel) -> Unit = {},
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .height(111.dp)
             .clip(RoundedCornerShape(Theme.dimension.medium))
+            .clickable { onClick(task) }
             .background(Theme.color.surfaceHigh)
             .padding(
                 start = Theme.dimension.extraSmall,

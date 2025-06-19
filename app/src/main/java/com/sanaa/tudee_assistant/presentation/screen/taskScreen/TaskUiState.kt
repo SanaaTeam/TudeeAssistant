@@ -22,7 +22,7 @@ data class TasksScreenUiState(
     val selectedTask: TaskUiModel? = null,
     val selectedDate: LocalDate =
         Clock.System.now()
-            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .toLocalDateTime(TimeZone.UTC)
             .date,
 )
 

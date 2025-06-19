@@ -22,4 +22,8 @@
     <string name="snack_bar_error">Some error happened.</string>
     <string name="snack_bar_success">Successfully.</string>
     <string name="loading_spinner">Loading spinner</string>
+    <string name="task_details">"Task Details"</string>
+    <string name="mark_as_done">"Move to done"</string>
+    <string name="mark_as_in_progress">"Move to in progress"</string>
+
 </resources>

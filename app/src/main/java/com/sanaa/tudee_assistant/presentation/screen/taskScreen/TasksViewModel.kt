@@ -173,11 +173,40 @@ class TaskViewModel(
         }
     }
 
+    fun onTaskDeletedDismiss() {
+        _state.update { it.copy(showDeleteDialog = false) }
+    }
 
     fun onTaskSwipeToDelete(task: TaskUiModel) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
             onTaskSelected(task)
+            onShowDeleteDialogChange(true)
+        }
+    }
+
+    fun onMoveTaskToAnotherStatus() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            if (state.value.selectedTask == null) return@launch
+            state.value.selectedTask?.copy(
+                status = when (state.value.selectedTaskUiStatus) {
+                    TaskUiStatus.DONE -> TaskUiStatus.DONE
+                    TaskUiStatus.TODO -> TaskUiStatus.IN_PROGRESS
+                    TaskUiStatus.IN_PROGRESS -> TaskUiStatus.DONE
+                }
+            )?.let { updatedTask ->
+                runCatching {
+                    taskService.updateTask(updatedTask.toTask())
+                }.onSuccess {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            showTaskDetailsDialog = false,
+                            selectedTask = null,
+                        )
+                    }
+                }
+            }
         }
     }
 }

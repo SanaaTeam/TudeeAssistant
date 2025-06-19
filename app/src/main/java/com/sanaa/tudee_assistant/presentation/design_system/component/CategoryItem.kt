@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.CategoryState
+import com.sanaa.tudee_assistant.presentation.state.CategoryState
 
 @Composable
 fun CategoryItem(

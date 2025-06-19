@@ -23,7 +23,7 @@ class ImageProcessor(private val context: Context) {
             } else {
                 MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
             }
-            val targetSize = (32 * context.resources.displayMetrics.density).toInt()
+            val targetSize = (64 * context.resources.displayMetrics.density).toInt()
             originalBitmap.scale(targetSize, targetSize)
 
         } catch (e: Exception) {

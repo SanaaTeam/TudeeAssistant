@@ -29,14 +29,15 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.data.utils.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
 fun CategoryTaskCard(
-    task: TaskUiModel,
+    task: TaskUiState,
+    categoryImagePath: String,
     modifier: Modifier = Modifier,
-    onClick: (TaskUiModel) -> Unit = {},
+    onClick: (TaskUiState) -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -61,7 +62,7 @@ fun CategoryTaskCard(
             Box(modifier = Modifier.size(56.dp), contentAlignment = Alignment.Center) {
 
                 CategoryThumbnail(
-                    imagePath = task.categoryImagePath,
+                    imagePath = categoryImagePath,
                     modifier = Modifier.size(Theme.dimension.extraLarge)
                 )
             }
@@ -100,6 +101,7 @@ fun CategoryTaskCard(
         }
     }
 }
+
 @Composable
 private fun DateChip(date: String) {
     Row(
@@ -122,6 +124,7 @@ private fun DateChip(date: String) {
         )
     }
 }
+
 @Preview(widthDp = 360)
 @Composable
 private fun Preview() {
@@ -134,7 +137,9 @@ private fun Preview() {
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             items(DataProvider.getTasksSample()) {
-                CategoryTaskCard(it)
+                CategoryTaskCard(
+                    task = it, categoryImagePath = "file:///android_asset/categories/agriculture.png",
+                )
             }
         }
     }

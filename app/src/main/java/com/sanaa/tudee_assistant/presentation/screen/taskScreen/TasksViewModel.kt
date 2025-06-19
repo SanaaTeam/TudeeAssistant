@@ -2,12 +2,11 @@ package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
-import com.sanaa.tudee_assistant.presentation.model.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.model.mapper.toUiModel
+import com.sanaa.tudee_assistant.presentation.model.mapper.toState
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,12 +18,17 @@ class TaskViewModel(
     private val categoryService: CategoryService,
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()) {
 
-    lateinit var categories: List<Category>
 
     init {
         viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
             categoryService.getCategories().collect { categoryList ->
-                categories = categoryList
+                _state.update {
+                    it.copy(
+                        categories = categoryList.map { category -> category.toState() },
+                        isLoading = false
+                    )
+                }
             }
         }
         getTasksByDueDate()
@@ -39,11 +43,7 @@ class TaskViewModel(
                     _state.update {
                         it.copy(
                             currentDateTasks = taskList.map { task ->
-                                task.toUiModel(
-                                    categories.firstOrNull { category ->
-                                        category.id == task.categoryId
-                                    }?.imagePath ?: ""
-                                )
+                                task.toState()
                             },
                             isLoading = false
                         )
@@ -56,10 +56,11 @@ class TaskViewModel(
         _state.update { it.copy(selectedTaskUiStatus = taskUiStatus) }
     }
 
-    fun onTaskSelected(task: TaskUiModel) {
+    fun onTaskSelected(task: TaskUiState) {
         _state.update { it.copy(selectedTask = task) }
     }
-    fun onTaskClick(task: TaskUiModel) {
+
+    fun onTaskClick(task: TaskUiState) {
         onTaskSelected(task)
         onShowTaskDetailsDialogChange(true)
     }
@@ -112,7 +113,7 @@ class TaskViewModel(
         _state.update { it.copy(showEditDialog = show) }
     }
 
-    fun onTaskSwipeToDelete(task: TaskUiModel) {
+    fun onTaskSwipeToDelete(task: TaskUiState) {
         onTaskSelected(task)
         onShowDeleteDialogChange(true)
     }

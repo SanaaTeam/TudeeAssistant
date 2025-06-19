@@ -1,34 +1,31 @@
 package com.sanaa.tudee_assistant.presentation.model.mapper
 
 import com.sanaa.tudee_assistant.domain.model.Task
-import com.sanaa.tudee_assistant.presentation.model.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 
-fun Task.toUiModel(
-    categoryImagePath: String
-): TaskUiModel {
-    return TaskUiModel(
+fun Task.toState(): TaskUiState {
+    return TaskUiState(
         id = id,
         title = title,
         dueDate = dueDate?.toString() ?: "",
-        categoryImagePath = categoryImagePath,
         categoryId = categoryId,
-        priority = priority.toUiModel(),
+        priority = priority.toState(),
         description = description ?: "",
-        status = status.toUiModel(),
+        status = status.toState(),
     )
 }
 
-fun Task.TaskPriority.toUiModel(): TaskUiPriority {
+fun Task.TaskPriority.toState(): TaskUiPriority {
     return when (this) {
         Task.TaskPriority.LOW -> TaskUiPriority.LOW
         Task.TaskPriority.MEDIUM -> TaskUiPriority.MEDIUM
         Task.TaskPriority.HIGH -> TaskUiPriority.HIGH
     }
 }
-fun Task.TaskStatus.toUiModel(): TaskUiStatus {
+fun Task.TaskStatus.toState(): TaskUiStatus {
     return when (this) {
         Task.TaskStatus.TODO -> TaskUiStatus.TODO
         Task.TaskStatus.IN_PROGRESS -> TaskUiStatus.IN_PROGRESS

@@ -88,7 +88,7 @@ fun PriorityTag(
 @Preview
 @Composable
 private fun PreviewPriorityTag() {
-    TudeeTheme(isDarkTheme = false) {
+    TudeeTheme() {
         var isSelected by remember { mutableStateOf(true) }
         Column(
             modifier = Modifier

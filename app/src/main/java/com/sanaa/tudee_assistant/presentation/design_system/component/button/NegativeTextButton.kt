@@ -49,7 +49,7 @@ fun NegativeTextButton(
 @Preview
 @Composable
 private fun NegativeTextButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (isDarkTheme = false){
+    TudeeTheme (){
         Column (
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
         ){
@@ -93,7 +93,7 @@ private fun NegativeTextButtonLightPreview(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun NegativeTextButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (isDarkTheme = true){
+    TudeeTheme (){
         Column (
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
         ){

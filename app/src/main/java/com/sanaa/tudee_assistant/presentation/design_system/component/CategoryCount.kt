@@ -42,7 +42,7 @@ fun CategoryCount(count: String, modifier: Modifier = Modifier) {
 @Preview()
 @Composable
 private fun CategoryCountPreview() {
-    TudeeTheme(isDarkTheme = false) {
+    TudeeTheme() {
         CategoryCount("16")
     }
 }

@@ -71,7 +71,7 @@ fun FloatingActionButton(
 @Preview
 @Composable
 private fun FloatingActionButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme(isDarkTheme = false){
+    TudeeTheme(){
         Column {
             FloatingActionButton(
                 enabled = true,
@@ -111,7 +111,7 @@ private fun FloatingActionButtonLightPreview(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun FloatingActionButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme(isDarkTheme = true){
+    TudeeTheme(){
         Column {
             FloatingActionButton(
                 enabled = true,

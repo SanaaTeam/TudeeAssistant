@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -13,8 +14,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.sanaa.tudee_assistant.data.utils.ThemeManager
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeBottomNavBarItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.compose.getKoin
+import org.koin.compose.koinInject
 
 internal var navItems = mutableListOf<NavItem>()
 
@@ -46,6 +52,7 @@ fun MainScreen(startDestination: Any, builder: NavGraphBuilder.() -> Unit) {
                     selectedIconRes = it.selectedIconRes
                 ) {
                     screenNavController.navigateTo(it.route)
+
                 }
             }
         }

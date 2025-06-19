@@ -18,6 +18,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+
 class TaskFormViewModel(
     private val taskService: TaskService,
     val categoryService: CategoryService
@@ -102,13 +103,17 @@ class TaskFormViewModel(
                 _uiState.update { it.copy(isLoading = true, error = null) }
                 val task = uiState.value.taskUiModel.toTask()
                 taskService.updateTask(task)
-                _uiState.update { it.copy(isOperationSuccessful = true, isLoading = false) }
-            } catch (e: Exception) {
+                _uiState.update { it.copy(isOperationSuccessful = true, isLoading = false) } } catch (e: Exception) {
                 handleError(e)
             }
         }
     }
 
+    internal fun resetState() {
+        _uiState.update {
+            AddTaskUiState()
+        }
+    }
     private fun handleError(e: Exception) {
         _uiState.update {
             it.copy(isLoading = false, error = e.message ?: "Failed to process task")
@@ -120,7 +125,6 @@ class TaskFormViewModel(
         _uiState.update {
             it.copy(
                 isButtonEnabled = state.taskUiModel.title.isNotBlank() &&
-                        state.taskUiModel.dueDate != null &&
                         state.selectedCategory != null
             )
         }

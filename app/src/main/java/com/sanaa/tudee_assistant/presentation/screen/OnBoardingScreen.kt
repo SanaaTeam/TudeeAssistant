@@ -95,7 +95,7 @@ fun OnBoardingScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 32.dp),
+                .padding(top = Theme.dimension.extraLarge),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Box(Modifier.fillMaxWidth()) {
@@ -105,7 +105,7 @@ fun OnBoardingScreen(
                         color = Theme.color.primary,
                         textAlign = TextAlign.Start,
                         modifier = Modifier
-                            .padding(start = 16.dp, top = 16.dp)
+                            .padding(start = Theme.dimension.medium, top = Theme.dimension.medium)
                             .clickable {
                                 navController.navigate("login") {
                                     popUpTo("onboarding") { inclusive = true }
@@ -151,7 +151,7 @@ fun PageIndicator(currentPage: Int, pageCount: Int) {
         modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
-            .padding(bottom = 16.dp),
+            .padding(bottom = Theme.dimension.medium),
         horizontalArrangement = Arrangement.Center
     ) {
         repeat(pageCount) { index ->
@@ -163,7 +163,7 @@ fun PageIndicator(currentPage: Int, pageCount: Int) {
 
             Box(
                 modifier = Modifier
-                    .padding(horizontal = 4.dp)
+                    .padding(horizontal = Theme.dimension.extraSmall)
                     .size(width = 100.dp, height = 5.dp)
                     .background(animatedColor, shape = RoundedCornerShape(2.dp))
             )
@@ -182,9 +182,9 @@ fun DialogContainer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = Theme.dimension.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(32.dp)
+        verticalArrangement = Arrangement.spacedBy(Theme.dimension.extraLarge)
     ) {
         Image(
             painter = painter,
@@ -196,12 +196,12 @@ fun DialogContainer(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(192.dp)
-                .background(Theme.color.onPrimaryCard, RoundedCornerShape(32.dp))
-                .border(1.dp, Theme.color.onPrimaryStroke, RoundedCornerShape(32.dp))
-                .padding(horizontal = 16.dp)
-                .padding(top = 24.dp, bottom = 48.dp),
+                .background(Theme.color.onPrimaryCard, RoundedCornerShape(Theme.dimension.extraLarge))
+                .border(1.dp, Theme.color.onPrimaryStroke, RoundedCornerShape(Theme.dimension.extraLarge))
+                .padding(horizontal = Theme.dimension.medium)
+                .padding(top = Theme.dimension.large, bottom = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             Text(
                 text = title,

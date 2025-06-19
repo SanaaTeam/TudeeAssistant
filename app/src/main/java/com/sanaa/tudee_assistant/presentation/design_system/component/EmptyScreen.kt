@@ -132,7 +132,7 @@ fun CircularContainer(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(4.dp)
+                        .size(Theme.dimension.extraSmall)
                         .clip(shape = CircleShape)
                         .background(color = Theme.color.surfaceHigh)
                 )
@@ -147,7 +147,7 @@ fun CircularContainer(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(8.dp)
+                        .size(Theme.dimension.small)
                         .clip(shape = CircleShape)
                         .background(color = Theme.color.surfaceHigh),
                 )
@@ -187,13 +187,13 @@ fun MessageBox(modifier: Modifier = Modifier) {
             .width(203.dp)
             .height(74.dp)
             .shadow(
-                elevation = 12.dp, shape = RoundedCornerShape(
-                    bottomEnd = 2.dp, bottomStart = 16.dp, topEnd = 16.dp, topStart = 16.dp
+                elevation = Theme.dimension.regular, shape = RoundedCornerShape(
+                    bottomEnd = 2.dp, bottomStart = Theme.dimension.medium, topEnd = Theme.dimension.medium, topStart = Theme.dimension.medium
                 ), spotColor = Color(0x0A000000)
             )
             .clip(
                 shape = RoundedCornerShape(
-                    bottomEnd = 2.dp, bottomStart = 16.dp, topEnd = 16.dp, topStart = 16.dp
+                    bottomEnd = 2.dp, bottomStart = Theme.dimension.medium, topEnd = Theme.dimension.medium, topStart = Theme.dimension.medium
                 )
             )
             .background(color = Theme.color.surfaceHigh)
@@ -205,13 +205,13 @@ fun MessageBox(modifier: Modifier = Modifier) {
                 text = stringResource(R.string.no_task_today),
                 style = Theme.textStyle.title.small,
                 color = Theme.color.body,
-                modifier = Modifier.padding(start = 12.dp, top = 8.dp)
+                modifier = Modifier.padding(start = Theme.dimension.regular, top = Theme.dimension.small)
             )
             Text(
                 text = stringResource(R.string.tap_to_add_task),
                 style = Theme.textStyle.body.small,
                 color = Theme.color.hint,
-                modifier = Modifier.padding(start = 12.dp, top = 4.dp)
+                modifier = Modifier.padding(start = Theme.dimension.regular, top = Theme.dimension.extraSmall)
             )
         }
     }

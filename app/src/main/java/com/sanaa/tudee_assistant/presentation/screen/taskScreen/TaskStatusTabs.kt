@@ -52,8 +52,8 @@ fun TaskStatusTabs(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(end = 20.dp),
-                        contentAlignment = Alignment.CenterEnd
+                            .padding(end = 20.dp, top = 120.dp),
+                        contentAlignment = Alignment.TopEnd
                     ) {
                         EmptyScreen()
                     }
@@ -71,8 +71,8 @@ fun TaskStatusTabs(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(end = 20.dp),
-                        contentAlignment = Alignment.CenterEnd
+                            .padding(end = 20.dp, top = 120.dp),
+                        contentAlignment = Alignment.TopEnd
                     ) {
                         EmptyScreen()
                     }
@@ -90,8 +90,8 @@ fun TaskStatusTabs(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(end = 20.dp),
-                        contentAlignment = Alignment.CenterEnd
+                            .padding(end = 20.dp, top = 120.dp),
+                        contentAlignment = Alignment.TopEnd
                     ) {
                         EmptyScreen()
                     }

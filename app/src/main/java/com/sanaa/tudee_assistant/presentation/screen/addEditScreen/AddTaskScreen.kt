@@ -26,8 +26,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,72 +40,47 @@ fun TaskScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val categories by viewModel.categoryService.getCategories().collectAsState(initial = emptyList())
-    val snackBarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(true) }
-
-    val successMessage = stringResource(
-        if (isEditMode) R.string.task_update_success else R.string.task_add_success
-    )
 
     LaunchedEffect(initialTask) {
         initialTask?.let { viewModel.loadTask(it) }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.uiState.collectLatest { state ->
-            if (state.error != null) {
-                coroutineScope.launch {
-                    snackBarHostState.showSnackbar(
-                        message = state.error,
-                        withDismissAction = true
-                    )
-                }
-            }
-            if (state.isOperationSuccessful) {
-                coroutineScope.launch {
-                    showBottomSheet = false
-                    snackBarHostState.showSnackbar(
-                        message = successMessage,
-                        withDismissAction = true
-                    )
-                }
-                onSuccess()
-            }
+    LaunchedEffect(uiState.isOperationSuccessful, uiState.error) {
+        if (uiState.isOperationSuccessful) {
+            showBottomSheet = false
+            onSuccess()
+            viewModel.resetState()
         }
     }
-    Box(modifier = Modifier.fillMaxWidth()) {
 
-        if (showBottomSheet) {
-            BaseBottomSheet(
-                content = {
-                    Column(modifier = Modifier.fillMaxHeight(0.81f)) {
-                        TaskForm(
-                            title = uiState.taskUiModel.title,
-                            description = uiState.taskUiModel.description ?: "",
-                            dueDate = uiState.taskUiModel.dueDate,
-                            selectedPriority = uiState.taskUiModel.priority,
-                            selectedCategory = uiState.selectedCategory,
-                            categories = categories,
-                            screenTitle = stringResource(if (isEditMode) R.string.edit_task else R.string.add_new_task),
-                            primaryButtonText = stringResource(if (isEditMode) R.string.save else R.string.add),
-                            isLoading = uiState.isLoading,
-                            isButtonEnabled = uiState.isButtonEnabled,
-                            onTitleChange = viewModel::onTitleChange,
-                            onDescriptionChange = viewModel::onDescriptionChange,
-                            onDateSelected = viewModel::onDateSelected,
-                            onPrioritySelected = viewModel::onPrioritySelected,
-                            onCategorySelected = viewModel::onCategorySelected,
-                            onPrimaryButtonClick = if (isEditMode) viewModel::updateTask else viewModel::addTask,
-                            onDismiss = onDismiss
-                        )
-                    }
-                },
-                onDismiss = onDismiss
-            )
-        }
-
-        TudeeSnackBar(snackBarHostState = snackBarHostState, isError = uiState.error != null)
+    if (showBottomSheet) {
+        BaseBottomSheet(
+            content = {
+                Column(modifier = Modifier.fillMaxHeight(0.81f)) {
+                    TaskForm(
+                        title = uiState.taskUiModel.title,
+                        description = uiState.taskUiModel.description ?: "",
+                        dueDate = uiState.taskUiModel.dueDate,
+                        selectedPriority = uiState.taskUiModel.priority,
+                        selectedCategory = uiState.selectedCategory,
+                        categories = categories,
+                        screenTitle = stringResource(if (isEditMode) R.string.edit_task else R.string.add_new_task),
+                        primaryButtonText = stringResource(if (isEditMode) R.string.save else R.string.add),
+                        isLoading = uiState.isLoading,
+                        isButtonEnabled = uiState.isButtonEnabled,
+                        onTitleChange = viewModel::onTitleChange,
+                        onDescriptionChange = viewModel::onDescriptionChange,
+                        onDateSelected = viewModel::onDateSelected,
+                        onPrioritySelected = viewModel::onPrioritySelected,
+                        onCategorySelected = viewModel::onCategorySelected,
+                        onPrimaryButtonClick = if (isEditMode) viewModel::updateTask else viewModel::addTask,
+                        onDismiss = onDismiss
+                    )
+                }
+            },
+            onDismiss = onDismiss
+        )
     }
 }
 

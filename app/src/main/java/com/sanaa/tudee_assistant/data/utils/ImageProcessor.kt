@@ -16,10 +16,14 @@ import java.io.IOException
 class ImageProcessor(private val context: Context) {
 
     @Throws(IOException::class)
-    suspend fun processImage(uri: Uri): Bitmap = withContext(Dispatchers.IO) {
+    suspend fun processImage(uri: Uri?): Bitmap = withContext(Dispatchers.IO) {
         try {
             val originalBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
+                uri?.let {
+                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, it))
+                } ?: run {
+                    throw IOException("Image URI is null")
+                }
             } else {
                 MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
             }

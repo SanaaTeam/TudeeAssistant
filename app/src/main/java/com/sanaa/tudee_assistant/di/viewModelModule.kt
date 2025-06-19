@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.di
 
+import com.sanaa.tudee_assistant.data.utils.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.screens.category.CategoryViewModel
@@ -10,7 +11,7 @@ val viewModelModule = module {
 
     viewModel {
         CategoryViewModel(
-            get<CategoryService>(), get<TaskService>()
+            get<CategoryService>(), get<TaskService>(),get<ImageProcessor>()
         )
     }
 

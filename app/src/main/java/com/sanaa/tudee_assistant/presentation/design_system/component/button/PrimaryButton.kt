@@ -81,7 +81,7 @@ fun PrimaryButton(
 @Preview()
 @Composable
 private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = false) {
         Column {
             Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(
@@ -125,7 +125,7 @@ private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
 @Preview()
 @Composable
 private fun PrimaryButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = true) {
         Column {
             Box(modifier.padding(top = Theme.dimension.small, start = Theme.dimension.small)) {
                 PrimaryButton(

@@ -79,7 +79,7 @@ private fun AppBarLightPreview() {
 
     var isDarkMode by remember { mutableStateOf(false) }
 
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = isDarkMode) {
 
         AppBar(
             tailComponent = {
@@ -97,7 +97,7 @@ private fun AppBarDarkPreview() {
 
     var isDarkMode by remember { mutableStateOf(true) }
 
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = isDarkMode) {
 
         AppBar(
             tailComponent = {

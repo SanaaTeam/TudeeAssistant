@@ -235,7 +235,7 @@ fun TudeeScrollableTabsPreview() {
 
     var selectedTab by remember { mutableIntStateOf(0) }
 
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = false) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

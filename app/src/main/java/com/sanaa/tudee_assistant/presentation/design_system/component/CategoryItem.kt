@@ -78,7 +78,7 @@ fun CategoryItem(
 @Preview(name = "Dark Theme")
 @Composable
 private fun CategoryDarkPreview() {
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = true) {
         CategoryItem(
             category = CategoryState(
                 "Education",
@@ -96,7 +96,7 @@ private fun CategoryDarkPreview() {
 @Preview(name = "Light Theme")
 @Composable
 private fun CategoryLightPreview() {
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = false) {
         CategoryItem(
             category = CategoryState(
                 "Education",

@@ -43,7 +43,7 @@ fun TextButton(
 @Preview()
 @Composable
 private fun TextButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (){
+    TudeeTheme (isDarkTheme = false){
         Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             TextButton(
                 label = "Cancel",
@@ -84,7 +84,7 @@ private fun TextButtonLightPreview(modifier: Modifier = Modifier) {
 @Preview()
 @Composable
 private fun TextButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (){
+    TudeeTheme (isDarkTheme = true){
         Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             TextButton(
                 label = "Cancel",

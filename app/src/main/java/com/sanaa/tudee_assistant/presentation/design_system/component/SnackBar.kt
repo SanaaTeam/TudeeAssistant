@@ -76,7 +76,7 @@ fun SnackBar(
 @Preview(name = "Dark Theme")
 @Composable
 private fun SnackBarDarkPreview() {
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = true) {
         Box(
             modifier = Modifier
                 .background(color = Theme.color.surface)
@@ -90,7 +90,7 @@ private fun SnackBarDarkPreview() {
 @Preview(name = "Light Theme")
 @Composable
 private fun SnackBarLightPreview() {
-    TudeeTheme() {
+    TudeeTheme(isDarkTheme = false) {
         Box(
             modifier = Modifier
                 .background(color = Theme.color.surface)

@@ -6,7 +6,6 @@ import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
 import com.sanaa.tudee_assistant.R
 
-
 @Composable
 fun CategoryThumbnail(
     modifier: Modifier = Modifier,

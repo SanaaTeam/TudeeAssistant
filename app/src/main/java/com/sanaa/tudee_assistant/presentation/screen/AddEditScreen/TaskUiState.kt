@@ -1,13 +1,14 @@
-package com.sanaa.tudee_assistant.presentation.screens.TaskScreen
+package com.sanaa.tudee_assistant.presentation.screen.AddEditScreen
 
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.Task
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
-data class TaskUiState(
+data class AddTaskUiState(
     val title: String = "",
     val description: String = "",
-    val selectedDate: LocalDateTime? = null,
+    val selectedDate: LocalDate? = null,
     val selectedPriority: Task.TaskPriority? = null,
     val selectedCategory: Category? = null,
     val isAddTaskButtonEnabled: Boolean = false,

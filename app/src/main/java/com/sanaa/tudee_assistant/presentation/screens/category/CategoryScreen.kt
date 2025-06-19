@@ -72,7 +72,7 @@ fun CategoryScreen(
                 )
             }
             LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
+                columns = GridCells.Adaptive(minSize = 104.dp),
                 modifier = Modifier
                     .fillMaxSize()
                     .background(color = Theme.color.surface),
@@ -144,7 +144,9 @@ fun CategoryScreen(
             onDismiss = {
                 showBottomSheet.value = false
             },
-            onImageSelected = {}
+            onImageSelected = {uri->
+//                viewModel.onImageSelected(uri)
+            }
         )
     }
 }

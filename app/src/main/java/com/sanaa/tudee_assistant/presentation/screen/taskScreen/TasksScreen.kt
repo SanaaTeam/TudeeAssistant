@@ -17,12 +17,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,10 +38,13 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TaskScreen
+import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
 import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -82,9 +87,10 @@ fun TasksScreenContent(
     onMoveToTaskViewDetails: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
+    val snackBarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     var showDialog by remember { mutableStateOf(false) }
-
+    var showAddTaskBottomSheet by remember { mutableStateOf(false) }
     var daysInMonth by
     remember {
         mutableStateOf(
@@ -213,10 +219,51 @@ fun TasksScreenContent(
 //                    sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
                 )
             }
+
+            if (showAddTaskBottomSheet) {
+                TaskScreen(
+                    isEditMode = false,
+                    initialTask = null,
+                    onDismiss = { showAddTaskBottomSheet = false },
+                    onSuccess = {
+                        showAddTaskBottomSheet = false
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = "Task added successfully",
+                                withDismissAction = true
+                            )
+                        }
+                    },
+                    onError = { errorMessage ->
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = errorMessage,
+                                withDismissAction = true
+                            )
+                        }
+                    }
+                )
+            }
         }
 
-        FloatingActionButton(enabled = true, modifier = Modifier.align(Alignment.BottomEnd).padding(end = 10.dp, bottom = 12.dp))
-    }
+        FloatingActionButton(
+            enabled = true,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 10.dp, bottom = 12.dp),
+            onClick = {
+                coroutineScope.launch {
+                    snackBarHostState.currentSnackbarData?.dismiss()
+                }
+                showAddTaskBottomSheet = true
+            }
+        )
+
+        TudeeSnackBar(
+            snackBarHostState = snackBarHostState,
+            isError = state.errorMessage != null
+        )
+}
 }
 
 @Preview(showBackground = true, locale = "ar")

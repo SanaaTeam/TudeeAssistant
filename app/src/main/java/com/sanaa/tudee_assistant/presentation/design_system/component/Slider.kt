@@ -81,7 +81,7 @@ fun Slider(title: String, description: String, status: TudeeStatus, @DrawableRes
 @Preview
 @Composable
 private fun Preview() {
-    TudeeTheme(isDarkTheme = true) {
+    TudeeTheme(false) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

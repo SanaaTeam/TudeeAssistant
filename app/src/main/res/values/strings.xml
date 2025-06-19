@@ -30,5 +30,9 @@
     <string name="task_details">"Task Details"</string>
     <string name="mark_as_done">"Move to done"</string>
     <string name="mark_as_in_progress">"Move to in progress"</string>
+    <string name="save">Save</string>
+    <string name="edit_task">Edit Task</string>
+    <string name="task_add_success">Add task successfully.</string>
+    <string name="task_update_success">Edited task successfully.</string>
 
 </resources>

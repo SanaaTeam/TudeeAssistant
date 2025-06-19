@@ -5,7 +5,9 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
-
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
 android {
     namespace = "com.sanaa.tudee_assistant"
     compileSdk = 35
@@ -55,6 +57,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -75,4 +79,24 @@ dependencies {
     implementation(libs.bundles.koin)
 
     implementation(libs.coil.compose)
+
+
+    // Test
+    testImplementation(libs.kotlin.test)
+    // kotest, assertion
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
+
+    // google truth
+    testImplementation(libs.truth)
+
+    // mockk
+    testImplementation(libs.mockk.v1140)
+
+    // junit params
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.junit.jupiter.v5102)
+    // kotlin coroutines test
+    testImplementation(libs.kotlinx.coroutines.test.v173)
+
 }

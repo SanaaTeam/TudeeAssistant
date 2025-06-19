@@ -16,11 +16,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,12 +40,14 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.CategoryState
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreen(
     modifier: Modifier = Modifier,
     viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>()
 ) {
     val state by viewModel.state.collectAsState()
+    val showBottomSheet = remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -106,7 +111,9 @@ fun CategoryScreen(
                             )
                         )
                     )
-                    .clickable { },
+                    .clickable {
+                        showBottomSheet.value = true
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -117,6 +124,28 @@ fun CategoryScreen(
                 )
             }
         }
+    }
+
+    if (showBottomSheet.value) {
+        AddNewCategory(
+            onAddClick = { title, imageUri ->
+                val newCategory = CategoryUiModel(
+                    name = title,
+
+                    imageUrl = imageUri?.toString() ?: "",
+                    isDefault = false,
+                    tasksCount = 0
+                )
+
+                viewModel.addNewCategory(newCategory)
+
+                showBottomSheet.value = false
+            },
+            onDismiss = {
+                showBottomSheet.value = false
+            },
+            onImageSelected = {}
+        )
     }
 }
 

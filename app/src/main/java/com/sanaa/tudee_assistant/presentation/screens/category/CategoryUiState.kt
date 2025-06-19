@@ -23,3 +23,12 @@ fun Category.toUiState(taskCount: Int): CategoryUiModel {
         tasksCount = taskCount
     )
 }
+
+fun CategoryUiModel.toCategory(): Category {
+    return Category(
+        name = this.name,
+        imagePath = this.imageUrl,
+        isDefault = this.isDefault
+    )
+}
+

@@ -44,4 +44,12 @@ class CategoryViewModel(
         }
     }
 
+    fun addNewCategory(categoryUiModel: CategoryUiModel) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            categoryService.addCategory(categoryUiModel.toCategory())
+
+            _state.update { it.copy(isLoading = false) }
+        }
+    }
 }

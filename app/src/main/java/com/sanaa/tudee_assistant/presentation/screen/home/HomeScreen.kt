@@ -1,6 +1,9 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -170,6 +173,25 @@ private fun CategoryList(
             }
         }
 
+        item {
+            AnimatedVisibility(
+                state.tasks.isEmpty(),
+                exit = shrinkVertically(
+                    shrinkTowards = Alignment.Top,
+                    animationSpec = tween(1000)
+                ) + fadeOut(tween(500))
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 48.dp)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    EmptyScreen()
+                }
+            }
+        }
+
         stickyHeader {
             if (state.tasks.any { it.status == TaskStatus.DONE }) {
                 Title(
@@ -215,23 +237,10 @@ private fun CategoryList(
         }
 
         item {
-            Crossfade(targetState = state.tasks) { tasks ->
-                if (tasks.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 48.dp)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        EmptyScreen()
-                    }
-                } else {
-                    CategoryList(
-                        items = state.tasks.filter { it.status == TaskStatus.TODO },
-                        onClick = { onTaskClick(it) }
-                    )
-                }
-            }
+            CategoryList(
+                items = state.tasks.filter { it.status == TaskStatus.TODO },
+                onClick = { onTaskClick(it) }
+            )
         }
     }
 }

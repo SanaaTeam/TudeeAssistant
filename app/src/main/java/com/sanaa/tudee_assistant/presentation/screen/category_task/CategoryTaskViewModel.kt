@@ -1,7 +1,9 @@
 package com.sanaa.tudee_assistant.presentation.screen.category_task
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CategoryTaskViewModel(
@@ -22,6 +25,19 @@ class CategoryTaskViewModel(
 
     private val _state = MutableStateFlow(CategoryTaskUiState())
     val state: StateFlow<CategoryTaskUiState> = _state.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val category = categoryService.getCategoryById(_state.value.categoryId)
+            _state.update {
+                _state.value.copy(
+                    categoryName = category.name,
+                    categoryImagePath = category.imagePath,
+                    isDefault = category.isDefault,
+                )
+            }
+        }
+    }
 
     fun loadCategoryTasks(categoryId: Int) {
         viewModelScope.launch {
@@ -59,6 +75,31 @@ class CategoryTaskViewModel(
                 _state.value = _state.value.copy(
                     isLoading = false,
                     error = e.message ?: "Failed to load category tasks"
+                )
+            }
+        }
+    }
+
+    fun updateCategory(newName: String, uri: Uri?) {
+        viewModelScope.launch {
+            try {
+                val currentCategory = categoryService.getCategoryById(_state.value.categoryId)
+                val updatedCategory = currentCategory.copy(
+                    name = _state.value.categoryName,
+                    imagePath = _state.value.categoryImagePath
+                )
+
+                categoryService.updateCategory(updatedCategory)
+
+                _state.value = _state.value.copy(
+                    categoryName = updatedCategory.name,
+                    categoryImagePath = updatedCategory.imagePath,
+                    error = null
+                )
+
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    error = e.message ?: "Failed to update category"
                 )
             }
         }

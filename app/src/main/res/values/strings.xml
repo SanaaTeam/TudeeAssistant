@@ -22,4 +22,6 @@
     <string name="category_image">Category image</string>
     <string name="add_new_category">Add new category</string>
     <string name="upload">Upload</string>
+    <string name="save">Save</string>
+    <string name="edit_category">Edit category</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.category_task
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.component.TabItem
@@ -46,8 +49,11 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.screen.category_task.composable.UpdateCurrentCategory
 import com.sanaa.tudee_assistant.presentation.state.CategoryTaskUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.Koin
 
 @Composable
 fun CategoryTaskScreen(
@@ -66,7 +72,11 @@ fun CategoryTaskScreen(
         state = state,
         onBackClick = onBackClick,
         onEditCategory = onEditCategory,
-        onTaskClick = { task -> }
+        onDeleteCategory = {
+
+        },
+        onTaskClick = { task -> },
+        viewModel = viewModel
     )
 }
 
@@ -76,9 +86,13 @@ fun CategoryTaskScreenContent(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     onEditCategory: (Int) -> Unit = {},
+    onDeleteCategory: () -> Unit = {},
     onTaskClick: (TaskUiState) -> Unit = {},
+    viewModel: CategoryTaskViewModel
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var showBottomSheetState by remember { mutableStateOf(false) }
+
 
     val tabs = listOf(
         TabItem(
@@ -163,7 +177,7 @@ fun CategoryTaskScreenContent(
                             .size(40.dp)
                             .clip(CircleShape)
                             .border(color = Theme.color.stroke, width = 1.dp, shape = CircleShape)
-                            .clickable { onEditCategory(state.categoryId) },
+                            .clickable { showBottomSheetState = true },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -243,6 +257,20 @@ fun CategoryTaskScreenContent(
                 )
             }
         }
+
+        if (showBottomSheetState) {
+            UpdateCurrentCategory(
+                onImageSelected = { },
+                onEditClick = { name, imageUri ->
+//                    viewModel.updateCategory(newName = name, uri = imageUri)
+                    showBottomSheetState = false
+                },
+                onDismiss = {
+                    showBottomSheetState = false
+                },
+            )
+        }
+
     }
 }
 
@@ -299,7 +327,9 @@ private fun TasksList(
 @Preview
 @Composable
 private fun CategoryTaskScreenPreview() {
-    TudeeTheme(isDarkTheme = false) {
+    TudeeTheme {
+        val viewModel = koinViewModel<CategoryTaskViewModel>()
+
         CategoryTaskScreenContent(
             state = CategoryTaskUiState(
                 categoryName = "Work",
@@ -343,7 +373,8 @@ private fun CategoryTaskScreenPreview() {
                 )
             ),
             onBackClick = {},
-            onEditCategory = {}
+            onEditCategory = {},
+            viewModel = viewModel
         )
     }
 }

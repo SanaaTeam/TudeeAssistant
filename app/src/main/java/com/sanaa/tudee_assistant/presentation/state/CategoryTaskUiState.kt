@@ -4,7 +4,7 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiModel
 
 data class CategoryTaskUiState(
     val isLoading: Boolean = false,
-    val categoryId: Int = -1,
+    val categoryId: Int = 1,
     val categoryName: String = "",
     val categoryImagePath: String = "",
     val isDefault: Boolean = true,

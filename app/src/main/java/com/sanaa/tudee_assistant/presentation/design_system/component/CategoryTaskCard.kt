@@ -21,13 +21,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.data.utils.getAssetsImagePainter
+import com.sanaa.tudee_assistant.data.utils.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
@@ -61,13 +60,10 @@ fun CategoryTaskCard(
         ) {
 
             Box(modifier = Modifier.size(56.dp), contentAlignment = Alignment.Center) {
-                Image(
-                    modifier = Modifier.size(Theme.dimension.extraLarge),
-                    painter = getAssetsImagePainter(
-                        context = LocalContext.current,
-                        imagePath = task.categoryImagePath
-                    ),
-                    contentDescription = null,
+
+                CategoryThumbnail(
+                    imagePath = task.categoryImagePath,
+                    modifier = Modifier.size(Theme.dimension.extraLarge)
                 )
             }
 

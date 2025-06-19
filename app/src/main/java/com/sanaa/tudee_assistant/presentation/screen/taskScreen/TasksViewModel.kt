@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
@@ -92,7 +93,7 @@ class TaskViewModel(
 
     fun onDueDateChange(date: LocalDate) {
         _state.update {
-            it.copy(selectedDate = date)
+            it.copy(selectedDate = date).also { Log.i("test", date.toString()) }
         }
         getTasksByDueDate()
     }

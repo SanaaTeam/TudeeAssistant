@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,10 +32,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composables.CustomDatePickerDialog
+import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -51,22 +54,29 @@ fun TasksScreen(
 
     TasksScreenContent(
         state = state,
-        onDateSelected = { viewModel::onDueDateChange },
-        onTaskSwipe = {
-            viewModel::onTaskSwipeToDelete
+        onDateSelected = { date -> viewModel.onDueDateChange(date) },
+        onTaskSwipe = { task ->
+            viewModel.onTaskSwipeToDelete(task)
             false
-        }, onTaskClick = { viewModel::onTaskClick },
-        modifier = modifier
+        }, onTaskClick = { task -> viewModel.onTaskClick(task) },
+        onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
+        onEditTaskViewDetails = { TODO() },
+        onMoveToTaskViewDetails = { TODO() },
+        modifier = modifier,
     )
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreenContent(
     state: TasksScreenUiState,
     onTaskSwipe: (TaskUiModel) -> Boolean,
     onDateSelected: (LocalDate) -> Unit,
     onTaskClick: (TaskUiModel) -> Unit,
+    onDismissTaskViewDetails: () -> Unit,
+    onEditTaskViewDetails: () -> Unit,
+    onMoveToTaskViewDetails: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -113,7 +123,6 @@ fun TasksScreenContent(
                     modifier = Modifier.size(20.dp)
                 )
             }
-
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -187,6 +196,15 @@ fun TasksScreenContent(
         }
 
         TaskStatusTabs(state, onTaskSwipe, onTaskClick)
+
+        if (state.showTaskDetailsDialog){
+            TaskViewDetails(
+                state.selectedTask!!, onDismissTaskViewDetails,
+                onEditClick = onEditTaskViewDetails,
+                onMoveToClicked = onMoveToTaskViewDetails,
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            )
+        }
     }
 }
 
@@ -223,6 +241,9 @@ private fun TasksScreenPreview() {
                 tasksState.copy(currentDateTasks = tasksState.currentDateTasks.filterNot { item -> item == task })
             false
         },
-        onTaskClick = {  },
+        onTaskClick = { },
+        onDismissTaskViewDetails = { },
+        onEditTaskViewDetails = { },
+        onMoveToTaskViewDetails = { },
     )
 }

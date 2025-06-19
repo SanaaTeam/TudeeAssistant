@@ -196,13 +196,13 @@ fun AddTaskContent(
                             color = Theme.color.title
                         )
                         LazyVerticalGrid(
-                            columns = GridCells.Fixed(3),
+                            columns = GridCells.Adaptive(minSize = 104.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .heightIn(min = 100.dp, max = 900.dp),
                             userScrollEnabled = false,
-                            verticalArrangement = Arrangement.spacedBy(24.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(Theme.dimension.large),
+                            horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
                         ) {
                             items(categories.size) { index ->
                                 val category = categories[index]
@@ -255,7 +255,6 @@ fun AddTaskContent(
                     val dateTime = DateFormater.formatLongToDate(millis)
                     onDateSelected(dateTime)
                 }
-                showDatePickerDialog = false
             },
             onDismiss = { showDatePickerDialog = false },
         )

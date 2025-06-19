@@ -86,11 +86,14 @@ fun TaskScreen(
 
 @Composable
 fun TudeeSnackBar(snackBarHostState: SnackbarHostState, isError: Boolean) {
-    Box {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .systemBarsPadding()
+    ) {
         SnackbarHost(
             hostState = snackBarHostState,
-            modifier = Modifier .fillMaxWidth()
-                .systemBarsPadding()
+            modifier = Modifier
                 .align(Alignment.Center)
                 .padding(horizontal = Theme.dimension.medium)
         ) { data ->

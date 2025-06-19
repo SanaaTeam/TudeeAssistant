@@ -75,4 +75,5 @@ dependencies {
     implementation(libs.bundles.koin)
 
     implementation(libs.coil.compose)
+    implementation(libs.androidx.datastore.preferences)
 }

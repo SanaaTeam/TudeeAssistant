@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -39,7 +37,7 @@ fun TaskViewDetails(
     onDismiss: () -> Unit,
     onEditClick: (TaskUiModel) -> Unit,
     onMoveToClicked: () -> Unit,
-    sheetState: SheetState,
+//    sheetState: SheetState,
     modifier: Modifier = Modifier
 ) {
 
@@ -51,7 +49,7 @@ fun TaskViewDetails(
 
     BaseBottomSheet(
         onDismiss = onDismiss,
-        sheetState = sheetState,
+//        sheetState = sheetState,
         content = {
             Column(
                 modifier = modifier
@@ -79,7 +77,6 @@ fun TaskViewDetails(
                         modifier = Modifier,
                         style = Theme.textStyle.title.medium,
                         color = Theme.color.title,
-
                         )
                     if (task.description != null)
                         Text(
@@ -148,7 +145,7 @@ private fun PreviewUpdateTaskStatus() {
                 createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
             ),
             onDismiss = {},
-            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+//            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
             onEditClick = {},
             onMoveToClicked = {}
         )

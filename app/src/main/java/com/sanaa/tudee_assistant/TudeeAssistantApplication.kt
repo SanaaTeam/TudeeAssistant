@@ -18,7 +18,7 @@ class TudeeAssistantApplication : Application() {
             modules(
                 databaseModule,
                 servicesModule,
-                viewModelModule
+                viewModelModule,
                 imageProcessorModule,
             )
         }

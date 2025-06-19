@@ -37,6 +37,8 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
+import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -58,7 +60,8 @@ fun TasksScreen(
         onTaskSwipe = { task ->
             viewModel.onTaskSwipeToDelete(task)
             false
-        }, onTaskClick = { task -> viewModel.onTaskClick(task) },
+        },
+        onTaskClick = { task -> viewModel.onTaskClick(task) },
         onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
         onEditTaskViewDetails = { TODO() },
         onMoveToTaskViewDetails = { TODO() },
@@ -197,7 +200,7 @@ fun TasksScreenContent(
 
         TaskStatusTabs(state, onTaskSwipe, onTaskClick)
 
-        if (state.showTaskDetailsDialog){
+        if (state.showTaskDetailsDialog) {
             TaskViewDetails(
                 state.selectedTask!!,
                 onDismissTaskViewDetails,
@@ -242,9 +245,12 @@ private fun TasksScreenPreview() {
                 tasksState.copy(currentDateTasks = tasksState.currentDateTasks.filterNot { item -> item == task })
             false
         },
-        onTaskClick = { },
-        onDismissTaskViewDetails = { },
-        onEditTaskViewDetails = { },
-        onMoveToTaskViewDetails = { },
+        onTaskClick = { task ->
+
+            tasksState = tasksState.copy(selectedTask = task, showTaskDetailsDialog = true)
+                      },
+        onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsDialog = false) },
+        onEditTaskViewDetails = {},
+        onMoveToTaskViewDetails = {},
     )
 }

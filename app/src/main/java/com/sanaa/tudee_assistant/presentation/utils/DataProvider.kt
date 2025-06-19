@@ -1,7 +1,8 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskScreen
+package com.sanaa.tudee_assistant.presentation.utils
 
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -18,7 +19,7 @@ object DataProvider {
             categoryImagePath = "file:///android_asset/categories/agriculture.png",
             priority = TaskUiPriority.MEDIUM,
             status = TaskUiStatus.IN_PROGRESS,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+            createdAt = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC)
         ),
         TaskUiModel(
             id = 2,
@@ -29,7 +30,7 @@ object DataProvider {
             categoryImagePath = "file:///android_asset/categories/agriculture.png",
             priority = TaskUiPriority.LOW,
             status = TaskUiStatus.DONE,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+            createdAt = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC)
         ),
         TaskUiModel(
             id = 3,
@@ -40,7 +41,7 @@ object DataProvider {
             categoryImagePath = "file:///android_asset/categories/agriculture.png",
             priority = TaskUiPriority.MEDIUM,
             status = TaskUiStatus.DONE,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+            createdAt = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC)
         ),
         TaskUiModel(
             id = 4,
@@ -51,7 +52,7 @@ object DataProvider {
             categoryImagePath = "file:///android_asset/categories/agriculture.png",
             priority = TaskUiPriority.HIGH,
             status = TaskUiStatus.TODO,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+            createdAt = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC)
         ),
         TaskUiModel(
             id = 5,
@@ -62,7 +63,7 @@ object DataProvider {
             categoryImagePath = "file:///android_asset/categories/agriculture.png",
             priority = TaskUiPriority.LOW,
             status = TaskUiStatus.IN_PROGRESS,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+            createdAt = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC)
         ),
         TaskUiModel(
             id = 6,
@@ -73,7 +74,7 @@ object DataProvider {
             categoryImagePath = "file:///android_asset/categories/agriculture.png",
             priority = TaskUiPriority.LOW,
             status = TaskUiStatus.TODO,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+            createdAt = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC)
         ),
     )
 }

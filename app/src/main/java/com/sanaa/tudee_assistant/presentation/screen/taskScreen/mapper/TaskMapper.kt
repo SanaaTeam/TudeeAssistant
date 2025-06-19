@@ -1,44 +1,12 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskScreen
+package com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper
 
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import kotlinx.datetime.Clock
+import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
-
-data class TasksScreenUiState(
-    val currentDateTasks: List<TaskUiModel> = emptyList(),
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null,
-    val successMessage: String? = null,
-    val showAddTaskDialog: Boolean = false,
-    val showEditDialog: Boolean = false,
-    val showTaskDetailsDialog: Boolean = false,
-    val showDeleteDialog: Boolean = false,
-    val selectedTaskUiStatus: TaskUiStatus = TaskUiStatus.TODO,
-    val selectedTask: TaskUiModel? = null,
-    val selectedDate: LocalDate =
-        Clock.System.now()
-            .toLocalDateTime(TimeZone.UTC)
-            .date,
-)
-
-data class TaskUiModel(
-    val id: Int?,
-    val title: String,
-    val description: String?,
-    val dueDate: String?,
-    val categoryId: Int,
-    val categoryImagePath: String,
-    val priority: TaskUiPriority,
-    val status: TaskUiStatus,
-    val createdAt: LocalDateTime,
-)
 
 fun Task.toUiModel(
     categoryImagePath: String

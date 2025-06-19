@@ -29,9 +29,8 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.data.utils.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
 fun CategoryTaskCard(
@@ -132,36 +131,6 @@ private fun DateChip(date: String) {
 @Composable
 private fun Preview() {
     TudeeTheme {
-        val items = listOf(
-            TaskUiModel(
-                id = 1,
-                title = "Organize Study Desk",
-                description = "Review cell structure and functions for tomorrow...",
-                dueDate = null,
-                categoryImagePath = "file:///android_asset/categories/agriculture.png",
-                priority = TaskUiPriority.MEDIUM,
-                status = TaskUiStatus.IN_PROGRESS
-            ),
-            TaskUiModel(
-                id = 2,
-                title = "Organize Study Desk",
-                description = "Review cell structure and functions for tomorrow...",
-                dueDate = null,
-                categoryImagePath = "file:///android_asset/categories/agriculture.png",
-                priority = TaskUiPriority.MEDIUM,
-                status = TaskUiStatus.IN_PROGRESS
-            ),
-            TaskUiModel(
-                id = 3,
-                title = "Organize Study Desk",
-                description = "Review cell structure and functions for tomorrow...",
-                dueDate = null,
-                categoryImagePath = "file:///android_asset/categories/agriculture.png",
-                priority = TaskUiPriority.MEDIUM,
-                status = TaskUiStatus.IN_PROGRESS
-            ),
-        )
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -169,7 +138,7 @@ private fun Preview() {
             contentPadding = PaddingValues(Theme.dimension.medium),
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
-            items(items) {
+            items(DataProvider.getTasksSample()) {
                 CategoryTaskCard(it)
             }
         }

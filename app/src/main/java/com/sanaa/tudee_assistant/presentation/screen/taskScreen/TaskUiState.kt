@@ -1,10 +1,12 @@
 package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
 import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -31,9 +33,11 @@ data class TaskUiModel(
     val title: String,
     val description: String?,
     val dueDate: String?,
+    val categoryId: Int,
     val categoryImagePath: String,
     val priority: TaskUiPriority,
     val status: TaskUiStatus,
+    val createdAt: LocalDateTime,
 )
 
 fun Task.toUiModel(
@@ -47,17 +51,20 @@ fun Task.toUiModel(
         priority = priority.toUiModel(),
         description = description ?: "",
         status = status.toUiModel(),
+        categoryId = categoryId,
+        createdAt = createdAt,
     )
 }
 
-fun Task.TaskPriority.toUiModel(): TaskUiPriority {
+fun TaskPriority.toUiModel(): TaskUiPriority {
     return when (this) {
-        Task.TaskPriority.LOW -> TaskUiPriority.LOW
-        Task.TaskPriority.MEDIUM -> TaskUiPriority.MEDIUM
-        Task.TaskPriority.HIGH -> TaskUiPriority.HIGH
+        TaskPriority.LOW -> TaskUiPriority.LOW
+        TaskPriority.MEDIUM -> TaskUiPriority.MEDIUM
+        TaskPriority.HIGH -> TaskUiPriority.HIGH
     }
 }
-    fun Task.TaskStatus.toUiModel(): TaskUiStatus {
+
+fun Task.TaskStatus.toUiModel(): TaskUiStatus {
     return when (this) {
         Task.TaskStatus.TODO -> TaskUiStatus.TODO
         Task.TaskStatus.IN_PROGRESS -> TaskUiStatus.IN_PROGRESS
@@ -65,3 +72,32 @@ fun Task.TaskPriority.toUiModel(): TaskUiPriority {
     }
 }
 
+
+fun TaskUiPriority.toTaskPriority(): TaskPriority {
+    return when (this) {
+        TaskUiPriority.LOW -> TaskPriority.LOW
+        TaskUiPriority.MEDIUM -> TaskPriority.MEDIUM
+        TaskUiPriority.HIGH -> TaskPriority.HIGH
+    }
+}
+
+fun TaskUiModel.toTask(): Task {
+    return Task(
+        id = id,
+        title = title,
+        description = description,
+        status = status.toTaskStatus(),
+        dueDate = dueDate?.let { LocalDate.parse(it) },
+        priority = priority.toTaskPriority(),
+        categoryId = categoryId,
+        createdAt = createdAt
+    )
+}
+
+fun TaskUiStatus.toTaskStatus(): Task.TaskStatus {
+    return when (this) {
+        TaskUiStatus.TODO -> Task.TaskStatus.TODO
+        TaskUiStatus.IN_PROGRESS -> Task.TaskStatus.IN_PROGRESS
+        TaskUiStatus.DONE -> Task.TaskStatus.DONE
+    }
+}

@@ -75,7 +75,7 @@ fun TasksScreenContent(
     onDateSelected: (LocalDate) -> Unit,
     onTaskClick: (TaskUiModel) -> Unit,
     onDismissTaskViewDetails: () -> Unit,
-    onEditTaskViewDetails: () -> Unit,
+    onEditTaskViewDetails: (TaskUiModel) -> Unit,
     onMoveToTaskViewDetails: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -199,7 +199,8 @@ fun TasksScreenContent(
 
         if (state.showTaskDetailsDialog){
             TaskViewDetails(
-                state.selectedTask!!, onDismissTaskViewDetails,
+                state.selectedTask!!,
+                onDismissTaskViewDetails,
                 onEditClick = onEditTaskViewDetails,
                 onMoveToClicked = onMoveToTaskViewDetails,
                 sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),

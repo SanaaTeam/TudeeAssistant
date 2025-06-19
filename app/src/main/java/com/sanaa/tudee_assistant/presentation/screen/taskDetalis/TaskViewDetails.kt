@@ -28,13 +28,16 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TaskUiModel
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskViewDetails(
     task: TaskUiModel,
     onDismiss: () -> Unit,
-    onEditClick: () -> Unit,
+    onEditClick: (TaskUiModel) -> Unit,
     onMoveToClicked: () -> Unit,
     sheetState: SheetState,
     modifier: Modifier = Modifier
@@ -111,7 +114,7 @@ fun TaskViewDetails(
                         ) {
                             SecondaryIconButton(
                                 iconRes = painterResource(R.drawable.pencil_edit),
-                                onClick = onEditClick
+                                onClick = { onEditClick }
                             )
                             SecondaryButton(
                                 lable = changeStatusTo,
@@ -138,9 +141,11 @@ private fun PreviewUpdateTaskStatus() {
                 title = "Organize Study Desk",
                 description = "Review cell structure and functions for tomorrow...",
                 dueDate = null,
+                categoryId = 1,
                 categoryImagePath = "file:///android_asset/categories/agriculture.png",
                 priority = TaskUiPriority.MEDIUM,
-                status = TaskUiStatus.IN_PROGRESS
+                status = TaskUiStatus.IN_PROGRESS,
+                createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
             ),
             onDismiss = {},
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),

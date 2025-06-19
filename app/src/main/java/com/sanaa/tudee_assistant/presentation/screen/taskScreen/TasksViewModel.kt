@@ -57,6 +57,7 @@ class TaskViewModel(
     fun onTaskSelected(task: TaskUiModel) {
         _state.update { it.copy(selectedTask = task) }
     }
+
     fun onTaskClick(task: TaskUiModel) {
         onTaskSelected(task)
         onShowTaskDetailsDialogChange(true)
@@ -109,6 +110,33 @@ class TaskViewModel(
     fun onShowEditDialogChange(show: Boolean) {
         _state.update { it.copy(showEditDialog = show) }
     }
+
+    fun onEditTask(taskUiModel: TaskUiModel) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            runCatching {
+                taskService.updateTask(taskUiModel.toTask())
+            }.onSuccess {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        showEditDialog = false,
+                        selectedTask = null,
+                    )
+                }
+                getTasksByDueDate()
+            }.onFailure {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        showEditDialog = false,
+                        selectedTask = null,
+                    )
+                }
+            }
+        }
+    }
+
 
     fun onTaskSwipeToDelete(task: TaskUiModel) {
         onTaskSelected(task)

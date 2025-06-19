@@ -2,8 +2,8 @@ package com.sanaa.tudee_assistant
 
 import android.app.Application
 import com.sanaa.tudee_assistant.di.databaseModule
-import com.sanaa.tudee_assistant.di.presentationModule
 import com.sanaa.tudee_assistant.di.servicesModule
+import com.sanaa.tudee_assistant.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -15,7 +15,7 @@ class TudeeAssistantApplication : Application() {
         startKoin {
             androidContext(this@TudeeAssistantApplication)
             modules(
-                presentationModule,
+                viewModelModule,
                 databaseModule,
                 servicesModule,
             )

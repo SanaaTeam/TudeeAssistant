@@ -4,6 +4,6 @@ import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-val presentationModule = module {
+val viewModelModule = module {
     viewModel { HomeScreenViewModel() }
 }

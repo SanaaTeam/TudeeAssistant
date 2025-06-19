@@ -34,7 +34,10 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Pri
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun TaskForm(
@@ -106,7 +109,7 @@ fun TaskForm(
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium)
                         .clickable { showDatePickerDialog = true },
-                    placeholder = stringResource(R.string.date_placeholder),
+                    placeholder = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
                     value = dueDate ?: "",
                     onValueChange = {},
                     readOnly = true,

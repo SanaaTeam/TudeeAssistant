@@ -26,7 +26,6 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTextField
 import com.sanaa.tudee_assistant.presentation.design_system.component.UploadBox
-import com.sanaa.tudee_assistant.presentation.design_system.component.UploadBoxContent
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.PrimaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
@@ -38,21 +37,26 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddNewCategory(
     onImageSelected: (Uri?) -> Unit,
-    onAddClick: () -> Unit,
+    onAddClick: (title: String, imageUri: Uri?) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var internalShowBottomSheet by remember { mutableStateOf(true) }
     var categoryTitle by remember { mutableStateOf("") }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
     AddNewCategoryContent(
-        onImageSelected = onImageSelected,
-        onAddClick = onAddClick,
+        onAddClick = { onAddClick(categoryTitle, selectedImageUri) },
         showBottomSheet = internalShowBottomSheet,
         categoryTitle = categoryTitle,
         onCategoryTitleChange = { categoryTitle = it },
         onDismiss = {
             internalShowBottomSheet = false
             onDismiss()
+        },
+        onImageSelected = { uri ->
+            selectedImageUri = uri
+            onImageSelected(uri)
         },
         modifier = modifier
     )
@@ -69,8 +73,6 @@ fun AddNewCategoryContent(
     showBottomSheet: Boolean = true,
     categoryTitle: String = "",
 ) {
-
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var processedImageBytes by remember { mutableStateOf<Bitmap?>(null) }
 
     val context = LocalContext.current
@@ -110,7 +112,6 @@ fun AddNewCategoryContent(
                         UploadBox(
                             modifier = Modifier.padding(top = Theme.dimension.small),
                             onImageSelected = { uri ->
-                                selectedImageUri = uri
                                 onImageSelected(uri)
                                 uri?.let {
                                     scope.launch {
@@ -158,5 +159,5 @@ fun AddNewCategoryContent(
 @Preview
 @Composable
 fun AddNewCategoryScreenPreview() {
-    AddNewCategory(onImageSelected = {}, onAddClick = {}, onDismiss = {})
+    AddNewCategory(onImageSelected = {}, onAddClick = { _, _ -> }, onDismiss = {})
 }

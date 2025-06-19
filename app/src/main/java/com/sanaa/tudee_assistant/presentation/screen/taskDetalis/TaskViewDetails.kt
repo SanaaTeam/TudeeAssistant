@@ -126,9 +126,6 @@ fun TaskViewDetails(
         }
     )
 
-    TaskUiStatus.TODO -> TODO()
-    TaskUiStatus.IN_PROGRESS -> TODO()
-    TaskUiStatus.DONE -> TODO()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

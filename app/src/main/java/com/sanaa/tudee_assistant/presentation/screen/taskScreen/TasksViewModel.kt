@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.TaskService
@@ -23,7 +24,37 @@ class TaskViewModel(
 
     init {
         getTasksByDueDate()
+        addFakeData()
     }
+
+    fun addFakeData() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            runCatching {
+                fakeTasks.forEach {
+                    taskService.addTask(
+                        it
+                    )
+                }
+            }.onSuccess {
+                Log.d("TaskViewModel", "addFakeDate: success")
+            }
+        }
+
+    }
+
+    fun getTaskById() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            runCatching {
+                taskService.getTaskById(1)
+            }.onSuccess {
+                Log.d(it.title.toString(), "getTaskById: ")
+            }.onFailure {
+            }
+        }
+    }
+
 
     val tasks = listOf(
         TaskUiModel(

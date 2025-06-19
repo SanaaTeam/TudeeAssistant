@@ -18,6 +18,10 @@
     <string name="onboarding_desc_1">Tudee not mad… just a little \ndisappointed, Let’s get back on track \ntogether.</string>
     <string name="onboarding_title_2">Let’s complete task and celebrate\ntogether.</string>
     <string name="onboarding_desc_2">Progress is progress. Tudee will celebrate you on for every win, big or small.</string>
+    <string name="delete_task_title">Delete task</string>
+    <string name="delete_subtitle">Are you sure to continue?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
     <string name="no_task_today" translatable="false">No tasks for today!</string>
     <string name="tap_to_add_task" translatable="false">Tap the + button to add your\nfirst one.</string>
 </resources>

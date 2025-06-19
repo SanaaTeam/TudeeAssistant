@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,18 +29,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.CategoryState
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoryScreen(
     modifier: Modifier = Modifier,
-    //viewModel: CategoryViewModel = getViewModel()
+    viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>()
 ) {
-    //val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     Box(
         modifier = modifier
@@ -72,66 +76,16 @@ fun CategoryScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
-                val categories = listOf(
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed",
-                    "ahmed",
-                    "mohamed"
-                )
-
-                items(categories) { category ->
+                items(state.currentDateCategory) { category ->
                     CategoryItem(
                         category = CategoryState(
-                            category,
-                            painterResource(R.drawable.education_cat),
-                            Theme.color.purpleAccent
+                            category.name,
+                            rememberAsyncImagePainter(category.imageUrl),
+                            Color.Unspecified
                         ),
                         onClick = {},
-                        topContent = { CategoryCount("16") } // CheckMarkContainer(modifier = Modifier.padding(2.dp))
+                        // condition
+                        topContent = { CategoryCount(category.tasksCount.toString()) }
                     )
                 }
             }
@@ -152,7 +106,8 @@ fun CategoryScreen(
                             )
                         )
                     )
-                    .clickable { }, contentAlignment = Alignment.Center
+                    .clickable { },
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
                     modifier = Modifier.size(28.dp),
@@ -166,7 +121,7 @@ fun CategoryScreen(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun CategoryScreenPreview() {
     CategoryScreen()

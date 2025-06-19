@@ -1,18 +1,24 @@
 package com.sanaa.tudee_assistant.presentation.screens.category
 
 import com.sanaa.tudee_assistant.domain.model.Category
+import kotlinx.coroutines.flow.Flow
 
 data class CategoryUiState(
-    val name: String = "",
-    val imageUrl: String = "",
-    val isDefault: Boolean = true,
-    val tasksCount: Int = 0,
+    val currentDateCategory: List<CategoryUiModel> = emptyList(),
+    val isLoading: Boolean = false,
 )
 
-fun Category.toUiState(taskCount: Int): CategoryUiState {
-    return CategoryUiState(
+data class CategoryUiModel(
+    val name: String,
+    val imageUrl: String,
+    val isDefault: Boolean,
+    val tasksCount: Int,
+)
+
+fun Category.toUiState(taskCount: Int): CategoryUiModel {
+    return CategoryUiModel(
         name = this.name,
-        imageUrl = this.imageUrl,
+        imageUrl = this.imagePath,
         isDefault = this.isDefault,
         tasksCount = taskCount
     )

@@ -15,7 +15,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +35,7 @@ fun TaskScreen(
     initialTask: TaskUiModel? = null,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
+    onError: (String) -> Unit,
     viewModel: TaskFormViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()

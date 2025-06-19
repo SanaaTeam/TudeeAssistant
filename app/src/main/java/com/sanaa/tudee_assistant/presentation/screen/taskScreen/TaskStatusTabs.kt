@@ -40,7 +40,7 @@ fun TaskStatusTabs(
                 TaskListColumn(
                     state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
                     onTaskSwipe = { task -> onTaskSwipe(task) },
-                    onTaskClick = { onTaskClick }
+                    onTaskClick = onTaskClick
                 )
             },
             TabItem(
@@ -49,7 +49,10 @@ fun TaskStatusTabs(
             ) {
                 TaskListColumn(
                     state.currentDateTasks.filter { it.status == TaskUiStatus.TODO },
-                    onTaskSwipe = { task -> onTaskSwipe(task) })
+                    onTaskSwipe = { task -> onTaskSwipe(task) },
+                    onTaskClick = onTaskClick
+                )
+
             },
             TabItem(
                 label = stringResource(R.string.done_task_status),
@@ -57,7 +60,9 @@ fun TaskStatusTabs(
             ) {
                 TaskListColumn(
                     state.currentDateTasks.filter { it.status == TaskUiStatus.DONE },
-                    onTaskSwipe = { task -> onTaskSwipe(task) })
+                    onTaskSwipe = { task -> onTaskSwipe(task) },
+                    onTaskClick = onTaskClick
+                )
             }
         ),
         selectedTabIndex = selectedTab,

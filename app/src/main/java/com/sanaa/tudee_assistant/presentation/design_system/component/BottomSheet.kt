@@ -15,6 +15,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -29,33 +30,40 @@ fun BaseBottomSheet(
     content: @Composable () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    ModalBottomSheet(
-        sheetState = sheetState,
-        onDismissRequest = onDismiss,
-        scrimColor = Color.Black.copy(alpha = 0.6f),
-        shape = RoundedCornerShape(Theme.dimension.large, Theme.dimension.large),
-        containerColor = Theme.color.surface,
-        dragHandle = {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(Theme.dimension.medium),
-                horizontalArrangement = Arrangement.Center
-            ) {
+    LaunchedEffect(key1 = Unit) {
+        sheetState.expand()
+    }
+    if (sheetState.isVisible)
+        ModalBottomSheet(
+            sheetState = sheetState,
+            onDismissRequest = onDismiss,
+            scrimColor = Color.Black.copy(alpha = 0.6f),
+            shape = RoundedCornerShape(Theme.dimension.large, Theme.dimension.large),
+            containerColor = Theme.color.surface,
+            dragHandle = {
+                Row(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(Theme.dimension.medium),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .height(Theme.dimension.extraSmall)
+                            .width(Theme.dimension.extraLarge)
+                            .alpha(0.4f)
+                            .background(
+                                color = Theme.color.body,
+                                shape = RoundedCornerShape(100.dp)
+                            )
+                    )
+                }
+            },
+            content = {
                 Box(
-                    modifier = Modifier
-                        .height(Theme.dimension.extraSmall)
-                        .width(Theme.dimension.extraLarge)
-                        .alpha(0.4f)
-                        .background(color = Theme.color.body, shape = RoundedCornerShape(100.dp))
+                    modifier = Modifier.wrapContentHeight(),
                 )
+                { content() }
             }
-        },
-        content = {
-            Box(
-                modifier = Modifier.wrapContentHeight(),
-            )
-            { content() }
-        }
-    )
+        )
 }

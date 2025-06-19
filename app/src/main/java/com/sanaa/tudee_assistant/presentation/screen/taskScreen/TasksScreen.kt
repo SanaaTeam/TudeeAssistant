@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -61,7 +60,7 @@ fun TasksScreen(
             viewModel.onTaskSwipeToDelete(task)
             false
         },
-        onTaskClick = { task -> viewModel.onTaskClick(task) },
+        onTaskClick = viewModel::onTaskClick,
         onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
         onEditTaskViewDetails = { TODO() },
         onMoveToTaskViewDetails = { TODO() },
@@ -84,7 +83,6 @@ fun TasksScreenContent(
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
-
     var daysInMonth by
     remember {
         mutableStateOf(
@@ -199,16 +197,15 @@ fun TasksScreenContent(
         }
 
         TaskStatusTabs(state, onTaskSwipe, onTaskClick)
-
-        if (state.showTaskDetailsDialog) {
+        if (state.selectedTask != null && state.showTaskDetailsDialog)
             TaskViewDetails(
-                state.selectedTask!!,
-                onDismissTaskViewDetails,
-                onEditClick = onEditTaskViewDetails,
+                task = state.selectedTask,
+                onDismiss = onDismissTaskViewDetails,
+                onEditClick = { task -> onEditTaskViewDetails(task) },
                 onMoveToClicked = onMoveToTaskViewDetails,
-                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
-        }
+
     }
 }
 
@@ -246,9 +243,8 @@ private fun TasksScreenPreview() {
             false
         },
         onTaskClick = { task ->
-
             tasksState = tasksState.copy(selectedTask = task, showTaskDetailsDialog = true)
-                      },
+        },
         onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsDialog = false) },
         onEditTaskViewDetails = {},
         onMoveToTaskViewDetails = {},

@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -42,6 +44,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.AppBar
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.component.DarkModeThemeSwitchButton
+import com.sanaa.tudee_assistant.presentation.design_system.component.EmptyScreen
 import com.sanaa.tudee_assistant.presentation.design_system.component.Slider
 import com.sanaa.tudee_assistant.presentation.design_system.component.TaskCountByStatusCard
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
@@ -49,9 +52,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskStatus
-import com.sanaa.tudee_assistant.presentation.model.TudeeStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryTaskState
-import com.sanaa.tudee_assistant.presentation.state.SliderState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.formatDateTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -75,7 +76,6 @@ fun HomeScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreenContent(
     isDarkTheme: Boolean,
@@ -106,97 +106,21 @@ fun HomeScreenContent(
                 .fillMaxSize()
                 .background(Theme.color.surface)
         ) {
-            Column {
-                AppBar(
-                    tailComponent = {
-                        DarkModeThemeSwitchButton(
-                            isDarkTheme,
-                            onCheckedChange = {
-                                onChangeTheme()
-                            })
-                    }
-                )
-
-                if (isScrolled) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(Theme.color.primary)
-                            .background(Theme.color.stroke)
-                    )
+            AppBar(
+                tailComponent = {
+                    DarkModeThemeSwitchButton(
+                        isDarkTheme,
+                        onCheckedChange = {
+                            onChangeTheme()
+                        })
                 }
+            )
+
+            if (isScrolled) {
+                Line()
             }
 
-            LazyColumn(
-                state = scrollState,
-                modifier = Modifier,
-                contentPadding = PaddingValues(bottom = Theme.dimension.regular)
-            ) {
-                item {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(55.dp)
-                                .background(Theme.color.primary)
-                        )
-
-                        InfoCard(state)
-                    }
-                }
-
-                stickyHeader {
-                    if (state.tasks.any { it.status == TaskStatus.DONE }) {
-                        Title(
-                            text = stringResource(R.string.done_task_status),
-                            tasksCount = state.tasks.filter { it.status == TaskStatus.DONE }.size,
-                            onOpenClick = { onOpenCategory(TaskStatus.DONE) }
-                        )
-                    }
-                }
-
-                item {
-                    CategoryList(
-                        items = state.tasks.filter { it.status == TaskStatus.DONE },
-                        onClick = { onTaskClick(it) }
-                    )
-                }
-
-                stickyHeader {
-                    if (state.tasks.any { it.status == TaskStatus.IN_PROGRESS }) {
-                        Title(
-                            text = stringResource(R.string.in_progress_task_status),
-                            tasksCount = state.tasks.filter { it.status == TaskStatus.IN_PROGRESS }.size,
-                            onOpenClick = { onOpenCategory(TaskStatus.IN_PROGRESS) }
-                        )
-                    }
-                }
-
-                item {
-                    CategoryList(
-                        items = state.tasks.filter { it.status == TaskStatus.IN_PROGRESS },
-                        onClick = { onTaskClick(it) }
-                    )
-                }
-
-                stickyHeader {
-                    if (state.tasks.any { it.status == TaskStatus.TODO }) {
-                        Title(
-                            text = stringResource(R.string.todo_task_status),
-                            tasksCount = state.tasks.filter { it.status == TaskStatus.TODO }.size,
-                            onOpenClick = { onOpenCategory(TaskStatus.TODO) }
-                        )
-                    }
-                }
-
-                item {
-                    CategoryList(
-                        items = state.tasks.filter { it.status == TaskStatus.TODO },
-                        onClick = { onTaskClick(it) }
-                    )
-                }
-            }
+            CategoryList(scrollState, state, onOpenCategory, onTaskClick)
         }
 
 
@@ -206,6 +130,109 @@ fun HomeScreenContent(
                 .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
             iconRes = R.drawable.note_add,
         ) { onAddTask() }
+    }
+}
+
+@Composable
+private fun Line() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(Theme.color.primary)
+            .background(Theme.color.stroke)
+    )
+}
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun CategoryList(
+    scrollState: LazyListState,
+    state: HomeScreenUiState,
+    onOpenCategory: (TaskStatus) -> Unit,
+    onTaskClick: (CategoryTaskState) -> Unit,
+) {
+    LazyColumn(
+        state = scrollState,
+        modifier = Modifier,
+        contentPadding = PaddingValues(bottom = Theme.dimension.regular)
+    ) {
+        item {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(55.dp)
+                        .background(Theme.color.primary)
+                )
+
+                InfoCard(state)
+            }
+        }
+
+        stickyHeader {
+            if (state.tasks.any { it.status == TaskStatus.DONE }) {
+                Title(
+                    text = stringResource(R.string.done_task_status),
+                    tasksCount = state.tasks.filter { it.status == TaskStatus.DONE }.size,
+                    onOpenClick = { onOpenCategory(TaskStatus.DONE) }
+                )
+            }
+        }
+
+        item {
+            CategoryList(
+                items = state.tasks.filter { it.status == TaskStatus.DONE },
+                onClick = { onTaskClick(it) }
+            )
+        }
+
+        stickyHeader {
+            if (state.tasks.any { it.status == TaskStatus.IN_PROGRESS }) {
+                Title(
+                    text = stringResource(R.string.in_progress_task_status),
+                    tasksCount = state.tasks.filter { it.status == TaskStatus.IN_PROGRESS }.size,
+                    onOpenClick = { onOpenCategory(TaskStatus.IN_PROGRESS) }
+                )
+            }
+        }
+
+        item {
+            CategoryList(
+                items = state.tasks.filter { it.status == TaskStatus.IN_PROGRESS },
+                onClick = { onTaskClick(it) }
+            )
+        }
+
+        stickyHeader {
+            if (state.tasks.any { it.status == TaskStatus.TODO }) {
+                Title(
+                    text = stringResource(R.string.todo_task_status),
+                    tasksCount = state.tasks.filter { it.status == TaskStatus.TODO }.size,
+                    onOpenClick = { onOpenCategory(TaskStatus.TODO) }
+                )
+            }
+        }
+
+        item {
+            Crossfade(targetState = state.tasks) { tasks ->
+                if (tasks.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 48.dp)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        EmptyScreen()
+                    }
+                } else {
+                    CategoryList(
+                        items = state.tasks.filter { it.status == TaskStatus.TODO },
+                        onClick = { onTaskClick(it) }
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -247,7 +274,7 @@ private fun InfoCard(state: HomeScreenUiState) {
     ) {
         TopDate(state)
 
-        Slider(modifier = Modifier.padding(horizontal = 6.dp), sliderState = state.sliderState)
+        Slider(modifier = Modifier.padding(start = 12.dp), tasks = state.tasks)
 
         Text(
             modifier = Modifier.padding(
@@ -267,12 +294,18 @@ private fun InfoCard(state: HomeScreenUiState) {
             ),
             horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
         ) {
-            state.taskCounts.forEach {
-                TaskCountByStatusCard(
-                    count = it.first,
-                    taskStatus = it.second,
-                )
-            }
+            TaskCountByStatusCard(
+                count = state.tasks.filter { it.status == TaskStatus.DONE }.size,
+                taskStatus = TaskStatus.DONE,
+            )
+            TaskCountByStatusCard(
+                count = state.tasks.filter { it.status == TaskStatus.IN_PROGRESS }.size,
+                taskStatus = TaskStatus.IN_PROGRESS,
+            )
+            TaskCountByStatusCard(
+                count = state.tasks.filter { it.status == TaskStatus.TODO }.size,
+                taskStatus = TaskStatus.TODO,
+            )
         }
     }
 }
@@ -346,7 +379,7 @@ private fun TopDate(state: HomeScreenUiState) {
 
 @Preview
 @Composable
-private fun Preview() {
+fun PreviewHomeScreen() {
     val dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     var isDarkTheme by remember { mutableStateOf(false) }
     TudeeTheme(isDarkTheme = isDarkTheme) {
@@ -372,11 +405,6 @@ private fun Preview() {
                         TaskStatus.IN_PROGRESS
                     ),
                     Pair(list.filter { it.status == TaskStatus.TODO }.size, TaskStatus.TODO),
-                ),
-                sliderState = SliderState(
-                    title = "Tudee!",
-                    description = "You’re doing amazing!!! Tudee is proud of you.",
-                    status = TudeeStatus.OKAY,
                 ),
                 tasks = list
             ),

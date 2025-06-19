@@ -16,6 +16,16 @@
     <string name="today">today</string>
     <string name="overview">Overview</string>
 
+    <string name="okay_status_message">You\'ve completed * out of # tasks \nKeep going!</string>
+    <string name="good_status_message">You’re doing amazing!!! \nTudee is proud of you.</string>
+    <string name="bad_status_message">You just scrolling, not working. \nTudee is watching. back to work!!!</string>
+    <string name="poor_status_message">Fill your day with something \nawesome.</string>
+
+    <string name="okay_status_message_title">Stay working!</string>
+    <string name="good_status_message_title">Tadaa!</string>
+    <string name="bad_status_message_title">Zero progress?!</string>
+    <string name="poor_status_message_title">Nothing on your list…</string>
+
     <string-array name="month_abbreviations">
         <item>Jan</item>
         <item>Feb</item>

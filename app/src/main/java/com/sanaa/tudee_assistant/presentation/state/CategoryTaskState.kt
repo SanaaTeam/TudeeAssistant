@@ -8,7 +8,7 @@ data class CategoryTaskState(
     val icon: Painter,
     val title: String,
     val description: String? = null,
-    val date: String?,
-    val priority: TaskPriority,
-    val status: TaskStatus,
+    val date: String? = null,
+    val priority: TaskPriority = TaskPriority.LOW,
+    val status: TaskStatus = TaskStatus.TODO,
 )

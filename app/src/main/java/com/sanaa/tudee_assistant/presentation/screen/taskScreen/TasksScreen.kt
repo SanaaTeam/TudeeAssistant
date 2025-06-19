@@ -40,14 +40,12 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TaskScreen
-import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TaskScreen
+import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
 import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -72,7 +70,7 @@ fun TasksScreen(
         },
         onTaskClick = viewModel::onTaskClick,
         onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
-        onEditTaskViewDetails = { TODO() },
+        onEditTaskViewDetails = {},
         onMoveToTaskViewDetails = viewModel::onMoveTaskToAnotherStatus,
         onDeleteClick = viewModel::onTaskDeleted,
         onDeleteDismiss = viewModel::onTaskDeletedDismiss,
@@ -95,8 +93,11 @@ fun TasksScreenContent(
     onDeleteDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    var showEditTaskBottomSheet by remember { mutableStateOf(false) }
+    var editTask by remember { mutableStateOf<TaskUiModel?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     var showAddTaskBottomSheet by remember { mutableStateOf(false) }
     var daysInMonth by
@@ -231,7 +232,7 @@ fun TasksScreenContent(
                 )
 
         if (showAddTaskBottomSheet) {
-            TaskScreen(
+            AddEditTaskScreen(
                 isEditMode = false,
                 initialTask = null,
                 onDismiss = { showAddTaskBottomSheet = false },
@@ -256,6 +257,34 @@ fun TasksScreenContent(
         }
     }
 
+        if (showEditTaskBottomSheet && editTask != null) {
+            AddEditTaskScreen(
+                isEditMode = true,
+                initialTask = editTask,
+                onDismiss = {
+                    showEditTaskBottomSheet = false
+                    editTask = null
+                },
+                onSuccess = {
+                    showEditTaskBottomSheet = false
+                    editTask = null
+                    coroutineScope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = "Task updated successfully",
+                            withDismissAction = true
+                        )
+                    }
+                },
+                onError = { errorMessage ->
+                    coroutineScope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = errorMessage,
+                            withDismissAction = true
+                        )
+                    }
+                }
+            )
+        }
 
 
         FloatingActionButton(

@@ -31,7 +31,7 @@ val darkSchemaColors = TudeeColors(
     purpleAccent = Color(0xFF9887F5),
     purpleVariant = Color(0xFFEEEDF7),
     error = Color(0xFFE55C5C),
-    errorVariant = Color(0xFFFCE8E8),
+    errorVariant = Color(0xFF1F1111),
     overlay = Color(0xFF02151E).copy(alpha = 0.32f),
     emojiTint = Color(0xFF1F1F1F).copy(alpha = 0.87f),
 )

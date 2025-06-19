@@ -231,8 +231,8 @@ fun MessageBox(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewEmptyScreen() {
-    TudeeTheme(isDarkTheme = false) {
+private fun PreviewEmptyScreen() {
+    TudeeTheme(false) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             EmptyScreen()
         }

@@ -65,13 +65,13 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    isDarkTheme: Boolean,
+    isDark: Boolean,
     onChangeTheme: () -> Unit,
     viewModel: HomeScreenViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
     HomeScreenContent(
-        isDarkTheme = isDarkTheme,
+        isDark = isDark,
         state = state,
         onChangeTheme = onChangeTheme,
         viewModel::onAddTask,
@@ -82,7 +82,7 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreenContent(
-    isDarkTheme: Boolean,
+    isDark: Boolean,
     state: HomeScreenUiState,
     onChangeTheme: () -> Unit,
     onAddTask: () -> Unit,
@@ -113,7 +113,7 @@ fun HomeScreenContent(
             AppBar(
                 tailComponent = {
                     DarkModeThemeSwitchButton(
-                        isDarkTheme,
+                        isDark,
                         onCheckedChange = {
                             onChangeTheme()
                         })
@@ -400,12 +400,12 @@ private fun TopDate(state: HomeScreenUiState) {
 @Composable
 fun PreviewHomeScreen() {
     val dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-    var isDarkTheme by remember { mutableStateOf(false) }
-    TudeeTheme(isDarkTheme = isDarkTheme) {
+    var isDark by remember { mutableStateOf(false) }
+    TudeeTheme(isDark = isDark) {
         val list = DataProvider.getTasksSample()
 
         HomeScreenContent(
-            isDarkTheme,
+            isDark,
             HomeScreenUiState(
                 dayDate = dayDate,
                 taskCounts = listOf(
@@ -418,7 +418,7 @@ fun PreviewHomeScreen() {
                 ),
                 tasks = list
             ),
-            onChangeTheme = { isDarkTheme = !isDarkTheme }, {}, {}, {}
+            onChangeTheme = { isDark = !isDark }, {}, {}, {}
         )
     }
 }

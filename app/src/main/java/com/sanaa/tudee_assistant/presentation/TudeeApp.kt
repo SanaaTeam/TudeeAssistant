@@ -31,7 +31,7 @@ fun TudeeApp() {
     var isDarkTheme by remember { mutableStateOf(false) }
     var statusBarColor by remember { mutableStateOf(Color.White) }
 
-    TudeeTheme(isDarkTheme = isDarkTheme) {
+    TudeeTheme(isDark = isDarkTheme) {
         Scaffold(containerColor = statusBarColor) { innerPadding ->
             AppNavigation(
                 modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
@@ -74,7 +74,7 @@ private fun AppNavigation(
                     onStatusBarColor(Theme.color.primary)
 
                     HomeScreen(
-                        isDarkTheme = isDarkTheme,
+                        isDark = isDarkTheme,
                         onChangeTheme = onChangeTheme,
                     )
                 }

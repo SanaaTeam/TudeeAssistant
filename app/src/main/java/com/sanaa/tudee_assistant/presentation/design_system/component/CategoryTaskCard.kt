@@ -25,10 +25,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.data.utils.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.utils.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
@@ -126,7 +126,7 @@ private fun DateChip(date: String) {
 @Preview(widthDp = 360)
 @Composable
 private fun Preview() {
-    TudeeTheme {
+    TudeeTheme (false){
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -134,9 +134,10 @@ private fun Preview() {
             contentPadding = PaddingValues(Theme.dimension.medium),
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
-            items(DataProvider.getTasksSample()) {
+            items (DataProvider.getTasksSample()) {
                 CategoryTaskCard(
-                    task = it, categoryImagePath = "file:///android_asset/categories/agriculture.png",
+                    task = it,
+                    categoryImagePath = "file:///android_asset/categories/agriculture.png",
                 )
             }
         }

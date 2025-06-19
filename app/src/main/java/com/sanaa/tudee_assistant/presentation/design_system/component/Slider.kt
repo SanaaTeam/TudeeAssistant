@@ -146,7 +146,7 @@ fun getSlideStatus(tasks: List<TaskUiState>): TudeeStatus {
 @Composable
 private fun Preview() {
     val doneTask = DataProvider.getTasksSample()[0].copy(status = TaskUiStatus.DONE)
-    TudeeTheme(isDarkTheme = true) {
+    TudeeTheme(isDark = true) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

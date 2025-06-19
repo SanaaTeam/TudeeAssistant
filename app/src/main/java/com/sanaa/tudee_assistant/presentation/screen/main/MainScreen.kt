@@ -46,6 +46,7 @@ fun MainScreen(startDestination: Any, builder: NavGraphBuilder.() -> Unit) {
                     selectedIconRes = it.selectedIconRes
                 ) {
                     screenNavController.navigateTo(it.route)
+
                 }
             }
         }

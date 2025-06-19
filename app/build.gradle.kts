@@ -80,6 +80,8 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    implementation(libs.androidx.datastore.preferences)
+
 
     // Test
     testImplementation(libs.kotlin.test)
@@ -98,5 +100,6 @@ dependencies {
     testImplementation(libs.junit.jupiter.v5102)
     // kotlin coroutines test
     testImplementation(libs.kotlinx.coroutines.test.v173)
+
 
 }

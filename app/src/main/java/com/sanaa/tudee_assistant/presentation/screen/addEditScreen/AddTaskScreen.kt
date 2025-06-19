@@ -30,7 +30,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskScreen(
+fun AddEditTaskScreen(
     isEditMode: Boolean,
     initialTask: TaskUiModel? = null,
     onDismiss: () -> Unit,

@@ -31,8 +31,6 @@ class TasksServiceImpl(
             }
 
     }
-
-
     override suspend fun addTask(task: Task) {
         if (taskDao.insertTask(task.toLocalDto()) == -1L) {
             throw FailedToAddTaskException()

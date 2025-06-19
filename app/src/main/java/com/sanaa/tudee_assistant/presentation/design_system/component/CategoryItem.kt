@@ -15,10 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.data.utils.getAssetsImagePainter
+import com.sanaa.tudee_assistant.data.utils.CategoryThumbnail
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
@@ -30,8 +29,6 @@ fun CategoryItem(
     onClick: () -> Unit,
     topContent: @Composable () -> Unit = {},
 ) {
-    val context = LocalContext.current
-    val painter = getAssetsImagePainter(context, category.imagePath)
     Column(
         modifier = modifier
             .width(104.dp)
@@ -54,11 +51,7 @@ fun CategoryItem(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    painter = painter,
-                    contentDescription = null,
-                    modifier = Modifier.size(Theme.dimension.extraLarge),
-                )
+                CategoryThumbnail(modifier=Modifier,imagePath = category.imagePath)
             }
         }
 

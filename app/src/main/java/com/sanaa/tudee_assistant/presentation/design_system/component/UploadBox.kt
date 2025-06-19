@@ -40,18 +40,36 @@ import com.sanaa.tudee_assistant.presentation.utils.drawDashedBorder
 @Composable
 fun UploadBox(
     modifier: Modifier = Modifier,
-    onImageSelected: (Uri?) -> Unit,
     strokeColor: Color = Theme.color.stroke,
+    onImageSelected: (Uri?) -> Unit,
     cornerRadius: Dp = Theme.dimension.medium
 ) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUri = uri
         onImageSelected(uri)
     }
+    UploadBoxContent(
+        imageUri = imageUri,
+        modifier = modifier,
+        strokeColor = strokeColor,
+        launcher = launcher,
+        onImageSelected = onImageSelected,
+        cornerRadius = cornerRadius,
+    )
+}
+
+@Composable
+fun UploadBoxContent(
+    imageUri: Uri?,
+    modifier: Modifier = Modifier,
+    launcher: ManagedActivityResultLauncher<String, Uri?>,
+    onImageSelected: (Uri?) -> Unit,
+    strokeColor: Color = Theme.color.stroke,
+    cornerRadius: Dp = Theme.dimension.medium
+) {
 
     Box(
         modifier = modifier
@@ -92,7 +110,7 @@ fun SelectedImageView(
         )
         Box(
             modifier = Modifier
-                .size(32.dp)
+                .size(Theme.dimension.extraLarge)
                 .background(Color.White.copy(alpha = 0.8f), CircleShape)
                 .clickable { launcher.launch("image/*") },
             contentAlignment = Alignment.Center

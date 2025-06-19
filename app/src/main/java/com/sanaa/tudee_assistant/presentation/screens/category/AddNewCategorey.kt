@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.bottomSheet
+package com.sanaa.tudee_assistant.presentation.screens.category
 
 import android.graphics.Bitmap
 import android.net.Uri
@@ -26,6 +26,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTextField
 import com.sanaa.tudee_assistant.presentation.design_system.component.UploadBox
+import com.sanaa.tudee_assistant.presentation.design_system.component.UploadBoxContent
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.PrimaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
@@ -34,15 +35,41 @@ import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNewCategory(
     onImageSelected: (Uri?) -> Unit,
     onAddClick: () -> Unit,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showBottomSheet by remember { mutableStateOf(true) }
+    var internalShowBottomSheet by remember { mutableStateOf(true) }
     var categoryTitle by remember { mutableStateOf("") }
+    AddNewCategoryContent(
+        onImageSelected = onImageSelected,
+        onAddClick = onAddClick,
+        showBottomSheet = internalShowBottomSheet,
+        categoryTitle = categoryTitle,
+        onCategoryTitleChange = { categoryTitle = it },
+        onDismiss = {
+            internalShowBottomSheet = false
+            onDismiss()
+        },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddNewCategoryContent(
+    modifier: Modifier = Modifier,
+    onImageSelected: (Uri?) -> Unit,
+    onAddClick: () -> Unit,
+    onCategoryTitleChange: (String) -> Unit,
+    onDismiss: () -> Unit = {},
+    showBottomSheet: Boolean = true,
+    categoryTitle: String = "",
+) {
+
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var processedImageBytes by remember { mutableStateOf<Bitmap?>(null) }
 
@@ -71,7 +98,7 @@ fun AddNewCategory(
                             placeholder = stringResource(R.string.category_title),
                             value = categoryTitle,
                             icon = painterResource(R.drawable.menu_circle),
-                            onValueChange = { newText -> categoryTitle = newText },
+                            onValueChange = onCategoryTitleChange,
                             modifier = Modifier.padding(top = Theme.dimension.regular)
                         )
                         Text(
@@ -87,7 +114,8 @@ fun AddNewCategory(
                                 onImageSelected(uri)
                                 uri?.let {
                                     scope.launch {
-                                        processedImageBytes = HelperFunctions.processImage(context, it)
+                                        processedImageBytes =
+                                            HelperFunctions.processImage(context, it)
                                     }
                                 } ?: run {
                                     processedImageBytes = null
@@ -117,12 +145,12 @@ fun AddNewCategory(
                         SecondaryButton(
                             lable = stringResource(R.string.cancel),
                             modifier = Modifier.fillMaxWidth(),
-                            onClick = { showBottomSheet = false },
+                            onClick = { onDismiss() },
                         )
                     }
                 }
             },
-            onDismiss = { showBottomSheet = false }
+            onDismiss = { onDismiss() }
         )
     }
 }
@@ -130,5 +158,5 @@ fun AddNewCategory(
 @Preview
 @Composable
 fun AddNewCategoryScreenPreview() {
-    AddNewCategory({}, {})
+    AddNewCategory(onImageSelected = {}, onAddClick = {}, onDismiss = {})
 }

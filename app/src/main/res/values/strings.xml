@@ -12,7 +12,6 @@
     <string name="priority">Priority</string>
     <string name="category">Category</string>
     <string name="add">Add</string>
-    <string name="cancel">Cancel</string>
 
     <string name="todo_task_status">To-Do</string>
     <string name="in_progress_task_status">In Progress</string>

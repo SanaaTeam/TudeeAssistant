@@ -27,10 +27,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.sanaa.navigationtry.route.MainScreenRoute
+import com.sanaa.navigationtry.route.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import kotlinx.coroutines.launch
 
 data class OnBoardingContent(
@@ -107,8 +110,8 @@ fun OnBoardingScreen(
                         modifier = Modifier
                             .padding(start = Theme.dimension.medium, top = Theme.dimension.medium)
                             .clickable {
-                                navController.navigate("login") {
-                                    popUpTo("onboarding") { inclusive = true }
+                                navController.navigate(MainScreenRoute) {
+                                    popUpTo(OnBoardingScreenRoute) { inclusive = true }
                                 }
                             })
                 }

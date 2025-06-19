@@ -11,10 +11,10 @@ import com.sanaa.tudee_assistant.presentation.design_system.text_style.defaultTe
 
 @Composable
 fun TudeeTheme(
-    isDarkTheme: Boolean = false,
+    isDark: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val theme = if (isDarkTheme) darkSchemaColors else lightSchemaColors
+    val theme = if (isDark) darkSchemaColors else lightSchemaColors
 
     CompositionLocalProvider(
         LocalTudeeColors provides theme,

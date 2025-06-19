@@ -33,7 +33,7 @@ fun DeleteComponent(
     onDismiss: () -> Unit,
     onDeleteClicked: () -> Unit,
     title: String,
-    subtitle: String = stringResource(R.string.delete_task_subtitle),
+    subtitle: String = stringResource(R.string.delete_subtitle),
 ) {
     BaseBottomSheet(
         sheetState = sheetState,

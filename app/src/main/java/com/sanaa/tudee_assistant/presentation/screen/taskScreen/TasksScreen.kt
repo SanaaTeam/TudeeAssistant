@@ -96,8 +96,7 @@ fun TasksScreenContent(
 
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    var showEditTaskBottomSheet by remember { mutableStateOf(false) }
-    var editTask by remember { mutableStateOf<TaskUiModel?>(null) }
+
     var showDialog by remember { mutableStateOf(false) }
     var showAddTaskBottomSheet by remember { mutableStateOf(false) }
     var daysInMonth by
@@ -257,34 +256,6 @@ fun TasksScreenContent(
         }
     }
 
-        if (showEditTaskBottomSheet && editTask != null) {
-            AddEditTaskScreen(
-                isEditMode = true,
-                initialTask = editTask,
-                onDismiss = {
-                    showEditTaskBottomSheet = false
-                    editTask = null
-                },
-                onSuccess = {
-                    showEditTaskBottomSheet = false
-                    editTask = null
-                    coroutineScope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = "Task updated successfully",
-                            withDismissAction = true
-                        )
-                    }
-                },
-                onError = { errorMessage ->
-                    coroutineScope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = errorMessage,
-                            withDismissAction = true
-                        )
-                    }
-                }
-            )
-        }
 
 
         FloatingActionButton(

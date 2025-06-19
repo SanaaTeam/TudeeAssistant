@@ -110,7 +110,7 @@ fun TaskViewDetails(
                         ) {
                             SecondaryIconButton(
                                 iconRes = painterResource(R.drawable.pencil_edit),
-                                onClick = { onEditClick }
+                                onClick = { onEditClick(task) }
                             )
                             SecondaryButton(
                                 lable = changeStatusTo,

@@ -1,7 +1,5 @@
-package com.sanaa.tudee_assistant.presentation.composables
+package com.sanaa.tudee_assistant.presentation.composable
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,15 +21,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.TextButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDatePickerDialog(
@@ -52,7 +51,7 @@ fun CustomDatePickerDialog(
                     onDateSelected(datePickerState.selectedDateMillis!!)
                     onDismiss()
                 },
-                label = "OK",
+                label = stringResource(R.string.ok),
                 modifier = modifier.padding(vertical = 20.dp, horizontal = 28.dp)
             )
         },
@@ -64,13 +63,13 @@ fun CustomDatePickerDialog(
             ) {
                 TextButton(
                     onClick = { datePickerState.selectedDateMillis = null },
-                    label = "Clear",
+                    label = stringResource(R.string.clear),
                     modifier = Modifier.padding(vertical = 20.dp)
                 )
 
                 TextButton(
                     onClick = onDismiss,
-                    label = "Cancel",
+                    label = stringResource(R.string.cancel),
                     modifier = Modifier.padding(vertical = 20.dp)
                 )
             }
@@ -120,15 +119,14 @@ fun CustomDatePickerDialog(
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
+@Preview(widthDp = 360, locale = "ar")
 @Composable
 private fun CustomDatePickerDialogPreview() {
 
     var selectedDateText by remember { mutableStateOf("No Date") }
     var showDialog by remember { mutableStateOf(true) }
 
-    TudeeTheme(isDarkTheme = false) {
+    TudeeTheme(isDarkTheme = true) {
 
         Box(
             modifier = Modifier
@@ -137,7 +135,8 @@ private fun CustomDatePickerDialogPreview() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = selectedDateText
+                text = selectedDateText,
+                color = Theme.color.primary
             )
             if (showDialog) {
                 CustomDatePickerDialog(

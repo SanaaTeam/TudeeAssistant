@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
@@ -19,24 +21,49 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottom
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryImageContainer
 import com.sanaa.tudee_assistant.presentation.design_system.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.design_system.component.TaskStatusCard
+import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
+import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryIconButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskStatus
+import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskViewDetails(modifier: Modifier = Modifier) {
+fun TaskViewDetails(
+    task: TaskUiModel,
+    onDismiss: () -> Unit,
+    onEditClick: (TaskUiModel) -> Unit,
+    onMoveToClicked: () -> Unit,
+    sheetState: SheetState,
+    modifier: Modifier = Modifier
+) {
+
+    val changeStatusTo = when (task.status) {
+        TaskUiStatus.TODO -> stringResource(R.string.mark_as_in_progress)
+        TaskUiStatus.IN_PROGRESS -> stringResource(R.string.mark_as_done)
+        TaskUiStatus.DONE -> null
+    }
+
     BaseBottomSheet(
-        onDismiss = {},
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        onDismiss = onDismiss,
+        sheetState = sheetState,
         content = {
             Column(
-                modifier = modifier.padding(Theme.dimension.medium)
+                modifier = modifier
+                    .padding(
+                        bottom = Theme.dimension.large,
+                        start = Theme.dimension.medium,
+                        end = Theme.dimension.medium,
+                    )
             ) {
                 Text(
-                    text = "Task Details",
-                    modifier = Modifier.padding(bottom = 6.dp),
+                    text = stringResource(R.string.task_details),
+                    modifier = Modifier.padding(bottom = Theme.dimension.regular),
                     style = Theme.textStyle.title.large,
                     color = Theme.color.title,
                 )
@@ -44,23 +71,23 @@ fun TaskViewDetails(modifier: Modifier = Modifier) {
                     painter = painterResource(R.drawable.education_cat)
                 )
                 Column(
-                    modifier = Modifier.padding(Theme.dimension.small),
+                    modifier = Modifier.padding(top = Theme.dimension.small),
                     verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
                 ) {
                     Text(
-                        text = "Organize Study Desk",
+                        text = task.title,
                         modifier = Modifier,
                         style = Theme.textStyle.title.medium,
                         color = Theme.color.title,
 
                         )
-                    Text(
-                        text = "Solve all exercises from page 45 to 50 in the textbook, Solve all" +
-                                " exercises from page 45 to 50 in the textbook.",
-                        modifier = Modifier,
-                        style = Theme.textStyle.body.small,
-                        color = Theme.color.body,
-                    )
+                    if (task.description != null)
+                        Text(
+                            text = task.description,
+                            modifier = Modifier,
+                            style = Theme.textStyle.body.small,
+                            color = Theme.color.body,
+                        )
                 }
                 HorizontalDivider(
                     modifier = Modifier
@@ -69,27 +96,61 @@ fun TaskViewDetails(modifier: Modifier = Modifier) {
                     thickness = 1.dp,
                     color = Theme.color.stroke
                 )
-                Row(
-                    modifier = Modifier.padding(
-                        top = Theme.dimension.regular,
-                        bottom = Theme.dimension.regular
-                    ),
-                    horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
+                Column(
+                    modifier = Modifier.padding(top = Theme.dimension.regular),
+                    verticalArrangement = Arrangement.spacedBy(Theme.dimension.large)
                 ) {
-                    TaskStatusCard(taskStatus = TaskStatus.IN_PROGRESS)
-                    PriorityTag(
-                        priority = TaskPriority.HIGH,
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
+                    ) {
+                        TaskStatusCard(taskUiStatus = task.status)
+                        PriorityTag(
+                            priority = task.priority,
+                        )
+                    }
+                    changeStatusTo?.let {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
+                        ) {
+                            SecondaryIconButton(
+                                iconRes = painterResource(R.drawable.pencil_edit),
+                                onClick = { onEditClick }
+                            )
+                            SecondaryButton(
+                                lable = changeStatusTo,
+                                onClick = onMoveToClicked,
+                                modifier = Modifier.weight(1f)
+                            )
+
+                        }
+                    }
                 }
             }
         }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewUpdateTaskStatus() {
     TudeeTheme {
-        TaskViewDetails()
+        TaskViewDetails(
+            task = TaskUiModel(
+                id = 1,
+                title = "Organize Study Desk",
+                description = "Review cell structure and functions for tomorrow...",
+                dueDate = null,
+                categoryId = 1,
+                categoryImagePath = "file:///android_asset/categories/agriculture.png",
+                priority = TaskUiPriority.MEDIUM,
+                status = TaskUiStatus.IN_PROGRESS,
+                createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+            ),
+            onDismiss = {},
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            onEditClick = {},
+            onMoveToClicked = {}
+        )
     }
 }

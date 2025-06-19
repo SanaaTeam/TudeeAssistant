@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,19 +19,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.model.CategoryTaskState
-import com.sanaa.tudee_assistant.presentation.model.TaskPriority
+import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
 fun TaskListColumn(
-    taskList: List<CategoryTaskState>,
-    onTaskSwipe: (Int) -> Boolean = { true }
+    taskList: List<TaskUiModel>,
+    onTaskSwipe: (TaskUiModel) -> Boolean = { true },
+    onTaskClick: (TaskUiModel) -> Unit = {},
 ) {
 
     LazyColumn(
@@ -44,13 +47,10 @@ fun TaskListColumn(
         ),
         verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
     ) {
-        itemsIndexed(taskList) { index, task ->
+        itemsIndexed(taskList, key = { _, item -> item.hashCode() }) { _, task ->
             val dismissState = rememberSwipeToDismissBoxState(
-                confirmValueChange = { dismissValue ->
-                    if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
-                        onTaskSwipe(index)
-                    } else false
-                }
+                confirmValueChange = { onTaskSwipe(task) },
+                positionalThreshold = { it * 20f }
             )
 
             SwipeToDismissBox(
@@ -61,7 +61,10 @@ fun TaskListColumn(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Theme.color.errorVariant)
+                            .background(
+                                Theme.color.errorVariant,
+                                RoundedCornerShape(Theme.dimension.medium)
+                            )
                             .padding(horizontal = 20.dp),
                         contentAlignment = Alignment.CenterEnd
                     ) {
@@ -73,8 +76,11 @@ fun TaskListColumn(
                     }
                 },
                 content = {
-                    CategoryTaskCard(task)
-                }
+                    CategoryTaskCard(task, onClick = { onTaskClick })
+                },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(Theme.dimension.medium))
+                    .animateItem(fadeInSpec = null, fadeOutSpec = null)
             )
         }
     }
@@ -83,33 +89,15 @@ fun TaskListColumn(
 @Preview
 @Composable
 private fun TaskListColumnPreview() {
-    val items = listOf(
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow...",
-            date = null,
-            priority = TaskPriority.MEDIUM
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            date = "12-03-2025",
-            priority = TaskPriority.LOW
-        ),
-        CategoryTaskState(
-            icon = painterResource(R.drawable.birthday_cake),
-            title = "Organize Study Desk",
-            description = "Review cell structure and functions for tomorrow morning...",
-            date = "12-03-2025",
-            priority = TaskPriority.HIGH
-        ),
-    )
-    var itemsState by remember { mutableStateOf(items) }
 
-    TaskListColumn(itemsState, onTaskSwipe = { index ->
-        itemsState = itemsState.filterNot { item -> item == itemsState[index] }
-         false
+    var itemsState by remember { mutableStateOf(DataProvider.getTasksSample()) }
+
+    TudeeTheme(isDarkTheme = true) {
+
+        TaskListColumn(itemsState, onTaskSwipe = { task ->
+            itemsState = itemsState.filterNot { item -> item == task }
+            false
+        }
+        )
     }
-    )
 }

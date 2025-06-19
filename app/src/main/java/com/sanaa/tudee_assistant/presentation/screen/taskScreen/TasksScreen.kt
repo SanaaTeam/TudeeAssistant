@@ -1,7 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,11 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,78 +29,71 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composables.CustomDatePickerDialog
+import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
-import com.sanaa.tudee_assistant.presentation.design_system.component.TabItem
-import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTabs
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
+import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.koin.androidx.compose.koinViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun TasksScreen(
-    selectedDate: LocalDate,
     modifier: Modifier = Modifier,
-    onDateSelected: (LocalDate) -> Unit = {},
-    onDaySelected: (LocalDate) -> Unit = {},
+    viewModel: TaskViewModel = koinViewModel<TaskViewModel>()
+) {
+    val state by viewModel.state.collectAsState()
+
+    TasksScreenContent(
+        state = state,
+        onDateSelected = { date -> viewModel.onDueDateChange(date) },
+        onTaskSwipe = { task ->
+            viewModel.onTaskSwipeToDelete(task)
+            false
+        },
+        onTaskClick = { task -> viewModel.onTaskClick(task) },
+        onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
+        onEditTaskViewDetails = { TODO() },
+        onMoveToTaskViewDetails = { TODO() },
+        modifier = modifier,
+    )
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TasksScreenContent(
+    state: TasksScreenUiState,
+    onTaskSwipe: (TaskUiModel) -> Boolean,
+    onDateSelected: (LocalDate) -> Unit,
+    onTaskClick: (TaskUiModel) -> Unit,
+    onDismissTaskViewDetails: () -> Unit,
+    onEditTaskViewDetails: (TaskUiModel) -> Unit,
+    onMoveToTaskViewDetails: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
 
     var daysInMonth by
-    remember { mutableStateOf(DateFormater.getLocalDatesInMonth(selectedDate.year, selectedDate.monthNumber)) }
-
-
-    val tabs = listOf(
-        TabItem(
-            label = stringResource(R.string.in_progress_task_status),
-            count = 14
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.color.surface),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("In Progress Content", color = Theme.color.title)
-            }
-        },
-        TabItem(
-            label = stringResource(R.string.todo_task_status),
-            count = 0
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.color.surface),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("To Do Content", color = Theme.color.title)
-            }
-        },
-
-        TabItem(
-            label = stringResource(R.string.done_task_status),
-            count = 0
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.color.surface),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Done Content", color = Theme.color.title)
-            }
-        }
-    )
+    remember {
+        mutableStateOf(
+            DateFormater.getLocalDatesInMonth(
+                state.selectedDate.year,
+                state.selectedDate.monthNumber
+            )
+        )
+    }
 
     Column(
         modifier = modifier
@@ -134,26 +127,25 @@ fun TasksScreen(
                 )
             }
 
-
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable {
-                    showDialog = true
-                }
             ) {
                 Text(
-                    text = "${selectedDate.month}, ${selectedDate.year}",
+                    text = "${state.selectedDate.month}, ${state.selectedDate.year}",
                     color = Theme.color.body,
                     style = Theme.textStyle.label.medium
                 )
                 Icon(
                     painter = painterResource(R.drawable.icon_left_arrow),
-                    contentDescription = "back",
+                    contentDescription = "next",
                     tint = Theme.color.body,
                     modifier = Modifier
                         .size(16.dp)
                         .rotate(-90f)
+                        .clickable {
+                            showDialog = true
+                        }
                 )
             }
 
@@ -176,15 +168,17 @@ fun TasksScreen(
         }
 
         LazyRow(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
             items(daysInMonth) { date ->
                 DayItem(
                     dayDate = date,
-                    isSelected = date == selectedDate,
-                    onClick = { onDaySelected(date) }
+                    isSelected = date == state.selectedDate,
+                    onClick = { onDateSelected(date) }
                 )
             }
         }
@@ -195,38 +189,68 @@ fun TasksScreen(
                     selectedDateMillis?.let {
                         val date = DateFormater.formatLongToDate(selectedDateMillis)
                         onDateSelected(date)
-                        daysInMonth = (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
+                        daysInMonth =
+                            (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
                     }
                 },
                 onDismiss = { showDialog = false },
-                initialSelectedDate = selectedDate
+                initialSelectedDate = state.selectedDate
             )
         }
 
-        var selectedTab by remember { mutableIntStateOf(0) }
+        TaskStatusTabs(state, onTaskSwipe, onTaskClick)
 
-        TudeeTabs(
-            tabs,
-            selectedTabIndex = selectedTab,
-            onTabSelected = { selectedTab = it },
-            modifier = Modifier.fillMaxSize())
+        if (state.showTaskDetailsDialog) {
+            TaskViewDetails(
+                state.selectedTask!!,
+                onDismissTaskViewDetails,
+                onEditClick = onEditTaskViewDetails,
+                onMoveToClicked = onMoveToTaskViewDetails,
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            )
+        }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun TasksScreenPreview() {
 
-    var selectedDate by remember {
+    var tasksState by remember {
         mutableStateOf(
-            Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+            TasksScreenUiState(
+                currentDateTasks = DataProvider.getTasksSample(),
+                isLoading = false,
+                errorMessage = null,
+                successMessage = null,
+                showAddTaskDialog = false,
+                showEditDialog = false,
+                showTaskDetailsDialog = false,
+                showDeleteDialog = false,
+                selectedTaskUiStatus = TaskUiStatus.DONE,
+                selectedTask = null,
+                selectedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+            )
         )
     }
 
-    TasksScreen(
-        selectedDate,
-        onDaySelected = { date -> selectedDate = date },
-        onDateSelected = { date -> selectedDate = date }
+    TasksScreenContent(
+        tasksState,
+        onDateSelected = { date ->
+            tasksState = tasksState.copy(selectedDate = date)
+            tasksState = tasksState.copy(currentDateTasks = DataProvider.getTasksSample())
+        },
+        onTaskSwipe = { task ->
+            tasksState =
+                tasksState.copy(currentDateTasks = tasksState.currentDateTasks.filterNot { item -> item == task })
+            false
+        },
+        onTaskClick = { task ->
+
+            tasksState = tasksState.copy(selectedTask = task, showTaskDetailsDialog = true)
+                      },
+        onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsDialog = false) },
+        onEditTaskViewDetails = {},
+        onMoveToTaskViewDetails = {},
     )
 }

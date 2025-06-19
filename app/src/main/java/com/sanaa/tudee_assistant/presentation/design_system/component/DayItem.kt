@@ -40,10 +40,9 @@ fun DayItem(
         )
     )
 
-    Box(modifier = modifier.clickable { onClick() }) {
+    Box(modifier = modifier.clip(RoundedCornerShape(Theme.dimension.medium)).clickable { onClick() }) {
         Column(
             modifier = Modifier
-                .clip(RoundedCornerShape(Theme.dimension.medium))
                 .width(56.dp)
                 .then(
                     if (isSelected) Modifier.background(backgroundBrush)

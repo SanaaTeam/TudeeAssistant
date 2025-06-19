@@ -4,19 +4,20 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.sanaa.navigationtry.route.CategoriesScreenRoute
-import com.sanaa.navigationtry.route.CategoryTasksScreenRoute
-import com.sanaa.navigationtry.route.HomeScreenRoute
-import com.sanaa.navigationtry.route.MainScreenRoute
-import com.sanaa.navigationtry.route.OnBoardingScreenRoute
-import com.sanaa.navigationtry.route.SplashScreenRoute
-import com.sanaa.navigationtry.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.route.CategoriesScreenRoute
+import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
+import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
+import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
+import com.sanaa.tudee_assistant.presentation.route.SplashScreenRoute
+import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.composable
 
 @Composable
 fun TudeeApp() {
+
     val navHostController = rememberNavController()
     NavHost(
         navController = navHostController,

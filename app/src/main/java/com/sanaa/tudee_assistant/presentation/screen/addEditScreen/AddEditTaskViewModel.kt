@@ -104,6 +104,8 @@ class TaskFormViewModel(
                 val task = uiState.value.taskUiModel.toTask()
                 taskService.updateTask(task)
                 _uiState.update { it.copy(isOperationSuccessful = true, isLoading = false) } } catch (e: Exception) {
+            }
+            catch (e: Exception) {
                 handleError(e)
             }
         }

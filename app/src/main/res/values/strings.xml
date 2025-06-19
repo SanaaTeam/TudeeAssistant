@@ -16,4 +16,5 @@
     <string name="category_title">Category title</string>
     <string name="category_image">Category image</string>
     <string name="add_new_category">Add new category</string>
+    <string name="upload">Upload</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.design_system.component
 
 import android.net.Uri
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -10,10 +11,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -25,24 +24,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.utils.drawDashedBorder
 
 @Composable
 fun UploadBox(
     modifier: Modifier = Modifier,
     onImageSelected: (Uri?) -> Unit,
-    strokeColor: Color = Theme.color.stroke
+    strokeColor: Color = Theme.color.stroke,
+    cornerRadius: Dp = Theme.dimension.medium
 ) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -55,99 +55,105 @@ fun UploadBox(
 
     Box(
         modifier = modifier
-            .width(112.dp)
-            .height(113.dp)
+            .size(width = 112.dp, height = 113.dp)
             .background(color = Theme.color.surface)
-            .clickable { launcher.launch("image/*") }
             .clip(RoundedCornerShape(16.dp))
-            .drawBehind {
-                val stroke = Stroke(
-                    width = 2.dp.toPx(),
-                    pathEffect = PathEffect.dashPathEffect(
-                        floatArrayOf(6.dp.toPx(), 6.dp.toPx()),
-                        6.dp.toPx()
-                    )
-                )
-                drawRoundRect(
-                    color = strokeColor,
-                    style = stroke,
-                    cornerRadius = CornerRadius(16.dp.toPx())
-                )
-            },
+            .clickable { launcher.launch("image/*") }
+            .drawDashedBorder(strokeColor = strokeColor, cornerRadius = cornerRadius),
         contentAlignment = Alignment.Center
     ) {
-        if (imageUri == null) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.uplaoad_image),
-                    contentDescription = "Upload Icon",
-                    modifier = Modifier.size(24.dp),
-                )
+        imageUri?.let { uri ->
+            SelectedImageView(strokeColor, cornerRadius, uri, launcher)
+        } ?: run {
+            UploadPlaceholder()
+        }
+    }
+}
 
-                Text(
-                    text = "Upload",
-                    style = Theme.textStyle.label.medium,
-                    color = Theme.color.hint,
-                    modifier = Modifier.padding(top = Theme.dimension.small),
-                )
-            }
-        } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .drawBehind {
-                        val stroke = Stroke(
-                            width = 2.dp.toPx(),
-                            pathEffect = PathEffect.dashPathEffect(
-                                floatArrayOf(6.dp.toPx(), 6.dp.toPx()),
-                                6.dp.toPx()
-                            )
-                        )
-                        drawRoundRect(
-                            color = strokeColor,
-                            style = stroke,
-                            cornerRadius = CornerRadius(16.dp.toPx())
-                        )
-                    },
-                contentAlignment = Alignment.Center,
+@Composable
+fun SelectedImageView(
+    strokeColor: Color = Theme.color.stroke,
+    cornerRadius: Dp = Theme.dimension.medium,
+    imageUri: Uri,
+    launcher: ManagedActivityResultLauncher<String, Uri?>
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .drawDashedBorder(strokeColor = strokeColor, cornerRadius = cornerRadius),
+        contentAlignment = Alignment.Center,
 
-                ) {
-                AsyncImage(
-                    model = imageUri,
-                    contentDescription = "Selected Image",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .background(Color.White.copy(alpha = 0.8f), CircleShape)
-                        .clickable { launcher.launch("image/*") },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.edit_icon),
-                        contentDescription = "Edit Icon",
-                        modifier = Modifier.size(Theme.dimension.extraLarge),
-                    )
-                }
-            }
+        ) {
+        AsyncImage(
+            model = imageUri,
+            contentDescription = "Selected Image",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .background(Color.White.copy(alpha = 0.8f), CircleShape)
+                .clickable { launcher.launch("image/*") },
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(R.drawable.edit_icon),
+                contentDescription = "Edit Icon",
+                modifier = Modifier.size(Theme.dimension.extraLarge),
+            )
+        }
+    }
+}
+
+@Composable
+fun UploadPlaceholder() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(R.drawable.uplaoad_image),
+            contentDescription = "Upload Icon",
+            modifier = Modifier.size(Theme.dimension.large),
+        )
+
+        Text(
+            text = stringResource(R.string.upload),
+            style = Theme.textStyle.label.medium,
+            color = Theme.color.hint,
+            modifier = Modifier.padding(top = Theme.dimension.small),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UploadBoxLightPreview() {
+    TudeeTheme(isDarkTheme = false) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            UploadBox(onImageSelected = { })
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun UploadBoxPreview() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        UploadBox(onImageSelected = { })
+fun UploadBoxDarkPreview() {
+    TudeeTheme(isDarkTheme = true) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            UploadBox(onImageSelected = { })
+        }
     }
 }

@@ -1,11 +1,7 @@
-package com.sanaa.tudee_assistant.presentation.screens
+package com.sanaa.tudee_assistant.presentation.bottomSheet
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +22,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.scale
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTextField
@@ -35,10 +30,9 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Pri
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.dropShadowColor
+import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,11 +85,11 @@ fun AddNewCategory(
                             onImageSelected = { uri ->
                                 selectedImageUri = uri
                                 onImageSelected(uri)
-                                if (uri != null) {
+                                uri?.let {
                                     scope.launch {
-                                        processedImageBytes = processImage(context, uri)
+                                        processedImageBytes = HelperFunctions.processImage(context, it)
                                     }
-                                } else {
+                                } ?: run {
                                     processedImageBytes = null
                                 }
                             }
@@ -137,20 +131,4 @@ fun AddNewCategory(
 @Composable
 fun AddNewCategoryScreenPreview() {
     AddNewCategory({}, {})
-}
-
-suspend fun processImage(context: Context, uri: Uri): Bitmap? {
-    return withContext(Dispatchers.IO) {
-        try {
-            val originalBitmap = if (Build.VERSION.SDK_INT < 28) {
-                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-            } else {
-                val source = ImageDecoder.createSource(context.contentResolver, uri)
-                ImageDecoder.decodeBitmap(source)
-            }
-            originalBitmap.scale(32, 32)
-        } catch (e: Exception) {
-            throw e
-        }
-    }
 }

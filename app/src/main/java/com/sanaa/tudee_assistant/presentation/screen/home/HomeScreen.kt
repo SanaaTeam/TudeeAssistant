@@ -53,9 +53,10 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.TaskCountB
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskStatus
-import com.sanaa.tudee_assistant.presentation.state.CategoryTaskState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.formatDateTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -85,8 +86,8 @@ fun HomeScreenContent(
     state: HomeScreenUiState,
     onChangeTheme: () -> Unit,
     onAddTask: () -> Unit,
-    onTaskClick: (CategoryTaskState) -> Unit,
-    onOpenCategory: (TaskStatus) -> Unit,
+    onTaskClick: (TaskUiState) -> Unit,
+    onOpenCategory: (TaskUiStatus) -> Unit,
 ) {
     val scrollState = rememberLazyListState()
     var isScrolled by remember { mutableStateOf(false) }
@@ -152,8 +153,8 @@ private fun Line() {
 private fun CategoryList(
     scrollState: LazyListState,
     state: HomeScreenUiState,
-    onOpenCategory: (TaskStatus) -> Unit,
-    onTaskClick: (CategoryTaskState) -> Unit,
+    onOpenCategory: (TaskUiStatus) -> Unit,
+    onTaskClick: (TaskUiState) -> Unit,
 ) {
     LazyColumn(
         state = scrollState,
@@ -193,52 +194,55 @@ private fun CategoryList(
         }
 
         stickyHeader {
-            if (state.tasks.any { it.status == TaskStatus.DONE }) {
+            if (state.tasks.any { it.status == TaskUiStatus.DONE }) {
                 Title(
                     text = stringResource(R.string.done_task_status),
-                    tasksCount = state.tasks.filter { it.status == TaskStatus.DONE }.size,
-                    onOpenClick = { onOpenCategory(TaskStatus.DONE) }
+                    tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
+                    onOpenClick = { onOpenCategory(TaskUiStatus.DONE) }
                 )
             }
         }
 
         item {
             CategoryList(
-                items = state.tasks.filter { it.status == TaskStatus.DONE },
+                items = state.tasks.filter { it.status == TaskUiStatus.DONE },
+                categories = state.categories,
                 onClick = { onTaskClick(it) }
             )
         }
 
         stickyHeader {
-            if (state.tasks.any { it.status == TaskStatus.IN_PROGRESS }) {
+            if (state.tasks.any { it.status == TaskUiStatus.IN_PROGRESS }) {
                 Title(
                     text = stringResource(R.string.in_progress_task_status),
-                    tasksCount = state.tasks.filter { it.status == TaskStatus.IN_PROGRESS }.size,
-                    onOpenClick = { onOpenCategory(TaskStatus.IN_PROGRESS) }
+                    tasksCount = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
+                    onOpenClick = { onOpenCategory(TaskUiStatus.IN_PROGRESS) }
                 )
             }
         }
 
         item {
             CategoryList(
-                items = state.tasks.filter { it.status == TaskStatus.IN_PROGRESS },
+                items = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
+                categories = state.categories,
                 onClick = { onTaskClick(it) }
             )
         }
 
         stickyHeader {
-            if (state.tasks.any { it.status == TaskStatus.TODO }) {
+            if (state.tasks.any { it.status == TaskUiStatus.TODO }) {
                 Title(
                     text = stringResource(R.string.todo_task_status),
-                    tasksCount = state.tasks.filter { it.status == TaskStatus.TODO }.size,
-                    onOpenClick = { onOpenCategory(TaskStatus.TODO) }
+                    tasksCount = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
+                    onOpenClick = { onOpenCategory(TaskUiStatus.TODO) }
                 )
             }
         }
 
         item {
             CategoryList(
-                items = state.tasks.filter { it.status == TaskStatus.TODO },
+                items = state.tasks.filter { it.status == TaskUiStatus.TODO },
+                categories = state.categories,
                 onClick = { onTaskClick(it) }
             )
         }
@@ -246,7 +250,11 @@ private fun CategoryList(
 }
 
 @Composable
-private fun CategoryList(items: List<CategoryTaskState>, onClick: (CategoryTaskState) -> Unit) {
+private fun CategoryList(
+    items: List<TaskUiState>,
+    categories: List<CategoryUiState>,
+    onClick: (TaskUiState) -> Unit,
+) {
     LazyHorizontalGrid(
         modifier = Modifier.height(if (items.isNotEmpty()) 222.dp + Theme.dimension.extraLarge else 0.dp),
         rows = GridCells.Fixed(2),
@@ -258,10 +266,12 @@ private fun CategoryList(items: List<CategoryTaskState>, onClick: (CategoryTaskS
         verticalArrangement = Arrangement.spacedBy(Theme.dimension.small),
         horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small),
     ) {
-        items(items = items) {
+        items(items = items) { task ->
+            val categoryImagePath = categories.first { it.id == task.categoryId }.imagePath
             CategoryTaskCard(
                 modifier = Modifier.width(320.dp),
-                categoryTask = it,
+                task = task,
+                categoryImagePath = categoryImagePath,
                 onClick = { onClick(it) })
         }
     }
@@ -304,16 +314,16 @@ private fun InfoCard(state: HomeScreenUiState) {
             horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
         ) {
             TaskCountByStatusCard(
-                count = state.tasks.filter { it.status == TaskStatus.DONE }.size,
-                taskStatus = TaskStatus.DONE,
+                count = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
+                taskUiStatus = TaskUiStatus.DONE,
             )
             TaskCountByStatusCard(
-                count = state.tasks.filter { it.status == TaskStatus.IN_PROGRESS }.size,
-                taskStatus = TaskStatus.IN_PROGRESS,
+                count = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
+                taskUiStatus = TaskUiStatus.IN_PROGRESS,
             )
             TaskCountByStatusCard(
-                count = state.tasks.filter { it.status == TaskStatus.TODO }.size,
-                taskStatus = TaskStatus.TODO,
+                count = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
+                taskUiStatus = TaskUiStatus.TODO,
             )
         }
     }
@@ -392,28 +402,19 @@ fun PreviewHomeScreen() {
     val dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     var isDarkTheme by remember { mutableStateOf(false) }
     TudeeTheme(isDarkTheme = isDarkTheme) {
-        val list = List(15) { index ->
-            CategoryTaskState(
-                icon = painterResource(R.drawable.birthday_cake),
-                title = "Organize Study Desk",
-                description = "Review cell structure and functions for tomorrow...",
-                date = null,
-                priority = TaskPriority.MEDIUM,
-                status = if (index % 2 == 0) TaskStatus.DONE else TaskStatus.IN_PROGRESS,
-            )
-        }
+        val list = DataProvider.getTasksSample()
 
         HomeScreenContent(
             isDarkTheme,
             HomeScreenUiState(
                 dayDate = dayDate,
                 taskCounts = listOf(
-                    Pair(list.filter { it.status == TaskStatus.DONE }.size, TaskStatus.DONE),
+                    Pair(list.filter { it.status == TaskUiStatus.DONE }.size, TaskUiStatus.DONE),
                     Pair(
-                        list.filter { it.status == TaskStatus.IN_PROGRESS }.size,
-                        TaskStatus.IN_PROGRESS
+                        list.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
+                        TaskUiStatus.IN_PROGRESS
                     ),
-                    Pair(list.filter { it.status == TaskStatus.TODO }.size, TaskStatus.TODO),
+                    Pair(list.filter { it.status == TaskUiStatus.TODO }.size, TaskUiStatus.TODO),
                 ),
                 tasks = list
             ),

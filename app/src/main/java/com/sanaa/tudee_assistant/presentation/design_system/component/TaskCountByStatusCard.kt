@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskStatus
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 
 @Composable
 fun RowScope.TaskCountByStatusCard(
-    taskStatus: TaskStatus,
+    taskUiStatus: TaskUiStatus,
     count: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -44,10 +44,10 @@ fun RowScope.TaskCountByStatusCard(
             .clip(RoundedCornerShape(20.dp))
             .clipToBounds()
             .background(
-                when (taskStatus) {
-                    TaskStatus.TODO -> Theme.color.purpleAccent
-                    TaskStatus.IN_PROGRESS -> Theme.color.yellowAccent
-                    TaskStatus.DONE -> Theme.color.greenAccent
+                when (taskUiStatus) {
+                    TaskUiStatus.TODO -> Theme.color.purpleAccent
+                    TaskUiStatus.IN_PROGRESS -> Theme.color.yellowAccent
+                    TaskUiStatus.DONE -> Theme.color.greenAccent
                 }
             )
     ) {
@@ -56,7 +56,7 @@ fun RowScope.TaskCountByStatusCard(
                 .fillMaxWidth()
                 .padding(Theme.dimension.regular),
         ) {
-            StatusImage(taskStatus)
+            StatusImage(taskUiStatus)
 
             Text(
                 modifier = Modifier.padding(top = Theme.dimension.extraSmall),
@@ -66,10 +66,10 @@ fun RowScope.TaskCountByStatusCard(
             )
 
             Text(
-                text = when (taskStatus) {
-                    TaskStatus.TODO -> stringResource(R.string.todo_task_status)
-                    TaskStatus.IN_PROGRESS -> stringResource(R.string.in_progress_task_status)
-                    TaskStatus.DONE -> stringResource(R.string.done_task_status)
+                text = when (taskUiStatus) {
+                    TaskUiStatus.TODO -> stringResource(R.string.todo_task_status)
+                    TaskUiStatus.IN_PROGRESS -> stringResource(R.string.in_progress_task_status)
+                    TaskUiStatus.DONE -> stringResource(R.string.done_task_status)
                 },
                 color = Theme.color.onPrimaryCaption,
                 style = Theme.textStyle.label.small
@@ -85,7 +85,7 @@ fun RowScope.TaskCountByStatusCard(
 }
 
 @Composable
-private fun StatusImage(taskStatus: TaskStatus) {
+private fun StatusImage(taskUiStatus: TaskUiStatus) {
     Box(
         modifier = Modifier
             .size(40.dp)
@@ -101,10 +101,10 @@ private fun StatusImage(taskStatus: TaskStatus) {
         Image(
             modifier = Modifier.size(Theme.dimension.large),
             painter = painterResource(
-                id = when (taskStatus) {
-                    TaskStatus.TODO -> R.drawable.status_view_to_do
-                    TaskStatus.IN_PROGRESS -> R.drawable.status_view_in_progress
-                    TaskStatus.DONE -> R.drawable.status_view_done
+                id = when (taskUiStatus) {
+                    TaskUiStatus.TODO -> R.drawable.status_view_to_do
+                    TaskUiStatus.IN_PROGRESS -> R.drawable.status_view_in_progress
+                    TaskUiStatus.DONE -> R.drawable.status_view_done
                 }
             ),
             contentDescription = null,
@@ -160,9 +160,9 @@ private fun Preview() {
                 .padding(Theme.dimension.medium),
             horizontalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
-            TaskCountByStatusCard(TaskStatus.DONE, 2)
-            TaskCountByStatusCard(TaskStatus.IN_PROGRESS, 16)
-            TaskCountByStatusCard(TaskStatus.TODO, 1)
+            TaskCountByStatusCard(TaskUiStatus.DONE, 2)
+            TaskCountByStatusCard(TaskUiStatus.IN_PROGRESS, 16)
+            TaskCountByStatusCard(TaskUiStatus.TODO, 1)
         }
     }
 }

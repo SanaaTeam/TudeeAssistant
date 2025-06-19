@@ -1,8 +1,8 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
 import androidx.lifecycle.ViewModel
-import com.sanaa.tudee_assistant.presentation.model.TaskStatus
-import com.sanaa.tudee_assistant.presentation.state.CategoryTaskState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -14,11 +14,11 @@ class HomeScreenViewModel : ViewModel() {
 
     }
 
-    fun onTaskClick(categoryTaskState: CategoryTaskState) {
+    fun onTaskClick(categoryTaskState: TaskUiState) {
 
     }
 
-    fun onOpenCategory(taskStatus: TaskStatus) {
+    fun onOpenCategory(taskUiStatus: TaskUiStatus) {
 
     }
 }

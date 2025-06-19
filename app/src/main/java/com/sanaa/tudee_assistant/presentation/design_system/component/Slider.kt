@@ -24,14 +24,14 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskStatus
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.TudeeStatus
-import com.sanaa.tudee_assistant.presentation.state.CategoryTaskState
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
 fun Slider(
-    tasks: List<CategoryTaskState>,
+    tasks: List<TaskUiState>,
     modifier: Modifier = Modifier,
 ) {
     val status = getSlideStatus(tasks)
@@ -72,7 +72,7 @@ fun Slider(
                         stringResource(R.string.okay_status_message)
                             .replace(
                                 "*",
-                                tasks.filter { it.status == TaskStatus.DONE }.size.toString()
+                                tasks.filter { it.status == TaskUiStatus.DONE }.size.toString()
                             )
                             .replace("#", tasks.size.toString())
                     }
@@ -129,9 +129,9 @@ fun Slider(
     }
 }
 
-fun getSlideStatus(tasks: List<CategoryTaskState>): TudeeStatus {
-    val allTasksDone = tasks.all { it.status == TaskStatus.DONE }
-    val allTasksNotFinished = tasks.size > 1 && !tasks.any { it.status == TaskStatus.DONE }
+fun getSlideStatus(tasks: List<TaskUiState>): TudeeStatus {
+    val allTasksDone = tasks.all { it.status == TaskUiStatus.DONE }
+    val allTasksNotFinished = tasks.size > 1 && !tasks.any { it.status == TaskUiStatus.DONE }
     return if (tasks.isEmpty())
         TudeeStatus.POOR
     else if (allTasksNotFinished)
@@ -145,13 +145,7 @@ fun getSlideStatus(tasks: List<CategoryTaskState>): TudeeStatus {
 @Preview
 @Composable
 private fun Preview() {
-    val doneTask = CategoryTaskState(
-        icon = painterResource(R.drawable.birthday_cake),
-        title = "Organize Study Desk",
-        date = "12-03-2025",
-        priority = TaskPriority.LOW,
-        status = TaskStatus.DONE,
-    )
+    val doneTask = DataProvider.getTasksSample()[0].copy(status = TaskUiStatus.DONE)
     TudeeTheme(isDarkTheme = true) {
         Column(
             modifier = Modifier
@@ -162,8 +156,8 @@ private fun Preview() {
         ) {
             Slider(
                 listOf(
-                    doneTask.copy(status = TaskStatus.IN_PROGRESS),
-                    doneTask.copy(status = TaskStatus.TODO),
+                    doneTask.copy(status = TaskUiStatus.IN_PROGRESS),
+                    doneTask.copy(status = TaskUiStatus.TODO),
                     doneTask.copy(),
                     doneTask.copy(),
                 )
@@ -178,10 +172,10 @@ private fun Preview() {
             )
             Slider(
                 listOf(
-                    doneTask.copy(status = TaskStatus.IN_PROGRESS),
-                    doneTask.copy(status = TaskStatus.TODO),
-                    doneTask.copy(status = TaskStatus.IN_PROGRESS),
-                    doneTask.copy(status = TaskStatus.TODO),
+                    doneTask.copy(status = TaskUiStatus.IN_PROGRESS),
+                    doneTask.copy(status = TaskUiStatus.TODO),
+                    doneTask.copy(status = TaskUiStatus.IN_PROGRESS),
+                    doneTask.copy(status = TaskUiStatus.TODO),
                 )
             )
             Slider(emptyList())

@@ -7,23 +7,11 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,10 +27,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun EmptyScreen(
-    modifier: Modifier = Modifier,
-) {
-
+fun EmptyScreen(modifier: Modifier = Modifier) {
     var visibleCircular1 by remember { mutableStateOf(false) }
     var visibleCircular2 by remember { mutableStateOf(false) }
     var visibleCircular3 by remember { mutableStateOf(false) }
@@ -59,38 +44,31 @@ fun EmptyScreen(
         visibleMessageBox = true
     }
 
-    Box(
-        modifier = modifier.width(330.dp), contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = modifier.width(330.dp), contentAlignment = Alignment.Center) {
         Box(
             modifier = Modifier
                 .height(160.dp)
                 .align(Alignment.CenterEnd)
                 .background(color = Color.Transparent),
         ) {
-
             CircularContainer(
                 modifier = Modifier.align(Alignment.BottomEnd),
-                listOf(visibleCircular1, visibleCircular2, visibleCircular1)
+                listOf(visibleCircular1, visibleCircular2, visibleCircular3)
             )
 
             AnimatedVisibility(
-                visible = visibleMessageBox, enter = fadeIn(animationSpec = tween(600))
+                visible = visibleMessageBox,
+                enter = fadeIn(animationSpec = tween(600))
             ) {
                 MessageBox(modifier = Modifier.align(Alignment.TopEnd))
             }
-
         }
     }
 }
 
 @Composable
-fun CircularContainer(
-    modifier: Modifier = Modifier, visibleCirculars: List<Boolean>
-) {
-    Box(
-        modifier = modifier, contentAlignment = Alignment.BottomEnd
-    ) {
+fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Boolean>) {
+    Box(modifier = modifier, contentAlignment = Alignment.BottomEnd) {
 
         Box(
             modifier = Modifier
@@ -133,8 +111,8 @@ fun CircularContainer(
                 Box(
                     modifier = Modifier
                         .size(Theme.dimension.extraSmall)
-                        .clip(shape = CircleShape)
-                        .background(color = Theme.color.surfaceHigh)
+                        .clip(CircleShape)
+                        .background(Theme.color.surfaceHigh)
                 )
             }
 
@@ -148,10 +126,11 @@ fun CircularContainer(
                 Box(
                     modifier = Modifier
                         .size(Theme.dimension.small)
-                        .clip(shape = CircleShape)
-                        .background(color = Theme.color.surfaceHigh),
+                        .clip(CircleShape)
+                        .background(Theme.color.surfaceHigh)
                 )
             }
+
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.TopStart),
                 visible = visibleCirculars[2],
@@ -160,8 +139,8 @@ fun CircularContainer(
                 Box(
                     modifier = Modifier
                         .size(14.dp)
-                        .clip(shape = CircleShape)
-                        .background(color = Theme.color.surfaceHigh)
+                        .clip(CircleShape)
+                        .background(Theme.color.surfaceHigh)
                 )
             }
         }
@@ -171,36 +150,40 @@ fun CircularContainer(
                 .align(Alignment.BottomStart)
                 .padding(start = 21.6.dp, bottom = 11.2.dp)
                 .size(14.4.dp)
-                .clip(shape = CircleShape)
-                .background(color = Theme.color.primary.copy(alpha = 0.16f))
+                .clip(CircleShape)
+                .background(Theme.color.primary.copy(alpha = 0.16f))
         )
-
     }
 }
 
 @Composable
 fun MessageBox(modifier: Modifier = Modifier) {
-
     Box(
         modifier = modifier
             .padding(end = 127.dp)
             .width(203.dp)
             .height(74.dp)
             .shadow(
-                elevation = Theme.dimension.regular, shape = RoundedCornerShape(
-                    bottomEnd = 2.dp, bottomStart = Theme.dimension.medium, topEnd = Theme.dimension.medium, topStart = Theme.dimension.medium
-                ), spotColor = Color(0x0A000000)
+                elevation = Theme.dimension.regular,
+                shape = RoundedCornerShape(
+                    bottomEnd = 2.dp,
+                    bottomStart = Theme.dimension.medium,
+                    topEnd = Theme.dimension.medium,
+                    topStart = Theme.dimension.medium
+                ),
+                spotColor = Color(0x0A000000)
             )
             .clip(
                 shape = RoundedCornerShape(
-                    bottomEnd = 2.dp, bottomStart = Theme.dimension.medium, topEnd = Theme.dimension.medium, topStart = Theme.dimension.medium
+                    bottomEnd = 2.dp,
+                    bottomStart = Theme.dimension.medium,
+                    topEnd = Theme.dimension.medium,
+                    topStart = Theme.dimension.medium
                 )
             )
-            .background(color = Theme.color.surfaceHigh)
+            .background(Theme.color.surfaceHigh)
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = stringResource(R.string.no_task_today),
                 style = Theme.textStyle.title.small,
@@ -219,8 +202,8 @@ fun MessageBox(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewEmptyScreen() {
-    TudeeTheme(isDarkTheme = false) {
+private fun PreviewEmptyScreen() {
+    TudeeTheme(useDarkTheme = false) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             EmptyScreen()
         }

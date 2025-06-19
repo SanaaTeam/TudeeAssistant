@@ -34,7 +34,7 @@ fun StatusImage(imageSize: Dp, status: TudeeStatus) {
 @Preview
 @Composable
 private fun Preview() {
-    TudeeTheme {
+    TudeeTheme(false) {
         Column(
             modifier = Modifier.padding(Theme.dimension.medium),
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)

@@ -15,13 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.CategoryState
+import com.sanaa.tudee_assistant.presentation.state.CategoryState
 
 @Composable
 fun CategoryItem(
@@ -33,9 +34,7 @@ fun CategoryItem(
     Column(
         modifier = modifier
             .width(104.dp)
-            .height(102.dp)
-            .clickable { onClick() },
-        horizontalAlignment = Alignment.CenterHorizontally
+            .height(102.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Box(
@@ -49,13 +48,17 @@ fun CategoryItem(
                 topContent()
             }
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { onClick() },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     painter = category.categoryPainter,
                     contentDescription = null,
-                    modifier = Modifier.size(Theme.dimension.extraLarge),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(100.dp))
+                        .size(Theme.dimension.extraLarge),
                     tint = category.tint
                 )
             }
@@ -78,7 +81,7 @@ fun CategoryItem(
 @Preview(name = "Dark Theme")
 @Composable
 private fun CategoryDarkPreview() {
-    TudeeTheme(isDarkTheme = true) {
+    TudeeTheme(true) {
         CategoryItem(
             category = CategoryState(
                 "Education",
@@ -96,7 +99,7 @@ private fun CategoryDarkPreview() {
 @Preview(name = "Light Theme")
 @Composable
 private fun CategoryLightPreview() {
-    TudeeTheme(isDarkTheme = false) {
+    TudeeTheme(false) {
         CategoryItem(
             category = CategoryState(
                 "Education",

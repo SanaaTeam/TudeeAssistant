@@ -105,7 +105,7 @@ fun TudeeTextField(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewTudeeTextField() {
-    TudeeTheme {
+    TudeeTheme (false){
         TudeeTextField(
             placeholder = "Name",
             icon = painterResource(R.drawable.user_icon),

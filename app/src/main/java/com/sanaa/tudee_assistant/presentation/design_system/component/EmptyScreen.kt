@@ -212,13 +212,19 @@ fun MessageBox(
                 text = title,
                 style = Theme.textStyle.title.small,
                 color = Theme.color.body,
-                modifier = Modifier.padding(start = Theme.dimension.regular, top = Theme.dimension.small)
+                modifier = Modifier.padding(
+                    start = Theme.dimension.regular,
+                    top = Theme.dimension.small
+                )
             )
             Text(
                 text = caption,
                 style = Theme.textStyle.body.small,
                 color = Theme.color.hint,
-                modifier = Modifier.padding(start = Theme.dimension.regular, top = Theme.dimension.extraSmall)
+                modifier = Modifier.padding(
+                    start = Theme.dimension.regular,
+                    top = Theme.dimension.extraSmall
+                )
             )
         }
     }

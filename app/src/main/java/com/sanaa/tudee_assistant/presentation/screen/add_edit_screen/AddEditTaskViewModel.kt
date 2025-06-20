@@ -11,6 +11,7 @@ import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
 import com.sanaa.tudee_assistant.presentation.screens.category.toUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,19 +43,29 @@ class TaskFormViewModel(
     }
 
     fun loadTask(task: TaskUiState) {
-
-        viewModelScope.launch {
-            try {
-                taskService.getTaskCountByCategoryId(task.categoryId).collect { taskCount ->
-                    val category = categoryService
-                        .getCategoryById(task.categoryId).toState(taskCount)
-                    _uiState.update {
-                        it.copy(taskUiState = task, selectedCategory = category)
-                    }
+        viewModelScope.launch(Dispatchers.IO) {
+            taskService.getTaskCountByCategoryId(task.categoryId).collect { taskCount ->
+                val category = categoryService
+                    .getCategoryById(task.categoryId).toState(taskCount)
+                _uiState.update {
+                    it.copy(taskUiState = task, selectedCategory = category)
                 }
 
-            } catch (e: Exception) {
-                handleError(e)
+                categoryService.getCategories().collect { categories ->
+                    _uiState.update { state ->
+                        state.copy(categories = categories.map { it.toState(taskCount) })
+                    }
+                }
+            }
+        }
+    }
+
+    fun loadCategoriesForNewTask() {
+        viewModelScope.launch(Dispatchers.IO) {
+            categoryService.getCategories().collect { categories ->
+                _uiState.update { state ->
+                    state.copy(categories = categories.map { it.toState(0) })
+                }
             }
         }
     }

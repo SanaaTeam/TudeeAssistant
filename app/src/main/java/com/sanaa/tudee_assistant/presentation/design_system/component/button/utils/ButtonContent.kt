@@ -10,12 +10,12 @@ fun ButtonContent(
     label: String,
     enabled: Boolean = true,
     isLoading: Boolean = false,
-    contentColor: Color =when (enabled) {
+    contentColor: Color = when (enabled) {
         true -> Theme.color.primary
         false -> Theme.color.disable
     },
 
-) {
+    ) {
 
     Text(
         text = label,

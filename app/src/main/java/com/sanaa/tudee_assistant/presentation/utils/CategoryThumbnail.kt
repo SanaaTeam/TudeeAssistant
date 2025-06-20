@@ -12,7 +12,7 @@ fun CategoryThumbnail(
     imagePath: String,
 ) {
     AsyncImage(
-        model = imagePath ,
+        model = imagePath,
         contentDescription = "category image",
         modifier = modifier,
         error = painterResource(R.drawable.ic_not_found),

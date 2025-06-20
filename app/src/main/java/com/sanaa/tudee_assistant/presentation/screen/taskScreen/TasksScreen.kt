@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -94,7 +93,6 @@ fun TasksScreen(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreenContent(
     state: TasksScreenUiState,

@@ -12,4 +12,6 @@ data class TasksScreenRoute(
 )
 
 @Serializable
-object CategoriesScreenRoute
+data class CategoriesScreenRoute(
+    val taskUiStatus: TaskUiStatus,
+)

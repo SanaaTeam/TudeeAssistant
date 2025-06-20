@@ -40,9 +40,9 @@ object DateFormater {
     }
 
     fun localDateToEpochMillis(date: LocalDate?): Long? {
-            val dateTime = date?.atStartOfDayIn(TimeZone.UTC)
-            return dateTime?.toEpochMilliseconds()
-        }
+        val dateTime = date?.atStartOfDayIn(TimeZone.UTC)
+        return dateTime?.toEpochMilliseconds()
+    }
 
     fun getLocalDatesInMonth(year: Int, month: Int): List<LocalDate> {
         val totalDays = when (month) {

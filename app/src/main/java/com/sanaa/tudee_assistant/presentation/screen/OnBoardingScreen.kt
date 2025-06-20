@@ -36,14 +36,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.domain.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
 import kotlinx.coroutines.launch
@@ -77,7 +75,9 @@ fun getOnBoardingContent(page: Int): OnBoardingContent {
 
 @Composable
 fun OnBoardingScreen(
-    modifier: Modifier = Modifier, navController: NavController
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    preferencesManager: PreferencesManager
 ) {
     val isInPreview = LocalView.current.isInEditMode
 
@@ -92,6 +92,7 @@ fun OnBoardingScreen(
     }
 
     val pagerState = rememberPagerState(pageCount = { 3 }, initialPage = 0)
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier = modifier
@@ -125,11 +126,16 @@ fun OnBoardingScreen(
                                 navController.navigate(MainScreenRoute) {
                                     popUpTo(OnBoardingScreenRoute) { inclusive = true }
                                 }
-                            })
+                                scope.launch {
+                                    preferencesManager.setOnboardingCompleted()
+                                }
+
+                            }
+                    )
                 }
             }
 
-            OnBoardingPager(pagerState = pagerState)
+            OnBoardingPager(pagerState = pagerState, preferencesManager, navController)
 
             PageIndicator(
                 currentPage = pagerState.currentPage, pageCount = pagerState.pageCount
@@ -139,7 +145,11 @@ fun OnBoardingScreen(
 }
 
 @Composable
-fun OnBoardingPager(pagerState: PagerState) {
+fun OnBoardingPager(
+    pagerState: PagerState,
+    preferencesManager: PreferencesManager,
+    navController: NavController
+) {
     HorizontalPager(
         state = pagerState, modifier = Modifier
             .fillMaxWidth()
@@ -154,7 +164,9 @@ fun OnBoardingPager(pagerState: PagerState) {
                 title = content.title,
                 description = content.description,
                 painter = painterResource(id = content.imageRes),
-                pagerState = pagerState
+                pagerState = pagerState,
+                preferencesManager = preferencesManager,
+                navController = navController
             )
         }
     }
@@ -192,7 +204,9 @@ fun DialogContainer(
     description: String,
     painter: Painter,
     pagerState: PagerState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    preferencesManager: PreferencesManager,
+    navController: NavController
 ) {
     Column(
         modifier = modifier
@@ -244,7 +258,16 @@ fun DialogContainer(
             enabled = true,
             isLoading = false,
             onClick = {
-                val nextPage = pagerState.currentPage + 1
+                val currentPage = pagerState.currentPage
+                if (currentPage == 2) {
+                    coroutineScope.launch {
+                        navController.navigate(MainScreenRoute) {
+                            popUpTo(OnBoardingScreenRoute) { inclusive = true }
+                        }
+                        preferencesManager.setOnboardingCompleted()
+                    }
+                }
+                val nextPage = currentPage + 1
                 if (nextPage < pagerState.pageCount) {
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(nextPage)
@@ -256,17 +279,20 @@ fun DialogContainer(
         )
     }
 }
-
-@Preview(widthDp = 360)
-@Composable
-private fun BoardingScreenPreview() {
-    TudeeTheme( false) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Theme.color.surface)
-        ) {
-            OnBoardingScreen(navController = rememberNavController())
-        }
-    }
-}
+//
+//@Preview(widthDp = 360)
+//@Composable
+//private fun BoardingScreenPreview() {
+//    TudeeTheme( false) {
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .background(Theme.color.surface)
+//        ) {
+//            OnBoardingScreen(
+//                navController = rememberNavController(),
+//                preferencesManager = preferencesManager
+//            )
+//        }
+//    }
+//}

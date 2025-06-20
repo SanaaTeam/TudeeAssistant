@@ -19,15 +19,15 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
 @Composable
 fun SecondaryButton(
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
     lable: String,
     enabled: Boolean = true,
     isLoading: Boolean = false,
     onClick: () -> Unit = {}
-    ) {
+) {
 
 
-    val borderColor = when(enabled){
+    val borderColor = when (enabled) {
         true -> Theme.color.stroke
         false -> Theme.color.disable
     }
@@ -36,79 +36,76 @@ fun SecondaryButton(
         false -> Theme.color.stroke
     }
 
-    val verticalPadding = when(isLoading){
+    val verticalPadding = when (isLoading) {
         true -> Theme.dimension.medium
         false -> 18.dp
     }
 
-        Row(
-            modifier = modifier
-                .clip(RoundedCornerShape(100.dp))
-                .clickable(
-                    enabled = enabled,
-                    onClick = onClick
-                )
-                .border(
-                    width = 1.dp,
-                    color = borderColor,
-                    shape = RoundedCornerShape(100.dp)
-                )
-                .padding(horizontal = Theme.dimension.large, vertical = verticalPadding)
-            ,
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(
-                Theme.dimension.small,
-                Alignment.CenterHorizontally
-            )
-        ) {
-
-            ButtonContent(
-                label = lable,
-                isLoading = isLoading,
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(100.dp))
+            .clickable(
                 enabled = enabled,
-                contentColor = contentColor
+                onClick = onClick
             )
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(100.dp)
+            )
+            .padding(horizontal = Theme.dimension.large, vertical = verticalPadding),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(
+            Theme.dimension.small,
+            Alignment.CenterHorizontally
+        )
+    ) {
+
+        ButtonContent(
+            label = lable,
+            isLoading = isLoading,
+            enabled = enabled,
+            contentColor = contentColor
+        )
 
 
-
-        }
     }
+}
 
 
 @Preview
 @Composable
 private fun SecondaryButtonPreview(modifier: Modifier = Modifier) {
     Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
-            SecondaryButton(
-                lable = "Submit",
-                enabled = true,
-                isLoading = true,
-                onClick = {  }
-            )
-            SecondaryButton(
-                lable = "Submit",
-                enabled = true,
-                isLoading = false,
-                onClick = {  }
-            )
+        SecondaryButton(
+            lable = "Submit",
+            enabled = true,
+            isLoading = true,
+            onClick = { }
+        )
+        SecondaryButton(
+            lable = "Submit",
+            enabled = true,
+            isLoading = false,
+            onClick = { }
+        )
 
-            SecondaryButton(
-                lable = "Submit",
-                enabled = false,
-                isLoading = false,
-                onClick = {  }
-            )
+        SecondaryButton(
+            lable = "Submit",
+            enabled = false,
+            isLoading = false,
+            onClick = { }
+        )
 
-            SecondaryButton(
-                lable = "Submit",
-                enabled = false,
-                isLoading = true,
-                onClick = {  }
-            )
+        SecondaryButton(
+            lable = "Submit",
+            enabled = false,
+            isLoading = true,
+            onClick = { }
+        )
 
 
-
-        }
+    }
 
 
 }
@@ -117,35 +114,34 @@ private fun SecondaryButtonPreview(modifier: Modifier = Modifier) {
 @Preview()
 @Composable
 private fun SecondaryButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (true){
+    TudeeTheme(true) {
         Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             SecondaryButton(
                 lable = "Submit",
                 enabled = true,
                 isLoading = true,
-                onClick = {  }
+                onClick = { }
             )
             SecondaryButton(
                 lable = "Submit",
                 enabled = true,
                 isLoading = false,
-                onClick = {  }
+                onClick = { }
             )
 
             SecondaryButton(
                 lable = "Submit",
                 enabled = false,
                 isLoading = false,
-                onClick = {  }
+                onClick = { }
             )
 
             SecondaryButton(
                 lable = "Submit",
                 enabled = false,
                 isLoading = true,
-                onClick = {  }
+                onClick = { }
             )
-
 
 
         }

@@ -41,6 +41,13 @@ class HomeScreenViewModel(
     }
 
     fun onAddTask() {
+    }
+
+    fun onAddTaskSuccess() {
+        getTasks()
+    }
+
+    fun onAddTaskHasError(errorMessage: String) {
 
     }
 

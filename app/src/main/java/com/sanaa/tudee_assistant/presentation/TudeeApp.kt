@@ -18,7 +18,6 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.route.CategoriesScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
@@ -28,8 +27,8 @@ import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.OnBoardingScreen
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
-import com.sanaa.tudee_assistant.presentation.screen.main.composable
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 fun TudeeApp(isDarkTheme: Boolean, preferencesManager: PreferencesManager, isFirstLaunch: Boolean) {
@@ -84,38 +83,14 @@ private fun AppNavigation(
         }
 
         composable<MainScreenRoute> {
-            MainScreen(startDestination = HomeScreenRoute) {
-                composable(
-                    route = HomeScreenRoute,
-                    iconRes = R.drawable.home,
-                    selectedIconRes = R.drawable.home_fill,
-                ) {
-                    onStatusBarColor(Theme.color.primary)
-
-                    HomeScreen(
-                        isDark = isDarkTheme,
-                        onChangeTheme = onChangeTheme,
-                    )
-                }
-
-                composable(
-                    route = TasksScreenRoute,
-                    iconRes = R.drawable.profile,
-                    selectedIconRes = R.drawable.profile_fill,
-                ) {
-                    onStatusBarColor(Theme.color.surface)
-
-                }
-
-                composable(
-                    route = CategoriesScreenRoute,
-                    iconRes = R.drawable.menu,
-                    selectedIconRes = R.drawable.menu_fill,
-                ) {
-                    onStatusBarColor(Theme.color.surface)
-
-                }
-            }
+            val screenNavController = rememberNavController()
+            MainScreen(
+                startDestination = HomeScreenRoute,
+                screenNavController,
+                isDarkTheme = isDarkTheme,
+                onChangeTheme = onChangeTheme,
+                onStatusBarColor
+            )
         }
 
         composable<CategoryTasksScreenRoute> {

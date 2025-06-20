@@ -77,7 +77,7 @@ fun TaskForm(
             ) {
                 TudeeTextField(
                     placeholder = stringResource(R.string.task_title),
-                    value = uiState.taskUiModel.title,
+                    value = uiState.taskUiState.title,
                     onValueChange = onTitleChange,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,7 +87,7 @@ fun TaskForm(
 
                 TudeeTextField(
                     placeholder = stringResource(R.string.description),
-                    value = uiState.taskUiModel.description ?: "",
+                    value = uiState.taskUiState.description ?: "",
                     onValueChange = onDescriptionChange,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -101,7 +101,7 @@ fun TaskForm(
                         .padding(bottom = Theme.dimension.medium)
                         .clickable { onDatePickerShow() },
                     placeholder = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
-                    value = uiState.taskUiModel.dueDate ?: "",
+                    value = uiState.taskUiState.dueDate ?: "",
                     onValueChange = {},
                     readOnly = true,
                     enabled = false,
@@ -122,7 +122,7 @@ fun TaskForm(
                     TaskUiPriority.entries.forEach { priority ->
                         PriorityTag(
                             priority = priority,
-                            isSelected = uiState.taskUiModel.priority == priority,
+                            isSelected = uiState.taskUiState.priority == priority,
                             onClick = { onPrioritySelected(priority) }
                         )
                     }

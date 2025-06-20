@@ -22,7 +22,7 @@ import kotlinx.datetime.toLocalDateTime
 
 class TaskFormViewModel(
     private val taskService: TaskService,
-    val categoryService: CategoryService,
+    private val categoryService: CategoryService,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddTaskUiState())
@@ -35,7 +35,7 @@ class TaskFormViewModel(
                     val category = categoryService
                         .getCategoryById(task.categoryId).toState(taskCount)
                     _uiState.update {
-                        it.copy(taskUiModel = task, selectedCategory = category)
+                        it.copy(taskUiState = task, selectedCategory = category)
                     }
                 }
 
@@ -47,27 +47,27 @@ class TaskFormViewModel(
 
     fun onTitleChange(title: String) {
         _uiState.update {
-            it.copy(taskUiModel = it.taskUiModel.copy(title = title))
+            it.copy(taskUiState = it.taskUiState.copy(title = title))
         }
         validateInputs()
     }
 
     fun onDescriptionChange(description: String) {
         _uiState.update {
-            it.copy(taskUiModel = it.taskUiModel.copy(description = description))
+            it.copy(taskUiState = it.taskUiState.copy(description = description))
         }
     }
 
     fun onDateSelected(date: LocalDate) {
         _uiState.update {
-            it.copy(taskUiModel = it.taskUiModel.copy(dueDate = date.toString()))
+            it.copy(taskUiState = it.taskUiState.copy(dueDate = date.toString()))
         }
         validateInputs()
     }
 
     fun onPrioritySelected(priority: TaskUiPriority) {
         _uiState.update {
-            it.copy(taskUiModel = it.taskUiModel.copy(priority = priority))
+            it.copy(taskUiState = it.taskUiState.copy(priority = priority))
         }
     }
 
@@ -75,7 +75,7 @@ class TaskFormViewModel(
         _uiState.update {
             it.copy(
                 selectedCategory = category,
-                taskUiModel = it.taskUiModel.copy(categoryId = category.id ?: -1)
+                taskUiState = it.taskUiState.copy(categoryId = category.id ?: -1)
             )
         }
         validateInputs()
@@ -86,7 +86,7 @@ class TaskFormViewModel(
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, error = null) }
-                val task = uiState.value.taskUiModel.copy(
+                val task = uiState.value.taskUiState.copy(
                     status = TaskUiStatus.TODO
                 ).toTask(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
                 taskService.addTask(task)
@@ -102,7 +102,7 @@ class TaskFormViewModel(
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, error = null) }
-                val task = uiState.value.taskUiModel.toTask(
+                val task = uiState.value.taskUiState.toTask(
                     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                 )
                 taskService.updateTask(task)
@@ -129,7 +129,7 @@ class TaskFormViewModel(
         val state = _uiState.value
         _uiState.update {
             it.copy(
-                isButtonEnabled = state.taskUiModel.title.isNotBlank() &&
+                isButtonEnabled = state.taskUiState.title.isNotBlank() &&
                         state.selectedCategory != null
             )
         }

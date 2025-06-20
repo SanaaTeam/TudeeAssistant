@@ -31,7 +31,7 @@ fun FloatingActionButton(
     onClick: () -> Unit = {}
 ) {
 
-    val backgroundModifier =  when (enabled) {
+    val backgroundModifier = when (enabled) {
         true -> Modifier.background(
             brush = Brush.linearGradient(
                 listOf(
@@ -40,6 +40,7 @@ fun FloatingActionButton(
                 )
             )
         )
+
         false -> Modifier.background(color = Theme.color.disable)
     }
 
@@ -54,8 +55,8 @@ fun FloatingActionButton(
             .then(backgroundModifier),
         contentAlignment = Alignment.Center
     ) {
-        val iconColor = if(enabled) Theme.color.onPrimary else Theme.color.stroke
-        when(isLoading){
+        val iconColor = if (enabled) Theme.color.onPrimary else Theme.color.stroke
+        when (isLoading) {
             true -> SpinnerIcon(tint = iconColor)
             false -> Icon(
                 modifier = Modifier.size(28.dp),
@@ -71,7 +72,7 @@ fun FloatingActionButton(
 @Preview
 @Composable
 private fun FloatingActionButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme(false){
+    TudeeTheme(false) {
         Column {
             FloatingActionButton(
                 enabled = true,
@@ -107,11 +108,10 @@ private fun FloatingActionButtonLightPreview(modifier: Modifier = Modifier) {
 }
 
 
-
 @Preview
 @Composable
 private fun FloatingActionButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme(true){
+    TudeeTheme(true) {
         Column {
             FloatingActionButton(
                 enabled = true,

@@ -200,13 +200,19 @@ fun MessageBox(modifier: Modifier = Modifier) {
                 text = stringResource(R.string.no_task_today),
                 style = Theme.textStyle.title.small,
                 color = Theme.color.body,
-                modifier = Modifier.padding(start = Theme.dimension.regular, top = Theme.dimension.small)
+                modifier = Modifier.padding(
+                    start = Theme.dimension.regular,
+                    top = Theme.dimension.small
+                )
             )
             Text(
                 text = stringResource(R.string.tap_to_add_task),
                 style = Theme.textStyle.body.small,
                 color = Theme.color.hint,
-                modifier = Modifier.padding(start = Theme.dimension.regular, top = Theme.dimension.extraSmall)
+                modifier = Modifier.padding(
+                    start = Theme.dimension.regular,
+                    top = Theme.dimension.extraSmall
+                )
             )
         }
     }
@@ -215,7 +221,7 @@ fun MessageBox(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewEmptyScreen() {
-    TudeeTheme( false) {
+    TudeeTheme(false) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             EmptyScreen()
         }

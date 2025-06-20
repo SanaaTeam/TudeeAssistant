@@ -5,5 +5,5 @@ import com.sanaa.tudee_assistant.domain.ImageProcessor
 import org.koin.dsl.module
 
 val imageProcessorModule = module {
-    single < ImageProcessor>{ ImageProcessorImpl(get()) }
+    single<ImageProcessor> { ImageProcessorImpl(get()) }
 }

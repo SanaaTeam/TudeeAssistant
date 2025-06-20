@@ -46,14 +46,12 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeSnack
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.add_edit_screen.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TaskScreen
-import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
-import kotlinx.coroutines.launch
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortMonthName
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -70,8 +68,13 @@ import org.koin.androidx.compose.koinViewModel
 fun TasksScreen(
     modifier: Modifier = Modifier,
     viewModel: TaskViewModel = koinViewModel<TaskViewModel>(),
+    screenRoute: TasksScreenRoute,
 ) {
     val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.onTaskStatusSelectedChange(screenRoute.taskStatus)
+    }
 
     TasksScreenContent(
         state = state,
@@ -82,7 +85,6 @@ fun TasksScreen(
         },
         onTaskClick = viewModel::onTaskClick,
         onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
-        onEditTaskViewDetails = {},
         onMoveToTaskViewDetails = viewModel::onMoveTaskToAnotherStatus,
         onDeleteClick = viewModel::onTaskDeleted,
         onDeleteDismiss = viewModel::onTaskDeletedDismiss,
@@ -100,7 +102,6 @@ fun TasksScreenContent(
     onDateSelected: (LocalDate) -> Unit,
     onTaskClick: (TaskUiState) -> Unit,
     onDismissTaskViewDetails: () -> Unit,
-    onEditTaskViewDetails: (TaskUiState) -> Unit,
     onMoveToTaskViewDetails: () -> Unit,
     onDeleteClick: () -> Unit,
     onDeleteDismiss: () -> Unit,
@@ -223,7 +224,7 @@ fun TasksScreenContent(
 
             LaunchedEffect(key1 = state.selectedDate) {
                 coroutineScope.launch {
-                    listState.animateScrollToItem(state.selectedDate.dayOfMonth -1)
+                    listState.animateScrollToItem(state.selectedDate.dayOfMonth - 1)
                 }
             }
             LazyRow(
@@ -410,7 +411,6 @@ private fun TasksScreenPreview() {
             tasksState = tasksState.copy(selectedTask = task, showTaskDetailsDialog = true)
         },
         onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsDialog = false) },
-        onEditTaskViewDetails = {},
         onMoveToTaskViewDetails = {},
         onDeleteClick = {},
         onDeleteDismiss = {},

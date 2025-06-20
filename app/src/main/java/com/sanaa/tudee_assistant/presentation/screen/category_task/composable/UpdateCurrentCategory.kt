@@ -1,9 +1,11 @@
-package com.sanaa.tudee_assistant.presentation.screens.category
+package com.sanaa.tudee_assistant.presentation.screen.category_task.composable
 
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -16,16 +18,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTextField
 import com.sanaa.tudee_assistant.presentation.design_system.component.UploadBox
+import com.sanaa.tudee_assistant.presentation.design_system.component.button.NegativeTextButton
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.PrimaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
@@ -35,40 +38,68 @@ import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddNewCategory(
+fun UpdateCurrentCategory(
     onImageSelected: (Uri?) -> Unit,
-    onAddClick: (title: String, imageUri: Uri?) -> Unit,
+    onEditClick: (title: String, imageUri: Uri?) -> Unit,
+    onDeleteClick: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var internalShowBottomSheet by remember { mutableStateOf(true) }
+    var showEditBottomSheet by remember { mutableStateOf(true) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var categoryTitle by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    AddNewCategoryContent(
-        onAddClick = { onAddClick(categoryTitle, selectedImageUri) },
-        showBottomSheet = internalShowBottomSheet,
-        categoryTitle = categoryTitle,
-        onCategoryTitleChange = { categoryTitle = it },
-        onDismiss = {
-            internalShowBottomSheet = false
-            onDismiss()
-        },
-        onImageSelected = { uri ->
-            selectedImageUri = uri
-            onImageSelected(uri)
-        },
-        modifier = modifier
-    )
+    // Show delete confirmation dialog (appears after edit sheet is dismissed)
+    if (showDeleteDialog) {
+        DeleteCurrentCategory(
+            onDeleteClick = {
+                showDeleteDialog = false
+                onDeleteClick()
+            },
+            onDismiss = {
+                showDeleteDialog = false
+                onDismiss() // Call parent dismiss when delete is cancelled
+            }
+        )
+    }
+
+    // Show edit bottom sheet
+    if (showEditBottomSheet) {
+        UpdateCurrentCategoryContent(
+            onEditClick = {
+                showEditBottomSheet = false
+                onEditClick(categoryTitle, selectedImageUri)
+            },
+            showBottomSheet = showEditBottomSheet,
+            categoryTitle = categoryTitle,
+            onCategoryTitleChange = { categoryTitle = it },
+            onDismiss = {
+                showEditBottomSheet = false
+                onDismiss()
+            },
+            onImageSelected = { uri ->
+                selectedImageUri = uri
+                onImageSelected(uri)
+            },
+            modifier = modifier,
+            onDeleteClick = {
+                // First dismiss the edit sheet, then show delete confirmation
+                showEditBottomSheet = false
+                showDeleteDialog = true
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNewCategoryContent(
-    modifier: Modifier = Modifier,
+fun UpdateCurrentCategoryContent(
     onImageSelected: (Uri?) -> Unit,
-    onAddClick: () -> Unit,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     onCategoryTitleChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     onDismiss: () -> Unit = {},
     showBottomSheet: Boolean = true,
     categoryTitle: String = "",
@@ -77,7 +108,6 @@ fun AddNewCategoryContent(
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
 
     if (showBottomSheet) {
         BaseBottomSheet(
@@ -91,24 +121,44 @@ fun AddNewCategoryContent(
                             .padding(horizontal = Theme.dimension.medium)
                             .background(color = Theme.color.surface)
                     ) {
-                        Text(
-                            text = stringResource(R.string.add_new_category),
-                            style = Theme.textStyle.title.large,
-                            color = Theme.color.title
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = stringResource(R.string.edit_category),
+                                style = Theme.textStyle.title.large,
+                                color = Theme.color.title
+                            )
+
+                            NegativeTextButton(
+                                modifier = Modifier,
+                                label = stringResource(R.string.delete),
+                                enabled = true,
+                                isLoading = false,
+                                onClick = {
+                                    onDeleteClick() // This will trigger the sheet dismissal and show delete dialog
+                                }
+                            )
+                        }
+
                         TudeeTextField(
-                            placeholder = stringResource(R.string.category_title),
+                            placeholder = categoryTitle,
                             value = categoryTitle,
                             icon = painterResource(R.drawable.menu_circle),
                             onValueChange = onCategoryTitleChange,
                             modifier = Modifier.padding(top = Theme.dimension.regular)
                         )
+
                         Text(
                             text = stringResource(R.string.category_image),
                             style = Theme.textStyle.title.large,
                             color = Theme.color.title,
                             modifier = Modifier.padding(top = Theme.dimension.regular)
                         )
+
                         UploadBox(
                             modifier = Modifier.padding(top = Theme.dimension.small),
                             onImageSelected = { uri ->
@@ -136,12 +186,12 @@ fun AddNewCategoryContent(
                             )
                     ) {
                         PrimaryButton(
-                            label = stringResource(R.string.add),
+                            label = stringResource(R.string.save),
                             enabled = processedImageBytes != null && categoryTitle.isNotBlank(),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = Theme.dimension.regular),
-                            onClick = { onAddClick() }
+                            onClick = { onEditClick() }
                         )
                         SecondaryButton(
                             lable = stringResource(R.string.cancel),
@@ -154,10 +204,4 @@ fun AddNewCategoryContent(
             onDismiss = { onDismiss() }
         )
     }
-}
-
-@Preview
-@Composable
-fun AddNewCategoryScreenPreview() {
-    AddNewCategory(onImageSelected = {}, onAddClick = { _, _ -> }, onDismiss = {})
 }

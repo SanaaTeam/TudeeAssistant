@@ -73,4 +73,7 @@
     <string name="task_add_success">Add task successfully.</string>
     <string name="task_update_success">Edited task successfully.</string>
 
+    <string name="edit_category">Edit category</string>
+    <string name="delete_category">Delete category</string>
+    <string name="are_you_sure_to_continue">Are you sure to continue?</string>
 </resources>

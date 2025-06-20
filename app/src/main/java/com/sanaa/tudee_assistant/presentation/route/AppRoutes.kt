@@ -12,4 +12,6 @@ object OnBoardingScreenRoute
 object MainScreenRoute
 
 @Serializable
-object CategoryTasksScreenRoute
+data class CategoryTasksScreenRoute(
+    val id: Int?
+)

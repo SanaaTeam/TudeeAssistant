@@ -1,7 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.model.mapper
 
 import com.sanaa.tudee_assistant.domain.model.Category
-import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
 
 fun CategoryUiModel.toCategory(): Category {
     return Category(

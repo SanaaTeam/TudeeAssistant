@@ -15,10 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,6 +30,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Pri
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -41,16 +38,10 @@ import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun TaskForm(
-    title: String,
-    description: String,
-    dueDate: String?,
-    selectedPriority: TaskUiPriority,
-    selectedCategory: Category?,
+    uiState: AddTaskUiState,
     categories: List<Category>,
-    screenTitle: String,
-    primaryButtonText: String,
-    isLoading: Boolean,
-    isButtonEnabled: Boolean,
+    isEditMode: Boolean,
+    showDatePickerDialog: Boolean,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
@@ -58,10 +49,10 @@ fun TaskForm(
     onCategorySelected: (Category) -> Unit,
     onPrimaryButtonClick: () -> Unit,
     onDismiss: () -> Unit,
+    onDatePickerShow: () -> Unit,
+    onDatePickerDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showDatePickerDialog by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier
     ) {
@@ -71,7 +62,7 @@ fun TaskForm(
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = screenTitle,
+                text = stringResource(if (isEditMode) R.string.edit_task else R.string.add_new_task),
                 modifier = Modifier.padding(
                     start = Theme.dimension.medium,
                     top = Theme.dimension.medium,
@@ -86,17 +77,17 @@ fun TaskForm(
             ) {
                 TudeeTextField(
                     placeholder = stringResource(R.string.task_title),
-                    value = title,
+                    value = uiState.taskUiModel.title,
                     onValueChange = onTitleChange,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium),
                     icon = painterResource(R.drawable.task),
                 )
-                
+
                 TudeeTextField(
                     placeholder = stringResource(R.string.description),
-                    value = description,
+                    value = uiState.taskUiModel.description ?: "",
                     onValueChange = onDescriptionChange,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -108,9 +99,9 @@ fun TaskForm(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium)
-                        .clickable { showDatePickerDialog = true },
+                        .clickable { onDatePickerShow() },
                     placeholder = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
-                    value = dueDate ?: "",
+                    value = uiState.taskUiModel.dueDate ?: "",
                     onValueChange = {},
                     readOnly = true,
                     enabled = false,
@@ -123,7 +114,7 @@ fun TaskForm(
                     fontSize = Theme.textStyle.title.large.fontSize,
                     color = Theme.color.title
                 )
-                
+
                 Row(
                     modifier = Modifier.padding(bottom = Theme.dimension.medium),
                     horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
@@ -131,7 +122,7 @@ fun TaskForm(
                     TaskUiPriority.entries.forEach { priority ->
                         PriorityTag(
                             priority = priority,
-                            isSelected = selectedPriority == priority,
+                            isSelected = uiState.taskUiModel.priority == priority,
                             onClick = { onPrioritySelected(priority) }
                         )
                     }
@@ -143,7 +134,7 @@ fun TaskForm(
                     fontSize = Theme.textStyle.title.large.fontSize,
                     color = Theme.color.title
                 )
-                
+
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 104.dp),
                     modifier = Modifier
@@ -159,7 +150,7 @@ fun TaskForm(
                             category = category,
                             onClick = { onCategorySelected(category) },
                             topContent = {
-                                if (category == selectedCategory) {
+                                if (category == uiState.selectedCategory) {
                                     CheckMarkContainer()
                                 }
                             },
@@ -180,12 +171,12 @@ fun TaskForm(
                 )
         ) {
             PrimaryButton(
-                label = primaryButtonText,
+                label = stringResource(if (isEditMode) R.string.save else R.string.add),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = Theme.dimension.regular),
                 onClick = onPrimaryButtonClick,
-                enabled = isButtonEnabled && !isLoading
+                enabled = uiState.isButtonEnabled && !uiState.isLoading
             )
             SecondaryButton(
                 lable = stringResource(R.string.cancel),
@@ -197,13 +188,13 @@ fun TaskForm(
 
     if (showDatePickerDialog) {
         CustomDatePickerDialog(
-            onDateSelected = { millis ->
-                millis?.let {
-                    val dateTime = LocalDate.fromEpochDays((millis / (24 * 60 * 60 * 1000)).toInt())
-                    onDateSelected(dateTime)
+            onDateSelected = { selectedDateMillis: Long? ->
+                selectedDateMillis?.let {
+                    val date = DateFormater.formatLongToDate(selectedDateMillis)
+                    onDateSelected(date)
                 }
             },
-            onDismiss = { showDatePickerDialog = false },
+            onDismiss = onDatePickerDismiss,
         )
     }
-} 
+}

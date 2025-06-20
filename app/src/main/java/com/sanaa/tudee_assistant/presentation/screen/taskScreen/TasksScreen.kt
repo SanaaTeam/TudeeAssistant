@@ -334,6 +334,7 @@ fun TasksScreenContent(
                 )
             }
         }
+
         FloatingActionButton(
             enabled = true,
             modifier = Modifier
@@ -344,7 +345,8 @@ fun TasksScreenContent(
                     snackBarHostState.currentSnackbarData?.dismiss()
                 }
                 showAddTaskBottomSheet = true
-            }
+            },
+            iconRes = R.drawable.note_add
         )
 
         LaunchedEffect(state.successMessage) {
@@ -360,13 +362,6 @@ fun TasksScreenContent(
             }
         }
 
-        FloatingActionButton(
-            enabled = true,
-            iconRes = R.drawable.icon_add_task,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 10.dp, bottom = 12.dp)
-        )
         TudeeSnackBar(
             snackBarHostState = snackBarHostState,
             isError = state.errorMessage != null

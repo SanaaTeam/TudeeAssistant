@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.domain.ThemeManager
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.route.CategoriesScreenRoute
@@ -25,10 +27,14 @@ import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.composable
+import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
-fun TudeeApp() {
-    var isDarkTheme by remember { mutableStateOf(false) }
+fun TudeeApp(isDarkTheme: Boolean) {
+    val themeManager: ThemeManager = koinInject()
+    val scope = rememberCoroutineScope()
+
     var statusBarColor by remember { mutableStateOf(Color.White) }
 
     TudeeTheme(isDark = isDarkTheme) {
@@ -36,7 +42,11 @@ fun TudeeApp() {
             AppNavigation(
                 modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
                 isDarkTheme = isDarkTheme,
-                onChangeTheme = { isDarkTheme = !isDarkTheme },
+                onChangeTheme = {
+                    scope.launch {
+                        themeManager.setDarkTheme(!isDarkTheme )
+                    }
+                                },
                 onStatusBarColor = { color -> statusBarColor = color }
             )
         }

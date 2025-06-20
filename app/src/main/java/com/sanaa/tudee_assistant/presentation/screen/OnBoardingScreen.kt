@@ -260,7 +260,7 @@ fun DialogContainer(
 @Preview(widthDp = 360)
 @Composable
 private fun BoardingScreenPreview() {
-    TudeeTheme(isDark = false) {
+    TudeeTheme( false) {
         Box(
             modifier = Modifier
                 .fillMaxSize()

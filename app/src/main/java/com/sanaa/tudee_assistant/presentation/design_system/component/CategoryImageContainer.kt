@@ -37,7 +37,7 @@ fun CategoryImageContainer(
 @Preview
 @Composable
 private fun PreviewCategoryImage() {
-    TudeeTheme {
+    TudeeTheme(false) {
         CategoryImageContainer(painter = painterResource(id = R.drawable.birthday_cake))
     }
 }

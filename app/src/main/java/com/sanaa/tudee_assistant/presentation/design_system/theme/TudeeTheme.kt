@@ -12,7 +12,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.text_style.defaultTe
 
 @Composable
 fun TudeeTheme(
-    isDark: Boolean,
+    isDark: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     Log.d("isDark Test", "TudeeTheme: is dark value is : $isDark ")

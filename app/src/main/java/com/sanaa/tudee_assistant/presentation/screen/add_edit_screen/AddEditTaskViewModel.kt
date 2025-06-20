@@ -111,7 +111,7 @@ class TaskFormViewModel(
         }
     }
 
-    internal fun resetState() {
+    fun resetState() {
         _uiState.update {
             AddTaskUiState()
         }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,14 +28,12 @@ import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 @Composable
 fun DeleteComponent(
     modifier: Modifier = Modifier,
-    sheetState: SheetState,
     onDismiss: () -> Unit,
     onDeleteClicked: () -> Unit,
     title: String,
     subtitle: String = stringResource(R.string.delete_subtitle),
 ) {
     BaseBottomSheet(
-        sheetState = sheetState,
         onDismiss = onDismiss,
         content = {
             Column(

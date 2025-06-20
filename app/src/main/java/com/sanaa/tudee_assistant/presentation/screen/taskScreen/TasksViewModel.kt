@@ -2,15 +2,20 @@ package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
+import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 
 class TaskViewModel(
@@ -18,20 +23,19 @@ class TaskViewModel(
     private val categoryService: CategoryService,
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()) {
 
-
     init {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             categoryService.getCategories().collect { categoryList ->
                 _state.update {
                     it.copy(
-                        categories = categoryList.map { category -> category.toState() },
                         isLoading = false
                     )
                 }
             }
         }
         getTasksByDueDate()
+        addFakeTask()
     }
 
     private fun getTasksByDueDate() {
@@ -63,6 +67,29 @@ class TaskViewModel(
     fun onTaskClick(task: TaskUiState) {
         onTaskSelected(task)
         onShowTaskDetailsDialogChange(true)
+    }
+
+
+    fun addFakeTask() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            runCatching {
+                taskService.addTask(
+                    Task(
+                        id = 2,
+                        title = "Organize ",
+                        description = "Hello world ",
+                        status = Task.TaskStatus.TODO,
+                        dueDate = LocalDate(2025, 6, 19),
+                        priority = Task.TaskPriority.HIGH,
+                        categoryId = 1,
+                        createdAt = Clock.System.now()
+                            .toLocalDateTime(TimeZone.UTC),
+                    )
+                )
+            }
+
+        }
     }
 
     fun onTaskDeleted() {
@@ -114,7 +141,73 @@ class TaskViewModel(
     }
 
     fun onTaskSwipeToDelete(task: TaskUiState) {
-        onTaskSelected(task)
-        onShowDeleteDialogChange(true)
+        viewModelScope.launch {
+            onTaskSelected(task)
+            onShowDeleteDialogChange(true)
+        }
+    }
+
+    fun onEditTask(taskUiState: TaskUiState) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            runCatching {
+                taskService.updateTask(
+                    taskUiState.toTask(
+                        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                    )
+                )
+            }.onSuccess {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        showEditDialog = false,
+                        selectedTask = null,
+                    )
+                }
+                getTasksByDueDate()
+            }.onFailure {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        showEditDialog = false,
+                        selectedTask = null,
+                    )
+                }
+            }
+        }
+    }
+
+    fun onTaskDeletedDismiss() {
+        _state.update { it.copy(showDeleteDialog = false) }
+    }
+
+    fun onMoveTaskToAnotherStatus() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            if (state.value.selectedTask == null) return@launch
+            state.value.selectedTask?.copy(
+                status = when (state.value.selectedTaskUiStatus) {
+                    TaskUiStatus.DONE -> TaskUiStatus.DONE
+                    TaskUiStatus.TODO -> TaskUiStatus.IN_PROGRESS
+                    TaskUiStatus.IN_PROGRESS -> TaskUiStatus.DONE
+                }
+            )?.let { updatedTask ->
+                runCatching {
+                    taskService.updateTask(
+                        updatedTask.toTask(
+                            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                        )
+                    )
+                }.onSuccess {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            showTaskDetailsDialog = false,
+                            selectedTask = null,
+                        )
+                    }
+                }
+            }
+        }
     }
 }

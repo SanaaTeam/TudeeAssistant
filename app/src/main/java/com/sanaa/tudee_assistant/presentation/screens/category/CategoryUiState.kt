@@ -8,6 +8,7 @@ data class CategoryUiState(
 )
 
 data class CategoryUiModel(
+    val id: Int? = null,
     val name: String,
     val imagePath: String,
     val isDefault: Boolean,

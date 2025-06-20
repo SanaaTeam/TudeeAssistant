@@ -2,7 +2,7 @@ package com.sanaa.tudee_assistant.data.utils
 
 import com.sanaa.tudee_assistant.data.local.dto.CategoryLocalDto
 
- fun getDefaultCategories(): List<CategoryLocalDto> {
+fun getDefaultCategories(): List<CategoryLocalDto> {
     return listOf(
         CategoryLocalDto(
             name = "Adoration",

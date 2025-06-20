@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.di
 
+import com.sanaa.tudee_assistant.presentation.screen.add_edit_screen.TaskFormViewModel
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.screen.category_task.CategoryTaskViewModel
@@ -16,4 +17,5 @@ val viewModelModule = module {
         )
     }
     viewModel { HomeScreenViewModel(get(), get()) }
+    viewModel { TaskFormViewModel(get(), get()) }
 }

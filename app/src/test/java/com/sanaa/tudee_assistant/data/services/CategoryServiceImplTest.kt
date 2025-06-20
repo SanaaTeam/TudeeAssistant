@@ -104,13 +104,14 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    fun `updateCategory should throw FailedToUpdateCategoryException when update fails`() = runTest {
-        coEvery { categoryDao.updateCategory(any()) } returns 0
+    fun `updateCategory should throw FailedToUpdateCategoryException when update fails`() =
+        runTest {
+            coEvery { categoryDao.updateCategory(any()) } returns 0
 
-        val result = runCatching { categoryService.updateCategory(fakeCategory) }
+            val result = runCatching { categoryService.updateCategory(fakeCategory) }
 
-        assertThat(result.exceptionOrNull()).isInstanceOf(FailedToUpdateCategoryException::class.java)
-    }
+            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToUpdateCategoryException::class.java)
+        }
 
     @Test
     fun `deleteCategoryById should succeed when deletion is successful`() = runTest {
@@ -126,32 +127,35 @@ class CategoryServiceImplTest {
 
 
     @Test
-    fun `deleteCategoryById should throw CategoryNotFoundException when category not found`() = runTest {
-        coEvery { categoryDao.getCategoryById(1) } returns null
+    fun `deleteCategoryById should throw CategoryNotFoundException when category not found`() =
+        runTest {
+            coEvery { categoryDao.getCategoryById(1) } returns null
 
-        val result = runCatching { categoryService.deleteCategoryById(1) }
+            val result = runCatching { categoryService.deleteCategoryById(1) }
 
-        assertThat(result.exceptionOrNull()).isInstanceOf(CategoryNotFoundException::class.java)
-    }
-
-    @Test
-    fun `deleteCategoryById should throw DefaultCategoryException when isDefault is true`() = runTest {
-        coEvery { categoryDao.getCategoryById(1) } returns fakeLocalDto.copy(isDefault = true)
-
-        val result = runCatching { categoryService.deleteCategoryById(1) }
-
-        assertThat(result.exceptionOrNull()).isInstanceOf(DefaultCategoryException::class.java)
-    }
+            assertThat(result.exceptionOrNull()).isInstanceOf(CategoryNotFoundException::class.java)
+        }
 
     @Test
-    fun `deleteCategoryById should throw FailedToDeleteCategoryException when deletion fails`() = runTest {
-        coEvery { categoryDao.getCategoryById(1) } returns fakeLocalDto
-        coEvery { categoryDao.deleteCategoryById(1) } returns 0
+    fun `deleteCategoryById should throw DefaultCategoryException when isDefault is true`() =
+        runTest {
+            coEvery { categoryDao.getCategoryById(1) } returns fakeLocalDto.copy(isDefault = true)
 
-        val result = runCatching { categoryService.deleteCategoryById(1) }
+            val result = runCatching { categoryService.deleteCategoryById(1) }
 
-        assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteCategoryException::class.java)
-    }
+            assertThat(result.exceptionOrNull()).isInstanceOf(DefaultCategoryException::class.java)
+        }
+
+    @Test
+    fun `deleteCategoryById should throw FailedToDeleteCategoryException when deletion fails`() =
+        runTest {
+            coEvery { categoryDao.getCategoryById(1) } returns fakeLocalDto
+            coEvery { categoryDao.deleteCategoryById(1) } returns 0
+
+            val result = runCatching { categoryService.deleteCategoryById(1) }
+
+            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteCategoryException::class.java)
+        }
 
     @Test
     fun `deleteAllCategories should succeed when deletion is successful`() = runTest {
@@ -163,11 +167,12 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    fun `deleteAllCategories should throw FailedToDeleteCategoryException when no rows deleted`() = runTest {
-        coEvery { categoryDao.deleteAllCategory() } returns 0
+    fun `deleteAllCategories should throw FailedToDeleteCategoryException when no rows deleted`() =
+        runTest {
+            coEvery { categoryDao.deleteAllCategory() } returns 0
 
-        val result = runCatching { categoryService.deleteAllCategories() }
+            val result = runCatching { categoryService.deleteAllCategories() }
 
-        assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteCategoryException::class.java)
-    }
+            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteCategoryException::class.java)
+        }
 }

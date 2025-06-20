@@ -127,7 +127,7 @@ private fun DateChip(date: String) {
 @Preview(widthDp = 360)
 @Composable
 private fun Preview() {
-    TudeeTheme (false){
+    TudeeTheme(false) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -135,7 +135,7 @@ private fun Preview() {
             contentPadding = PaddingValues(Theme.dimension.medium),
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
-            items (DataProvider.getTasksSample()) {
+            items(DataProvider.getTasksSample()) {
                 CategoryTaskCard(
                     task = it,
                     categoryImagePath = "file:///android_asset/categories/agriculture.png",

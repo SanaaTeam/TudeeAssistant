@@ -25,6 +25,7 @@ fun Task.TaskPriority.toState(): TaskUiPriority {
         Task.TaskPriority.HIGH -> TaskUiPriority.HIGH
     }
 }
+
 fun Task.TaskStatus.toState(): TaskUiStatus {
     return when (this) {
         Task.TaskStatus.TODO -> TaskUiStatus.TODO

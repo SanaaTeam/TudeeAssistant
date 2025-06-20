@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -100,7 +101,8 @@ fun TaskForm(
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium)
                         .clickable { onDatePickerShow() },
-                    placeholder = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+                    placeholder = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
                     value = uiState.taskUiState.dueDate ?: "",
                     onValueChange = {},
                     readOnly = true,
@@ -144,8 +146,7 @@ fun TaskForm(
                     verticalArrangement = Arrangement.spacedBy(Theme.dimension.large),
                     horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
                 ) {
-                    items(categories.size) { index ->
-                        val category = categories[index]
+                    items(categories) { category ->
                         CategoryItem(
                             category = category,
                             onClick = { onCategorySelected(category) },

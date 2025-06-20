@@ -80,7 +80,7 @@ fun TudeeScrollableTabs(
                 }
             },
             divider = {
-                Box (
+                Box(
                     modifier = Modifier
                         .height(1.dp)
                         .background(color = Theme.color.stroke)
@@ -145,7 +145,7 @@ private fun CustomTab(
         selected = isSelected,
         onClick = onClick,
 
-    ) {
+        ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(space = Theme.dimension.extraSmall),
@@ -194,7 +194,7 @@ private fun TudeeScrollableTabsPreview() {
         TabItem(
             label = stringResource(R.string.in_progress_task_status),
             count = 14
-        ){
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()

@@ -30,6 +30,8 @@ junitJupiter = "5.8.1"
 truth = "1.4.2"
 junitJunitJupiter = "5.8.1"
 
+coreSplashscreen = "1.0.1"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -78,7 +80,7 @@ koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-comp
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJunitJupiter" }
 
-
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 
 [bundles]
 room = [

@@ -54,6 +54,8 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Flo
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.screen.add_edit_screen.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
@@ -76,7 +78,9 @@ fun HomeScreen(
         onChangeTheme = onChangeTheme,
         viewModel::onAddTask,
         viewModel::onTaskClick,
-        viewModel::onOpenCategory
+        viewModel::onOpenCategory,
+        viewModel::onAddTaskSuccess,
+        viewModel::onAddTaskHasError,
     )
 }
 
@@ -88,8 +92,11 @@ fun HomeScreenContent(
     onAddTask: () -> Unit,
     onTaskClick: (TaskUiState) -> Unit,
     onOpenCategory: (TaskUiStatus) -> Unit,
+    onAddTaskSuccess: () -> Unit,
+    onAddTaskHasError: (String) -> Unit,
 ) {
     val scrollState = rememberLazyListState()
+    var showEditTaskBottomSheet by remember { mutableStateOf(false) }
     var isScrolled by remember { mutableStateOf(false) }
 
     LaunchedEffect(scrollState) {
@@ -133,7 +140,26 @@ fun HomeScreenContent(
                 .align(Alignment.BottomEnd)
                 .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
             iconRes = R.drawable.note_add,
-        ) { onAddTask() }
+        ) {
+            showEditTaskBottomSheet = true
+            onAddTask()
+        }
+
+        if (showEditTaskBottomSheet) {
+            AddEditTaskScreen(
+                isEditMode = false,
+                onDismiss = {
+                    showEditTaskBottomSheet = false
+                },
+                onSuccess = {
+                    showEditTaskBottomSheet = false
+                    onAddTaskSuccess()
+                },
+                onError = { errorMessage ->
+                    onAddTaskHasError(errorMessage)
+                }
+            )
+        }
     }
 }
 
@@ -418,7 +444,7 @@ fun PreviewHomeScreen() {
                 ),
                 tasks = list
             ),
-            onChangeTheme = { isDark = !isDark }, {}, {}, {}
+            onChangeTheme = { isDark = !isDark }, {}, {}, {}, {}, {}
         )
     }
 }

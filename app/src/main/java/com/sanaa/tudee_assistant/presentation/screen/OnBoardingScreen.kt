@@ -33,7 +33,6 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import kotlinx.coroutines.launch
 
 data class OnBoardingContent(
@@ -241,7 +240,7 @@ fun DialogContainer(
 @Preview(widthDp = 360)
 @Composable
 private fun BoardingScreenPreview() {
-    TudeeTheme(isDarkTheme = false) {
+    TudeeTheme( false) {
         Box(
             modifier = Modifier
                 .fillMaxSize()

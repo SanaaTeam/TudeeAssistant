@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -38,11 +39,12 @@ class MainActivity : ComponentActivity() {
                 showSplash = false
                 keepSplashOn = false
             }
+            Log.d("isDark Test", "onCreate: is dark value is : $isDark ")
             TudeeTheme(isDark) {
                 if (showSplash) {
                     SplashScreen()
                 } else {
-                    TudeeApp()
+                    TudeeApp(isDark)
                 }
             }
         }

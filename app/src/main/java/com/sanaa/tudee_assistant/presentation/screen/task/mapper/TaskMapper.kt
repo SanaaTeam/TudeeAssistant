@@ -1,10 +1,10 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper
+package com.sanaa.tudee_assistant.presentation.screen.task.mapper
 
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 

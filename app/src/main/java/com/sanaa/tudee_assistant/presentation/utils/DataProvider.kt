@@ -1,8 +1,8 @@
 package com.sanaa.tudee_assistant.presentation.utils
 
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 object DataProvider {
 

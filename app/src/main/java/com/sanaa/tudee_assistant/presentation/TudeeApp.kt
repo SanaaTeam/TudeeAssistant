@@ -21,9 +21,9 @@ import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.SplashScreenRoute
-import com.sanaa.tudee_assistant.presentation.screen.OnBoardingScreen
 import com.sanaa.tudee_assistant.presentation.screen.category_task.CategoryTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
+import com.sanaa.tudee_assistant.presentation.screen.on_boarding.OnBoardingScreen
 import kotlinx.coroutines.launch
 
 @Composable

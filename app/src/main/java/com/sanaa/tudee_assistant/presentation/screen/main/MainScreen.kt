@@ -22,7 +22,7 @@ import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryScreen
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
-import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TasksScreen
+import com.sanaa.tudee_assistant.presentation.screen.task.TasksScreen
 
 @Composable
 fun MainScreen(

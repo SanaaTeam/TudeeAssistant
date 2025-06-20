@@ -1,7 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.state
-
-import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+package com.sanaa.tudee_assistant.presentation.model
 
 data class TaskUiState(
     val id: Int? = null,

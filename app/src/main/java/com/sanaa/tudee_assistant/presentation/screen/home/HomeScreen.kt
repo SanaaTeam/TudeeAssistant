@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.bottom_sheet.add_edit_task.AddEditTaskBottomSheet
 import com.sanaa.tudee_assistant.presentation.design_system.component.AppBar
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.component.DarkModeThemeSwitchButton
@@ -53,10 +54,9 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.TaskCountB
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.add_edit_screen.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.formatDateTime
 import kotlinx.datetime.Clock
@@ -145,7 +145,7 @@ fun HomeScreenContent(
         }
 
         if (showEditTaskBottomSheet) {
-            AddEditTaskScreen(
+            AddEditTaskBottomSheet(
                 isEditMode = false,
                 onDismiss = {
                     showEditTaskBottomSheet = false
@@ -204,7 +204,7 @@ private fun CategoryList(
                 state.tasks.isEmpty(),
                 exit = shrinkVertically(
                     shrinkTowards = Alignment.Top,
-                    animationSpec = tween(1000)
+                    animationSpec = tween(300)
                 ) + fadeOut(tween(500))
             ) {
                 Box(
@@ -297,7 +297,8 @@ private fun CategoryList(
                 modifier = Modifier.width(320.dp),
                 task = task,
                 categoryImagePath = categoryImagePath,
-                onClick = { onClick(it) })
+                onClick = { onClick(it) }
+            )
         }
     }
 }

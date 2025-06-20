@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.add_edit_screen
+package com.sanaa.tudee_assistant.presentation.bottom_sheet.add_edit_task
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,12 +12,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEditTaskScreen(
+fun AddEditTaskBottomSheet(
     isEditMode: Boolean,
     taskToEdit: TaskUiState? = null,
     onDismiss: () -> Unit,

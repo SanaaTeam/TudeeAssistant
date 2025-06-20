@@ -47,7 +47,6 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category_task.composable.UpdateCurrentCategory
 import com.sanaa.tudee_assistant.presentation.state.CategoryTaskUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -65,8 +64,8 @@ fun CategoryTaskScreen(
 
 
     LaunchedEffect(categoryId) {
-        if (categoryId!=null)
-        viewModel.loadCategoryTasks(categoryId)
+        if (categoryId != null)
+            viewModel.loadCategoryTasks(categoryId)
     }
 
     CategoryTaskScreenContent(

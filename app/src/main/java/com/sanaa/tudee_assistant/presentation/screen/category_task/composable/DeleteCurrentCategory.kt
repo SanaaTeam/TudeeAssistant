@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.NegativeButton
-import com.sanaa.tudee_assistant.presentation.design_system.component.button.NegativeTextButton
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.dropShadowColor

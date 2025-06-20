@@ -39,7 +39,7 @@ fun AddNewCategory(
     onImageSelected: (Uri?) -> Unit,
     onAddClick: (title: String, imageUri: Uri?) -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var internalShowBottomSheet by remember { mutableStateOf(true) }
     var categoryTitle by remember { mutableStateOf("") }

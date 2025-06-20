@@ -35,8 +35,6 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.screen.main.navigateTo
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -82,9 +80,7 @@ fun CategoryScreen(
                 items(state.currentDateCategory) { category ->
                     CategoryItem(
                         category = category,
-                        onClick = {
-                            screenNavController.navigate(CategoryTasksScreenRoute(category.id))
-                        },
+                        onClick = {},
                         // condition
                         topContent = { CategoryCount(category.tasksCount.toString()) }
                     )
@@ -142,9 +138,9 @@ fun CategoryScreen(
     }
 }
 
-//
-//@Preview(showBackground = true)
-//@Composable
-//private fun CategoryScreenPreview() {
-//    CategoryScreen(screenNavController = screenNavController)
-//}
+
+@Preview(showBackground = true)
+@Composable
+private fun CategoryScreenPreview() {
+//    CategoryScreen(screenNavController = navHostController)
+}

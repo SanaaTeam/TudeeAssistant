@@ -80,14 +80,14 @@ fun TaskListColumn(
                 content = {
                     CategoryTaskCard(
                         task = task,
-                        categoryImagePath = categories.first { it.id == task.categoryId }.imagePath,
+                        categoryImagePath = categories.firstOrNull { it.id == task.categoryId }?.imagePath
+                            ?: "",
                         onClick = { onTaskClick(task) }
                     )
                 },
                 modifier = Modifier
                     .clip(RoundedCornerShape(Theme.dimension.medium))
                     .animateItem(fadeInSpec = null, fadeOutSpec = null)
-
             )
         }
     }

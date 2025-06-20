@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeBottomNavBarItem
@@ -21,6 +22,7 @@ import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryScreen
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
+import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TasksScreen
 
 @Composable
 fun MainScreen(
@@ -51,7 +53,7 @@ fun MainScreen(
 
             composable<TasksScreenRoute> {
                 onStatusBarColor(Theme.color.surface)
-
+                TasksScreen(screenRoute = it.toRoute<TasksScreenRoute>())
             }
 
             composable<CategoriesScreenRoute> {
@@ -73,7 +75,7 @@ fun MainScreen(
                 iconRes = R.drawable.profile,
                 selectedIconRes = R.drawable.profile_fill,
             ) {
-                screenNavController.navigateTo(TasksScreenRoute)
+                screenNavController.navigateTo(TasksScreenRoute())
             }
             TudeeBottomNavBarItem(
                 selected = currentDestination?.hasRoute(CategoriesScreenRoute::class) == true,

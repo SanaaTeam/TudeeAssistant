@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
@@ -68,7 +69,6 @@ fun SnackBar(
             color = Theme.color.body,
             style = Theme.textStyle.body.medium,
             modifier = Modifier.padding(start = Theme.dimension.regular)
-
         )
     }
 }
@@ -82,7 +82,7 @@ private fun SnackBarDarkPreview() {
                 .background(color = Theme.color.surface)
                 .padding(Theme.dimension.extraSmall)
         ) {
-            SnackBar(message = "Success")
+            SnackBar(message = stringResource(R.string.snack_bar_success))
         }
     }
 }
@@ -96,7 +96,10 @@ private fun SnackBarLightPreview() {
                 .background(color = Theme.color.surface)
                 .padding(Theme.dimension.extraSmall)
         ) {
-            SnackBar(snackBarStatus = SnackBarStatus.ERROR, message = "Something went wrong")
+            SnackBar(
+                snackBarStatus = SnackBarStatus.ERROR,
+                message = stringResource(R.string.snack_bar_success)
+            )
         }
     }
 }

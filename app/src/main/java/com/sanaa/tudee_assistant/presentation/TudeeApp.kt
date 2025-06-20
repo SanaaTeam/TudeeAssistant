@@ -90,6 +90,18 @@ private fun AppNavigation(
             )
         }
 
+        composable<MainScreenRoute> {
+            val screenNavController = rememberNavController()
+            MainScreen(
+                startDestination = HomeScreenRoute,
+                screenNavController,
+                isDarkTheme = isDarkTheme,
+                onChangeTheme = onChangeTheme,
+                onStatusBarColor,
+                navHostController = navHostController
+            )
+        }
+
         composable<CategoryTasksScreenRoute> {
             CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id)
         }

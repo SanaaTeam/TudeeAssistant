@@ -25,19 +25,16 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskViewDetails(
-    task: TaskUiModel,
+    task: TaskUiState,
     onDismiss: () -> Unit,
-    onEditClick: (TaskUiModel) -> Unit,
+    onEditClick: (TaskUiState) -> Unit,
     onMoveToClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
 
     val changeStatusTo = when (task.status) {
@@ -132,16 +129,14 @@ fun TaskViewDetails(
 private fun PreviewUpdateTaskStatus() {
     TudeeTheme {
         TaskViewDetails(
-            task = TaskUiModel(
+            task = TaskUiState(
                 id = 1,
                 title = "Organize Study Desk",
                 description = "Review cell structure and functions for tomorrow...",
                 dueDate = null,
                 categoryId = 1,
-                categoryImagePath = "file:///android_asset/categories/agriculture.png",
                 priority = TaskUiPriority.MEDIUM,
                 status = TaskUiStatus.IN_PROGRESS,
-                createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
             ),
             onDismiss = {},
             onEditClick = {},

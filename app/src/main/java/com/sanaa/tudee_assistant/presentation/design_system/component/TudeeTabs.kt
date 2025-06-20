@@ -44,7 +44,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 
 @Composable
-fun TudeeTabs(
+fun TudeeScrollableTabs(
     tabs: List<TabItem>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
@@ -189,7 +189,7 @@ private fun CustomTab(
 
 @Preview(showBackground = true)
 @Composable
-fun TudeeTabsPreview() {
+private fun TudeeScrollableTabsPreview() {
     val tabs = listOf(
         TabItem(
             label = stringResource(R.string.in_progress_task_status),
@@ -235,13 +235,13 @@ fun TudeeTabsPreview() {
 
     var selectedTab by remember { mutableIntStateOf(0) }
 
-    TudeeTheme(isDarkTheme = false) {
+    TudeeTheme(false) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Theme.color.surface)
         ) {
-            TudeeTabs(
+            TudeeScrollableTabs(
                 tabs = tabs,
                 selectedTabIndex = selectedTab,
                 onTabSelected = { selectedTab = it },

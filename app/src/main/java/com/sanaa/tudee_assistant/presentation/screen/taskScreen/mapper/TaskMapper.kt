@@ -4,23 +4,20 @@ import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 
-fun Task.toUiModel(
-    categoryImagePath: String
-): TaskUiModel {
-    return TaskUiModel(
+fun Task.toUiModel(): TaskUiState {
+    return TaskUiState(
         id = id,
         title = title,
         dueDate = dueDate?.toString() ?: "",
-        categoryImagePath = categoryImagePath,
         priority = priority.toUiModel(),
         description = description ?: "",
         status = status.toUiModel(),
         categoryId = categoryId,
-        createdAt = createdAt,
     )
 }
 
@@ -49,7 +46,7 @@ fun TaskUiPriority.toTaskPriority(): TaskPriority {
     }
 }
 
-fun TaskUiModel.toTask(): Task {
+fun TaskUiState.toTask(createdAt: LocalDateTime): Task {
     return Task(
         id = id,
         title = title,

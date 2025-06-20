@@ -20,7 +20,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.CheckMarkContainer
@@ -30,6 +29,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Pri
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -39,19 +39,19 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun TaskForm(
     uiState: AddTaskUiState,
-    categories: List<Category>,
+    categories: List<CategoryUiModel>,
     isEditMode: Boolean,
     showDatePickerDialog: Boolean,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onPrioritySelected: (TaskUiPriority) -> Unit,
-    onCategorySelected: (Category) -> Unit,
+    onCategorySelected: (CategoryUiModel) -> Unit,
     onPrimaryButtonClick: () -> Unit,
     onDismiss: () -> Unit,
     onDatePickerShow: () -> Unit,
     onDatePickerDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier

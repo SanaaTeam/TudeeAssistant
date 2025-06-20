@@ -43,7 +43,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.add_edit_screen.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
-import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.coroutines.launch
@@ -57,7 +57,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun TasksScreen(
     modifier: Modifier = Modifier,
-    viewModel: TaskViewModel = koinViewModel<TaskViewModel>()
+    viewModel: TaskViewModel = koinViewModel<TaskViewModel>(),
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -83,11 +83,11 @@ fun TasksScreen(
 @Composable
 fun TasksScreenContent(
     state: TasksScreenUiState,
-    onTaskSwipe: (TaskUiModel) -> Boolean,
+    onTaskSwipe: (TaskUiState) -> Boolean,
     onDateSelected: (LocalDate) -> Unit,
-    onTaskClick: (TaskUiModel) -> Unit,
+    onTaskClick: (TaskUiState) -> Unit,
     onDismissTaskViewDetails: () -> Unit,
-    onEditTaskViewDetails: (TaskUiModel) -> Unit,
+    onEditTaskViewDetails: (TaskUiState) -> Unit,
     onMoveToTaskViewDetails: () -> Unit,
     onDeleteClick: () -> Unit,
     onDeleteDismiss: () -> Unit,
@@ -97,7 +97,7 @@ fun TasksScreenContent(
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     var showEditTaskBottomSheet by remember { mutableStateOf(false) }
-    var taskToEdit by remember { mutableStateOf<TaskUiModel?>(null) }
+    var taskToEdit by remember { mutableStateOf<TaskUiState?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     var showAddTaskBottomSheet by remember { mutableStateOf(false) }
     var daysInMonth by
@@ -224,7 +224,7 @@ fun TasksScreenContent(
                         onDismissTaskViewDetails()
                         taskToEdit = task
                         showEditTaskBottomSheet = true
-                    },                    onMoveToClicked = onMoveToTaskViewDetails,
+                    }, onMoveToClicked = onMoveToTaskViewDetails,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             if (state.selectedTask != null && state.showDeleteDialog)
@@ -304,7 +304,7 @@ fun TasksScreenContent(
             snackBarHostState = snackBarHostState,
             isError = state.errorMessage != null
         )
-}
+    }
 }
 
 @Preview(showBackground = true, locale = "ar")

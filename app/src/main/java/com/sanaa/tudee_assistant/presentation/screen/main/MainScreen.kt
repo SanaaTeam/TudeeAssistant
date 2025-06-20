@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeBottomNavBarItem
 
-internal var navItems = mutableListOf<NavItem>()
+internal var navItems = mutableSetOf<NavItem>()
 
 internal data class NavItem(
     val route: Any,
@@ -46,6 +46,7 @@ fun MainScreen(startDestination: Any, builder: NavGraphBuilder.() -> Unit) {
                     selectedIconRes = it.selectedIconRes
                 ) {
                     screenNavController.navigateTo(it.route)
+
                 }
             }
         }

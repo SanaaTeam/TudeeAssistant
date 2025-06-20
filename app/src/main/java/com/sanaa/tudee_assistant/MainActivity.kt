@@ -4,14 +4,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.sanaa.tudee_assistant.domain.ThemeManager
 import com.sanaa.tudee_assistant.presentation.TudeeApp
+import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TudeeApp()
+            val themeManager: ThemeManager= koinInject()
+            val isDark by themeManager.isDarkTheme.collectAsState(initial = false)
+
+            TudeeTheme (isDark){
+                TudeeApp()
+            }
         }
     }
 }

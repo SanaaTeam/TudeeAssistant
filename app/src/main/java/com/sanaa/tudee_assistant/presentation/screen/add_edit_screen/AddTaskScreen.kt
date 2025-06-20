@@ -12,21 +12,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
-import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditTaskScreen(
     isEditMode: Boolean,
-    taskToEdit: TaskUiModel? = null,
+    taskToEdit: TaskUiState? = null,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
-    viewModel: TaskFormViewModel = koinViewModel()
+    viewModel: TaskFormViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val categories by viewModel.categoryService.getCategories().collectAsState(initial = emptyList())
     var showBottomSheet by remember { mutableStateOf(true) }
     var showDatePickerDialog by remember { mutableStateOf(false) }
 
@@ -51,7 +50,7 @@ fun AddEditTaskScreen(
                 Column(modifier = Modifier.fillMaxHeight(0.81f)) {
                     TaskForm(
                         uiState = uiState,
-                        categories = categories,
+                        categories = uiState.categories,
                         isEditMode = isEditMode,
                         showDatePickerDialog = showDatePickerDialog,
                         onTitleChange = viewModel::onTitleChange,

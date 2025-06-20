@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,13 +42,11 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Flo
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TaskScreen
-import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
 import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -76,6 +75,7 @@ fun TasksScreen(
         onMoveToTaskViewDetails = viewModel::onMoveTaskToAnotherStatus,
         onDeleteClick = viewModel::onTaskDeleted,
         onDeleteDismiss = viewModel::onTaskDeletedDismiss,
+        onShowSnackBar = viewModel::onSnackBarShown,
         modifier = modifier,
     )
 }
@@ -93,6 +93,7 @@ fun TasksScreenContent(
     onMoveToTaskViewDetails: () -> Unit,
     onDeleteClick: () -> Unit,
     onDeleteDismiss: () -> Unit,
+    onShowSnackBar: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -226,37 +227,37 @@ fun TasksScreenContent(
             if (state.selectedTask != null && state.showDeleteDialog)
                 DeleteComponent(
                     onDismiss = onDeleteDismiss,
-                    onDeleteClicked = onDeleteClick,
+                    onDeleteClicked = {
+                        onDeleteClick()
+                    },
                     title = stringResource(R.string.delete_task_title),
                 )
 
-        if (showAddTaskBottomSheet) {
-            TaskScreen(
-                isEditMode = false,
-                initialTask = null,
-                onDismiss = { showAddTaskBottomSheet = false },
-                onSuccess = {
-                    showAddTaskBottomSheet = false
-                    coroutineScope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = "Task added successfully",
-                            withDismissAction = true
-                        )
+            if (showAddTaskBottomSheet) {
+                TaskScreen(
+                    isEditMode = false,
+                    initialTask = null,
+                    onDismiss = { showAddTaskBottomSheet = false },
+                    onSuccess = {
+                        showAddTaskBottomSheet = false
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = R.string.snack_bar_success.toString(),
+                                withDismissAction = true
+                            )
+                        }
+                    },
+                    onError = { errorMessage ->
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = errorMessage,
+                                withDismissAction = true
+                            )
+                        }
                     }
-                },
-                onError = { errorMessage ->
-                    coroutineScope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = errorMessage,
-                            withDismissAction = true
-                        )
-                    }
-                }
-            )
+                )
+            }
         }
-    }
-
-
 
         FloatingActionButton(
             enabled = true,
@@ -271,11 +272,24 @@ fun TasksScreenContent(
             }
         )
 
+        LaunchedEffect(state.successMessage) {
+            state.successMessage?.let {
+                snackBarHostState.showSnackbar(it)
+                onShowSnackBar()
+            }
+        }
+        LaunchedEffect(state.successMessage) {
+            state.errorMessage?.let {
+                snackBarHostState.showSnackbar(it)
+                onShowSnackBar()
+            }
+        }
+
         TudeeSnackBar(
             snackBarHostState = snackBarHostState,
             isError = state.errorMessage != null
         )
-}
+    }
 }
 
 @Preview(showBackground = true, locale = "ar")
@@ -319,5 +333,6 @@ private fun TasksScreenPreview() {
         onMoveToTaskViewDetails = {},
         onDeleteClick = {},
         onDeleteDismiss = {},
+        onShowSnackBar = {},
     )
 }

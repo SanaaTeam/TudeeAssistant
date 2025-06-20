@@ -3,7 +3,6 @@ package com.sanaa.tudee_assistant.presentation.screen.category_task
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
@@ -105,14 +104,45 @@ class CategoryTaskViewModel(
         }
     }
 
-    fun deleteCategory(categoryId: Int) {
+    fun deleteCategory(onSuccess: () -> Unit = {}) {
         viewModelScope.launch {
             try {
-                categoryService.deleteCategoryById(categoryId)
+                _state.update { it.copy(isLoading = true, error = null) }
+
+                val categoryId = _state.value.categoryId
+
+                if (_state.value.isDefault) {
+                    throw Exception("Cannot delete default category")
+                }
+
+                val tasks = taskService.getTasksByCategoryId(categoryId)
+                tasks.collect { taskList ->
+                    taskList.forEach { task ->
+                        task.id?.let { taskId ->
+                            taskService.deleteTaskById(taskId)
+                        }
+                    }
+
+                    categoryService.deleteCategoryById(categoryId)
+
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            error = null
+                        )
+                    }
+
+                    onSuccess()
+                    return@collect
+                }
+
             } catch (e: Exception) {
-                _state.value = _state.value.copy(
-                    error = e.message ?: "Failed to delete category"
-                )
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        error = e.message ?: "Failed to delete category"
+                    )
+                }
             }
         }
     }

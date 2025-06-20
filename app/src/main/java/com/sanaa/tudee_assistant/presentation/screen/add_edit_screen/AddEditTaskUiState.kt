@@ -2,7 +2,7 @@ package com.sanaa.tudee_assistant.presentation.screen.add_edit_screen
 
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 data class AddTaskUiState(

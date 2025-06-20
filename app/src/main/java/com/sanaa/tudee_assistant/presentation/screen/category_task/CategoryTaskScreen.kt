@@ -72,7 +72,6 @@ fun CategoryTaskScreen(
         onDeleteCategory = {
 
         },
-        onTaskClick = { task -> },
         viewModel = viewModel
     )
 }
@@ -84,7 +83,6 @@ fun CategoryTaskScreenContent(
     modifier: Modifier = Modifier,
     onEditCategory: (Int) -> Unit = {},
     onDeleteCategory: () -> Unit = {},
-    onTaskClick: (TaskUiState) -> Unit = {},
     viewModel: CategoryTaskViewModel
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -98,7 +96,6 @@ fun CategoryTaskScreenContent(
         ) {
             TasksList(
                 tasks = state.inProgressTasks,
-                onTaskClick = onTaskClick,
             )
         },
         TabItem(
@@ -107,7 +104,6 @@ fun CategoryTaskScreenContent(
         ) {
             TasksList(
                 tasks = state.todoTasks,
-                onTaskClick = onTaskClick,
             )
         },
         TabItem(
@@ -116,7 +112,6 @@ fun CategoryTaskScreenContent(
         ) {
             TasksList(
                 tasks = state.doneTasks,
-                onTaskClick = onTaskClick,
             )
         }
     )
@@ -155,7 +150,7 @@ fun CategoryTaskScreenContent(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.arrow_left),
-                            contentDescription = "Back",
+                            contentDescription = null,
                             tint = Theme.color.body,
                             modifier = Modifier.size(20.dp)
                         )
@@ -278,7 +273,6 @@ fun CategoryTaskScreenContent(
 private fun TasksList(
     tasks: List<TaskUiModel>,
     modifier: Modifier = Modifier,
-    onTaskClick: (TaskUiState) -> Unit = {}
 ) {
     if (tasks.isEmpty()) {
         Box(
@@ -313,10 +307,7 @@ private fun TasksList(
                         status = task.status,
                         categoryId = task.categoryId
                     ),
-                    categoryImagePath = task.categoryImagePath,
-                    onClick = { taskUiState ->
-                        onTaskClick(taskUiState)
-                    }
+                    categoryImagePath = task.categoryImagePath
                 )
             }
         }

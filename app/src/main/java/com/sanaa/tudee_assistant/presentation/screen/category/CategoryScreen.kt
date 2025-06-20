@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screens.category
+package com.sanaa.tudee_assistant.presentation.screen.category
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

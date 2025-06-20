@@ -10,23 +10,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.data.utils.CategoryThumbnail
+import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.CategoryState
 
 @Composable
 fun CategoryItem(
     modifier: Modifier = Modifier,
-    category: CategoryState,
+    category: Category,
     onClick: () -> Unit,
     topContent: @Composable () -> Unit = {},
 ) {
@@ -52,12 +50,7 @@ fun CategoryItem(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(
-                    painter = category.categoryPainter,
-                    contentDescription = null,
-                    modifier = Modifier.size(Theme.dimension.extraLarge),
-                    tint = category.tint
-                )
+                CategoryThumbnail(modifier=Modifier,imagePath = category.imagePath)
             }
         }
 
@@ -66,7 +59,7 @@ fun CategoryItem(
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
-                text = category.title,
+                text = category.name,
                 style = Theme.textStyle.label.small,
                 color = Theme.color.body,
                 modifier = Modifier.align(Alignment.BottomCenter)
@@ -80,10 +73,10 @@ fun CategoryItem(
 private fun CategoryDarkPreview() {
     TudeeTheme(isDarkTheme = true) {
         CategoryItem(
-            category = CategoryState(
-                "Education",
-                painterResource(R.drawable.education_cat),
-                Theme.color.purpleAccent
+            category = Category(
+                name = "Education",
+                imagePath = "file:///android_asset/categories/education.png",
+                isDefault = true
             ),
             onClick = {},
             topContent = { CheckMarkContainer(modifier = Modifier.padding(2.dp)) },
@@ -98,10 +91,10 @@ private fun CategoryDarkPreview() {
 private fun CategoryLightPreview() {
     TudeeTheme(isDarkTheme = false) {
         CategoryItem(
-            category = CategoryState(
-                "Education",
-                painterResource(R.drawable.education_cat),
-                Theme.color.purpleAccent
+            category = Category(
+                name = "Education",
+                imagePath = "file:///android_asset/categories/education.png",
+                isDefault = true
             ),
             onClick = {},
             topContent = { CategoryCount("16") },

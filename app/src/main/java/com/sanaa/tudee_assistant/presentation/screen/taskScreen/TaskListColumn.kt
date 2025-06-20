@@ -34,7 +34,7 @@ import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 fun TaskListColumn(
     taskList: List<TaskUiModel>,
     onTaskSwipe: (TaskUiModel) -> Boolean = { true },
-    onTaskClick: (TaskUiModel) -> Unit = {},
+    onTaskClick: (TaskUiModel) -> Unit,
 ) {
 
     LazyColumn(
@@ -76,7 +76,9 @@ fun TaskListColumn(
                     }
                 },
                 content = {
-                    CategoryTaskCard(task, onClick = { onTaskClick(task) })
+                    CategoryTaskCard(task, onClick = {
+                        onTaskClick(task)
+                    })
                 },
                 modifier = Modifier
                     .clip(RoundedCornerShape(Theme.dimension.medium))
@@ -95,11 +97,12 @@ private fun TaskListColumnPreview() {
     TudeeTheme(isDarkTheme = true) {
 
         TaskListColumn(
-            itemsState,
-            onTaskSwipe = { task ->
+            itemsState, onTaskSwipe = { task ->
                 itemsState = itemsState.filterNot { item -> item == task }
                 false
+
             },
+            {}
         )
     }
 }

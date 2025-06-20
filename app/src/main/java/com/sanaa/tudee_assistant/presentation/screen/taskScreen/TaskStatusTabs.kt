@@ -66,7 +66,10 @@ fun TaskStatusTabs(
                 if (state.currentDateTasks.any { it.status == TaskUiStatus.TODO }) {
                     TaskListColumn(
                         state.currentDateTasks.filter { it.status == TaskUiStatus.TODO },
-                        onTaskSwipe = { task -> onTaskSwipe(task) })
+                        onTaskSwipe = { task -> onTaskSwipe(task) },
+                        onTaskClick = onTaskClick
+                    )
+
                 } else {
                     Box(
                         modifier = Modifier
@@ -85,7 +88,9 @@ fun TaskStatusTabs(
                 if (state.currentDateTasks.any { it.status == TaskUiStatus.DONE }) {
                     TaskListColumn(
                         state.currentDateTasks.filter { it.status == TaskUiStatus.DONE },
-                        onTaskSwipe = { task -> onTaskSwipe(task) })
+                        onTaskSwipe = { task -> onTaskSwipe(task) },
+                        onTaskClick = onTaskClick
+                    )
                 } else {
                     Box(
                         modifier = Modifier

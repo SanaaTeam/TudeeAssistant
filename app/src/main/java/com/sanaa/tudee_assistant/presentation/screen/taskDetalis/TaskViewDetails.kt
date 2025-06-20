@@ -37,7 +37,6 @@ fun TaskViewDetails(
     onDismiss: () -> Unit,
     onEditClick: (TaskUiModel) -> Unit,
     onMoveToClicked: () -> Unit,
-//    sheetState: SheetState,
     modifier: Modifier = Modifier
 ) {
 
@@ -49,7 +48,6 @@ fun TaskViewDetails(
 
     BaseBottomSheet(
         onDismiss = onDismiss,
-//        sheetState = sheetState,
         content = {
             Column(
                 modifier = modifier
@@ -77,6 +75,7 @@ fun TaskViewDetails(
                         modifier = Modifier,
                         style = Theme.textStyle.title.medium,
                         color = Theme.color.title,
+
                         )
                     if (task.description != null)
                         Text(
@@ -145,7 +144,6 @@ private fun PreviewUpdateTaskStatus() {
                 createdAt = Clock.System.now().toLocalDateTime(TimeZone.UTC)
             ),
             onDismiss = {},
-//            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
             onEditClick = {},
             onMoveToClicked = {}
         )

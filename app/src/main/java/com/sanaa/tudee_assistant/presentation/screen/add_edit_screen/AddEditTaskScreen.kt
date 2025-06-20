@@ -34,7 +34,10 @@ fun AddEditTaskScreen(
         if (!isEditMode) {
             viewModel.resetState()
         }
-        taskToEdit?.let { viewModel.loadTask(it) }
+        if (taskToEdit == null)
+            viewModel.loadCategoriesForNewTask()
+        else
+            viewModel.loadTask(taskToEdit)
     }
     LaunchedEffect(uiState.isOperationSuccessful, uiState.error) {
         if (uiState.isOperationSuccessful) {

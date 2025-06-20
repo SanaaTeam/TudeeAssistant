@@ -68,6 +68,6 @@ fun TaskStatusCard(
 @Composable
 private fun PreviewTaskStatusCard() {
     TudeeTheme {
-        TaskStatusCard(taskUiStatus = TaskUiStatus.TODO)
+        TaskStatusCard(taskUiStatus = TaskUiStatus.DONE)
     }
 }

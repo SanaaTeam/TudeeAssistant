@@ -7,8 +7,8 @@ import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
+import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toUiModel
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
@@ -23,16 +23,12 @@ class TaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()) {
+    lateinit var categories: List<Category>
 
     init {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
             categoryService.getCategories().collect { categoryList ->
-                _state.update {
-                    it.copy(
-                        isLoading = false
-                    )
-                }
+                categories = categoryList
             }
         }
         getTasksByDueDate()
@@ -47,9 +43,7 @@ class TaskViewModel(
                 .collect { taskList ->
                     _state.update {
                         it.copy(
-                            currentDateTasks = taskList.map { task ->
-                                task.toState()
-                            },
+                            currentDateTasks = taskList.map { task -> task.toUiModel() },
                             isLoading = false
                         )
                     }
@@ -132,8 +126,8 @@ class TaskViewModel(
         }
     }
 
-    fun onShowEditDialogChange(show: Boolean) {
-        _state.update { it.copy(showEditDialog = show) }
+    fun onTaskDeletedDismiss() {
+        _state.update { it.copy(showDeleteDialog = false) }
     }
 
     fun onTaskSwipeToDelete(task: TaskUiState) {
@@ -141,40 +135,6 @@ class TaskViewModel(
             onTaskSelected(task)
             onShowDeleteDialogChange(true)
         }
-    }
-
-    fun onEditTask(taskUiState: TaskUiState) {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            runCatching {
-                taskService.updateTask(
-                    taskUiState.toTask(
-                        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-                    )
-                )
-            }.onSuccess {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        showEditDialog = false,
-                        selectedTask = null,
-                    )
-                }
-                getTasksByDueDate()
-            }.onFailure {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        showEditDialog = false,
-                        selectedTask = null,
-                    )
-                }
-            }
-        }
-    }
-
-    fun onTaskDeletedDismiss() {
-        _state.update { it.copy(showDeleteDialog = false) }
     }
 
     fun onMoveTaskToAnotherStatus() {
@@ -191,7 +151,9 @@ class TaskViewModel(
                 runCatching {
                     taskService.updateTask(
                         updatedTask.toTask(
-                            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                            createdAt = Clock.System.now().toLocalDateTime(
+                                TimeZone.UTC
+                            )
                         )
                     )
                 }.onSuccess {

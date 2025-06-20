@@ -30,16 +30,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.screen.main.navigateTo
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoryScreen(
     modifier: Modifier = Modifier,
-    viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>()
+    viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
+    screenNavController: NavHostController
 ) {
     val state by viewModel.state.collectAsState()
     val showBottomSheet = remember { mutableStateOf(false) }
@@ -78,7 +82,9 @@ fun CategoryScreen(
                 items(state.currentDateCategory) { category ->
                     CategoryItem(
                         category = category,
-                        onClick = {},
+                        onClick = {
+                            screenNavController.navigate(CategoryTasksScreenRoute(category.id))
+                        },
                         // condition
                         topContent = { CategoryCount(category.tasksCount.toString()) }
                     )
@@ -136,9 +142,9 @@ fun CategoryScreen(
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-private fun CategoryScreenPreview() {
-    CategoryScreen()
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//private fun CategoryScreenPreview() {
+//    CategoryScreen(screenNavController = screenNavController)
+//}

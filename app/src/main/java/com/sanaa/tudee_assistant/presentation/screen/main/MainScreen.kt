@@ -29,6 +29,7 @@ fun MainScreen(
     isDarkTheme: Boolean,
     onChangeTheme: () -> Unit,
     onStatusBarColor: (Color) -> Unit,
+    navHostController: NavHostController,
 ) {
     val navBackStackEntry by screenNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -55,7 +56,7 @@ fun MainScreen(
 
             composable<CategoriesScreenRoute> {
                 onStatusBarColor(Theme.color.surfaceHigh)
-                CategoryScreen()
+                CategoryScreen(screenNavController = navHostController)
             }
         }
 

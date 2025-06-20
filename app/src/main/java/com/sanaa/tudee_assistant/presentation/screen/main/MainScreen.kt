@@ -75,7 +75,7 @@ fun MainScreen(
                 iconRes = R.drawable.profile,
                 selectedIconRes = R.drawable.profile_fill,
             ) {
-                screenNavController.navigateTo(TasksScreenRoute)
+                screenNavController.navigateTo(TasksScreenRoute())
             }
             TudeeBottomNavBarItem(
                 selected = currentDestination?.hasRoute(CategoriesScreenRoute::class) == true,

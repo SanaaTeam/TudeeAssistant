@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.category_task
 
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -39,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.component.TabItem
@@ -53,7 +51,6 @@ import com.sanaa.tudee_assistant.presentation.screen.category_task.composable.Up
 import com.sanaa.tudee_assistant.presentation.state.CategoryTaskUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.Koin
 
 @Composable
 fun CategoryTaskScreen(
@@ -262,12 +259,15 @@ fun CategoryTaskScreenContent(
             UpdateCurrentCategory(
                 onImageSelected = { },
                 onEditClick = { name, imageUri ->
-//                    viewModel.updateCategory(newName = name, uri = imageUri)
                     showBottomSheetState = false
+                },
+                onDeleteClick = {
+                    showBottomSheetState = false
+                    onBackClick()
                 },
                 onDismiss = {
                     showBottomSheetState = false
-                },
+                }
             )
         }
 

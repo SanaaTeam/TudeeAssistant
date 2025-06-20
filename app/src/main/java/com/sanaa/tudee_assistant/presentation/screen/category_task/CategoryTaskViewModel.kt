@@ -105,6 +105,18 @@ class CategoryTaskViewModel(
         }
     }
 
+    fun deleteCategory(categoryId: Int) {
+        viewModelScope.launch {
+            try {
+                categoryService.deleteCategoryById(categoryId)
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    error = e.message ?: "Failed to delete category"
+                )
+            }
+        }
+    }
+
     private fun Task.toUiModel(categoryImagePath: String): TaskUiModel {
         return TaskUiModel(
             id = id,

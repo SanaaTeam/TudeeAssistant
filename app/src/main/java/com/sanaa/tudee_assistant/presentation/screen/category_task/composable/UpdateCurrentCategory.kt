@@ -41,40 +41,65 @@ import kotlinx.coroutines.launch
 fun UpdateCurrentCategory(
     onImageSelected: (Uri?) -> Unit,
     onEditClick: (title: String, imageUri: Uri?) -> Unit,
+    onDeleteClick: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var internalShowBottomSheet by remember { mutableStateOf(true) }
+    var showEditBottomSheet by remember { mutableStateOf(true) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var categoryTitle by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    UpdateCurrentCategoryContent(
-        onEditClick = { onEditClick(categoryTitle, selectedImageUri) },
-        showBottomSheet = internalShowBottomSheet,
-        categoryTitle = categoryTitle,
-        onCategoryTitleChange = { categoryTitle = it },
-        onDismiss = {
-            internalShowBottomSheet = false
-            onDismiss()
-        },
-        onImageSelected = { uri ->
-            selectedImageUri = uri
-            onImageSelected(uri)
-        },
-        modifier = modifier,
-        onDeleteClick = {}
-    )
-}
+    // Show delete confirmation dialog (appears after edit sheet is dismissed)
+    if (showDeleteDialog) {
+        DeleteCurrentCategory(
+            onDeleteClick = {
+                showDeleteDialog = false
+                onDeleteClick()
+            },
+            onDismiss = {
+                showDeleteDialog = false
+                onDismiss() // Call parent dismiss when delete is cancelled
+            }
+        )
+    }
 
+    // Show edit bottom sheet
+    if (showEditBottomSheet) {
+        UpdateCurrentCategoryContent(
+            onEditClick = {
+                showEditBottomSheet = false
+                onEditClick(categoryTitle, selectedImageUri)
+            },
+            showBottomSheet = showEditBottomSheet,
+            categoryTitle = categoryTitle,
+            onCategoryTitleChange = { categoryTitle = it },
+            onDismiss = {
+                showEditBottomSheet = false
+                onDismiss()
+            },
+            onImageSelected = { uri ->
+                selectedImageUri = uri
+                onImageSelected(uri)
+            },
+            modifier = modifier,
+            onDeleteClick = {
+                // First dismiss the edit sheet, then show delete confirmation
+                showEditBottomSheet = false
+                showDeleteDialog = true
+            }
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateCurrentCategoryContent(
-    modifier: Modifier = Modifier,
     onImageSelected: (Uri?) -> Unit,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onCategoryTitleChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     onDismiss: () -> Unit = {},
     showBottomSheet: Boolean = true,
     categoryTitle: String = "",
@@ -83,7 +108,6 @@ fun UpdateCurrentCategoryContent(
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
 
     if (showBottomSheet) {
         BaseBottomSheet(
@@ -115,24 +139,26 @@ fun UpdateCurrentCategoryContent(
                                 enabled = true,
                                 isLoading = false,
                                 onClick = {
-                                    onDeleteClick()
-                                    onDismiss()
+                                    onDeleteClick() // This will trigger the sheet dismissal and show delete dialog
                                 }
                             )
                         }
+
                         TudeeTextField(
                             placeholder = categoryTitle,
-                            value = "",
+                            value = categoryTitle,
                             icon = painterResource(R.drawable.menu_circle),
                             onValueChange = onCategoryTitleChange,
                             modifier = Modifier.padding(top = Theme.dimension.regular)
                         )
+
                         Text(
                             text = stringResource(R.string.category_image),
                             style = Theme.textStyle.title.large,
                             color = Theme.color.title,
                             modifier = Modifier.padding(top = Theme.dimension.regular)
                         )
+
                         UploadBox(
                             modifier = Modifier.padding(top = Theme.dimension.small),
                             onImageSelected = { uri ->

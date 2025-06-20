@@ -1,14 +1,15 @@
 package com.sanaa.tudee_assistant.presentation.screen.task
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.model.mapper.toState
+import com.sanaa.tudee_assistant.presentation.screen.category.toUiState
 import com.sanaa.tudee_assistant.presentation.screen.task.mapper.toTask
+import com.sanaa.tudee_assistant.presentation.screen.task.mapper.toUiModel
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -25,11 +26,10 @@ class TaskViewModel(
 
     init {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
             categoryService.getCategories().collect { categoryList ->
                 _state.update {
                     it.copy(
-                        isLoading = false
+                        categories = categoryList.map { category -> category.toUiState(0) }
                     )
                 }
             }
@@ -46,9 +46,7 @@ class TaskViewModel(
                 .collect { taskList ->
                     _state.update {
                         it.copy(
-                            currentDateTasks = taskList.map { task ->
-                                task.toState()
-                            },
+                            currentDateTasks = taskList.map { task -> task.toUiModel() },
                             isLoading = false
                         )
                     }
@@ -100,22 +98,11 @@ class TaskViewModel(
                     if (it?.id == null) return@launch
                     taskService.deleteTaskById(it.id)
                 }.onSuccess {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            showDeleteDialog = false,
-                            selectedTask = null,
-                        )
-                    }
+                    handleOnSuccess(message = R.string.snack_bar_success.toString())
                     getTasksByDueDate()
                 }.onFailure {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            showDeleteDialog = false,
-                            selectedTask = null,
-                        )
-                    }
+                    handleOnError(message = R.string.snack_bar_error.toString())
+
                 }
             }
         }
@@ -123,7 +110,7 @@ class TaskViewModel(
 
     fun onDueDateChange(date: LocalDate) {
         _state.update {
-            it.copy(selectedDate = date).also { Log.i("test", date.toString()) }
+            it.copy(selectedDate = date)
         }
         getTasksByDueDate()
     }
@@ -136,8 +123,14 @@ class TaskViewModel(
         _state.update { it.copy(showTaskDetailsDialog = show) }
     }
 
-    fun onShowEditDialogChange(show: Boolean) {
-        _state.update { it.copy(showEditDialog = show) }
+    fun onSnackBarShown() {
+        _state.update {
+            it.copy(successMessage = null, errorMessage = null)
+        }
+    }
+
+    fun onTaskDeletedDismiss() {
+        _state.update { it.copy(showDeleteDialog = false) }
     }
 
     fun onTaskSwipeToDelete(task: TaskUiState) {
@@ -147,67 +140,57 @@ class TaskViewModel(
         }
     }
 
-    fun onEditTask(taskUiState: TaskUiState) {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            runCatching {
-                taskService.updateTask(
-                    taskUiState.toTask(
-                        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-                    )
-                )
-            }.onSuccess {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        showEditDialog = false,
-                        selectedTask = null,
-                    )
-                }
-                getTasksByDueDate()
-            }.onFailure {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        showEditDialog = false,
-                        selectedTask = null,
-                    )
-                }
-            }
-        }
-    }
-
-    fun onTaskDeletedDismiss() {
-        _state.update { it.copy(showDeleteDialog = false) }
-    }
-
     fun onMoveTaskToAnotherStatus() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             if (state.value.selectedTask == null) return@launch
             state.value.selectedTask?.copy(
                 status = when (state.value.selectedTaskUiStatus) {
-                    TaskUiStatus.DONE -> TaskUiStatus.DONE
                     TaskUiStatus.TODO -> TaskUiStatus.IN_PROGRESS
                     TaskUiStatus.IN_PROGRESS -> TaskUiStatus.DONE
+                    TaskUiStatus.DONE -> TaskUiStatus.DONE
                 }
             )?.let { updatedTask ->
                 runCatching {
                     taskService.updateTask(
                         updatedTask.toTask(
-                            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                            createdAt = Clock.System.now().toLocalDateTime(
+                                TimeZone.UTC
+                            )
                         )
                     )
                 }.onSuccess {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            showTaskDetailsDialog = false,
-                            selectedTask = null,
-                        )
-                    }
+                    handleOnSuccess(
+                        message = R.string.snack_bar_success.toString()
+                    )
+                }.onFailure {
+                    handleOnError()
                 }
             }
+        }
+    }
+
+    private fun handleOnSuccess(message: String? = null) {
+        _state.update {
+            it.copy(
+                successMessage = message,
+                errorMessage = null,
+                isLoading = false,
+                showTaskDetailsDialog = false,
+                showDeleteDialog = false
+            )
+        }
+    }
+
+    private fun handleOnError(message: String? = null) {
+        _state.update {
+            it.copy(
+                successMessage = null,
+                errorMessage = message,
+                isLoading = false,
+                showTaskDetailsDialog = false,
+                showDeleteDialog = false
+            )
         }
     }
 }

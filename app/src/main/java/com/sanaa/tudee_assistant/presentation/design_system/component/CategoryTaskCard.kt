@@ -115,6 +115,7 @@ private fun DateChip(date: String) {
             contentDescription = null,
             tint = Theme.color.body
         )
+
         Text(
             text = date,
             color = Theme.color.body,

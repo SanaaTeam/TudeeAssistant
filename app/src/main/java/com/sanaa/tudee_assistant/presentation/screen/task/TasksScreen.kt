@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,10 +29,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.bottom_sheet.add_edit_task.AddEditTaskBottomSheet
@@ -42,23 +47,33 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Flo
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.task_details.TaskViewDetails
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
+import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortMonthName
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun TasksScreen(
+    screenRoute: TasksScreenRoute,
     modifier: Modifier = Modifier,
     viewModel: TaskViewModel = koinViewModel<TaskViewModel>(),
 ) {
     val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.onTaskStatusSelectedChange(screenRoute.taskStatus)
+    }
 
     TasksScreenContent(
         state = state,
@@ -69,10 +84,10 @@ fun TasksScreen(
         },
         onTaskClick = viewModel::onTaskClick,
         onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
-        onEditTaskViewDetails = {},
         onMoveToTaskViewDetails = viewModel::onMoveTaskToAnotherStatus,
         onDeleteClick = viewModel::onTaskDeleted,
         onDeleteDismiss = viewModel::onTaskDeletedDismiss,
+        onShowSnackBar = viewModel::onSnackBarShown,
         modifier = modifier,
     )
 }
@@ -85,10 +100,10 @@ fun TasksScreenContent(
     onDateSelected: (LocalDate) -> Unit,
     onTaskClick: (TaskUiState) -> Unit,
     onDismissTaskViewDetails: () -> Unit,
-    onEditTaskViewDetails: (TaskUiState) -> Unit,
     onMoveToTaskViewDetails: () -> Unit,
     onDeleteClick: () -> Unit,
     onDeleteDismiss: () -> Unit,
+    onShowSnackBar: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -117,7 +132,7 @@ fun TasksScreenContent(
                 .background(Theme.color.surfaceHigh),
         ) {
             Text(
-                text = "Tasks",
+                text = stringResource(R.string.tasks),
                 style = Theme.textStyle.title.large,
                 color = Theme.color.title,
                 modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp)
@@ -131,8 +146,18 @@ fun TasksScreenContent(
             ) {
                 Box(
                     modifier = Modifier
+                        .clip(CircleShape)
                         .border(1.dp, Theme.color.stroke, CircleShape)
-                        .padding(6.dp),
+                        .padding(6.dp)
+                        .clickable {
+                            val nextMonth = state.selectedDate.minus(1, DateTimeUnit.MONTH)
+                            onDateSelected(nextMonth)
+                            daysInMonth =
+                                (DateFormater.getLocalDatesInMonth(
+                                    nextMonth.year,
+                                    nextMonth.monthNumber
+                                ))
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -148,17 +173,17 @@ fun TasksScreenContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "${state.selectedDate.month}, ${state.selectedDate.year}",
+                        text = "${state.selectedDate.getShortMonthName()}, ${state.selectedDate.year}",
                         color = Theme.color.body,
                         style = Theme.textStyle.label.medium
                     )
                     Icon(
                         painter = painterResource(R.drawable.icon_left_arrow),
-                        contentDescription = "next",
+                        contentDescription = "calender",
                         tint = Theme.color.body,
                         modifier = Modifier
                             .size(16.dp)
-                            .rotate(-90f)
+                            .rotate(if (LocalLayoutDirection.current == LayoutDirection.Rtl) 90f else -90f)
                             .clickable {
                                 showDialog = true
                             }
@@ -167,8 +192,18 @@ fun TasksScreenContent(
 
                 Box(
                     modifier = Modifier
+                        .clip(CircleShape)
                         .border(1.dp, Theme.color.stroke, CircleShape)
-                        .padding(6.dp),
+                        .padding(6.dp)
+                        .clickable {
+                            val previousMonth = state.selectedDate.plus(1, DateTimeUnit.MONTH)
+                            onDateSelected(previousMonth)
+                            daysInMonth =
+                                (DateFormater.getLocalDatesInMonth(
+                                    previousMonth.year,
+                                    previousMonth.monthNumber
+                                ))
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -182,19 +217,29 @@ fun TasksScreenContent(
                 }
 
             }
+            val listState = rememberLazyListState()
+            val coroutineScope = rememberCoroutineScope()
 
+            LaunchedEffect(key1 = state.selectedDate) {
+                coroutineScope.launch {
+                    listState.animateScrollToItem(state.selectedDate.dayOfMonth - 1)
+                }
+            }
             LazyRow(
+                state = listState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 contentPadding = PaddingValues(horizontal = 24.dp)
             ) {
-                items(daysInMonth) { date ->
+                itemsIndexed(daysInMonth) { index, date ->
                     DayItem(
                         dayDate = date,
                         isSelected = date == state.selectedDate,
-                        onClick = { onDateSelected(date) }
+                        onClick = {
+                            onDateSelected(date)
+                        }
                     )
                 }
             }
@@ -228,7 +273,9 @@ fun TasksScreenContent(
             if (state.selectedTask != null && state.showDeleteDialog)
                 DeleteComponent(
                     onDismiss = onDeleteDismiss,
-                    onDeleteClicked = onDeleteClick,
+                    onDeleteClicked = {
+                        onDeleteClick()
+                    },
                     title = stringResource(R.string.delete_task_title),
                 )
             if (showAddTaskBottomSheet) {
@@ -285,6 +332,7 @@ fun TasksScreenContent(
                 )
             }
         }
+
         FloatingActionButton(
             enabled = true,
             modifier = Modifier
@@ -295,8 +343,22 @@ fun TasksScreenContent(
                     snackBarHostState.currentSnackbarData?.dismiss()
                 }
                 showAddTaskBottomSheet = true
-            }
+            },
+            iconRes = R.drawable.note_add
         )
+
+        LaunchedEffect(state.successMessage) {
+            state.successMessage?.let {
+                snackBarHostState.showSnackbar(it)
+                onShowSnackBar()
+            }
+        }
+        LaunchedEffect(state.successMessage) {
+            state.errorMessage?.let {
+                snackBarHostState.showSnackbar(it)
+                onShowSnackBar()
+            }
+        }
 
         TudeeSnackBar(
             snackBarHostState = snackBarHostState,
@@ -305,7 +367,7 @@ fun TasksScreenContent(
     }
 }
 
-@Preview(showBackground = true, locale = "ar")
+@Preview(showBackground = true)
 @Composable
 private fun TasksScreenPreview() {
 
@@ -342,9 +404,9 @@ private fun TasksScreenPreview() {
             tasksState = tasksState.copy(selectedTask = task, showTaskDetailsDialog = true)
         },
         onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsDialog = false) },
-        onEditTaskViewDetails = {},
         onMoveToTaskViewDetails = {},
         onDeleteClick = {},
         onDeleteDismiss = {},
+        onShowSnackBar = {},
     )
 }

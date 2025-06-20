@@ -39,7 +39,12 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun EmptyScreen(modifier: Modifier = Modifier) {
+fun EmptyScreen(
+    modifier: Modifier = Modifier,
+    title: String = stringResource(R.string.no_task_today),
+    caption: String = stringResource(R.string.tap_to_add_task),
+) {
+
     var visibleCircular1 by remember { mutableStateOf(false) }
     var visibleCircular2 by remember { mutableStateOf(false) }
     var visibleCircular3 by remember { mutableStateOf(false) }
@@ -56,7 +61,9 @@ fun EmptyScreen(modifier: Modifier = Modifier) {
         visibleMessageBox = true
     }
 
-    Box(modifier = modifier.width(330.dp), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifier.width(330.dp), contentAlignment = Alignment.Center
+    ) {
         Box(
             modifier = Modifier
                 .height(160.dp)
@@ -72,7 +79,7 @@ fun EmptyScreen(modifier: Modifier = Modifier) {
                 visible = visibleMessageBox,
                 enter = fadeIn(animationSpec = tween(600))
             ) {
-                MessageBox(modifier = Modifier.align(Alignment.TopEnd))
+                MessageBox(modifier = Modifier.align(Alignment.TopEnd), title = title, caption = caption)
             }
         }
     }
@@ -169,7 +176,12 @@ fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Bool
 }
 
 @Composable
-fun MessageBox(modifier: Modifier = Modifier) {
+fun MessageBox(
+    title: String,
+    caption: String,
+    modifier: Modifier = Modifier
+) {
+
     Box(
         modifier = modifier
             .padding(end = 127.dp)
@@ -197,7 +209,7 @@ fun MessageBox(modifier: Modifier = Modifier) {
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = stringResource(R.string.no_task_today),
+                text = title,
                 style = Theme.textStyle.title.small,
                 color = Theme.color.body,
                 modifier = Modifier.padding(
@@ -206,7 +218,7 @@ fun MessageBox(modifier: Modifier = Modifier) {
                 )
             )
             Text(
-                text = stringResource(R.string.tap_to_add_task),
+                text = caption,
                 style = Theme.textStyle.body.small,
                 color = Theme.color.hint,
                 modifier = Modifier.padding(
@@ -218,11 +230,11 @@ fun MessageBox(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun PreviewEmptyScreen() {
-    TudeeTheme(false) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    TudeeTheme(isDark = false) {
+        Box(modifier = Modifier.fillMaxSize().background(Theme.color.surface), contentAlignment = Alignment.Center) {
             EmptyScreen()
         }
     }

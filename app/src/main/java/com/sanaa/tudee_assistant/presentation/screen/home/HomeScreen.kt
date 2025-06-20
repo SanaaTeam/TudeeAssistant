@@ -204,7 +204,7 @@ private fun CategoryList(
                 state.tasks.isEmpty(),
                 exit = shrinkVertically(
                     shrinkTowards = Alignment.Top,
-                    animationSpec = tween(1000)
+                    animationSpec = tween(300)
                 ) + fadeOut(tween(500))
             ) {
                 Box(

@@ -21,15 +21,17 @@ import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
-    private var keepSplashOn = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            installSplashScreen().setKeepOnScreenCondition { keepSplashOn }
-        }
+        val splashScreen = installSplashScreen()
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
+            var keepSplash by remember { mutableStateOf(true) }
+
+            splashScreen.setKeepOnScreenCondition { keepSplash }
+
             val themeManager: ThemeManager = koinInject()
             val isDark by themeManager.isDarkTheme.collectAsState(initial = false)
             var showSplash by remember { mutableStateOf(true) }
@@ -37,12 +39,13 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(Unit) {
                 delay(1000)
                 showSplash = false
-                keepSplashOn = false
+                keepSplash = false
             }
-            Log.d("isDark Test", "onCreate: is dark value is : $isDark ")
+
+            Log.d("SplashDebug", "Splash visible: $keepSplash")
             TudeeTheme(isDark) {
                 if (showSplash) {
-                    SplashScreen()
+                    SplashScreen() // Your custom composable splash
                 } else {
                     TudeeApp(isDark)
                 }

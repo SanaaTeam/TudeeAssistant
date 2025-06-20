@@ -7,8 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.sanaa.tudee_assistant.domain.ThemeManager
-import com.sanaa.tudee_assistant.presentation.TudeeApp
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TasksScreen
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +22,8 @@ class MainActivity : ComponentActivity() {
             val isDark by themeManager.isDarkTheme.collectAsState(initial = false)
 
             TudeeTheme (isDark){
-                TudeeApp()
+//                TudeeApp()
+                TasksScreen(screenRoute = TasksScreenRoute(TaskUiStatus.IN_PROGRESS))
             }
         }
     }

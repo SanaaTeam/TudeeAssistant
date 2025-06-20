@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
@@ -25,6 +26,7 @@ import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.composable
+import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TasksScreen
 
 @Composable
 fun TudeeApp() {
@@ -84,8 +86,9 @@ private fun AppNavigation(
                     iconRes = R.drawable.profile,
                     selectedIconRes = R.drawable.profile_fill,
                 ) {
+                    val args = it.toRoute<TasksScreenRoute>()
                     onStatusBarColor(Theme.color.surface)
-
+                    TasksScreen(screenRoute = args)
                 }
 
                 composable(

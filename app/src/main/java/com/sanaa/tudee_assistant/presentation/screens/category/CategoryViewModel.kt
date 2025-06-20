@@ -3,7 +3,7 @@ package com.sanaa.tudee_assistant.presentation.screens.category
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.data.utils.ImageProcessor
+import com.sanaa.tudee_assistant.domain.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -27,14 +27,16 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
 fun TaskListColumn(
-    taskList: List<TaskUiModel>,
-    onTaskSwipe: (TaskUiModel) -> Boolean = { true },
-    onTaskClick: (TaskUiModel) -> Unit,
+    taskList: List<TaskUiState>,
+    categories: List<CategoryUiModel>,
+    onTaskSwipe: (TaskUiState) -> Boolean = { true },
+    onTaskClick: (TaskUiState) -> Unit,
 ) {
 
     LazyColumn(
@@ -76,9 +78,11 @@ fun TaskListColumn(
                     }
                 },
                 content = {
-                    CategoryTaskCard(task, onClick = {
-                        onTaskClick(task)
-                    })
+                    CategoryTaskCard(
+                        task = task,
+                        categoryImagePath = categories.first { it.id == task.categoryId }.imagePath,
+                        onClick = { onTaskClick(task) }
+                    )
                 },
                 modifier = Modifier
                     .clip(RoundedCornerShape(Theme.dimension.medium))
@@ -91,18 +95,17 @@ fun TaskListColumn(
 @Preview
 @Composable
 private fun TaskListColumnPreview() {
-
     var itemsState by remember { mutableStateOf(DataProvider.getTasksSample()) }
 
-    TudeeTheme(isDarkTheme = true) {
-
+    TudeeTheme(isDark = true) {
         TaskListColumn(
-            itemsState, onTaskSwipe = { task ->
+            taskList = itemsState,
+            categories = emptyList(),
+            onTaskSwipe = { task ->
                 itemsState = itemsState.filterNot { item -> item == task }
                 false
-
             },
-            {}
+            onTaskClick = {}
         )
     }
 }

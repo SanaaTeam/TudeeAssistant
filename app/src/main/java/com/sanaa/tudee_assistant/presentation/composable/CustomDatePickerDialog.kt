@@ -126,7 +126,7 @@ private fun CustomDatePickerDialogPreview() {
     var selectedDateText by remember { mutableStateOf("No Date") }
     var showDialog by remember { mutableStateOf(true) }
 
-    TudeeTheme(isDarkTheme = true) {
+    TudeeTheme(isDark = true) {
 
         Box(
             modifier = Modifier

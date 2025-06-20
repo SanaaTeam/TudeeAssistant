@@ -1,14 +1,15 @@
-package com.sanaa.tudee_assistant.presentation.screen.addEditScreen
+package com.sanaa.tudee_assistant.presentation.screen.add_edit_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
-import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,19 +22,23 @@ import kotlinx.datetime.toLocalDateTime
 
 class TaskFormViewModel(
     private val taskService: TaskService,
-    val categoryService: CategoryService
+    private val categoryService: CategoryService,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddTaskUiState())
     val uiState: StateFlow<AddTaskUiState> = _uiState.asStateFlow()
 
-    fun loadTask(task: TaskUiModel) {
+    fun loadTask(task: TaskUiState) {
         viewModelScope.launch {
             try {
-                val category = categoryService.getCategoryById(task.categoryId)
-                _uiState.update {
-                    it.copy(taskUiModel = task, selectedCategory = category)
+                taskService.getTaskCountByCategoryId(task.categoryId).collect { taskCount ->
+                    val category = categoryService
+                        .getCategoryById(task.categoryId).toState(taskCount)
+                    _uiState.update {
+                        it.copy(taskUiState = task, selectedCategory = category)
+                    }
                 }
+
             } catch (e: Exception) {
                 handleError(e)
             }
@@ -42,38 +47,35 @@ class TaskFormViewModel(
 
     fun onTitleChange(title: String) {
         _uiState.update {
-            it.copy(taskUiModel = it.taskUiModel.copy(title = title))
+            it.copy(taskUiState = it.taskUiState.copy(title = title))
         }
         validateInputs()
     }
 
     fun onDescriptionChange(description: String) {
         _uiState.update {
-            it.copy(taskUiModel = it.taskUiModel.copy(description = description))
+            it.copy(taskUiState = it.taskUiState.copy(description = description))
         }
     }
 
     fun onDateSelected(date: LocalDate) {
         _uiState.update {
-            it.copy(taskUiModel = it.taskUiModel.copy(dueDate = date.toString()))
+            it.copy(taskUiState = it.taskUiState.copy(dueDate = date.toString()))
         }
         validateInputs()
     }
 
     fun onPrioritySelected(priority: TaskUiPriority) {
         _uiState.update {
-            it.copy(taskUiModel = it.taskUiModel.copy(priority = priority))
+            it.copy(taskUiState = it.taskUiState.copy(priority = priority))
         }
     }
 
-    fun onCategorySelected(category: Category) {
+    fun onCategorySelected(category: CategoryUiModel) {
         _uiState.update {
             it.copy(
                 selectedCategory = category,
-                taskUiModel = it.taskUiModel.copy(
-                    categoryId = category.id ?: -1,
-                    categoryImagePath = category.imagePath
-                )
+                taskUiState = it.taskUiState.copy(categoryId = category.id ?: -1)
             )
         }
         validateInputs()
@@ -84,10 +86,9 @@ class TaskFormViewModel(
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, error = null) }
-                val task = uiState.value.taskUiModel.copy(
-                    createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                val task = uiState.value.taskUiState.copy(
                     status = TaskUiStatus.TODO
-                ).toTask()
+                ).toTask(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
                 taskService.addTask(task)
                 _uiState.update { it.copy(isOperationSuccessful = true, isLoading = false) }
             } catch (e: Exception) {
@@ -101,19 +102,23 @@ class TaskFormViewModel(
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, error = null) }
-                val task = uiState.value.taskUiModel.toTask()
+                val task = uiState.value.taskUiState.toTask(
+                    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                )
                 taskService.updateTask(task)
-                _uiState.update { it.copy(isOperationSuccessful = true, isLoading = false) } } catch (e: Exception) {
+                _uiState.update { it.copy(isOperationSuccessful = true, isLoading = false) }
+            } catch (e: Exception) {
                 handleError(e)
             }
         }
     }
 
-    internal fun resetState() {
+    fun resetState() {
         _uiState.update {
             AddTaskUiState()
         }
     }
+
     private fun handleError(e: Exception) {
         _uiState.update {
             it.copy(isLoading = false, error = e.message ?: "Failed to process task")
@@ -124,7 +129,7 @@ class TaskFormViewModel(
         val state = _uiState.value
         _uiState.update {
             it.copy(
-                isButtonEnabled = state.taskUiModel.title.isNotBlank() &&
+                isButtonEnabled = state.taskUiState.title.isNotBlank() &&
                         state.selectedCategory != null
             )
         }

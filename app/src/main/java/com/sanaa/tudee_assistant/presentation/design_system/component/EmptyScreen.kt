@@ -70,29 +70,24 @@ fun EmptyScreen(
                 .align(Alignment.CenterEnd)
                 .background(color = Color.Transparent),
         ) {
-
             CircularContainer(
                 modifier = Modifier.align(Alignment.BottomEnd),
-                listOf(visibleCircular1, visibleCircular2, visibleCircular1)
+                listOf(visibleCircular1, visibleCircular2, visibleCircular3)
             )
 
             AnimatedVisibility(
-                visible = visibleMessageBox, enter = fadeIn(animationSpec = tween(600))
+                visible = visibleMessageBox,
+                enter = fadeIn(animationSpec = tween(600))
             ) {
                 MessageBox(modifier = Modifier.align(Alignment.TopEnd), title = title, caption = caption)
             }
-
         }
     }
 }
 
 @Composable
-fun CircularContainer(
-    modifier: Modifier = Modifier, visibleCirculars: List<Boolean>
-) {
-    Box(
-        modifier = modifier, contentAlignment = Alignment.BottomEnd
-    ) {
+fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Boolean>) {
+    Box(modifier = modifier, contentAlignment = Alignment.BottomEnd) {
 
         Box(
             modifier = Modifier
@@ -134,9 +129,9 @@ fun CircularContainer(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(4.dp)
-                        .clip(shape = CircleShape)
-                        .background(color = Theme.color.surfaceHigh)
+                        .size(Theme.dimension.extraSmall)
+                        .clip(CircleShape)
+                        .background(Theme.color.surfaceHigh)
                 )
             }
 
@@ -149,11 +144,12 @@ fun CircularContainer(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(8.dp)
-                        .clip(shape = CircleShape)
-                        .background(color = Theme.color.surfaceHigh),
+                        .size(Theme.dimension.small)
+                        .clip(CircleShape)
+                        .background(Theme.color.surfaceHigh)
                 )
             }
+
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.TopStart),
                 visible = visibleCirculars[2],
@@ -162,8 +158,8 @@ fun CircularContainer(
                 Box(
                     modifier = Modifier
                         .size(14.dp)
-                        .clip(shape = CircleShape)
-                        .background(color = Theme.color.surfaceHigh)
+                        .clip(CircleShape)
+                        .background(Theme.color.surfaceHigh)
                 )
             }
         }
@@ -173,10 +169,9 @@ fun CircularContainer(
                 .align(Alignment.BottomStart)
                 .padding(start = 21.6.dp, bottom = 11.2.dp)
                 .size(14.4.dp)
-                .clip(shape = CircleShape)
-                .background(color = Theme.color.primary.copy(alpha = 0.16f))
+                .clip(CircleShape)
+                .background(Theme.color.primary.copy(alpha = 0.16f))
         )
-
     }
 }
 
@@ -193,40 +188,46 @@ fun MessageBox(
             .width(203.dp)
             .height(74.dp)
             .shadow(
-                elevation = 12.dp, shape = RoundedCornerShape(
-                    bottomEnd = 2.dp, bottomStart = 16.dp, topEnd = 16.dp, topStart = 16.dp
-                ), spotColor = Color(0x0A000000)
+                elevation = Theme.dimension.regular,
+                shape = RoundedCornerShape(
+                    bottomEnd = 2.dp,
+                    bottomStart = Theme.dimension.medium,
+                    topEnd = Theme.dimension.medium,
+                    topStart = Theme.dimension.medium
+                ),
+                spotColor = Color(0x0A000000)
             )
             .clip(
                 shape = RoundedCornerShape(
-                    bottomEnd = 2.dp, bottomStart = 16.dp, topEnd = 16.dp, topStart = 16.dp
+                    bottomEnd = 2.dp,
+                    bottomStart = Theme.dimension.medium,
+                    topEnd = Theme.dimension.medium,
+                    topStart = Theme.dimension.medium
                 )
             )
-            .background(color = Theme.color.surfaceHigh)
+            .background(Theme.color.surfaceHigh)
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = title,
                 style = Theme.textStyle.title.small,
                 color = Theme.color.body,
-                modifier = Modifier.padding(start = 12.dp, top = 8.dp)
+                modifier = Modifier.padding(start = Theme.dimension.regular, top = Theme.dimension.small)
             )
             Text(
                 text = caption,
                 style = Theme.textStyle.body.small,
                 color = Theme.color.hint,
-                modifier = Modifier.padding(start = 12.dp, top = 4.dp)
+                modifier = Modifier.padding(start = Theme.dimension.regular, top = Theme.dimension.extraSmall)
             )
         }
     }
 }
 
-@Preview()
+@Preview
 @Composable
-fun PreviewEmptyScreen() {
-    TudeeTheme(isDarkTheme = true) {
+private fun PreviewEmptyScreen() {
+    TudeeTheme(isDark = false) {
         Box(modifier = Modifier.fillMaxSize().background(Theme.color.surface), contentAlignment = Alignment.Center) {
             EmptyScreen()
         }

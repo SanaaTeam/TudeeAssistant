@@ -15,15 +15,15 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.EmptyScreen
 import com.sanaa.tudee_assistant.presentation.design_system.component.TabItem
-import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTabs
+import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 @Composable
 fun TaskStatusTabs(
     state: TasksScreenUiState,
-    onTaskSwipe: (TaskUiModel) -> Boolean,
-    onTaskClick: (TaskUiModel) -> Unit,
+    onTaskSwipe: (TaskUiState) -> Boolean,
+    onTaskClick: (TaskUiState) -> Unit,
 ) {
 
     var selectedTab by remember {
@@ -36,7 +36,7 @@ fun TaskStatusTabs(
         )
     }
 
-    TudeeTabs(
+    TudeeScrollableTabs(
         tabs = listOf(
             TabItem(
                 label = stringResource(R.string.in_progress_task_status),
@@ -44,7 +44,8 @@ fun TaskStatusTabs(
             ) {
                 if (state.currentDateTasks.any { it.status == TaskUiStatus.IN_PROGRESS }) {
                     TaskListColumn(
-                        state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
+                        taskList = state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
+                        categories = state.categories,
                         onTaskSwipe = { task -> onTaskSwipe(task) },
                         onTaskClick = { onTaskClick }
                     )
@@ -65,7 +66,8 @@ fun TaskStatusTabs(
             ) {
                 if (state.currentDateTasks.any { it.status == TaskUiStatus.TODO }) {
                     TaskListColumn(
-                        state.currentDateTasks.filter { it.status == TaskUiStatus.TODO },
+                        taskList = state.currentDateTasks.filter { it.status == TaskUiStatus.TODO },
+                        categories = state.categories,
                         onTaskSwipe = { task -> onTaskSwipe(task) },
                         onTaskClick = onTaskClick
                     )
@@ -87,7 +89,8 @@ fun TaskStatusTabs(
             ) {
                 if (state.currentDateTasks.any { it.status == TaskUiStatus.DONE }) {
                     TaskListColumn(
-                        state.currentDateTasks.filter { it.status == TaskUiStatus.DONE },
+                        taskList = state.currentDateTasks.filter { it.status == TaskUiStatus.DONE },
+                        categories = state.categories,
                         onTaskSwipe = { task -> onTaskSwipe(task) },
                         onTaskClick = onTaskClick
                     )

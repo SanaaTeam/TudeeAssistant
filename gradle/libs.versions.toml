@@ -1,24 +1,38 @@
 [versions]
 agp = "8.10.1"
 coilCompose = "2.6.0"
+
+datastorePreferences = "1.1.7"
+
+junitJupiterParams = "5.10.2"
+junitJupiterVersion = "5.10.2"
+kotestAssertionsCore = "5.7.2"
+kotestRunnerJunit5 = "5.7.2"
+
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCoroutinesTestVersion = "1.7.3"
 kotlinxDatetime = "0.6.2"
 lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 composeNavigation = "2.9.0"
+mockkMockkVersion = "1.14.0"
 serialization = "1.8.1"
 
 room = "2.7.1"
 koin-bom = "4.0.0"
 ksp = "2.0.21-1.0.27"
+junitJupiter = "5.8.1"
+truth = "1.4.2"
+junitJunitJupiter = "5.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -33,7 +47,14 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiterParams" }
+junit-jupiter-v5102 = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiterVersion" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotestAssertionsCore" }
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotestRunnerJunit5" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
+kotlinx-coroutines-test-v173 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTestVersion" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+mockk-v1140 = { module = "io.mockk:mockk", version.ref = "mockkMockkVersion" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 
@@ -54,6 +75,8 @@ koin-logging = { module = "io.insert-koin:koin-logger-slf4j" }
 koin-core-viewmodel = { module = "io.insert-koin:koin-core-viewmodel" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
 koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJunitJupiter" }
 
 
 

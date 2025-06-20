@@ -71,7 +71,7 @@ fun DeleteComponent(
                         .dropShadow(
                             color = dropShadowColor,
                             offsetX = 0.dp,
-                            offsetY = 4.dp,
+                            offsetY = Theme.dimension.extraSmall,
                             blur = 20.dp
                         )
                         .background(Theme.color.surfaceHigh)

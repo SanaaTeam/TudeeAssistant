@@ -22,12 +22,50 @@
     <string name="snack_bar_error">Some error happened.</string>
     <string name="snack_bar_success">Successfully.</string>
     <string name="loading_spinner">Loading spinner</string>
+    <string name="skip">Skip</string>
+    <string name="onboarding_title_0">Overwhelmed with tasks?\n</string>
+    <string name="onboarding_desc_0">Let’s bring some order to the chaos.\nTudee is here to help you sort, plan, and\nbreathe easier.</string>
+    <string name="onboarding_title_1">Uh-oh! Procrastinating again\n</string>
+    <string name="onboarding_desc_1">Tudee not mad… just a little \ndisappointed, Let’s get back on track \ntogether.</string>
+    <string name="onboarding_title_2">Let’s complete task and celebrate\ntogether.</string>
+    <string name="onboarding_desc_2">Progress is progress. Tudee will celebrate you on for every win, big or small.</string>
     <string name="delete_task_title">Delete task</string>
     <string name="delete_subtitle">Are you sure to continue?</string>
     <string name="delete">Delete</string>
-    <string name="cancel">Cancel</string>
     <string name="no_task_today" translatable="false">No tasks for today!</string>
     <string name="tap_to_add_task" translatable="false">Tap the + button to add your\nfirst one.</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="category_title">Category title</string>
+    <string name="category_image">Category image</string>
+    <string name="add_new_category">Add new category</string>
+    <string name="upload">Upload</string>
+
+    <string name="today">today</string>
+    <string name="overview">Overview</string>
+    <string name="okay_status_message">You\'ve completed * out of # tasks \nKeep going!</string>
+    <string name="good_status_message">You’re doing amazing!!! \nTudee is proud of you.</string>
+    <string name="bad_status_message">You just scrolling, not working. \nTudee is watching. back to work!!!</string>
+    <string name="poor_status_message">Fill your day with something \nawesome.</string>
+    <string name="okay_status_message_title">Stay working!</string>
+    <string name="good_status_message_title">Tadaa!</string>
+    <string name="bad_status_message_title">Zero progress?!</string>
+    <string name="poor_status_message_title">Nothing on your list…</string>
+
+    <string-array name="month_abbreviations">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
     <string name="task_details">"Task Details"</string>
     <string name="mark_as_done">"Move to done"</string>
     <string name="mark_as_in_progress">"Move to in progress"</string>

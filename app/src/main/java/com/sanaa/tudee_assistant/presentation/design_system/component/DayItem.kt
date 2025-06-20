@@ -40,7 +40,11 @@ fun DayItem(
         )
     )
 
-    Box(modifier = modifier.clip(RoundedCornerShape(Theme.dimension.medium)).clickable { onClick() }) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(Theme.dimension.medium))
+            .clickable { onClick() }
+    ) {
         Column(
             modifier = Modifier
                 .width(56.dp)
@@ -71,7 +75,7 @@ fun DayItem(
 @Preview
 @Composable
 private fun Preview() {
-    TudeeTheme(isDarkTheme = true) {
+    TudeeTheme(false) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

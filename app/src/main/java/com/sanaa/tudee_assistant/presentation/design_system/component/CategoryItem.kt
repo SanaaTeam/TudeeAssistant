@@ -16,24 +16,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.data.utils.CategoryThumbnail
-import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.utils.CategoryThumbnail
 
 @Composable
 fun CategoryItem(
     modifier: Modifier = Modifier,
-    category: Category,
+    category: CategoryUiModel,
     onClick: () -> Unit,
     topContent: @Composable () -> Unit = {},
 ) {
     Column(
         modifier = modifier
             .width(104.dp)
-            .height(102.dp)
-            .clickable { onClick() },
-        horizontalAlignment = Alignment.CenterHorizontally
+            .height(102.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Box(
@@ -47,10 +45,12 @@ fun CategoryItem(
                 topContent()
             }
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { onClick() },
                 contentAlignment = Alignment.Center,
             ) {
-                CategoryThumbnail(modifier=Modifier,imagePath = category.imagePath)
+                CategoryThumbnail(modifier = Modifier, imagePath = category.imagePath)
             }
         }
 
@@ -71,12 +71,13 @@ fun CategoryItem(
 @Preview(name = "Dark Theme")
 @Composable
 private fun CategoryDarkPreview() {
-    TudeeTheme(isDarkTheme = true) {
+    TudeeTheme(true) {
         CategoryItem(
-            category = Category(
+            category = CategoryUiModel(
                 name = "Education",
                 imagePath = "file:///android_asset/categories/education.png",
-                isDefault = true
+                isDefault = true,
+                tasksCount = 10
             ),
             onClick = {},
             topContent = { CheckMarkContainer(modifier = Modifier.padding(2.dp)) },
@@ -89,12 +90,13 @@ private fun CategoryDarkPreview() {
 @Preview(name = "Light Theme")
 @Composable
 private fun CategoryLightPreview() {
-    TudeeTheme(isDarkTheme = false) {
+    TudeeTheme(false) {
         CategoryItem(
-            category = Category(
+            category = CategoryUiModel(
                 name = "Education",
                 imagePath = "file:///android_asset/categories/education.png",
-                isDefault = true
+                isDefault = true,
+                tasksCount = 10
             ),
             onClick = {},
             topContent = { CategoryCount("16") },

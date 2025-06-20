@@ -91,7 +91,6 @@ private fun AppNavigation(
                 onChangeTheme = onChangeTheme,
                 onStatusBarColor
             )
-
         }
 
         composable<CategoryTasksScreenRoute> {

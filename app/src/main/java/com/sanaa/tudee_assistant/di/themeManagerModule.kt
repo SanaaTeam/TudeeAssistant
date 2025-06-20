@@ -5,5 +5,5 @@ import com.sanaa.tudee_assistant.domain.PreferencesManager
 import org.koin.dsl.module
 
 val preferencesManagerModule = module {
-        single<PreferencesManager> { PreferencesManagerImpl(get()) }
+    single<PreferencesManager> { PreferencesManagerImpl(get()) }
 }

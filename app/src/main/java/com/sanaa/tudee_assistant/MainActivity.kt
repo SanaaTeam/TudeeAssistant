@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                 if (showSplash) {
                     SplashScreen() // Your custom composable splash
                 } else {
-                    TudeeApp(isDark,preferencesManager,isFirstLaunch)
+                    TudeeApp(isDark, preferencesManager, isFirstLaunch)
                 }
             }
         }

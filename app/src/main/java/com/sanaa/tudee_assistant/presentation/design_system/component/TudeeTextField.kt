@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+
 @Composable
 fun TudeeTextField(
     value: String,
@@ -105,7 +106,7 @@ fun TudeeTextField(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewTudeeTextField() {
-    TudeeTheme (false){
+    TudeeTheme(false) {
         TudeeTextField(
             placeholder = "Name",
             icon = painterResource(R.drawable.user_icon),

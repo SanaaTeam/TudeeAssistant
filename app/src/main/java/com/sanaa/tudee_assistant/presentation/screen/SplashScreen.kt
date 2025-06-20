@@ -99,7 +99,7 @@ fun SplashScreen(
 private fun SplashScreenPreview() {
 
     TudeeTheme(false) {
-      //  SplashScreen { showSplash = false }
+        //  SplashScreen { showSplash = false }
 
     }
 }

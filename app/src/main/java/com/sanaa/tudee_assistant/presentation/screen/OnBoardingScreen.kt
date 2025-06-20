@@ -135,7 +135,7 @@ fun OnBoardingScreen(
                 }
             }
 
-            OnBoardingPager(pagerState = pagerState,preferencesManager,navController)
+            OnBoardingPager(pagerState = pagerState, preferencesManager, navController)
 
             PageIndicator(
                 currentPage = pagerState.currentPage, pageCount = pagerState.pageCount
@@ -259,12 +259,12 @@ fun DialogContainer(
             isLoading = false,
             onClick = {
                 val currentPage = pagerState.currentPage
-                if (currentPage == 2){
+                if (currentPage == 2) {
                     coroutineScope.launch {
                         navController.navigate(MainScreenRoute) {
                             popUpTo(OnBoardingScreenRoute) { inclusive = true }
                         }
-                            preferencesManager.setOnboardingCompleted()
+                        preferencesManager.setOnboardingCompleted()
                     }
                 }
                 val nextPage = currentPage + 1

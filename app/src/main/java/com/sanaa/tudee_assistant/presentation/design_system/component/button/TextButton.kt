@@ -21,7 +21,7 @@ fun TextButton(
     isLoading: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    Row (
+    Row(
         modifier
             .clickable(
                 enabled = enabled,
@@ -29,21 +29,16 @@ fun TextButton(
             ),
         horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small),
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         ButtonContent(label, enabled, isLoading)
     }
 }
 
 
-
-
-
-
-
 @Preview()
 @Composable
 private fun TextButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (false){
+    TudeeTheme(false) {
         Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             TextButton(
                 label = "Cancel",
@@ -71,7 +66,6 @@ private fun TextButtonLightPreview(modifier: Modifier = Modifier) {
                 isLoading = false,
                 onClick = {}
             )
-
 
 
         }
@@ -80,11 +74,10 @@ private fun TextButtonLightPreview(modifier: Modifier = Modifier) {
 }
 
 
-
 @Preview()
 @Composable
 private fun TextButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (true){
+    TudeeTheme(true) {
         Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             TextButton(
                 label = "Cancel",
@@ -112,7 +105,6 @@ private fun TextButtonDarkPreview(modifier: Modifier = Modifier) {
                 isLoading = false,
                 onClick = {}
             )
-
 
 
         }

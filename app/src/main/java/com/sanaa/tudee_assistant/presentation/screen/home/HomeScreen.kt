@@ -54,7 +54,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Flo
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.formatDateTime
@@ -252,7 +252,7 @@ private fun CategoryList(
 @Composable
 private fun CategoryList(
     items: List<TaskUiState>,
-    categories: List<CategoryUiState>,
+    categories: List<CategoryUiModel>,
     onClick: (TaskUiState) -> Unit,
 ) {
     LazyHorizontalGrid(

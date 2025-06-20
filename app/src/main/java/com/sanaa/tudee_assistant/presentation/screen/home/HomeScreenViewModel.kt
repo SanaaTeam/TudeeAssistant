@@ -17,7 +17,6 @@ class HomeScreenViewModel(
 ) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()) {
 
     init {
-        getCategories()
         getTasks()
     }
 
@@ -29,17 +28,13 @@ class HomeScreenViewModel(
                         tasks = tasks.map { it.toState() }
                     )
                 }
-            }
-        }
-    }
 
-    private fun getCategories() {
-        viewModelScope.launch {
-            categoryService.getCategories().collect { categories ->
-                _state.update { state ->
-                    state.copy(
-                        categories = categories.map { it.toState() }
-                    )
+                categoryService.getCategories().collect { categories ->
+                    _state.update { state ->
+                        state.copy(
+                            categories = categories.map { it.toState(tasks.size) }
+                        )
+                    }
                 }
             }
         }

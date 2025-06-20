@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.design_system.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,12 +9,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,8 +40,6 @@ fun CategoryTaskCard(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .height(111.dp)
             .clip(RoundedCornerShape(Theme.dimension.medium))
             .clickable { onClick(task) }
             .background(Theme.color.surfaceHigh)
@@ -60,7 +57,6 @@ fun CategoryTaskCard(
         ) {
 
             Box(modifier = Modifier.size(56.dp), contentAlignment = Alignment.Center) {
-
                 CategoryThumbnail(
                     imagePath = categoryImagePath,
                     modifier = Modifier.size(Theme.dimension.extraLarge)
@@ -68,7 +64,6 @@ fun CategoryTaskCard(
             }
 
             Row {
-
                 task.dueDate?.let { DateChip(it) }
 
                 PriorityTag(
@@ -78,6 +73,7 @@ fun CategoryTaskCard(
                 )
             }
         }
+
         Column(
             modifier = Modifier.padding(start = Theme.dimension.small),
             verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -91,6 +87,7 @@ fun CategoryTaskCard(
 
             task.description?.let {
                 Text(
+                    modifier = Modifier.padding(bottom = Theme.dimension.regular),
                     text = task.description,
                     color = Theme.color.hint,
                     style = Theme.textStyle.label.small,
@@ -112,10 +109,11 @@ private fun DateChip(date: String) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        Image(
+        Icon(
             modifier = Modifier.size(Theme.dimension.regular),
             painter = painterResource(id = R.drawable.calendar_favorite_01),
             contentDescription = null,
+            tint = Theme.color.body
         )
 
         Text(

@@ -17,10 +17,10 @@ class TudeeAssistantApplication : Application() {
         startKoin {
             androidContext(this@TudeeAssistantApplication)
             modules(
+                viewModelModule,
                 databaseModule,
                 servicesModule,
                 imageProcessorModule,
-                viewModelModule,
                 themeManagerModule
             )
         }

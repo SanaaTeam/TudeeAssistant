@@ -50,7 +50,7 @@ fun CategoryItem(
                     .clickable { onClick() },
                 contentAlignment = Alignment.Center,
             ) {
-                CategoryThumbnail(modifier = Modifier, imagePath = category.imagePath)
+                CategoryThumbnail(modifier = Modifier.size(32.dp), imagePath = category.imagePath)
             }
         }
 

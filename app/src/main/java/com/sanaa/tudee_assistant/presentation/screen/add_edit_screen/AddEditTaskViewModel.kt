@@ -9,6 +9,7 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.screens.category.toUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +29,20 @@ class TaskFormViewModel(
     private val _uiState = MutableStateFlow(AddTaskUiState())
     val uiState: StateFlow<AddTaskUiState> = _uiState.asStateFlow()
 
+    init{
+        viewModelScope.launch {
+            categoryService.getCategories().collect { categoryList ->
+                _uiState.update {
+                    it.copy(
+                        categories = categoryList.map { category -> category.toUiState(0) }
+                    )
+                }
+            }
+        }
+    }
+
     fun loadTask(task: TaskUiState) {
+
         viewModelScope.launch {
             try {
                 taskService.getTaskCountByCategoryId(task.categoryId).collect { taskCount ->
@@ -115,7 +129,7 @@ class TaskFormViewModel(
 
     fun resetState() {
         _uiState.update {
-            AddTaskUiState()
+            AddTaskUiState(categories = it.categories)
         }
     }
 

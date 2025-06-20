@@ -2,13 +2,13 @@ package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toUiModel
+import com.sanaa.tudee_assistant.presentation.screens.category.toUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
@@ -23,12 +23,15 @@ class TaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()) {
-    lateinit var categories: List<Category>
 
     init {
         viewModelScope.launch {
             categoryService.getCategories().collect { categoryList ->
-                categories = categoryList
+                _state.update {
+                    it.copy(
+                        categories = categoryList.map { category -> category.toUiState(0) }
+                    )
+                }
             }
         }
         getTasksByDueDate()

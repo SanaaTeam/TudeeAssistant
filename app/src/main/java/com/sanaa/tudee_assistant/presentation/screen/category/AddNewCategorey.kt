@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screens.category
+package com.sanaa.tudee_assistant.presentation.screen.category
 
 import android.graphics.Bitmap
 import android.net.Uri
@@ -39,7 +39,7 @@ fun AddNewCategory(
     onImageSelected: (Uri?) -> Unit,
     onAddClick: (title: String, imageUri: Uri?) -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var internalShowBottomSheet by remember { mutableStateOf(true) }
     var categoryTitle by remember { mutableStateOf("") }

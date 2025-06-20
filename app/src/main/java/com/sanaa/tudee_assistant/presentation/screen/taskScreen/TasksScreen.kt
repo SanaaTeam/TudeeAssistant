@@ -65,9 +65,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TasksScreen(
+    screenRoute: TasksScreenRoute,
     modifier: Modifier = Modifier,
     viewModel: TaskViewModel = koinViewModel<TaskViewModel>(),
-    screenRoute: TasksScreenRoute,
 ) {
     val state by viewModel.state.collectAsState()
 

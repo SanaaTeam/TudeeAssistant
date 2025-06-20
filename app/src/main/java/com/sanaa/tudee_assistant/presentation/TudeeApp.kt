@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.domain.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
@@ -21,6 +22,7 @@ import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.SplashScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.OnBoardingScreen
+import com.sanaa.tudee_assistant.presentation.screen.category_task.CategoryTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import kotlinx.coroutines.launch
 
@@ -83,12 +85,25 @@ private fun AppNavigation(
                 screenNavController,
                 isDarkTheme = isDarkTheme,
                 onChangeTheme = onChangeTheme,
-                onStatusBarColor
+                onStatusBarColor,
+                navHostController = navHostController
+            )
+        }
+
+        composable<MainScreenRoute> {
+            val screenNavController = rememberNavController()
+            MainScreen(
+                startDestination = HomeScreenRoute,
+                screenNavController,
+                isDarkTheme = isDarkTheme,
+                onChangeTheme = onChangeTheme,
+                onStatusBarColor,
+                navHostController = navHostController
             )
         }
 
         composable<CategoryTasksScreenRoute> {
-
+            CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id)
         }
     }
 }

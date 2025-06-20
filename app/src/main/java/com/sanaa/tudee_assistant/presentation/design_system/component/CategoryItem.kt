@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
 import com.sanaa.tudee_assistant.presentation.utils.CategoryThumbnail
 
 @Composable

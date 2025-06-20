@@ -8,7 +8,7 @@ import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toUiModel
-import com.sanaa.tudee_assistant.presentation.screens.category.toUiState
+import com.sanaa.tudee_assistant.presentation.screen.category.toUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update

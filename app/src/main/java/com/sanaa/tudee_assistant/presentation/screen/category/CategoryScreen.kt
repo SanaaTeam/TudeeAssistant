@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screens.category
+package com.sanaa.tudee_assistant.presentation.screen.category
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryItem
@@ -39,7 +40,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CategoryScreen(
     modifier: Modifier = Modifier,
-    viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>()
+    viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
+    screenNavController: NavHostController
 ) {
     val state by viewModel.state.collectAsState()
     val showBottomSheet = remember { mutableStateOf(false) }
@@ -140,5 +142,5 @@ fun CategoryScreen(
 @Preview(showBackground = true)
 @Composable
 private fun CategoryScreenPreview() {
-    CategoryScreen()
+//    CategoryScreen(screenNavController = navHostController)
 }

@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen
+package com.sanaa.tudee_assistant.presentation.screen.on_boarding
 
 import android.app.Activity
 import android.view.WindowManager

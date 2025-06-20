@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -16,7 +15,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.sanaa.tudee_assistant.domain.ThemeManager
 import com.sanaa.tudee_assistant.presentation.TudeeApp
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.screen.SplashScreen
+import com.sanaa.tudee_assistant.presentation.screen.splash.SplashScreen
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
 

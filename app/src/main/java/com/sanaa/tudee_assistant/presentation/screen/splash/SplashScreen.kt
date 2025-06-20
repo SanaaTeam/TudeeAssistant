@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen
+package com.sanaa.tudee_assistant.presentation.screen.splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

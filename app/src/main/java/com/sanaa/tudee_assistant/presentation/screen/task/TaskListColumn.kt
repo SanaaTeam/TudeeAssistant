@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskScreen
+package com.sanaa.tudee_assistant.presentation.screen.task
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,8 +27,8 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
+import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable

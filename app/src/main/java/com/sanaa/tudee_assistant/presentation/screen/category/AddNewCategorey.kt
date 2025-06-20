@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screens.category
+package com.sanaa.tudee_assistant.presentation.screen.category
 
 import android.graphics.Bitmap
 import android.net.Uri

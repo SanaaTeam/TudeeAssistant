@@ -1,15 +1,15 @@
-package com.sanaa.tudee_assistant.presentation.screen.add_edit_screen
+package com.sanaa.tudee_assistant.presentation.bottom_sheet.add_edit_task
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
-import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
-import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.screen.task.mapper.toTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

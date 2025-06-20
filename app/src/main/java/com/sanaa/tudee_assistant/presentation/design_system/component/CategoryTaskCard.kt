@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 

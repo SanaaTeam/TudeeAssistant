@@ -1,14 +1,14 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskScreen
+package com.sanaa.tudee_assistant.presentation.screen.task
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
-import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.screen.task.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

@@ -2,8 +2,8 @@ package com.sanaa.tudee_assistant.presentation.model.mapper
 
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 
 fun Task.toState(): TaskUiState {

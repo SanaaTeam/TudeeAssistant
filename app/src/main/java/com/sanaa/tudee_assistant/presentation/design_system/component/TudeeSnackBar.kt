@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
+import com.sanaa.tudee_assistant.presentation.model.SnackBarUiStatus
 
 @Composable
 fun TudeeSnackBar(snackBarHostState: SnackbarHostState, isError: Boolean) {
@@ -27,7 +27,7 @@ fun TudeeSnackBar(snackBarHostState: SnackbarHostState, isError: Boolean) {
         ) { data ->
             SnackBar(
                 message = data.visuals.message,
-                snackBarStatus = if (isError) SnackBarStatus.ERROR else SnackBarStatus.SUCCESS
+                snackBarStatus = if (isError) SnackBarUiStatus.ERROR else SnackBarUiStatus.SUCCESS
             )
         }
     }

@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskDetalis
+package com.sanaa.tudee_assistant.presentation.screen.task_details
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,8 +24,8 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Sec
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

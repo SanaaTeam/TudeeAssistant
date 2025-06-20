@@ -1,8 +1,8 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskScreen
+package com.sanaa.tudee_assistant.presentation.screen.task
 
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone

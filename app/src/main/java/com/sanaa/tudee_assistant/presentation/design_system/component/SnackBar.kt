@@ -20,13 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
+import com.sanaa.tudee_assistant.presentation.model.SnackBarUiStatus
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 
 @Composable
 fun SnackBar(
     modifier: Modifier = Modifier,
-    snackBarStatus: SnackBarStatus = SnackBarStatus.SUCCESS,
+    snackBarStatus: SnackBarUiStatus = SnackBarUiStatus.SUCCESS,
     message: String,
 ) {
     Row(
@@ -48,14 +48,14 @@ fun SnackBar(
         Box(
             modifier = Modifier
                 .background(
-                    color = if (snackBarStatus == SnackBarStatus.ERROR) Theme.color.errorVariant else Theme.color.greenVariant,
+                    color = if (snackBarStatus == SnackBarUiStatus.ERROR) Theme.color.errorVariant else Theme.color.greenVariant,
                     shape = RoundedCornerShape(Theme.dimension.regular)
                 )
                 .padding(Theme.dimension.small)
         ) {
             Image(
                 painter = painterResource(
-                    id = if (snackBarStatus == SnackBarStatus.ERROR) R.drawable.snack_bar_error else R.drawable.snack_bar_success
+                    id = if (snackBarStatus == SnackBarUiStatus.ERROR) R.drawable.snack_bar_error else R.drawable.snack_bar_success
                 ),
                 contentDescription = message,
                 modifier = Modifier.size(Theme.dimension.large),
@@ -96,7 +96,7 @@ private fun SnackBarLightPreview() {
                 .background(color = Theme.color.surface)
                 .padding(Theme.dimension.extraSmall)
         ) {
-            SnackBar(snackBarStatus = SnackBarStatus.ERROR, message = "Something went wrong")
+            SnackBar(snackBarStatus = SnackBarUiStatus.ERROR, message = "Something went wrong")
         }
     }
 }

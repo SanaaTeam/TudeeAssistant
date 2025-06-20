@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.add_edit_screen
+package com.sanaa.tudee_assistant.presentation.bottom_sheet.add_edit_task
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,7 +30,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Pri
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.screens.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate

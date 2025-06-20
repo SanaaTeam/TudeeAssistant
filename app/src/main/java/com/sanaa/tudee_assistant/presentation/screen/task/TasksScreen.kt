@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskScreen
+package com.sanaa.tudee_assistant.presentation.screen.task
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,16 +33,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.bottom_sheet.add_edit_task.AddEditTaskBottomSheet
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.composable.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.add_edit_screen.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.screen.task_details.TaskViewDetails
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.coroutines.launch
@@ -232,7 +232,7 @@ fun TasksScreenContent(
                     title = stringResource(R.string.delete_task_title),
                 )
             if (showAddTaskBottomSheet) {
-                AddEditTaskScreen(
+                AddEditTaskBottomSheet(
                     isEditMode = false,
                     taskToEdit = null,
                     onDismiss = { showAddTaskBottomSheet = false },
@@ -257,7 +257,7 @@ fun TasksScreenContent(
             }
 
             if (showEditTaskBottomSheet && taskToEdit != null) {
-                AddEditTaskScreen(
+                AddEditTaskBottomSheet(
                     isEditMode = true,
                     taskToEdit = taskToEdit,
                     onDismiss = {

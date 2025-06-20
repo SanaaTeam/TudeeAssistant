@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.model
 
-enum class SnackBarStatus {
+enum class SnackBarUiStatus {
     ERROR,
     SUCCESS
 }

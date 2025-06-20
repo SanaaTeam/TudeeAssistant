@@ -26,7 +26,7 @@ fun TudeeSnackBar(snackBarHostState: SnackbarHostState, isError: Boolean) {
                 .padding(horizontal = Theme.dimension.medium)
         ) { data ->
             SnackBar(
-                message = data.visuals.message.toInt(),
+                message = data.visuals.message,
                 snackBarStatus = if (isError) SnackBarStatus.ERROR else SnackBarStatus.SUCCESS
             )
         }

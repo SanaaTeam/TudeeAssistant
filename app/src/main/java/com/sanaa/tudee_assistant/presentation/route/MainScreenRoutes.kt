@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.route
 
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,4 +10,6 @@ object HomeScreenRoute
 object TasksScreenRoute
 
 @Serializable
-object CategoriesScreenRoute
+data class CategoriesScreenRoute(
+    val taskUiStatus: TaskUiStatus,
+)

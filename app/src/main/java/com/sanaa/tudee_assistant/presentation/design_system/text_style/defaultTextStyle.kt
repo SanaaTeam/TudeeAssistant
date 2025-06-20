@@ -87,4 +87,4 @@ val defaultTextStyle = TudeeTextStyle(
         )
     ),
 
-)
+    )

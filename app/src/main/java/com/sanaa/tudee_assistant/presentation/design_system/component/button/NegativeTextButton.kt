@@ -18,15 +18,15 @@ fun NegativeTextButton(
     label: String,
     enabled: Boolean = true,
     isLoading: Boolean = false,
-    onClick:()-> Unit
+    onClick: () -> Unit
 ) {
 
-    val contentColor = when(enabled){
+    val contentColor = when (enabled) {
         true -> Theme.color.error
         false -> Theme.color.stroke
     }
 
-    Row (
+    Row(
         modifier
             .clickable(
                 enabled = enabled,
@@ -34,7 +34,7 @@ fun NegativeTextButton(
             ),
         horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small),
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         ButtonContent(
             label = label,
             enabled = enabled,
@@ -49,10 +49,10 @@ fun NegativeTextButton(
 @Preview
 @Composable
 private fun NegativeTextButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (false){
-        Column (
+    TudeeTheme(false) {
+        Column(
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
-        ){
+        ) {
             NegativeTextButton(
                 label = "Submit",
                 enabled = true,
@@ -88,15 +88,13 @@ private fun NegativeTextButtonLightPreview(modifier: Modifier = Modifier) {
 }
 
 
-
-
 @Preview
 @Composable
 private fun NegativeTextButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme (true){
-        Column (
+    TudeeTheme(true) {
+        Column(
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
-        ){
+        ) {
             NegativeTextButton(
                 label = "Submit",
                 enabled = true,

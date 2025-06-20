@@ -16,7 +16,6 @@ class FailedToDeleteCategoryException : CategoryException()
 class DefaultCategoryException : CategoryException()
 
 
-
 class DatabaseFailureException(
     message: String,
     cause: Throwable? = null

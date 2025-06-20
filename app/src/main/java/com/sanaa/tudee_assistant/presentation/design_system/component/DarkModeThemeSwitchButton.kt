@@ -155,7 +155,6 @@ private fun DarkModeThemeSwitchButtonPreview() {
 }
 
 
-
 @Composable
 private fun BoxScope.AnimatedSun(
     isDarkMode: Boolean,

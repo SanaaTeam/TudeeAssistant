@@ -30,12 +30,12 @@ val databaseModule = module {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     get<CoroutineScope>(named("databaseScope")).launch {
-                        try{
+                        try {
                             val database = get<AppDatabase>()
                             getDefaultCategories().forEach { defaultCategory ->
                                 database.categoryDao().insertCategory(defaultCategory)
                             }
-                        }catch (e: Exception){
+                        } catch (e: Exception) {
                             Log.e("DB", "Failed to insert defaults", e)
                         }
                     }

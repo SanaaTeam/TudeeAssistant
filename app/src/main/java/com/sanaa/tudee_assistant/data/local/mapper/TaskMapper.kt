@@ -15,7 +15,7 @@ fun TaskLocalDto.toDomain(): Task = Task(
 )
 
 fun Task.toLocalDto(): TaskLocalDto = TaskLocalDto(
-    taskId = id?:0,
+    taskId = id ?: 0,
     title = title,
     description = description,
     status = status,

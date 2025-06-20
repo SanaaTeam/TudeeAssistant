@@ -101,7 +101,8 @@ fun TaskForm(
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium)
                         .clickable { onDatePickerShow() },
-                    placeholder = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+                    placeholder = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
                     value = uiState.taskUiState.dueDate ?: "",
                     onValueChange = {},
                     readOnly = true,

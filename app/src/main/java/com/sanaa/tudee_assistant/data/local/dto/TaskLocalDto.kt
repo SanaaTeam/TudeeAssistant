@@ -25,7 +25,7 @@ data class TaskLocalDto(
 
     @ColumnInfo(name = "due_date")
     val dueDate: LocalDate? = null,
-  
+
     @ColumnInfo(name = "priority")
     val priority: TaskPriority = TaskPriority.MEDIUM,
 

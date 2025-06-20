@@ -67,7 +67,7 @@ fun TaskStatusCard(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewTaskStatusCard() {
-    TudeeTheme (false){
+    TudeeTheme(false) {
         TaskStatusCard(taskUiStatus = TaskUiStatus.TODO)
     }
 }

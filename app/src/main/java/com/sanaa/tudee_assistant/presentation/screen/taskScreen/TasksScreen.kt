@@ -37,11 +37,11 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.composable.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.design_system.component.DayItem
+import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.screen.addEditScreen.TudeeSnackBar
+import com.sanaa.tudee_assistant.presentation.screen.add_edit_screen.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
 import com.sanaa.tudee_assistant.presentation.state.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
@@ -96,7 +96,8 @@ fun TasksScreenContent(
 
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-
+    var showEditTaskBottomSheet by remember { mutableStateOf(false) }
+    var taskToEdit by remember { mutableStateOf<TaskUiModel?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     var showAddTaskBottomSheet by remember { mutableStateOf(false) }
     var daysInMonth by
@@ -219,8 +220,11 @@ fun TasksScreenContent(
                 TaskViewDetails(
                     task = state.selectedTask,
                     onDismiss = onDismissTaskViewDetails,
-                    onEditClick = { task -> onEditTaskViewDetails(task) },
-                    onMoveToClicked = onMoveToTaskViewDetails,
+                    onEditClick = { task ->
+                        onDismissTaskViewDetails()
+                        taskToEdit = task
+                        showEditTaskBottomSheet = true
+                    },                    onMoveToClicked = onMoveToTaskViewDetails,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             if (state.selectedTask != null && state.showDeleteDialog)
@@ -229,35 +233,60 @@ fun TasksScreenContent(
                     onDeleteClicked = onDeleteClick,
                     title = stringResource(R.string.delete_task_title),
                 )
+            if (showAddTaskBottomSheet) {
+                AddEditTaskScreen(
+                    isEditMode = false,
+                    taskToEdit = null,
+                    onDismiss = { showAddTaskBottomSheet = false },
+                    onSuccess = {
+                        showAddTaskBottomSheet = false
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = "Task added successfully",
+                                withDismissAction = true
+                            )
+                        }
+                    },
+                    onError = { errorMessage ->
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = errorMessage,
+                                withDismissAction = true
+                            )
+                        }
+                    }
+                )
+            }
 
-        if (showAddTaskBottomSheet) {
-            AddEditTaskScreen(
-                isEditMode = false,
-                initialTask = null,
-                onDismiss = { showAddTaskBottomSheet = false },
-                onSuccess = {
-                    showAddTaskBottomSheet = false
-                    coroutineScope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = "Task added successfully",
-                            withDismissAction = true
-                        )
+            if (showEditTaskBottomSheet && taskToEdit != null) {
+                AddEditTaskScreen(
+                    isEditMode = true,
+                    taskToEdit = taskToEdit,
+                    onDismiss = {
+                        showEditTaskBottomSheet = false
+                        taskToEdit = null
+                    },
+                    onSuccess = {
+                        showEditTaskBottomSheet = false
+                        taskToEdit = null
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = "Task updated successfully",
+                                withDismissAction = true
+                            )
+                        }
+                    },
+                    onError = { errorMessage ->
+                        coroutineScope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = errorMessage,
+                                withDismissAction = true
+                            )
+                        }
                     }
-                },
-                onError = { errorMessage ->
-                    coroutineScope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = errorMessage,
-                            withDismissAction = true
-                        )
-                    }
-                }
-            )
+                )
+            }
         }
-    }
-
-
-
         FloatingActionButton(
             enabled = true,
             modifier = Modifier

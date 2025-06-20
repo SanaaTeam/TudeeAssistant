@@ -5,14 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.sanaa.tudee_assistant.presentation.TudeeApp
-import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TasksScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TasksScreen()
+            TudeeApp()
         }
     }
 }

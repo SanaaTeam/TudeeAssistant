@@ -100,10 +100,10 @@ class TaskViewModel(
                     if (it?.id == null) return@launch
                     taskService.deleteTaskById(it.id)
                 }.onSuccess {
-                    onSuccess(message = R.string.snack_bar_success.toString())
+                    handleOnSuccess(message = R.string.snack_bar_success.toString())
                     getTasksByDueDate()
                 }.onFailure {
-                    onError(message = R.string.snack_bar_error.toString())
+                    handleOnError(message = R.string.snack_bar_error.toString())
 
                 }
             }
@@ -160,17 +160,17 @@ class TaskViewModel(
                 runCatching {
                     taskService.updateTask(updatedTask.toTask())
                 }.onSuccess {
-                    onSuccess(
+                    handleOnSuccess(
                         message = R.string.snack_bar_success.toString()
                     )
                 }.onFailure {
-                    onError()
+                    handleOnError()
                 }
             }
         }
     }
 
-    private fun onSuccess(message: String? = null) {
+    private fun handleOnSuccess(message: String? = null) {
         _state.update {
             it.copy(
                 successMessage = message,
@@ -182,7 +182,7 @@ class TaskViewModel(
         }
     }
 
-    private fun onError(message: String? = null) {
+    private fun handleOnError(message: String? = null) {
         _state.update {
             it.copy(
                 successMessage = null,

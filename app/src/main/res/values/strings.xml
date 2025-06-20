@@ -5,6 +5,16 @@
     <string name="high">High</string>
     <string name="medium">Medium</string>
     <string name="low">Low</string>
+    <string name="add_new_task">Add new task</string>
+    <string name="task_title">Task title</string>
+    <string name="description">Description</string>
+    <string name="date_placeholder">22-6-2025</string>
+    <string name="priority">Priority</string>
+    <string name="category">Category</string>
+    <string name="add">Add</string>
+    <string name="clear">Clear</string>
+    <string name="ok">OK</string>
+
     <string name="todo_task_status">To-Do</string>
     <string name="in_progress_task_status">In Progress</string>
     <string name="done_task_status">Done</string>
@@ -24,7 +34,6 @@
     <string name="no_task_today" translatable="false">No tasks for today!</string>
     <string name="tap_to_add_task" translatable="false">Tap the + button to add your\nfirst one.</string>
 
-    <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="category_title">Category title</string>
     <string name="category_image">Category image</string>
@@ -56,7 +65,14 @@
         <item>Nov</item>
         <item>Dec</item>
     </string-array>
+    <string name="task_details">"Task Details"</string>
+    <string name="mark_as_done">"Move to done"</string>
+    <string name="mark_as_in_progress">"Move to in progress"</string>
     <string name="save">Save</string>
+    <string name="edit_task">Edit Task</string>
+    <string name="task_add_success">Add task successfully.</string>
+    <string name="task_update_success">Edited task successfully.</string>
+
     <string name="edit_category">Edit category</string>
     <string name="delete_category">Delete category</string>
     <string name="are_you_sure_to_continue">Are you sure to continue?</string>

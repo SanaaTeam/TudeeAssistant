@@ -148,7 +148,7 @@ fun UploadPlaceholder() {
 @Preview(showBackground = true)
 @Composable
 fun UploadBoxLightPreview() {
-    TudeeTheme {
+    TudeeTheme(isDark = false) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -163,7 +163,8 @@ fun UploadBoxLightPreview() {
 @Preview(showBackground = true)
 @Composable
 fun UploadBoxDarkPreview() {
-    TudeeTheme(false) {
+    TudeeTheme(isDark = true) {
+
         Box(
             modifier = Modifier
                 .fillMaxSize()

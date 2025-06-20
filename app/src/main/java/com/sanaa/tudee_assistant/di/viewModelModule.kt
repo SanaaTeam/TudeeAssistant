@@ -10,11 +10,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel {
-        CategoryViewModel(
-            get<CategoryService>(), get<TaskService>(), get<ImageProcessor>()
-        )
-    }
+    viewModel { CategoryViewModel(get(), get(), get()) }
     viewModel {
         CategoryTaskViewModel(
             get<CategoryService>(), get<TaskService>()

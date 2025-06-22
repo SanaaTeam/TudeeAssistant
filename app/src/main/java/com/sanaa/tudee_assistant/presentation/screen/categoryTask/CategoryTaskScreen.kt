@@ -3,60 +3,45 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.composable.TaskListColumn
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.category.UpdateCurrentCategory
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import org.koin.androidx.compose.koinViewModel
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import org.koin.compose.koinInject
 
 @Composable
 fun CategoryTaskScreen(
     viewModel: CategoryTaskViewModel = koinInject<CategoryTaskViewModel>(),
     categoryId: Int?,
-    onBackClick: () -> Unit = {},
-    onEditCategory: (Int) -> Unit = {},
+    modifier: Modifier = Modifier,
+//    onBackClick: () -> Unit = {},
+//    onEditCategory: (Int) -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -68,262 +53,127 @@ fun CategoryTaskScreen(
 
     CategoryTaskScreenContent(
         state = state,
-        onBackClick = onBackClick,
-        onEditCategory = onEditCategory,
-        onDeleteCategory = {
-
-        },
-        viewModel = viewModel
+        listener = viewModel,
+        onBackClick = { /*onBackClick()*/ },
+        modifier = modifier.fillMaxSize()
     )
 }
 
 @Composable
 fun CategoryTaskScreenContent(
     state: CategoryTaskScreenUiState,
+    listener: CategoryTaskInteractionListener,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onEditCategory: (Int) -> Unit = {},
-    onDeleteCategory: () -> Unit = {},
-    viewModel: CategoryTaskViewModel
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-    var showBottomSheetState by remember { mutableStateOf(false) }
-
-
-    val tabs = listOf(
-        TabItem(
-            label = stringResource(R.string.in_progress_task_status),
-            count = state.inProgressTasksCount
-        ) {
-            TasksList(
-                tasks = state.inProgressTasks,
-                categoryImagePath = state.categoryImagePath,
-            )
-            TasksList(
-                tasks = state.todoTasks,
-                categoryImagePath = state.categoryImagePath,
-            )
-        },
-        TabItem(
-            label = stringResource(R.string.todo_task_status),
-            count = state.todoTasksCount
-        ) {
-            TasksList(
-                tasks = state.todoTasks,
-                categoryImagePath = state.categoryImagePath,
-            )
-        },
-        TabItem(
-            label = stringResource(R.string.done_task_status),
-            count = state.doneTasksCount
-        ) {
-            TasksList(
-                tasks = state.doneTasks,
-                categoryImagePath = state.categoryImagePath,
-            )
-        }
-    )
-
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .background(Theme.color.surface)
-            .windowInsetsPadding(WindowInsets.statusBars)
+            .fillMaxWidth()
     ) {
-
-        Box(
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
                 .height(64.dp)
-                .background(Theme.color.surfaceHigh)
+                .fillMaxWidth()
+                .background(color = Theme.color.surfaceHigh)
                 .padding(horizontal = Theme.dimension.medium),
-            contentAlignment = Alignment.CenterStart
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .border(color = Theme.color.stroke, width = 1.dp, shape = CircleShape)
-                            .clickable { onBackClick() },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.arrow_left),
-                            contentDescription = null,
-                            tint = Theme.color.body,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-
-                    Text(
-                        text = state.categoryName,
-                        style = Theme.textStyle.title.large,
-                        color = Theme.color.title
-                    )
-                }
-
-                if (!state.isDefault && state.categoryId != -1) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .border(color = Theme.color.stroke, width = 1.dp, shape = CircleShape)
-                            .clickable { showBottomSheetState = true },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.pencil_edit),
-                            contentDescription = null,
-                            tint = Theme.color.body,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-            }
-        }
-
-        when {
-            state.isLoading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        color = Theme.color.primary
-                    )
-                }
-            }
-
-            state.error != null -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
-                    ) {
-                        Text(
-                            text = state.error,
-                            style = Theme.textStyle.body.medium,
-                            color = Theme.color.error,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(horizontal = Theme.dimension.medium)
-                        )
-                    }
-                }
-            }
-
-            state.totalTasksCount == 0 -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
-                    ) {
-                        Text(
-                            text = "No tasks found in this category",
-                            style = Theme.textStyle.title.medium,
-                            color = Theme.color.hint,
-                            textAlign = TextAlign.Center
-                        )
-                        Text(
-                            text = "Add your first task to get started!",
-                            style = Theme.textStyle.body.medium,
-                            color = Theme.color.hint,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-
-            else -> {
-                TudeeScrollableTabs(
-                    tabs = tabs,
-                    selectedTabIndex = selectedTabIndex,
-                    onTabSelected = { selectedTabIndex = it },
-                    modifier = Modifier.fillMaxSize()
+                OutlinedIconButton(painter = painterResource(R.drawable.arrow_left))
+                Text(
+                    text = state.currentCategory.name,
+                    style = Theme.textStyle.title.large,
+                    color = Theme.color.title,
+                    modifier = Modifier.padding(start = Theme.dimension.regular)
                 )
             }
+            OutlinedIconButton()
         }
 
-        if (showBottomSheetState) {
-            UpdateCurrentCategory(
-                onImageSelected = { },
-                onEditClick = { name, imageUri ->
-                    showBottomSheetState = false
-                },
-                onDeleteClick = {
-                    showBottomSheetState = false
-                    onBackClick()
-                },
-                onDismiss = {
-                    showBottomSheetState = false
-                }
-            )
-        }
+        TudeeScrollableTabs(
+            tabs = listOf(
+                TabItem(
+                    label = stringResource(R.string.in_progress_task_status),
+                    count = state.filteredTasks.size,
+                    content = {
+                        TaskListColumn(
+                            taskList = state.filteredTasks,
+                            onTaskClick = { },
+                            categories = listOf(state.currentCategory),
+                        )
+
+                    }
+                ),
+                TabItem(
+                    label = stringResource(R.string.todo_task_status),
+                    count = state.filteredTasks.size,
+                    content = {
+                        TaskListColumn(
+                            taskList = state.filteredTasks,
+                            onTaskClick = { },
+                            categories = listOf(state.currentCategory),
+                        )
+
+                    }
+                ),
+                TabItem(
+                    label = stringResource(R.string.done_task_status),
+                    count = state.filteredTasks.size,
+                    content = {
+                        TaskListColumn(
+                            taskList = state.filteredTasks,
+                            onTaskClick = { },
+                            categories = listOf(state.currentCategory),
+                        )
+
+                    }
+                ),
+
+                ),
+            selectedTabIndex = state.selectedTapIndex,
+            onTabSelected = { it -> listener.onStatusChanged(it) },
+            modifier = Modifier.fillMaxSize()
+        )
 
     }
+
 }
 
+
+@Preview(showBackground = true)
 @Composable
-private fun TasksList(
-    tasks: List<TaskUiState>,
-    categoryImagePath: String,
-    modifier: Modifier = Modifier,
-) {
-    if (tasks.isEmpty()) {
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Theme.color.surface),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "No tasks found",
-                style = Theme.textStyle.body.medium,
-                color = Theme.color.hint,
-                textAlign = TextAlign.Center
-            )
-        }
-    } else {
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Theme.color.surface),
-            contentPadding = PaddingValues(Theme.dimension.medium),
-            verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
-        ) {
-            items(tasks) { task ->
-                CategoryTaskCard(
-                    task = TaskUiState(
-                        id = task.id,
-                        title = task.title,
-                        description = task.description,
-                        dueDate = task.dueDate,
-                        priority = task.priority,
-                        status = task.status,
-                        categoryId = task.categoryId
-                    ),
-                    categoryImagePath = categoryImagePath
-                )
-            }
-        }
+private fun CategoryTaskScreenPreview() {
+    TudeeTheme {
+        CategoryTaskScreenContent(
+            state = CategoryTaskScreenUiState(
+                currentCategory = CategoryUiState(
+                    id = 1,
+                    name = "Work",
+                    imagePath = "",
+                    isDefault = true,
+                    tasksCount = 5
+                ),
+                allCategoryTasks = listOf(),
+                isLoading = false
+            ),
+            listener = object : CategoryTaskInteractionListener {
+                override fun onDeleteClicked() {}
+                override fun onEditClicked() {}
+                override fun onEditDismissClicked() {}
+                override fun onConfirmDeleteClicked() {}
+                override fun onDeleteDismiss() {}
+                override fun onStatusChanged(index: Int) {
+
+                }
+            },
+            onBackClick = {}
+        )
     }
-
 }
-
+/*
 @Preview
 @Composable
 private fun CategoryTaskScreenPreview() {
@@ -375,6 +225,33 @@ private fun CategoryTaskScreenPreview() {
             onBackClick = {},
             onEditCategory = {},
             viewModel = viewModel
+        )
+    }
+}
+ */
+
+
+@Composable
+fun OutlinedIconButton(
+    modifier: Modifier = Modifier,
+    painter: Painter = painterResource(R.drawable.pencil_edit),
+    tint: Color = Theme.color.body,
+    contentDescription: String? = null,
+    onClick: () -> Unit = {},
+) {
+    Box(
+        modifier = modifier
+            .size(40.dp)
+            .border(width = 1.dp, color = Theme.color.stroke, shape = CircleShape)
+            .clickable(
+                onClick = { onClick() }),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painter,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(20.dp),
+            tint = tint
         )
     }
 }

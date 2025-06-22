@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen
+package com.sanaa.tudee_assistant.presentation.screen.onBoarding
 
 import android.app.Activity
 import android.view.WindowManager
@@ -40,8 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
-import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
-import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
 import kotlinx.coroutines.launch
@@ -100,7 +100,7 @@ fun OnBoardingScreen(
             .background(Theme.color.overlay)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.boarding_screen000),
+            painter = painterResource(id = R.drawable.background_ellipse),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier

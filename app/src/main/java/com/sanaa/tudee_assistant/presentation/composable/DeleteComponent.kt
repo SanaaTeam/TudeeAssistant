@@ -17,11 +17,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
-import com.sanaa.tudee_assistant.presentation.design_system.component.button.NegativeButton
-import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
-import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.design_system.theme.dropShadowColor
+import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
+import com.sanaa.tudee_assistant.presentation.designSystem.component.button.NegativeButton
+import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryButton
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -15,14 +15,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
-import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.SplashScreenRoute
-import com.sanaa.tudee_assistant.presentation.screen.OnBoardingScreen
-import com.sanaa.tudee_assistant.presentation.screen.category_task.CategoryTaskScreen
+import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingScreen
+import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import kotlinx.coroutines.launch
 

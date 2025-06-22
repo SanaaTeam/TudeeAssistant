@@ -1,7 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.state.mapper
 
 import com.sanaa.tudee_assistant.domain.model.Category
-import com.sanaa.tudee_assistant.domain.model.NewCategory
+import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 
 fun CategoryUiState.toCategory(): Category {
@@ -13,8 +13,8 @@ fun CategoryUiState.toCategory(): Category {
     )
 }
 
-fun CategoryUiState.toNewCategory(): NewCategory {
-    return NewCategory(
+fun CategoryUiState.toNewCategory(): AddCategoryRequest {
+    return AddCategoryRequest(
         name = name,
         imagePath = imagePath,
     )

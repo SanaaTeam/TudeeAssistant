@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.state.mapper
 
-import com.sanaa.tudee_assistant.domain.model.NewTask
+import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.domain.model.Task.TaskStatus
@@ -70,8 +70,8 @@ fun TaskUiStatus.toTaskStatus(): TaskStatus {
     }
 }
 
-fun TaskUiState.toNewTask(): NewTask {
-    return NewTask(
+fun TaskUiState.toNewTask(): AddTaskRequest {
+    return AddTaskRequest(
         title = title,
         description = description,
         status = status.toTaskStatus(),

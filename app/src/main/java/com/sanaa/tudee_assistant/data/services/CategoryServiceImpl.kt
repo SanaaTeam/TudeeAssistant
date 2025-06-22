@@ -10,7 +10,7 @@ import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateException
 import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
 import com.sanaa.tudee_assistant.domain.model.Category
-import com.sanaa.tudee_assistant.domain.model.NewCategory
+import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -35,8 +35,8 @@ class CategoryServiceImpl(
                 )
             }
 
-    override suspend fun addCategory(newCategory: NewCategory) {
-        if (categoryDao.insertCategory(newCategory.toLocalDto()) == -1L) {
+    override suspend fun addCategory(addCategoryRequest: AddCategoryRequest) {
+        if (categoryDao.insertCategory(addCategoryRequest.toLocalDto()) == -1L) {
             throw FailedToAddException("Failed to add category")
         }
     }

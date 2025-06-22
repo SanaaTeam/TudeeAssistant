@@ -8,7 +8,7 @@ import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateException
 import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
-import com.sanaa.tudee_assistant.domain.model.NewTask
+import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import kotlinx.coroutines.flow.Flow
@@ -34,8 +34,8 @@ class TaskServiceImpl(
     }
 
 
-    override suspend fun addTask(newTask: NewTask) {
-        if (taskDao.insertTask(newTask.toLocalDto()) == -1L) {
+    override suspend fun addTask(addTaskRequest: AddTaskRequest) {
+        if (taskDao.insertTask(addTaskRequest.toLocalDto()) == -1L) {
             throw FailedToAddException("Failed to add task")
         }
     }

@@ -5,12 +5,12 @@ import com.sanaa.tudee_assistant.data.local.dao.CategoryDao
 import com.sanaa.tudee_assistant.data.local.dto.CategoryLocalDto
 import com.sanaa.tudee_assistant.domain.exceptions.DatabaseFailureException
 import com.sanaa.tudee_assistant.domain.exceptions.DefaultCategoryException
-import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddCategoryException
-import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteCategoryException
-import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateCategoryException
+import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddException
+import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
+import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateException
 import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
 import com.sanaa.tudee_assistant.domain.model.Category
-import com.sanaa.tudee_assistant.domain.model.NewCategory
+import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -78,7 +78,7 @@ class CategoryServiceImplTest {
     fun `addCategory should succeed when insert is successful`() = runTest {
         coEvery { categoryDao.insertCategory(any()) } returns 1L
 
-        categoryService.addCategory(NewCategory(fakeCategory.name, fakeCategory.imagePath))
+        categoryService.addCategory(AddCategoryRequest(fakeCategory.name, fakeCategory.imagePath))
 
         coVerify { categoryDao.insertCategory(match { it.name == fakeCategory.name }) }
     }
@@ -89,14 +89,14 @@ class CategoryServiceImplTest {
 
         val result = runCatching {
             categoryService.addCategory(
-                NewCategory(
+                AddCategoryRequest(
                     fakeCategory.name,
                     fakeCategory.imagePath
                 )
             )
         }
 
-        assertThat(result.exceptionOrNull()).isInstanceOf(FailedToAddCategoryException::class.java)
+        assertThat(result.exceptionOrNull()).isInstanceOf(FailedToAddException::class.java)
     }
 
     @Test
@@ -118,7 +118,7 @@ class CategoryServiceImplTest {
 
             val result = runCatching { categoryService.updateCategory(fakeCategory) }
 
-            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToUpdateCategoryException::class.java)
+            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToUpdateException::class.java)
         }
 
     @Test
@@ -162,7 +162,7 @@ class CategoryServiceImplTest {
 
             val result = runCatching { categoryService.deleteCategoryById(1) }
 
-            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteCategoryException::class.java)
+            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteException::class.java)
         }
 
     @Test
@@ -181,6 +181,6 @@ class CategoryServiceImplTest {
 
             val result = runCatching { categoryService.deleteAllCategories() }
 
-            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteCategoryException::class.java)
+            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteException::class.java)
         }
 }

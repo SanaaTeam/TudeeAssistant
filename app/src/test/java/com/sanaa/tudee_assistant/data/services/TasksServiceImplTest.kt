@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
-import com.sanaa.tudee_assistant.domain.model.NewTask
+import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
 import com.sanaa.tudee_assistant.domain.model.Task
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -185,9 +185,9 @@ class TasksServiceImplTest {
             // Given
             every { taskDao.getTasksByStatus(any()) } returns flowOf(fakeTasks)
             // When
-            tasksService.getTasksByStatus(fakeTasks[0].status).toList()
+            tasksService.getTasksByStatus(Task.TaskStatus.valueOf(fakeTasks[0].status)).toList()
             // Then
-            coVerify(exactly = 1) { taskDao.getTasksByStatus(fakeTasks[0].status) }
+            coVerify(exactly = 1) { taskDao.getTasksByStatus(Task.TaskStatus.valueOf(fakeTasks[0].status)) }
         }
 
     @Test
@@ -196,7 +196,7 @@ class TasksServiceImplTest {
             // Given
             every { taskDao.getTasksByDate(any()) } returns flowOf(fakeTasks)
             // When
-            tasksService.getTasksByDueDate(fakeTasks[0].dueDate).toList()
+            tasksService.getTasksByDueDate(LocalDate.parse(fakeTasks[0].dueDate)).toList()
             // Then
             coVerify(exactly = 1) {
                 taskDao.getTasksByDate(fakeTasks[0].dueDate)
@@ -210,7 +210,7 @@ class TasksServiceImplTest {
             every { taskDao.getTasksByDate(any()) } throws Exception("Database error")
             // When
             val result = runCatching {
-                tasksService.getTasksByDueDate(fakeTasks[0].dueDate).toList()
+                tasksService.getTasksByDueDate(LocalDate.parse(fakeTasks[0].dueDate)).toList()
             }
             // Then
             assertThat(result.isFailure).isTrue()
@@ -222,21 +222,21 @@ class TasksServiceImplTest {
             taskId = 1,
             title = "Task 1",
             description = "Description 1",
-            status = Task.TaskStatus.IN_PROGRESS,
-            dueDate = LocalDate(2023, 1, 1),
-            priority = Task.TaskPriority.HIGH,
+            status = Task.TaskStatus.IN_PROGRESS.name,
+            dueDate = LocalDate(2023, 1, 1).toString(),
+            priority = Task.TaskPriority.HIGH.name,
             categoryId = 1,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+            createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
         )
     )
 
-    private fun TaskLocalDto.toNewTask() : NewTask{
-        return NewTask(
+    private fun TaskLocalDto.toNewTask() : AddTaskRequest{
+        return AddTaskRequest(
             title = title,
             description = description,
-            status = status,
-            dueDate = dueDate,
-            priority = priority,
+            status = Task.TaskStatus.valueOf(status),
+            dueDate = LocalDate.parse(dueDate),
+            priority = Task.TaskPriority.valueOf(priority),
             categoryId = categoryId
         )
     }

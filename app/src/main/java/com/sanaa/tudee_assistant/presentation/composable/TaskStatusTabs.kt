@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskScreen
+package com.sanaa.tudee_assistant.presentation.composable
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +17,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.EmptyScree
 import com.sanaa.tudee_assistant.presentation.design_system.component.TabItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TasksScreenUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 @Composable

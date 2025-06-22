@@ -45,10 +45,7 @@ fun MainScreen(
             composable<HomeScreenRoute> {
                 onStatusBarColor(Theme.color.primary)
 
-                HomeScreen(
-                    isDark = isDarkTheme,
-                    onChangeTheme = onChangeTheme,
-                )
+                HomeScreen()
             }
 
             composable<TasksScreenRoute> {

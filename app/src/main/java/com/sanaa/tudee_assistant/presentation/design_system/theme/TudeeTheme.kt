@@ -1,9 +1,10 @@
 package com.sanaa.tudee_assistant.presentation.design_system.theme
 
-import android.util.Log
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import com.sanaa.tudee_assistant.presentation.design_system.color.ColorThemeController
+import com.sanaa.tudee_assistant.presentation.design_system.color.LocalColorThemeController
 import com.sanaa.tudee_assistant.presentation.design_system.color.LocalTudeeColors
 import com.sanaa.tudee_assistant.presentation.design_system.color.darkSchemaColors
 import com.sanaa.tudee_assistant.presentation.design_system.color.lightSchemaColors
@@ -15,15 +16,14 @@ fun TudeeTheme(
     isDark: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    Log.d("isDark Test", "TudeeTheme: is dark value is : $isDark ")
-
-    val theme = if (isDark) darkSchemaColors else lightSchemaColors
+    val colorThemeController = remember { ColorThemeController(isDark) }
+    val theme = if (colorThemeController.isDarkTheme) darkSchemaColors else lightSchemaColors
 
     CompositionLocalProvider(
+        LocalColorThemeController provides colorThemeController,
         LocalTudeeColors provides theme,
         LocalTudeeTextStyle provides defaultTextStyle
     ) {
         content()
-        MaterialTheme.shapes.small
     }
 }

@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.domain.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
@@ -12,12 +13,22 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(
+    private val preferencesManager: PreferencesManager,
     private val taskService: TaskService,
     private val categoryService: CategoryService,
 ) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()) {
 
     init {
+        loadScreen()
         getTasks()
+    }
+
+    private fun loadScreen() {
+        viewModelScope.launch(Dispatchers.IO) {
+            preferencesManager.isDarkTheme.collect { isDarkTheme ->
+                _state.update { it.copy(isDarkTheme = isDarkTheme) }
+            }
+        }
     }
 
     private fun getTasks() {
@@ -41,6 +52,9 @@ class HomeScreenViewModel(
     }
 
     fun onAddTask() {
+    }
+
+    fun onToggleTheme() {
     }
 
     fun onAddTaskSuccess() {

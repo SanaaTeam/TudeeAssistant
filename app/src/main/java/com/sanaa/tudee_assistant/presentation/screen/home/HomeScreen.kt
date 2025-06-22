@@ -44,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.design_system.color.LocalThemeController
 import com.sanaa.tudee_assistant.presentation.design_system.component.AppBar
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.component.DarkModeThemeSwitchButton
@@ -65,16 +66,16 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(
-    isDark: Boolean,
-    onChangeTheme: () -> Unit,
-    viewModel: HomeScreenViewModel = koinViewModel(),
-) {
+fun HomeScreen(viewModel: HomeScreenViewModel = koinViewModel()) {
+    val themeController = LocalThemeController.current
     val state by viewModel.state.collectAsState()
+
     HomeScreenContent(
-        isDark = isDark,
         state = state,
-        onChangeTheme = onChangeTheme,
+        onToggleTheme = {
+            viewModel.onToggleTheme()
+            themeController.toggleTheme()
+        },
         viewModel::onAddTask,
         viewModel::onTaskClick,
         viewModel::onOpenCategory,
@@ -85,9 +86,8 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreenContent(
-    isDark: Boolean,
     state: HomeScreenUiState,
-    onChangeTheme: () -> Unit,
+    onToggleTheme: () -> Unit,
     onAddTask: () -> Unit,
     onTaskClick: (TaskUiState) -> Unit,
     onOpenCategory: (TaskUiStatus) -> Unit,
@@ -119,10 +119,9 @@ fun HomeScreenContent(
             AppBar(
                 tailComponent = {
                     DarkModeThemeSwitchButton(
-                        isDark,
-                        onCheckedChange = {
-                            onChangeTheme()
-                        })
+                        state.isDarkTheme,
+                        onCheckedChange = { onToggleTheme() }
+                    )
                 }
             )
 
@@ -430,7 +429,6 @@ fun PreviewHomeScreen() {
         val list = DataProvider.getTasksSample()
 
         HomeScreenContent(
-            isDark,
             HomeScreenUiState(
                 dayDate = dayDate,
                 taskCounts = listOf(
@@ -443,7 +441,8 @@ fun PreviewHomeScreen() {
                 ),
                 tasks = list
             ),
-            onChangeTheme = { isDark = !isDark }, {}, {}, {}, {}, {}
+            onToggleTheme = { isDark = !isDark },
+            {}, {}, {}, {}, {}
         )
     }
 }

@@ -1,7 +1,6 @@
 package com.sanaa.tudee_assistant
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -42,7 +41,6 @@ class MainActivity : ComponentActivity() {
                 keepSplash = false
             }
 
-            Log.d("SplashDebug", "Splash visible: $keepSplash")
             TudeeTheme(isDark) {
                 if (showSplash) {
                     SplashScreen() // Your custom composable splash

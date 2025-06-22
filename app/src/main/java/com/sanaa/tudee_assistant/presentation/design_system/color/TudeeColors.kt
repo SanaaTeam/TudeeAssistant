@@ -1,5 +1,8 @@
 package com.sanaa.tudee_assistant.presentation.design_system.color
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
@@ -37,6 +40,15 @@ data class TudeeColors(
     val emojiTint: Color,
 )
 
+class ThemeController(isDark: Boolean) {
+    var isDarkTheme by mutableStateOf(isDark)
+
+    fun toggleTheme() {
+        isDarkTheme = !isDarkTheme
+    }
+}
+
+val LocalThemeController = staticCompositionLocalOf { ThemeController(false) }
 
 val LocalTudeeColors = staticCompositionLocalOf { lightSchemaColors }
 

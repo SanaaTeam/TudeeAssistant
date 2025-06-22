@@ -13,9 +13,9 @@ fun TaskLocalDto.toDomain(): Task = Task(
     id = taskId,
     title = title,
     description = description,
-    status = status,
+    status = Task.TaskStatus.valueOf(status),
     dueDate = LocalDate.parse(dueDate),
-    priority = priority,
+    priority = Task.TaskPriority.valueOf(priority),
     categoryId = categoryId,
     createdAt = LocalDateTime.parse(createdAt)
 )
@@ -24,19 +24,20 @@ fun Task.toLocalDto(): TaskLocalDto = TaskLocalDto(
     taskId = id,
     title = title,
     description = description,
-    status = status,
+    status = status.name,
     dueDate = dueDate.toString(),
-    priority = priority,
+    priority = priority.name,
     categoryId = categoryId,
     createdAt = createdAt.toString()
 )
+
 fun NewTask.toLocalDto(): TaskLocalDto = TaskLocalDto(
     taskId = 0,
     title = title,
     description = description,
-    status = status,
+    status = status.name,
     dueDate = dueDate.toString(),
-    priority = priority,
+    priority = priority.name,
     categoryId = categoryId,
     createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
 )

@@ -4,6 +4,8 @@ import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.domain.model.NewTask
 import com.sanaa.tudee_assistant.domain.model.Task
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -12,10 +14,10 @@ fun TaskLocalDto.toDomain(): Task = Task(
     title = title,
     description = description,
     status = status,
-    dueDate = dueDate,
+    dueDate = LocalDate.parse(dueDate),
     priority = priority,
     categoryId = categoryId,
-    createdAt = createdAt
+    createdAt = LocalDateTime.parse(createdAt)
 )
 
 fun Task.toLocalDto(): TaskLocalDto = TaskLocalDto(
@@ -23,18 +25,18 @@ fun Task.toLocalDto(): TaskLocalDto = TaskLocalDto(
     title = title,
     description = description,
     status = status,
-    dueDate = dueDate,
+    dueDate = dueDate.toString(),
     priority = priority,
     categoryId = categoryId,
-    createdAt = createdAt
+    createdAt = createdAt.toString()
 )
 fun NewTask.toLocalDto(): TaskLocalDto = TaskLocalDto(
     taskId = 0,
     title = title,
     description = description,
     status = status,
-    dueDate = dueDate,
+    dueDate = dueDate.toString(),
     priority = priority,
     categoryId = categoryId,
-    createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
 )

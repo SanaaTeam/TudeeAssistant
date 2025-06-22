@@ -9,7 +9,6 @@ import androidx.room.Update
 import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.domain.model.Task
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.LocalDate
 
 @Dao
 interface TaskDao {
@@ -33,7 +32,7 @@ interface TaskDao {
     suspend fun getTaskById(taskId: Int): TaskLocalDto?
 
     @Query("SELECT * FROM tasks WHERE due_date = :date")
-    fun getTasksByDate(date: LocalDate): Flow<List<TaskLocalDto>>
+    fun getTasksByDate(date: String): Flow<List<TaskLocalDto>>
 
     @Query("SELECT * FROM tasks WHERE category_id = :categoryId")
     fun getTasksByCategoryId(categoryId: Int): Flow<List<TaskLocalDto>>

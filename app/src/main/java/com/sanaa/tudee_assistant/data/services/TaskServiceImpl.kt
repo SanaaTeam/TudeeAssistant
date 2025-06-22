@@ -82,7 +82,7 @@ class TaskServiceImpl(
     }
 
     override fun getTasksByDueDate(dueDate: LocalDate): Flow<List<Task>> {
-        return taskDao.getTasksByDate(dueDate).map { list ->
+        return taskDao.getTasksByDate(dueDate.toString()).map { list ->
             list.map { it.toDomain() }
         }.catch {
             throw DatabaseFailureException("database failure", it)

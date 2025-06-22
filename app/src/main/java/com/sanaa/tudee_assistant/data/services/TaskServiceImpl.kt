@@ -4,9 +4,9 @@ import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
 import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
 import com.sanaa.tudee_assistant.domain.exceptions.DatabaseFailureException
-import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddTaskException
-import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteTaskException
-import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateTaskException
+import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddException
+import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
+import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateException
 import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
 import com.sanaa.tudee_assistant.domain.model.NewTask
 import com.sanaa.tudee_assistant.domain.model.Task
@@ -36,31 +36,31 @@ class TaskServiceImpl(
 
     override suspend fun addTask(newTask: NewTask) {
         if (taskDao.insertTask(newTask.toLocalDto()) == -1L) {
-            throw FailedToAddTaskException()
+            throw FailedToAddException("Failed to add task")
         }
     }
 
     override suspend fun updateTask(task: Task) {
         if (taskDao.updateTask(task.toLocalDto()) <= 0) {
-            throw FailedToUpdateTaskException()
+            throw FailedToUpdateException("Failed to update task")
         }
 
     }
 
     override suspend fun deleteTaskById(taskId: Int) {
         if (taskDao.deleteTaskById(taskId) <= 0) {
-            throw FailedToDeleteTaskException()
+            throw FailedToDeleteException("Failed to delete task")
         }
     }
 
     override suspend fun deleteAllTasks() {
         if (taskDao.deleteAllTasks() <= 0) {
-            throw FailedToDeleteTaskException()
+            throw FailedToDeleteException("Failed to delete all tasks")
         }
     }
 
     override suspend fun getTaskById(taskId: Int): Task {
-        return taskDao.getTaskById(taskId)?.toDomain() ?: throw NotFoundException()
+        return taskDao.getTaskById(taskId)?.toDomain() ?: throw NotFoundException("Task not found")
     }
 
 

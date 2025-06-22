@@ -1,20 +1,17 @@
 package com.sanaa.tudee_assistant.domain.exceptions
 
-class NotFoundException() : Exception()
 
-open class TaskException : Exception()
+open class DataSourceAccessException(message: String) : Exception(message)
+open class StoringDataFailureException(message: String) : DataSourceAccessException(message)
+open class RetrievingDataFailureException(message: String) : DataSourceAccessException(message)
 
-class FailedToUpdateTaskException : TaskException()
-class FailedToAddTaskException : TaskException()
-class FailedToDeleteTaskException : TaskException()
+class NotFoundException(message: String) : RetrievingDataFailureException(message)
 
-open class CategoryException : Exception()
+class FailedToUpdateException(message: String) : StoringDataFailureException(message)
+class FailedToAddException(message: String) : StoringDataFailureException(message)
+class FailedToDeleteException(message: String) : StoringDataFailureException(message)
 
-class FailedToUpdateCategoryException : CategoryException()
-class FailedToAddCategoryException : CategoryException()
-class FailedToDeleteCategoryException : CategoryException()
-class DefaultCategoryException : CategoryException()
-
+class DefaultCategoryException(message: String) : StoringDataFailureException(message)
 
 class DatabaseFailureException(
     message: String,

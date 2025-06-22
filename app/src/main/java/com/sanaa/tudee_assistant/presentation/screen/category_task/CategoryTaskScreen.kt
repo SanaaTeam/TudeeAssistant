@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.design_system.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.design_system.component.TabItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
@@ -310,7 +311,15 @@ private fun TasksList(
                         status = task.status,
                         categoryId = task.categoryId
                     ),
-                    categoryImagePath = task.categoryImagePath
+                    categoryImagePath = task.categoryImagePath,
+                    onClick = {},
+                    taskDateAndPriority = {
+                        PriorityTag(
+                            modifier = Modifier.padding(start = Theme.dimension.extraSmall),
+                            priority = task.priority,
+                            enabled = false
+                        )
+                    }
                 )
             }
         }

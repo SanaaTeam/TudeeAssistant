@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,7 +37,8 @@ fun CategoryTaskCard(
     task: TaskUiState,
     categoryImagePath: String,
     modifier: Modifier = Modifier,
-    onClick: (TaskUiState) -> Unit = {},
+    onClick: (TaskUiState) -> Unit,
+    taskDateAndPriority: @Composable RowScope.() -> Unit
 ) {
     Column(
         modifier = modifier
@@ -64,14 +66,9 @@ fun CategoryTaskCard(
             }
 
             Row {
-                task.dueDate?.let { DateChip(it) }
-
-                PriorityTag(
-                    modifier = Modifier.padding(start = Theme.dimension.extraSmall),
-                    priority = task.priority,
-                    enabled = false
-                )
+                taskDateAndPriority()
             }
+
         }
 
         Column(
@@ -99,30 +96,6 @@ fun CategoryTaskCard(
     }
 }
 
-@Composable
-private fun DateChip(date: String) {
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(100.dp))
-            .background(Theme.color.surface)
-            .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        Icon(
-            modifier = Modifier.size(Theme.dimension.regular),
-            painter = painterResource(id = R.drawable.calendar_favorite_01),
-            contentDescription = null,
-            tint = Theme.color.body
-        )
-
-        Text(
-            text = date,
-            color = Theme.color.body,
-            style = Theme.textStyle.label.small
-        )
-    }
-}
 
 @Preview(widthDp = 360)
 @Composable
@@ -139,6 +112,15 @@ private fun Preview() {
                 CategoryTaskCard(
                     task = it,
                     categoryImagePath = "file:///android_asset/categories/agriculture.png",
+                    onClick = {},
+                    taskDateAndPriority = {
+                            it.dueDate?.let { DateChip(it) }
+                            PriorityTag(
+                                modifier = Modifier.padding(start = Theme.dimension.extraSmall),
+                                priority = it.priority,
+                                enabled = false
+                            )
+                    }
                 )
             }
         }

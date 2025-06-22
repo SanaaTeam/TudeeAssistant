@@ -48,6 +48,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.AppBar
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.component.DarkModeThemeSwitchButton
 import com.sanaa.tudee_assistant.presentation.design_system.component.EmptyScreen
+import com.sanaa.tudee_assistant.presentation.design_system.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.design_system.component.Slider
 import com.sanaa.tudee_assistant.presentation.design_system.component.TaskCountByStatusCard
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
@@ -195,7 +196,7 @@ private fun CategoryList(
                         .background(Theme.color.primary)
                 )
 
-                InfoCard(state)
+                HomeOverviewCard(state)
             }
         }
 
@@ -204,8 +205,8 @@ private fun CategoryList(
                 state.tasks.isEmpty(),
                 exit = shrinkVertically(
                     shrinkTowards = Alignment.Top,
-                    animationSpec = tween(1000)
-                ) + fadeOut(tween(500))
+                    animationSpec = tween(500)
+                ) + fadeOut(tween(50))
             ) {
                 Box(
                     modifier = Modifier
@@ -297,17 +298,26 @@ private fun CategoryList(
                 modifier = Modifier.width(320.dp),
                 task = task,
                 categoryImagePath = categoryImagePath,
-                onClick = { onClick(it) })
+                onClick = { onClick(it) },
+                taskDateAndPriority = {
+                    PriorityTag(
+                        modifier = Modifier.padding(start = Theme.dimension.extraSmall),
+                        priority = task.priority,
+                        enabled = false
+                    )
+                }
+
+            )
+
         }
     }
 }
 
 @Composable
-private fun InfoCard(state: HomeScreenUiState) {
+private fun HomeOverviewCard(state: HomeScreenUiState) {
     Column(
         modifier = Modifier
             .padding(
-                top = Theme.dimension.large,
                 bottom = Theme.dimension.medium,
                 start = Theme.dimension.medium,
                 end = Theme.dimension.medium

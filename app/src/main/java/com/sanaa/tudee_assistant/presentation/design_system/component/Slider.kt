@@ -131,7 +131,7 @@ fun Slider(
 
 fun getSlideStatus(tasks: List<TaskUiState>): TudeeStatus {
     val allTasksDone = tasks.all { it.status == TaskUiStatus.DONE }
-    val allTasksNotFinished = tasks.size > 1 && !tasks.any { it.status == TaskUiStatus.DONE }
+    val allTasksNotFinished = !tasks.any { it.status == TaskUiStatus.DONE }
     return if (tasks.isEmpty())
         TudeeStatus.POOR
     else if (allTasksNotFinished)

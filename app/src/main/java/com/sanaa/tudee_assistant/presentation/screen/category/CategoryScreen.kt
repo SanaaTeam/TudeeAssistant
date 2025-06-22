@@ -32,9 +32,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryCount
-import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryItem
-import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
+import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -121,7 +122,8 @@ fun CategoryScreen(
     if (showBottomSheet.value) {
         AddNewCategory(
             onAddClick = { title, imageUri ->
-                val newCategory = CategoryUiModel(
+                val newCategory = CategoryUiState(
+                    id = 0,
                     name = title,
                     imagePath = imageUri.toString(),
                     isDefault = false,

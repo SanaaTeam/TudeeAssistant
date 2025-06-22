@@ -44,18 +44,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.design_system.component.AppBar
-import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
-import com.sanaa.tudee_assistant.presentation.design_system.component.DarkModeThemeSwitchButton
-import com.sanaa.tudee_assistant.presentation.design_system.component.EmptyScreen
-import com.sanaa.tudee_assistant.presentation.design_system.component.Slider
-import com.sanaa.tudee_assistant.presentation.design_system.component.TaskCountByStatusCard
-import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
-import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
+import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
+import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
+import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskCountByStatusCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.add_edit_screen.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.formatDateTime
@@ -277,7 +277,7 @@ private fun CategoryList(
 @Composable
 private fun CategoryList(
     items: List<TaskUiState>,
-    categories: List<CategoryUiModel>,
+    categories: List<CategoryUiState>,
     onClick: (TaskUiState) -> Unit,
 ) {
     LazyHorizontalGrid(

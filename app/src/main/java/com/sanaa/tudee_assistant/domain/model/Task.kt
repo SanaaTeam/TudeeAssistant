@@ -4,11 +4,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 data class Task(
-    val id: Int? = null,
+    val id: Int,
     val title: String,
     val description: String?,
     val status: TaskStatus,
-    val dueDate: LocalDate?,
+    val dueDate: LocalDate,
     val priority: TaskPriority,
     val categoryId: Int,
     val createdAt: LocalDateTime,

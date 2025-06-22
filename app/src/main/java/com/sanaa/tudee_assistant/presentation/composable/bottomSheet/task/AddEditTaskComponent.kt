@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.addEditTask
+package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,6 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
+import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.TaskForm
+import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.TaskFormViewModel
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.androidx.compose.koinViewModel
 

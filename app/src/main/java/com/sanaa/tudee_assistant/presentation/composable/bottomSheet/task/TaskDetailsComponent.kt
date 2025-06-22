@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.taskDetalis
+package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,7 +32,7 @@ import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskViewDetails(
+fun TaskDetailsComponent(
     task: TaskUiState,
     onDismiss: () -> Unit,
     onEditClick: (TaskUiState) -> Unit,
@@ -131,7 +131,7 @@ fun TaskViewDetails(
 @Composable
 private fun PreviewUpdateTaskStatus() {
     TudeeTheme {
-        TaskViewDetails(
+        TaskDetailsComponent(
             task = TaskUiState(
                 id = 1,
                 title = "Organize Study Desk",

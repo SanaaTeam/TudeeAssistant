@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.model
 
-enum class TudeeStatus {
+enum class TudeeUiStatus {
     GOOD,
     OKAY,
     POOR,

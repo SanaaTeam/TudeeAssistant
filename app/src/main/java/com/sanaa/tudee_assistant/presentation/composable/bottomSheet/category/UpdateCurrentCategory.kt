@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.categoryTask.composable
+package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.category
 
 import android.graphics.Bitmap
 import android.net.Uri

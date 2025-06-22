@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.addEditTask
+package com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask
 
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus

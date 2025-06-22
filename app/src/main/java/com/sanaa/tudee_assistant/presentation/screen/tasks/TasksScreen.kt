@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
-import com.sanaa.tudee_assistant.presentation.composable.DeleteComponent
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeSnackBar
@@ -47,8 +47,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Floa
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.screen.addEditTask.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.screen.taskDetalis.TaskViewDetails
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
@@ -261,7 +261,7 @@ fun TasksScreenContent(
             }
             TaskStatusTabs(state, onTaskSwipe, onTaskClick)
             if (state.selectedTask != null && state.showTaskDetailsDialog)
-                TaskViewDetails(
+                TaskDetailsComponent(
                     task = state.selectedTask,
                     onDismiss = onDismissTaskViewDetails,
                     onEditClick = { task ->

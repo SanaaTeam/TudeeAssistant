@@ -25,7 +25,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.model.TudeeStatus
+import com.sanaa.tudee_assistant.presentation.model.TudeeUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
@@ -50,10 +50,10 @@ fun Slider(
             ) {
                 Text(
                     text = when (status) {
-                        TudeeStatus.GOOD -> stringResource(R.string.good_status_message_title)
-                        TudeeStatus.OKAY -> stringResource(R.string.okay_status_message_title)
-                        TudeeStatus.POOR -> stringResource(R.string.poor_status_message_title)
-                        TudeeStatus.BAD -> stringResource(R.string.bad_status_message_title)
+                        TudeeUiStatus.GOOD -> stringResource(R.string.good_status_message_title)
+                        TudeeUiStatus.OKAY -> stringResource(R.string.okay_status_message_title)
+                        TudeeUiStatus.POOR -> stringResource(R.string.poor_status_message_title)
+                        TudeeUiStatus.BAD -> stringResource(R.string.bad_status_message_title)
                     },
                     style = Theme.textStyle.title.small,
                     color = Theme.color.title
@@ -64,11 +64,11 @@ fun Slider(
 
             Text(
                 text = when (status) {
-                    TudeeStatus.GOOD -> {
+                    TudeeUiStatus.GOOD -> {
                         stringResource(R.string.good_status_message)
                     }
 
-                    TudeeStatus.OKAY -> {
+                    TudeeUiStatus.OKAY -> {
                         stringResource(R.string.okay_status_message)
                             .replace(
                                 "*",
@@ -77,11 +77,11 @@ fun Slider(
                             .replace("#", tasks.size.toString())
                     }
 
-                    TudeeStatus.POOR -> {
+                    TudeeUiStatus.POOR -> {
                         stringResource(R.string.poor_status_message)
                     }
 
-                    TudeeStatus.BAD -> {
+                    TudeeUiStatus.BAD -> {
                         stringResource(R.string.bad_status_message)
                     }
                 },
@@ -117,10 +117,10 @@ fun Slider(
                     .height(92.dp),
                 painter = painterResource(
                     id = when (status) {
-                        TudeeStatus.OKAY -> R.drawable.robot1
-                        TudeeStatus.GOOD -> R.drawable.robot2
-                        TudeeStatus.BAD -> R.drawable.robot3
-                        TudeeStatus.POOR -> R.drawable.robot1
+                        TudeeUiStatus.OKAY -> R.drawable.robot1
+                        TudeeUiStatus.GOOD -> R.drawable.robot2
+                        TudeeUiStatus.BAD -> R.drawable.robot3
+                        TudeeUiStatus.POOR -> R.drawable.robot1
                     }
                 ),
                 contentDescription = null,
@@ -129,17 +129,17 @@ fun Slider(
     }
 }
 
-fun getSlideStatus(tasks: List<TaskUiState>): TudeeStatus {
+fun getSlideStatus(tasks: List<TaskUiState>): TudeeUiStatus {
     val allTasksDone = tasks.all { it.status == TaskUiStatus.DONE }
     val allTasksNotFinished = tasks.size > 1 && !tasks.any { it.status == TaskUiStatus.DONE }
     return if (tasks.isEmpty())
-        TudeeStatus.POOR
+        TudeeUiStatus.POOR
     else if (allTasksNotFinished)
-        TudeeStatus.BAD
+        TudeeUiStatus.BAD
     else if (allTasksDone)
-        TudeeStatus.GOOD
+        TudeeUiStatus.GOOD
     else
-        TudeeStatus.OKAY
+        TudeeUiStatus.OKAY
 }
 
 @Preview

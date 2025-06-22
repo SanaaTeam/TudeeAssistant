@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.addEditTask
+package com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

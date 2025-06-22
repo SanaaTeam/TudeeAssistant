@@ -46,7 +46,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.categoryTask.composable.UpdateCurrentCategory
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.category.UpdateCurrentCategory
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject

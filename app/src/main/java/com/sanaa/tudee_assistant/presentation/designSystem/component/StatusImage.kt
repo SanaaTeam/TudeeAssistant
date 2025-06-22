@@ -13,18 +13,18 @@ import androidx.compose.ui.unit.Dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TudeeStatus
+import com.sanaa.tudee_assistant.presentation.model.TudeeUiStatus
 
 @Composable
-fun StatusImage(imageSize: Dp, status: TudeeStatus) {
+fun StatusImage(imageSize: Dp, status: TudeeUiStatus) {
     Image(
         modifier = Modifier.size(imageSize),
         painter = painterResource(
             id = when (status) {
-                TudeeStatus.GOOD -> R.drawable.good_statues
-                TudeeStatus.OKAY -> R.drawable.okay_statues
-                TudeeStatus.POOR -> R.drawable.poor_statues
-                TudeeStatus.BAD -> R.drawable.bad_staues
+                TudeeUiStatus.GOOD -> R.drawable.good_statues
+                TudeeUiStatus.OKAY -> R.drawable.okay_statues
+                TudeeUiStatus.POOR -> R.drawable.poor_statues
+                TudeeUiStatus.BAD -> R.drawable.bad_staues
             }
         ),
         contentDescription = null,
@@ -39,10 +39,10 @@ private fun Preview() {
             modifier = Modifier.padding(Theme.dimension.medium),
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
-            StatusImage(Theme.dimension.large, TudeeStatus.GOOD)
-            StatusImage(Theme.dimension.large, TudeeStatus.OKAY)
-            StatusImage(Theme.dimension.large, TudeeStatus.POOR)
-            StatusImage(Theme.dimension.large, TudeeStatus.BAD)
+            StatusImage(Theme.dimension.large, TudeeUiStatus.GOOD)
+            StatusImage(Theme.dimension.large, TudeeUiStatus.OKAY)
+            StatusImage(Theme.dimension.large, TudeeUiStatus.POOR)
+            StatusImage(Theme.dimension.large, TudeeUiStatus.BAD)
         }
     }
 }

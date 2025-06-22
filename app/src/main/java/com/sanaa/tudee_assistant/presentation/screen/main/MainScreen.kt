@@ -28,8 +28,6 @@ import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
 fun MainScreen(
     startDestination: Any,
     screenNavController: NavHostController,
-    isDarkTheme: Boolean,
-    onChangeTheme: () -> Unit,
     onStatusBarColor: (Color) -> Unit,
     navHostController: NavHostController,
 ) {
@@ -44,7 +42,6 @@ fun MainScreen(
         ) {
             composable<HomeScreenRoute> {
                 onStatusBarColor(Theme.color.primary)
-
                 HomeScreen()
             }
 

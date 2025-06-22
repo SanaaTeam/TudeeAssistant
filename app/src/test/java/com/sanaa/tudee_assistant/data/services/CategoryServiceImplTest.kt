@@ -1,14 +1,16 @@
 package com.sanaa.tudee_assistant.data.services
 
+import com.google.common.truth.Truth.assertThat
 import com.sanaa.tudee_assistant.data.local.dao.CategoryDao
 import com.sanaa.tudee_assistant.data.local.dto.CategoryLocalDto
-import com.sanaa.tudee_assistant.domain.exceptions.CategoryNotFoundException
 import com.sanaa.tudee_assistant.domain.exceptions.DatabaseFailureException
 import com.sanaa.tudee_assistant.domain.exceptions.DefaultCategoryException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddCategoryException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteCategoryException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateCategoryException
+import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
 import com.sanaa.tudee_assistant.domain.model.Category
+import com.sanaa.tudee_assistant.domain.model.NewCategory
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -17,7 +19,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -49,7 +50,7 @@ class CategoryServiceImplTest {
     fun `getCategoryById should throw CategoryNotFoundException when returns null`() = runTest {
         coEvery { categoryDao.getCategoryById(1) } returns null
 
-        assertThrows<CategoryNotFoundException> {
+        assertThrows<NotFoundException> {
             categoryService.getCategoryById(1)
         }
     }
@@ -77,7 +78,7 @@ class CategoryServiceImplTest {
     fun `addCategory should succeed when insert is successful`() = runTest {
         coEvery { categoryDao.insertCategory(any()) } returns 1L
 
-        categoryService.addCategory(fakeCategory)
+        categoryService.addCategory(NewCategory(fakeCategory.name, fakeCategory.imagePath))
 
         coVerify { categoryDao.insertCategory(match { it.name == fakeCategory.name }) }
     }
@@ -86,7 +87,14 @@ class CategoryServiceImplTest {
     fun `addCategory should throw FailedToAddCategoryException when insert fails`() = runTest {
         coEvery { categoryDao.insertCategory(any()) } returns -1L
 
-        val result = runCatching { categoryService.addCategory(fakeCategory) }
+        val result = runCatching {
+            categoryService.addCategory(
+                NewCategory(
+                    fakeCategory.name,
+                    fakeCategory.imagePath
+                )
+            )
+        }
 
         assertThat(result.exceptionOrNull()).isInstanceOf(FailedToAddCategoryException::class.java)
     }
@@ -133,7 +141,7 @@ class CategoryServiceImplTest {
 
             val result = runCatching { categoryService.deleteCategoryById(1) }
 
-            assertThat(result.exceptionOrNull()).isInstanceOf(CategoryNotFoundException::class.java)
+            assertThat(result.exceptionOrNull()).isInstanceOf(NotFoundException::class.java)
         }
 
     @Test

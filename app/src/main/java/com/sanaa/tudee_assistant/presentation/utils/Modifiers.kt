@@ -4,7 +4,6 @@ import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
@@ -86,7 +85,6 @@ fun Modifier.dropShadow(
     }
 }
 
-@Composable
 fun Modifier.drawDashedBorder(strokeColor: Color, cornerRadius: Dp): Modifier = this.then(
     Modifier.drawBehind {
         val stroke = Stroke(

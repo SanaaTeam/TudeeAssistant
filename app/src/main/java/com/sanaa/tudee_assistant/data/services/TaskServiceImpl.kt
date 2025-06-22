@@ -7,7 +7,8 @@ import com.sanaa.tudee_assistant.domain.exceptions.DatabaseFailureException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddTaskException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteTaskException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateTaskException
-import com.sanaa.tudee_assistant.domain.exceptions.TaskNotFoundException
+import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
+import com.sanaa.tudee_assistant.domain.model.NewTask
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 
-class TasksServiceImpl(
+class TaskServiceImpl(
     private val taskDao: TaskDao
 ) : TaskService {
 
@@ -33,8 +34,8 @@ class TasksServiceImpl(
     }
 
 
-    override suspend fun addTask(task: Task) {
-        if (taskDao.insertTask(task.toLocalDto()) == -1L) {
+    override suspend fun addTask(newTask: NewTask) {
+        if (taskDao.insertTask(newTask.toLocalDto()) == -1L) {
             throw FailedToAddTaskException()
         }
     }
@@ -59,7 +60,7 @@ class TasksServiceImpl(
     }
 
     override suspend fun getTaskById(taskId: Int): Task {
-        return taskDao.getTaskById(taskId)?.toDomain() ?: throw TaskNotFoundException()
+        return taskDao.getTaskById(taskId)?.toDomain() ?: throw NotFoundException()
     }
 
 

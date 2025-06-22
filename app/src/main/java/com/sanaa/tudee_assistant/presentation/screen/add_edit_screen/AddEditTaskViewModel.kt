@@ -6,21 +6,18 @@ import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.model.mapper.toState
-import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
-import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
-import com.sanaa.tudee_assistant.presentation.screen.category.toUiState
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toNewTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 class TaskFormViewModel(
     private val taskService: TaskService,
@@ -35,7 +32,7 @@ class TaskFormViewModel(
             categoryService.getCategories().collect { categoryList ->
                 _uiState.update {
                     it.copy(
-                        categories = categoryList.map { category -> category.toUiState(0) }
+                        categories = categoryList.map { category -> category.toState(0) }
                     )
                 }
             }
@@ -96,11 +93,11 @@ class TaskFormViewModel(
         }
     }
 
-    fun onCategorySelected(category: CategoryUiModel) {
+    fun onCategorySelected(category: CategoryUiState) {
         _uiState.update {
             it.copy(
                 selectedCategory = category,
-                taskUiState = it.taskUiState.copy(categoryId = category.id ?: -1)
+                taskUiState = it.taskUiState.copy(categoryId = category.id)
             )
         }
         validateInputs()
@@ -111,10 +108,10 @@ class TaskFormViewModel(
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, error = null) }
-                val task = uiState.value.taskUiState.copy(
+                val newTask = uiState.value.taskUiState.copy(
                     status = TaskUiStatus.TODO
-                ).toTask(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
-                taskService.addTask(task)
+                ).toNewTask()
+                taskService.addTask(newTask)
                 _uiState.update { it.copy(isOperationSuccessful = true, isLoading = false) }
             } catch (e: Exception) {
                 handleError(e)
@@ -127,9 +124,7 @@ class TaskFormViewModel(
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, error = null) }
-                val task = uiState.value.taskUiState.toTask(
-                    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-                )
+                val task = uiState.value.taskUiState.toTask()
                 taskService.updateTask(task)
                 _uiState.update { it.copy(isOperationSuccessful = true, isLoading = false) }
             } catch (e: Exception) {

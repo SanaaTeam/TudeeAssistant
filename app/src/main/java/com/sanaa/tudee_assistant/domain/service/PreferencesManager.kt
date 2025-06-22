@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.domain
+package com.sanaa.tudee_assistant.domain.service
 
 import kotlinx.coroutines.flow.Flow
 

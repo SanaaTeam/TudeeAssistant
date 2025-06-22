@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
+import com.sanaa.tudee_assistant.domain.model.NewTask
 import com.sanaa.tudee_assistant.domain.model.Task
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,7 +22,7 @@ import org.junit.jupiter.api.Test
 class TasksServiceImplTest {
 
     private val taskDao = mockk<TaskDao>(relaxed = true)
-    private val tasksService = TasksServiceImpl(taskDao)
+    private val tasksService = TaskServiceImpl(taskDao)
 
 
     @Test
@@ -54,7 +55,7 @@ class TasksServiceImplTest {
         every { taskDao.getAllTasks() } throws Exception("Database error")
 
         // When
-        val result = kotlin.runCatching { tasksService.getAllTasks().toList() }
+        val result = runCatching { tasksService.getAllTasks().toList() }
 
         // Then
         assertThat(result.isFailure).isTrue()
@@ -66,10 +67,10 @@ class TasksServiceImplTest {
         coEvery { taskDao.insertTask(any()) } returns 1
 
         // When
-        tasksService.addTask(fakeTasks[0].toDomain())
+        tasksService.addTask(fakeTasks[0].toNewTask())
 
         // Then
-        coVerify(exactly = 1) { taskDao.insertTask(match { it.taskId == fakeTasks[0].taskId }) }
+        coVerify(exactly = 1) { taskDao.insertTask(match { it.title == fakeTasks[0].title }) }
     }
 
     @Test
@@ -77,7 +78,7 @@ class TasksServiceImplTest {
         // Given
         coEvery { taskDao.insertTask(any()) } returns -1
         // When
-        val result = runCatching { tasksService.addTask(fakeTasks[0].toDomain()) }
+        val result = runCatching { tasksService.addTask(fakeTasks[0].toNewTask()) }
         // Then
         assertThat(result.isFailure).isTrue()
     }
@@ -195,16 +196,10 @@ class TasksServiceImplTest {
             // Given
             every { taskDao.getTasksByDate(any()) } returns flowOf(fakeTasks)
             // When
-            tasksService.getTasksByDueDate(fakeTasks[0].dueDate ?: LocalDate(2023, 1, 1)).toList()
+            tasksService.getTasksByDueDate(fakeTasks[0].dueDate).toList()
             // Then
             coVerify(exactly = 1) {
-                taskDao.getTasksByDate(
-                    fakeTasks[0].dueDate ?: LocalDate(
-                        2023,
-                        1,
-                        1
-                    )
-                )
+                taskDao.getTasksByDate(fakeTasks[0].dueDate)
             }
         }
 
@@ -215,13 +210,7 @@ class TasksServiceImplTest {
             every { taskDao.getTasksByDate(any()) } throws Exception("Database error")
             // When
             val result = runCatching {
-                tasksService.getTasksByDueDate(
-                    fakeTasks[0].dueDate ?: LocalDate(
-                        2023,
-                        1,
-                        1
-                    )
-                ).toList()
+                tasksService.getTasksByDueDate(fakeTasks[0].dueDate).toList()
             }
             // Then
             assertThat(result.isFailure).isTrue()
@@ -240,4 +229,15 @@ class TasksServiceImplTest {
             createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
         )
     )
+
+    private fun TaskLocalDto.toNewTask() : NewTask{
+        return NewTask(
+            title = title,
+            description = description,
+            status = status,
+            dueDate = dueDate,
+            priority = priority,
+            categoryId = categoryId
+        )
+    }
 }

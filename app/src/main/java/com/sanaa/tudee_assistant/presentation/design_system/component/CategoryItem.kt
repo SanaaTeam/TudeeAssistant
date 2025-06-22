@@ -16,15 +16,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
-import com.sanaa.tudee_assistant.presentation.utils.CategoryThumbnail
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 
 @Composable
 fun CategoryItem(
     modifier: Modifier = Modifier,
-    category: CategoryUiModel,
+    category: CategoryUiState,
     onClick: () -> Unit,
     topContent: @Composable () -> Unit = {},
 ) {
@@ -73,7 +73,8 @@ fun CategoryItem(
 private fun CategoryDarkPreview() {
     TudeeTheme(true) {
         CategoryItem(
-            category = CategoryUiModel(
+            category = CategoryUiState(
+                id = 0,
                 name = "Education",
                 imagePath = "file:///android_asset/categories/education.png",
                 isDefault = true,
@@ -92,7 +93,8 @@ private fun CategoryDarkPreview() {
 private fun CategoryLightPreview() {
     TudeeTheme(false) {
         CategoryItem(
-            category = CategoryUiModel(
+            category = CategoryUiState(
+                id = 0,
                 name = "Education",
                 imagePath = "file:///android_asset/categories/education.png",
                 isDefault = true,

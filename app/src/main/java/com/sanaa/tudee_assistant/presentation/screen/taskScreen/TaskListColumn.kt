@@ -27,14 +27,14 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
 fun TaskListColumn(
     taskList: List<TaskUiState>,
-    categories: List<CategoryUiModel>,
+    categories: List<CategoryUiState>,
     onTaskSwipe: (TaskUiState) -> Boolean = { true },
     onTaskClick: (TaskUiState) -> Unit,
 ) {

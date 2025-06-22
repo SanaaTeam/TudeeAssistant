@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.utils
+package com.sanaa.tudee_assistant.presentation.composable
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

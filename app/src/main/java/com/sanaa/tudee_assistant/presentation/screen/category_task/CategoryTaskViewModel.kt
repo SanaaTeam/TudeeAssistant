@@ -3,13 +3,10 @@ package com.sanaa.tudee_assistant.presentation.screen.category_task
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
-import com.sanaa.tudee_assistant.presentation.model.TaskUiModel
-import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.CategoryTaskUiState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,8 +19,8 @@ class CategoryTaskViewModel(
     private val taskService: TaskService
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(CategoryTaskUiState())
-    val state: StateFlow<CategoryTaskUiState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(CategoryTaskScreenUiState())
+    val state: StateFlow<CategoryTaskScreenUiState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -60,7 +57,7 @@ class CategoryTaskViewModel(
                         )
                     }
                     .collect { tasks ->
-                        val uiTasks = tasks.map { it.toUiModel(category.imagePath) }
+                        val uiTasks = tasks.map { it.toState() }
 
                         _state.value = _state.value.copy(
                             isLoading = false,
@@ -145,26 +142,5 @@ class CategoryTaskViewModel(
                 }
             }
         }
-    }
-
-    private fun Task.toUiModel(categoryImagePath: String): TaskUiModel {
-        return TaskUiModel(
-            id = id,
-            title = title,
-            description = description,
-            dueDate = dueDate?.toString(),
-            categoryImagePath = categoryImagePath,
-            priority = when (priority) {
-                Task.TaskPriority.HIGH -> TaskUiPriority.HIGH
-                Task.TaskPriority.MEDIUM -> TaskUiPriority.MEDIUM
-                Task.TaskPriority.LOW -> TaskUiPriority.LOW
-            },
-            status = when (status) {
-                Task.TaskStatus.TODO -> TaskUiStatus.TODO
-                Task.TaskStatus.IN_PROGRESS -> TaskUiStatus.IN_PROGRESS
-                Task.TaskStatus.DONE -> TaskUiStatus.DONE
-            },
-            categoryId = categoryId
-        )
     }
 }

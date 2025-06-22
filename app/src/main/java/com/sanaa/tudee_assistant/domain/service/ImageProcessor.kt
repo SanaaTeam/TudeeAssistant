@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.domain
+package com.sanaa.tudee_assistant.domain.service
 
 import android.graphics.Bitmap
 import android.net.Uri

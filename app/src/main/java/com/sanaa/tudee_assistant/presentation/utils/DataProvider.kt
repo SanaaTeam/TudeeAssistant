@@ -3,6 +3,9 @@ package com.sanaa.tudee_assistant.presentation.utils
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 object DataProvider {
 
@@ -11,7 +14,7 @@ object DataProvider {
             id = 1,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
+            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
             priority = TaskUiPriority.MEDIUM,
             status = TaskUiStatus.IN_PROGRESS,
             categoryId = 1
@@ -29,7 +32,7 @@ object DataProvider {
             id = 3,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
+            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
             priority = TaskUiPriority.MEDIUM,
             status = TaskUiStatus.DONE,
             categoryId = 3
@@ -38,7 +41,7 @@ object DataProvider {
             id = 4,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
+            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
             priority = TaskUiPriority.HIGH,
             status = TaskUiStatus.TODO,
             categoryId = 4
@@ -47,16 +50,17 @@ object DataProvider {
             id = 5,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
+            dueDate = Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
             priority = TaskUiPriority.LOW,
             status = TaskUiStatus.IN_PROGRESS,
-            categoryId = 5
+            categoryId = 5,
         ),
         TaskUiState(
             id = 6,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = null,
+            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
             priority = TaskUiPriority.LOW,
             status = TaskUiStatus.TODO,
             categoryId = 6

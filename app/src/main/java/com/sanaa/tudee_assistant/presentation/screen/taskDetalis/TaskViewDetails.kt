@@ -26,6 +26,9 @@ import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -133,7 +136,7 @@ private fun PreviewUpdateTaskStatus() {
                 id = 1,
                 title = "Organize Study Desk",
                 description = "Review cell structure and functions for tomorrow...",
-                dueDate = null,
+                dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
                 categoryId = 1,
                 priority = TaskUiPriority.MEDIUM,
                 status = TaskUiStatus.IN_PROGRESS,

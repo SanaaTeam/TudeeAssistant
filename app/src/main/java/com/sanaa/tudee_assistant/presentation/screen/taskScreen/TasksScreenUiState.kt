@@ -1,7 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -20,6 +20,7 @@ data class TasksScreenUiState(
     val showDeleteDialog: Boolean = false,
     val selectedTaskUiStatus: TaskUiStatus = TaskUiStatus.TODO,
     val selectedTask: TaskUiState? = null,
-    val selectedDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-    val categories: List<CategoryUiModel> = emptyList(),
+    val selectedDate: LocalDate = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    val categories: List<CategoryUiState> = emptyList(),
 )

@@ -44,11 +44,9 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.TabItem
 import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskUiModel
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.category_task.composable.UpdateCurrentCategory
-import com.sanaa.tudee_assistant.presentation.state.CategoryTaskUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -81,7 +79,7 @@ fun CategoryTaskScreen(
 
 @Composable
 fun CategoryTaskScreenContent(
-    state: CategoryTaskUiState,
+    state: CategoryTaskScreenUiState,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     onEditCategory: (Int) -> Unit = {},
@@ -99,6 +97,11 @@ fun CategoryTaskScreenContent(
         ) {
             TasksList(
                 tasks = state.inProgressTasks,
+                categoryImagePath = state.categoryImagePath,
+            )
+            TasksList(
+                tasks = state.todoTasks,
+                categoryImagePath = state.categoryImagePath,
             )
         },
         TabItem(
@@ -107,6 +110,7 @@ fun CategoryTaskScreenContent(
         ) {
             TasksList(
                 tasks = state.todoTasks,
+                categoryImagePath = state.categoryImagePath,
             )
         },
         TabItem(
@@ -115,6 +119,7 @@ fun CategoryTaskScreenContent(
         ) {
             TasksList(
                 tasks = state.doneTasks,
+                categoryImagePath = state.categoryImagePath,
             )
         }
     )
@@ -274,7 +279,8 @@ fun CategoryTaskScreenContent(
 
 @Composable
 private fun TasksList(
-    tasks: List<TaskUiModel>,
+    tasks: List<TaskUiState>,
+    categoryImagePath: String,
     modifier: Modifier = Modifier,
 ) {
     if (tasks.isEmpty()) {
@@ -310,7 +316,7 @@ private fun TasksList(
                         status = task.status,
                         categoryId = task.categoryId
                     ),
-                    categoryImagePath = task.categoryImagePath
+                    categoryImagePath = categoryImagePath
                 )
             }
         }
@@ -325,44 +331,44 @@ private fun CategoryTaskScreenPreview() {
         val viewModel = koinViewModel<CategoryTaskViewModel>()
 
         CategoryTaskScreenContent(
-            state = CategoryTaskUiState(
+            state = CategoryTaskScreenUiState(
                 categoryName = "Work",
                 isDefault = false,
                 categoryId = 1,
                 todoTasks = listOf(
-                    TaskUiModel(
+                    TaskUiState(
                         1,
                         "Task 1",
                         "Description",
                         "12-03-2025",
-                        "",
                         TaskUiPriority.HIGH,
                         TaskUiStatus.TODO,
-                        1
+                        1,
+                        "",
                     )
                 ),
                 inProgressTasks = listOf(
-                    TaskUiModel(
+                    TaskUiState(
                         2,
                         "Task 2",
                         "Description",
                         "12-03-2025",
-                        "",
                         TaskUiPriority.MEDIUM,
                         TaskUiStatus.IN_PROGRESS,
-                        1
+                        1,
+                        "",
                     )
                 ),
                 doneTasks = listOf(
-                    TaskUiModel(
+                    TaskUiState(
                         3,
                         "Task 3",
                         "Description",
                         "12-03-2025",
-                        "",
                         TaskUiPriority.LOW,
                         TaskUiStatus.DONE,
-                        1
+                        1,
+                        "",
                     )
                 )
             ),

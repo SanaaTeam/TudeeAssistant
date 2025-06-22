@@ -1,11 +1,12 @@
 package com.sanaa.tudee_assistant.domain.service
 
+import com.sanaa.tudee_assistant.domain.model.NewTask
 import com.sanaa.tudee_assistant.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
 
 interface TaskService {
-    suspend fun addTask(task: Task)
+    suspend fun addTask(newTask: NewTask)
     suspend fun updateTask(task: Task)
     suspend fun deleteTaskById(taskId: Int)
     suspend fun deleteAllTasks()

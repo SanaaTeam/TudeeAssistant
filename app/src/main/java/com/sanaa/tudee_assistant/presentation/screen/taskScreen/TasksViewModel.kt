@@ -2,21 +2,18 @@ package com.sanaa.tudee_assistant.presentation.screen.taskScreen
 
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.domain.model.NewTask
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toTask
-import com.sanaa.tudee_assistant.presentation.screen.taskScreen.mapper.toUiModel
-import com.sanaa.tudee_assistant.presentation.screen.category.toUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 
 class TaskViewModel(
@@ -29,7 +26,7 @@ class TaskViewModel(
             categoryService.getCategories().collect { categoryList ->
                 _state.update {
                     it.copy(
-                        categories = categoryList.map { category -> category.toUiState(0) }
+                        categories = categoryList.map { category -> category.toState(0) }
                     )
                 }
             }
@@ -46,7 +43,7 @@ class TaskViewModel(
                 .collect { taskList ->
                     _state.update {
                         it.copy(
-                            currentDateTasks = taskList.map { task -> task.toUiModel() },
+                            currentDateTasks = taskList.map { task -> task.toState() },
                             isLoading = false
                         )
                     }
@@ -73,16 +70,13 @@ class TaskViewModel(
             _state.update { it.copy(isLoading = true) }
             runCatching {
                 taskService.addTask(
-                    Task(
-                        id = 2,
+                    NewTask(
                         title = "Organize ",
                         description = "Hello world ",
                         status = Task.TaskStatus.TODO,
                         dueDate = LocalDate(2025, 6, 19),
                         priority = Task.TaskPriority.HIGH,
                         categoryId = 1,
-                        createdAt = Clock.System.now()
-                            .toLocalDateTime(TimeZone.UTC),
                     )
                 )
             }
@@ -153,11 +147,7 @@ class TaskViewModel(
             )?.let { updatedTask ->
                 runCatching {
                     taskService.updateTask(
-                        updatedTask.toTask(
-                            createdAt = Clock.System.now().toLocalDateTime(
-                                TimeZone.UTC
-                            )
-                        )
+                        updatedTask.toTask()
                     )
                 }.onSuccess {
                     handleOnSuccess(

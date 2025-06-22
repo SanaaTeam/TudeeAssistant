@@ -30,7 +30,7 @@ import com.sanaa.tudee_assistant.presentation.design_system.component.button.Pri
 import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -40,14 +40,14 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 fun TaskForm(
     uiState: AddTaskUiState,
-    categories: List<CategoryUiModel>,
+    categories: List<CategoryUiState>,
     isEditMode: Boolean,
     showDatePickerDialog: Boolean,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onPrioritySelected: (TaskUiPriority) -> Unit,
-    onCategorySelected: (CategoryUiModel) -> Unit,
+    onCategorySelected: (CategoryUiState) -> Unit,
     onPrimaryButtonClick: () -> Unit,
     onDismiss: () -> Unit,
     onDatePickerShow: () -> Unit,
@@ -103,7 +103,7 @@ fun TaskForm(
                         .clickable { onDatePickerShow() },
                     placeholder = Clock.System.now()
                         .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
-                    value = uiState.taskUiState.dueDate ?: "",
+                    value = uiState.taskUiState.dueDate,
                     onValueChange = {},
                     readOnly = true,
                     enabled = false,

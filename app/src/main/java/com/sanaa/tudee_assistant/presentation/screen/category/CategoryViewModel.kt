@@ -3,9 +3,12 @@ package com.sanaa.tudee_assistant.presentation.screen.category
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.domain.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toNewCategory
+import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -19,8 +22,8 @@ class CategoryViewModel(
 
     ) : ViewModel() {
 
-    private val _state = MutableStateFlow(CategoryUiState())
-    val state: StateFlow<CategoryUiState>
+    private val _state = MutableStateFlow(CategoryScreenUiState())
+    val state: StateFlow<CategoryScreenUiState>
         get() = _state
 
     init {
@@ -34,9 +37,9 @@ class CategoryViewModel(
             categoryService.getCategories().collect { categoryList ->
                 val mappedList = categoryList.map { category ->
                     val taskCount = taskService
-                        .getTaskCountByCategoryId(category.id ?: 0)
+                        .getTaskCountByCategoryId(category.id)
                         .first()
-                    category.toUiState(taskCount)
+                    category.toState(taskCount)
                 }
 
                 _state.update {
@@ -48,21 +51,22 @@ class CategoryViewModel(
         }
     }
 
-    fun addNewCategory(categoryUiModel: CategoryUiModel) {
+    fun addNewCategory(categoryUiState: CategoryUiState) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             val imagePath = imageProcessor.saveImageToInternalStorage(
-                imageProcessor.processImage(categoryUiModel.imagePath.toUri())
+                imageProcessor.processImage(categoryUiState.imagePath.toUri())
             )
 
-            val newCategory = CategoryUiModel(
-                name = categoryUiModel.name,
+            val newCategory = CategoryUiState(
+                id = 0,
+                name = categoryUiState.name,
                 imagePath = imagePath,
                 isDefault = false,
-                tasksCount = 0
+                tasksCount = 0,
             )
 
-            categoryService.addCategory(newCategory.toCategory())
+            categoryService.addCategory(newCategory.toNewCategory())
             _state.update { it.copy(isLoading = false) }
         }
     }

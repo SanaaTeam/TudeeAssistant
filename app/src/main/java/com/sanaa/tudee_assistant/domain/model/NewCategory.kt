@@ -1,8 +1,6 @@
 package com.sanaa.tudee_assistant.domain.model
 
-data class Category(
-    val id: Int,
+class NewCategory(
     val name: String,
     val imagePath: String,
-    val isDefault: Boolean,
 )

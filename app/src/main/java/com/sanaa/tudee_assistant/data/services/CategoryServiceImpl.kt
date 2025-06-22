@@ -3,13 +3,14 @@ package com.sanaa.tudee_assistant.data.services
 import com.sanaa.tudee_assistant.data.local.dao.CategoryDao
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
 import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
-import com.sanaa.tudee_assistant.domain.exceptions.CategoryNotFoundException
 import com.sanaa.tudee_assistant.domain.exceptions.DatabaseFailureException
 import com.sanaa.tudee_assistant.domain.exceptions.DefaultCategoryException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddCategoryException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteCategoryException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateCategoryException
+import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
 import com.sanaa.tudee_assistant.domain.model.Category
+import com.sanaa.tudee_assistant.domain.model.NewCategory
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -20,7 +21,7 @@ class CategoryServiceImpl(
 ) : CategoryService {
     override suspend fun getCategoryById(categoryId: Int): Category {
         return categoryDao.getCategoryById(categoryId)?.toDomain()
-            ?: throw CategoryNotFoundException()
+            ?: throw NotFoundException()
     }
 
     override fun getCategories(): Flow<List<Category>> =
@@ -34,8 +35,8 @@ class CategoryServiceImpl(
                 )
             }
 
-    override suspend fun addCategory(category: Category) {
-        if (categoryDao.insertCategory(category.toLocalDto()) == -1L) {
+    override suspend fun addCategory(newCategory: NewCategory) {
+        if (categoryDao.insertCategory(newCategory.toLocalDto()) == -1L) {
             throw FailedToAddCategoryException()
         }
     }
@@ -48,7 +49,7 @@ class CategoryServiceImpl(
 
     override suspend fun deleteCategoryById(categoryId: Int) {
         val category = categoryDao.getCategoryById(categoryId)
-            ?: throw CategoryNotFoundException()
+            ?: throw NotFoundException()
         if (category.isDefault) {
             throw DefaultCategoryException()
         }

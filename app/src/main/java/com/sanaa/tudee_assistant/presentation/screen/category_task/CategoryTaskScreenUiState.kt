@@ -1,16 +1,16 @@
-package com.sanaa.tudee_assistant.presentation.state
+package com.sanaa.tudee_assistant.presentation.screen.category_task
 
-import com.sanaa.tudee_assistant.presentation.model.TaskUiModel
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
-data class CategoryTaskUiState(
+data class CategoryTaskScreenUiState(
     val isLoading: Boolean = false,
     val categoryId: Int = 1,
     val categoryName: String = "",
     val categoryImagePath: String = "",
     val isDefault: Boolean = true,
-    val todoTasks: List<TaskUiModel> = emptyList(),
-    val inProgressTasks: List<TaskUiModel> = emptyList(),
-    val doneTasks: List<TaskUiModel> = emptyList(),
+    val todoTasks: List<TaskUiState> = emptyList(),
+    val inProgressTasks: List<TaskUiState> = emptyList(),
+    val doneTasks: List<TaskUiState> = emptyList(),
     val error: String? = null
 ) {
     val todoTasksCount: Int get() = todoTasks.size

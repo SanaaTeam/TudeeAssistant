@@ -70,29 +70,23 @@ fun HomeScreen(viewModel: HomeScreenViewModel = koinViewModel()) {
     val themeController = LocalColorThemeController.current
     val state by viewModel.state.collectAsState()
 
+    val actionsListener = object : HomeScreenActionsListener by viewModel {
+        override fun onChangeTheme(isDark: Boolean) {
+            viewModel.onChangeTheme(isDark)
+            themeController.toggleTheme()
+        }
+    }
+
     HomeScreenContent(
         state = state,
-        onChangeTheme = { isDarkTheme ->
-            viewModel.onChangeTheme(isDarkTheme)
-            themeController.toggleTheme()
-        },
-        viewModel::onAddTask,
-        viewModel::onTaskClick,
-        viewModel::onOpenCategory,
-        viewModel::onAddTaskSuccess,
-        viewModel::onAddTaskHasError,
+        actionsListener = actionsListener,
     )
 }
 
 @Composable
 fun HomeScreenContent(
     state: HomeScreenUiState,
-    onChangeTheme: (Boolean) -> Unit,
-    onAddTask: () -> Unit,
-    onTaskClick: (TaskUiState) -> Unit,
-    onOpenCategory: (TaskUiStatus) -> Unit,
-    onAddTaskSuccess: () -> Unit,
-    onAddTaskHasError: (String) -> Unit,
+    actionsListener: HomeScreenActionsListener,
 ) {
     val scrollState = rememberLazyListState()
     var showEditTaskBottomSheet by remember { mutableStateOf(false) }
@@ -120,7 +114,7 @@ fun HomeScreenContent(
                 tailComponent = {
                     DarkModeThemeSwitchButton(
                         state.isDarkTheme,
-                        onCheckedChange = { onChangeTheme(state.isDarkTheme.not()) }
+                        onCheckedChange = { actionsListener.onChangeTheme(state.isDarkTheme.not()) }
                     )
                 }
             )
@@ -128,8 +122,12 @@ fun HomeScreenContent(
             if (isScrolled) {
                 Line()
             }
-
-            CategoryList(scrollState, state, onOpenCategory, onTaskClick)
+            CategoryList(
+                scrollState,
+                state,
+                onOpenCategory = { actionsListener.onOpenCategory(it) },
+                onTaskClick = { actionsListener.onTaskClick(it) }
+            )
         }
 
 
@@ -140,7 +138,7 @@ fun HomeScreenContent(
             iconRes = R.drawable.note_add,
         ) {
             showEditTaskBottomSheet = true
-            onAddTask()
+            actionsListener.onAddTask()
         }
 
         if (showEditTaskBottomSheet) {
@@ -151,15 +149,16 @@ fun HomeScreenContent(
                 },
                 onSuccess = {
                     showEditTaskBottomSheet = false
-                    onAddTaskSuccess()
+                    actionsListener.onAddTaskSuccess()
                 },
                 onError = { errorMessage ->
-                    onAddTaskHasError(errorMessage)
+                    actionsListener.onAddTaskHasError(errorMessage)
                 }
             )
         }
     }
 }
+
 
 @Composable
 private fun Line() {
@@ -428,8 +427,21 @@ fun PreviewHomeScreen() {
     TudeeTheme(isDark = isDark) {
         val list = DataProvider.getTasksSample()
 
+        val previewActions = object : HomeScreenActionsListener {
+            override fun onChangeTheme(isDarkValue: Boolean) {
+                isDark = isDarkValue
+            }
+
+            override fun onAddTask() {}
+            override fun onTaskClick(task: TaskUiState) {}
+            override fun onOpenCategory(status: TaskUiStatus) {}
+            override fun onAddTaskSuccess() {}
+            override fun onAddTaskHasError(error: String) {}
+        }
+
         HomeScreenContent(
-            HomeScreenUiState(
+            state = HomeScreenUiState(
+                isDarkTheme = isDark,
                 dayDate = dayDate,
                 taskCounts = listOf(
                     Pair(list.filter { it.status == TaskUiStatus.DONE }.size, TaskUiStatus.DONE),
@@ -441,8 +453,7 @@ fun PreviewHomeScreen() {
                 ),
                 tasks = list
             ),
-            onChangeTheme = { isDark = !isDark },
-            {}, {}, {}, {}, {}
+            actionsListener = previewActions
         )
     }
 }

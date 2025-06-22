@@ -16,7 +16,7 @@ class HomeScreenViewModel(
     private val preferencesManager: PreferencesManager,
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()) {
+) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()), HomeScreenActionsListener {
 
     init {
         loadScreen()
@@ -51,28 +51,28 @@ class HomeScreenViewModel(
         }
     }
 
-    fun onAddTask() {
+    override fun onAddTask() {
     }
 
-    fun onChangeTheme(isDarkTheme: Boolean) {
+    override fun onChangeTheme(isDarkTheme: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             preferencesManager.setDarkTheme(isDarkTheme)
         }
     }
 
-    fun onAddTaskSuccess() {
+    override fun onAddTaskSuccess() {
         getTasks()
     }
 
-    fun onAddTaskHasError(errorMessage: String) {
+    override fun onAddTaskHasError(errorMessage: String) {
 
     }
 
-    fun onTaskClick(categoryTaskState: TaskUiState) {
+    override fun onTaskClick(categoryTaskState: TaskUiState) {
 
     }
 
-    fun onOpenCategory(taskUiStatus: TaskUiStatus) {
+    override fun onOpenCategory(taskUiStatus: TaskUiStatus) {
 
     }
 }

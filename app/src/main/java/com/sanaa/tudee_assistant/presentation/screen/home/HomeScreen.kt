@@ -44,19 +44,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.design_system.component.AppBar
-import com.sanaa.tudee_assistant.presentation.design_system.component.CategoryTaskCard
-import com.sanaa.tudee_assistant.presentation.design_system.component.DarkModeThemeSwitchButton
-import com.sanaa.tudee_assistant.presentation.design_system.component.EmptyScreen
-import com.sanaa.tudee_assistant.presentation.design_system.component.PriorityTag
-import com.sanaa.tudee_assistant.presentation.design_system.component.Slider
-import com.sanaa.tudee_assistant.presentation.design_system.component.TaskCountByStatusCard
-import com.sanaa.tudee_assistant.presentation.design_system.component.button.FloatingActionButton
-import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.design_system.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
+import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
+import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
+import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
+import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskCountByStatusCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.design_system.color.LocalColorThemeController
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.add_edit_screen.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.screen.category.CategoryUiModel
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.formatDateTime
@@ -66,34 +67,27 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(
-    isDark: Boolean,
-    onChangeTheme: () -> Unit,
-    viewModel: HomeScreenViewModel = koinViewModel(),
-) {
+fun HomeScreen(viewModel: HomeScreenViewModel = koinViewModel()) {
+    val themeController = LocalColorThemeController.current
     val state by viewModel.state.collectAsState()
+
+    val actionsListener = object : HomeScreenActionsListener by viewModel {
+        override fun onChangeTheme(isDark: Boolean) {
+            viewModel.onChangeTheme(isDark)
+            themeController.toggleTheme()
+        }
+    }
+
     HomeScreenContent(
-        isDark = isDark,
         state = state,
-        onChangeTheme = onChangeTheme,
-        viewModel::onAddTask,
-        viewModel::onTaskClick,
-        viewModel::onOpenCategory,
-        viewModel::onAddTaskSuccess,
-        viewModel::onAddTaskHasError,
+        actionsListener = actionsListener,
     )
 }
 
 @Composable
 fun HomeScreenContent(
-    isDark: Boolean,
     state: HomeScreenUiState,
-    onChangeTheme: () -> Unit,
-    onAddTask: () -> Unit,
-    onTaskClick: (TaskUiState) -> Unit,
-    onOpenCategory: (TaskUiStatus) -> Unit,
-    onAddTaskSuccess: () -> Unit,
-    onAddTaskHasError: (String) -> Unit,
+    actionsListener: HomeScreenActionsListener,
 ) {
     val scrollState = rememberLazyListState()
     var showEditTaskBottomSheet by remember { mutableStateOf(false) }
@@ -120,18 +114,21 @@ fun HomeScreenContent(
             AppBar(
                 tailComponent = {
                     DarkModeThemeSwitchButton(
-                        isDark,
-                        onCheckedChange = {
-                            onChangeTheme()
-                        })
+                        state.isDarkTheme,
+                        onCheckedChange = { actionsListener.onChangeTheme(state.isDarkTheme.not()) }
+                    )
                 }
             )
 
             if (isScrolled) {
                 Line()
             }
-
-            CategoryList(scrollState, state, onOpenCategory, onTaskClick)
+            CategoryList(
+                scrollState,
+                state,
+                onOpenCategory = { actionsListener.onOpenCategory(it) },
+                onTaskClick = { actionsListener.onTaskClick(it) }
+            )
         }
 
 
@@ -142,7 +139,7 @@ fun HomeScreenContent(
             iconRes = R.drawable.note_add,
         ) {
             showEditTaskBottomSheet = true
-            onAddTask()
+            actionsListener.onAddTask()
         }
 
         if (showEditTaskBottomSheet) {
@@ -153,15 +150,16 @@ fun HomeScreenContent(
                 },
                 onSuccess = {
                     showEditTaskBottomSheet = false
-                    onAddTaskSuccess()
+                    actionsListener.onAddTaskSuccess()
                 },
                 onError = { errorMessage ->
-                    onAddTaskHasError(errorMessage)
+                    actionsListener.onAddTaskHasError(errorMessage)
                 }
             )
         }
     }
 }
+
 
 @Composable
 private fun Line() {
@@ -278,7 +276,7 @@ private fun CategoryList(
 @Composable
 private fun CategoryList(
     items: List<TaskUiState>,
-    categories: List<CategoryUiModel>,
+    categories: List<CategoryUiState>,
     onClick: (TaskUiState) -> Unit,
 ) {
     LazyHorizontalGrid(
@@ -439,9 +437,21 @@ fun PreviewHomeScreen() {
     TudeeTheme(isDark = isDark) {
         val list = DataProvider.getTasksSample()
 
+        val previewActions = object : HomeScreenActionsListener {
+            override fun onChangeTheme(isDarkValue: Boolean) {
+                isDark = isDarkValue
+            }
+
+            override fun onAddTask() {}
+            override fun onTaskClick(task: TaskUiState) {}
+            override fun onOpenCategory(status: TaskUiStatus) {}
+            override fun onAddTaskSuccess() {}
+            override fun onAddTaskHasError(error: String) {}
+        }
+
         HomeScreenContent(
-            isDark,
-            HomeScreenUiState(
+            state = HomeScreenUiState(
+                isDarkTheme = isDark,
                 dayDate = dayDate,
                 taskCounts = listOf(
                     Pair(list.filter { it.status == TaskUiStatus.DONE }.size, TaskUiStatus.DONE),
@@ -453,7 +463,7 @@ fun PreviewHomeScreen() {
                 ),
                 tasks = list
             ),
-            onChangeTheme = { isDark = !isDark }, {}, {}, {}, {}, {}
+            actionsListener = previewActions
         )
     }
 }

@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.core.graphics.scale
-import com.sanaa.tudee_assistant.domain.ImageProcessor
+import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

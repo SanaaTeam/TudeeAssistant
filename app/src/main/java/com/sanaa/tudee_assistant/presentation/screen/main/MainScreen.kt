@@ -13,23 +13,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeBottomNavBar
-import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeBottomNavBarItem
-import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBar
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBarItem
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.route.CategoriesScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryScreen
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
-import com.sanaa.tudee_assistant.presentation.screen.taskScreen.TasksScreen
+import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
 
 @Composable
 fun MainScreen(
     startDestination: Any,
     screenNavController: NavHostController,
-    isDarkTheme: Boolean,
-    onChangeTheme: () -> Unit,
     onStatusBarColor: (Color) -> Unit,
     navHostController: NavHostController,
 ) {
@@ -44,11 +42,7 @@ fun MainScreen(
         ) {
             composable<HomeScreenRoute> {
                 onStatusBarColor(Theme.color.primary)
-
-                HomeScreen(
-                    isDark = isDarkTheme,
-                    onChangeTheme = onChangeTheme,
-                )
+                HomeScreen()
             }
 
             composable<TasksScreenRoute> {

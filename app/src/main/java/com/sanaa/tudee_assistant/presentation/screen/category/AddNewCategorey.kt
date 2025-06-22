@@ -23,13 +23,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.design_system.component.BaseBottomSheet
-import com.sanaa.tudee_assistant.presentation.design_system.component.TudeeTextField
-import com.sanaa.tudee_assistant.presentation.design_system.component.UploadBox
-import com.sanaa.tudee_assistant.presentation.design_system.component.button.PrimaryButton
-import com.sanaa.tudee_assistant.presentation.design_system.component.button.SecondaryButton
-import com.sanaa.tudee_assistant.presentation.design_system.theme.Theme
-import com.sanaa.tudee_assistant.presentation.design_system.theme.dropShadowColor
+import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeTextField
+import com.sanaa.tudee_assistant.presentation.designSystem.component.UploadBox
+import com.sanaa.tudee_assistant.presentation.designSystem.component.button.PrimaryButton
+import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryButton
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
 import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
@@ -99,7 +99,7 @@ fun AddNewCategoryContent(
                         TudeeTextField(
                             placeholder = stringResource(R.string.category_title),
                             value = categoryTitle,
-                            icon = painterResource(R.drawable.menu_circle),
+                            icon = painterResource(R.drawable.menu),
                             onValueChange = onCategoryTitleChange,
                             modifier = Modifier.padding(top = Theme.dimension.regular)
                         )

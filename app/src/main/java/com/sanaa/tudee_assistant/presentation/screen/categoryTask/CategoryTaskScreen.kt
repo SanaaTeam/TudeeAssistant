@@ -55,12 +55,15 @@ fun CategoryTaskScreenContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .background(color = Theme.color.surface)
+            .fillMaxWidth()
     ) {
         CategoryTaskHeaderComponent(
             title = state.currentCategory.name,
             onEditClick = { listener.onEditClicked() },
             onBackClick = {},
+            isEditable = state.currentCategory.isDefault
         )
 
         TudeeScrollableTabs(
@@ -140,7 +143,9 @@ private fun CategoryTaskScreenPreview() {
 
 @Composable
 fun TasksList(
-    tasks: List<TaskUiState>, category: CategoryUiState, modifier: Modifier = Modifier
+    tasks: List<TaskUiState>,
+    category: CategoryUiState,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier

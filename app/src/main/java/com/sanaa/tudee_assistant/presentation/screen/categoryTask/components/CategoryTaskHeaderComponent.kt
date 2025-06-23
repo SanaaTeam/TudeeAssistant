@@ -18,9 +18,10 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 @Composable
 fun CategoryTaskHeaderComponent(
     title: String,
-    onEditClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onEditClick: () -> Unit = {},
+    isEditable: Boolean = false,
 ) {
     Row(
         modifier = modifier
@@ -47,8 +48,9 @@ fun CategoryTaskHeaderComponent(
                 modifier = Modifier.padding(start = Theme.dimension.regular)
             )
         }
-        OutlinedIconButton(
-            onClick = onEditClick,
-        )
+        if (isEditable)
+            OutlinedIconButton(
+                onClick = onEditClick,
+            )
     }
 }

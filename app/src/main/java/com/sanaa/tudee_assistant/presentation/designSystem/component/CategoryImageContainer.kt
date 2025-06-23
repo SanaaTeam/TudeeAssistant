@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 
@@ -30,10 +31,12 @@ fun CategoryImageContainer(
     }
 }
 
-//@Preview
-//@Composable
-//private fun PreviewCategoryImage() {
-//    TudeeTheme(false) {
-//        CategoryImageContainer(painter = painterResource(id = R.drawable.birthday_cake))
-//    }
-//}
+@Preview
+@Composable
+private fun PreviewCategoryImage() {
+    TudeeTheme(false) {
+        CategoryImageContainer(){
+            CategoryThumbnail(modifier = Modifier.size(32.dp), imagePath = "file:///android_asset/categories/adoration.png")
+        }
+    }
+}

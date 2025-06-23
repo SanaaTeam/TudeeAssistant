@@ -18,7 +18,7 @@ data class CategoryTaskScreenUiState(
     val showDeleteCategoryBottomSheet: Boolean = false,
     val showEditCategoryBottomSheet: Boolean = false,
     val currentSelectedTaskStatus: TaskUiStatus = TaskUiStatus.TODO,
-    val selectedTapIndex: Int = 0,
+    val selectedTapIndex: Int = 1,
     val allCategoryTasks: List<TaskUiState> = emptyList(),
     val filteredTasks: List<TaskUiState> = emptyList()
 )

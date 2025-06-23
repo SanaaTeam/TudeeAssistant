@@ -14,6 +14,9 @@ class CategoryTaskViewModel(
 ) : BaseViewModel<CategoryTaskScreenUiState>(initialState = CategoryTaskScreenUiState()),
     CategoryTaskInteractionListener {
 
+        init {
+            loadCategoryTasks(1)
+        }
     fun loadCategoryTasks(categoryId: Int) {
         tryToExecute(
             function = {
@@ -23,7 +26,9 @@ class CategoryTaskViewModel(
                 _state.update {
                     it.copy(
                         currentCategory = category.toState(tasksCount = tasks.size),
-                        allCategoryTasks = tasks.map { task -> task.toState() }
+                        allCategoryTasks = tasks.map { task -> task.toState() },
+                        filteredTasks = _state.value.allCategoryTasks
+                            .filter { task -> task.status == _state.value.currentSelectedTaskStatus },
                     )
                 }
             },
@@ -84,8 +89,8 @@ class CategoryTaskViewModel(
 
     override fun onStatusChanged(index: Int) {
         val status = when (index) {
-            0 -> TaskUiStatus.TODO
-            1 -> TaskUiStatus.IN_PROGRESS
+            0 -> TaskUiStatus.IN_PROGRESS
+            1 -> TaskUiStatus.TODO
             2 -> TaskUiStatus.DONE
             else -> TaskUiStatus.TODO
         }

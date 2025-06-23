@@ -44,15 +44,7 @@ fun AddEditTaskContent(
     categories: List<CategoryUiState>,
     isEditMode: Boolean,
     showDatePickerDialog: Boolean,
-    onTitleChange: (String) -> Unit,
-    onDescriptionChange: (String) -> Unit,
-    onDateSelected: (LocalDate) -> Unit,
-    onPrioritySelected: (TaskUiPriority) -> Unit,
-    onCategorySelected: (CategoryUiState) -> Unit,
-    onPrimaryButtonClick: () -> Unit,
-    onDismiss: () -> Unit,
-    onDatePickerShow: () -> Unit,
-    onDatePickerDismiss: () -> Unit,
+    listener: AddEditTaskListener,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -80,7 +72,7 @@ fun AddEditTaskContent(
                 TudeeTextField(
                     placeholder = stringResource(R.string.task_title),
                     value = uiState.taskUiState.title,
-                    onValueChange = onTitleChange,
+                    onValueChange = listener::onTitleChange,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium),
@@ -90,7 +82,7 @@ fun AddEditTaskContent(
                 TudeeTextField(
                     placeholder = stringResource(R.string.description),
                     value = uiState.taskUiState.description ?: "",
-                    onValueChange = onDescriptionChange,
+                    onValueChange = listener::onDescriptionChange,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(168.dp)
@@ -101,7 +93,7 @@ fun AddEditTaskContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium)
-                        .clickable { onDatePickerShow() },
+                        .clickable { listener.onDatePickerShow() },
                     placeholder = Clock.System.now()
                         .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
                     value = uiState.taskUiState.dueDate,
@@ -126,7 +118,7 @@ fun AddEditTaskContent(
                         PriorityTag(
                             priority = priority,
                             isSelected = uiState.taskUiState.priority == priority,
-                            onClick = { onPrioritySelected(priority) }
+                            onClick = { listener.onPrioritySelected(priority) }
                         )
                     }
                 }
@@ -150,7 +142,7 @@ fun AddEditTaskContent(
                     items(categories) { category ->
                         CategoryItem(
                             category = category,
-                            onClick = { onCategorySelected(category) },
+                            onClick = { listener.onCategorySelected(category) },
                             topContent = {
                                 if (category == uiState.selectedCategory) {
                                     CheckMarkContainer()
@@ -177,13 +169,13 @@ fun AddEditTaskContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = Theme.dimension.regular),
-                onClick = onPrimaryButtonClick,
+                onClick = listener::onPrimaryButtonClick,
                 enabled = uiState.isButtonEnabled && !uiState.isLoading
             )
             SecondaryButton(
                 lable = stringResource(R.string.cancel),
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onDismiss
+                onClick = listener::onDismiss
             )
         }
     }
@@ -193,10 +185,10 @@ fun AddEditTaskContent(
             onDateSelected = { selectedDateMillis: Long? ->
                 selectedDateMillis?.let {
                     val date = DateFormater.formatLongToDate(selectedDateMillis)
-                    onDateSelected(date)
+                    listener.onDateSelected(date)
                 }
             },
-            onDismiss = onDatePickerDismiss,
+            onDismiss = listener::onDatePickerDismiss,
             minDateMillis = Clock.System.now()
                 .toLocalDateTime(TimeZone.currentSystemDefault())
                 .date

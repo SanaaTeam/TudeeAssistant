@@ -152,7 +152,6 @@ fun HomeScreenContent(
             iconRes = R.drawable.note_add,
         ) {
             showEditTaskBottomSheet = true
-            actionsListener.onAddTask()
         }
 
         if (showEditTaskBottomSheet) {
@@ -476,7 +475,6 @@ fun PreviewHomeScreen() {
                 isDark = isDarkValue
             }
 
-            override fun onAddTask() {}
             override fun onTaskClick(task: TaskUiState) {}
             override fun onDismissTaskDetails() {}
             override fun onAddTaskSuccess() {}

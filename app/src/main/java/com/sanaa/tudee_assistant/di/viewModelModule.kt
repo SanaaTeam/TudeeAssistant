@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.di
 
-import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.TaskFormViewModel
+import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskViewModel
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryViewModel
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskViewModel
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenViewModel
@@ -13,5 +13,5 @@ val viewModelModule = module {
     viewModelOf(::CategoryTaskViewModel)
     viewModelOf(::HomeScreenViewModel)
     viewModelOf(::TaskViewModel)
-    viewModelOf(::TaskFormViewModel)
+    viewModelOf(::AddEditTaskViewModel)
 }

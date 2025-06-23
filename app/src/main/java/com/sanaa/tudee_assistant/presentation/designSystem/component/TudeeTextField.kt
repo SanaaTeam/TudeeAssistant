@@ -87,7 +87,9 @@ fun TudeeTextField(
 
                 Box(
                     modifier = Modifier
-                        .weight(1f),
+                        .weight(1f)
+                        .align(if (icon == null) Alignment.Top else Alignment.CenterVertically)
+                    ,
                     contentAlignment = if (icon == null) Alignment.TopStart else Alignment.CenterStart
                 ) {
                     if (value.isEmpty()) {

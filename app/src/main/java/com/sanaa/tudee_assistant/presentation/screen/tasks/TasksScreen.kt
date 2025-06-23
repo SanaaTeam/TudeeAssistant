@@ -260,7 +260,7 @@ fun TasksScreenContent(
                 )
             }
             TaskStatusTabs(state, onTaskSwipe, onTaskClick)
-            if (state.selectedTask != null && state.showTaskDetailsDialog)
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
                 TaskDetailsComponent(
                     task = state.selectedTask,
                     onDismiss = onDismissTaskViewDetails,
@@ -271,7 +271,7 @@ fun TasksScreenContent(
                     }, onMoveToClicked = onMoveToTaskViewDetails,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
-            if (state.selectedTask != null && state.showDeleteDialog)
+            if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
                 DeleteComponent(
                     onDismiss = onDeleteDismiss,
                     onDeleteClicked = {
@@ -376,14 +376,13 @@ private fun TasksScreenPreview() {
         mutableStateOf(
             TasksScreenUiState(
                 currentDateTasks = DataProvider.getTasksSample(),
-                isLoading = false,
                 errorMessage = null,
                 successMessage = null,
-                showAddTaskDialog = false,
-                showEditDialog = false,
-                showTaskDetailsDialog = false,
-                showDeleteDialog = false,
-                selectedTaskUiStatus = TaskUiStatus.DONE,
+                showAddTaskBottomSheet = false,
+                showEditTaskBottomSheet = false,
+                showTaskDetailsBottomSheet = false,
+                showDeleteTaskBottomSheet = false,
+                selectedStatusTab = TaskUiStatus.DONE,
                 selectedTask = null,
                 selectedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
             )
@@ -402,9 +401,9 @@ private fun TasksScreenPreview() {
             false
         },
         onTaskClick = { task ->
-            tasksState = tasksState.copy(selectedTask = task, showTaskDetailsDialog = true)
+            tasksState = tasksState.copy(selectedTask = task, showTaskDetailsBottomSheet = true)
         },
-        onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsDialog = false) },
+        onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsBottomSheet = false) },
         onMoveToTaskViewDetails = {},
         onDeleteClick = {},
         onDeleteDismiss = {},

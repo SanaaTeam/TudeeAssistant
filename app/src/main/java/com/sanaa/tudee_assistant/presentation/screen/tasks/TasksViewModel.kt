@@ -37,14 +37,12 @@ class TaskViewModel(
 
     private fun getTasksByDueDate() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
 
             taskService.getTasksByDueDate(_state.value.selectedDate)
                 .collect { taskList ->
                     _state.update {
                         it.copy(
                             currentDateTasks = taskList.map { task -> task.toState() },
-                            isLoading = false
                         )
                     }
                 }
@@ -52,7 +50,7 @@ class TaskViewModel(
     }
 
     fun onTaskStatusSelectedChange(taskUiStatus: TaskUiStatus) {
-        _state.update { it.copy(selectedTaskUiStatus = taskUiStatus) }
+        _state.update { it.copy(selectedStatusTab = taskUiStatus) }
     }
 
     fun onTaskSelected(task: TaskUiState) {
@@ -67,7 +65,6 @@ class TaskViewModel(
 
     fun addFakeTask() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
             runCatching {
                 taskService.addTask(
                     AddTaskRequest(
@@ -87,7 +84,6 @@ class TaskViewModel(
     fun onTaskDeleted() {
         _state.value.selectedTask.let {
             viewModelScope.launch {
-                _state.update { it.copy(isLoading = true) }
                 runCatching {
                     if (it?.id == null) return@launch
                     taskService.deleteTaskById(it.id)
@@ -110,11 +106,11 @@ class TaskViewModel(
     }
 
     fun onShowDeleteDialogChange(show: Boolean) {
-        _state.update { it.copy(showDeleteDialog = show) }
+        _state.update { it.copy(showDeleteTaskBottomSheet = show) }
     }
 
     fun onShowTaskDetailsDialogChange(show: Boolean) {
-        _state.update { it.copy(showTaskDetailsDialog = show) }
+        _state.update { it.copy(showTaskDetailsBottomSheet = show) }
     }
 
     fun onSnackBarShown() {
@@ -124,7 +120,7 @@ class TaskViewModel(
     }
 
     fun onTaskDeletedDismiss() {
-        _state.update { it.copy(showDeleteDialog = false) }
+        _state.update { it.copy(showDeleteTaskBottomSheet = false) }
     }
 
     fun onTaskSwipeToDelete(task: TaskUiState) {
@@ -136,10 +132,9 @@ class TaskViewModel(
 
     fun onMoveTaskToAnotherStatus() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
             if (state.value.selectedTask == null) return@launch
             state.value.selectedTask?.copy(
-                status = when (state.value.selectedTaskUiStatus) {
+                status = when (state.value.selectedStatusTab) {
                     TaskUiStatus.TODO -> TaskUiStatus.IN_PROGRESS
                     TaskUiStatus.IN_PROGRESS -> TaskUiStatus.DONE
                     TaskUiStatus.DONE -> TaskUiStatus.DONE
@@ -165,9 +160,8 @@ class TaskViewModel(
             it.copy(
                 successMessage = message,
                 errorMessage = null,
-                isLoading = false,
-                showTaskDetailsDialog = false,
-                showDeleteDialog = false
+                showTaskDetailsBottomSheet = false,
+                showDeleteTaskBottomSheet = false
             )
         }
     }
@@ -177,9 +171,8 @@ class TaskViewModel(
             it.copy(
                 successMessage = null,
                 errorMessage = message,
-                isLoading = false,
-                showTaskDetailsDialog = false,
-                showDeleteDialog = false
+                showTaskDetailsBottomSheet = false,
+                showDeleteTaskBottomSheet = false
             )
         }
     }

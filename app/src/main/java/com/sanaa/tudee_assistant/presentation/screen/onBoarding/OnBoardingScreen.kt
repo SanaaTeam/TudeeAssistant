@@ -1,7 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.onBoarding
 
-import android.app.Activity
-import android.view.WindowManager
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -36,7 +33,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -61,10 +57,6 @@ fun OnBoardingScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(Unit) {
-
-    }
-
     OnBoardingScreenContent(
         state = state,
         interactionListener = viewModel,
@@ -74,24 +66,12 @@ fun OnBoardingScreen(
 }
 
 @Composable
-fun OnBoardingScreenContent(
+private fun OnBoardingScreenContent(
     state: OnBoardingScreenUiState,
     navHostController: NavHostController,
     interactionListener: OnBoardingScreenInteractionListener,
     modifier: Modifier = Modifier,
 ) {
-
-    val isInPreview = LocalView.current.isInEditMode
-
-    if (!isInPreview) {
-        val window = LocalView.current.context as Activity
-        LaunchedEffect(Unit) {
-            window.window.setFlags(
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-            )
-        }
-    }
 
     val pagerState = rememberPagerState(
         pageCount = { state.pageList.size },
@@ -129,7 +109,6 @@ fun OnBoardingScreenContent(
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter)
                     .verticalScroll(rememberScrollState())
-                    .padding(Theme.dimension.medium)
             ) {
 
                 OnBoardingPager(
@@ -142,6 +121,9 @@ fun OnBoardingScreenContent(
                     currentPage = pagerState.currentPage,
                     pageCount = pagerState.pageCount,
                     onIndicatorClick = { index -> interactionListener.setCurrentPage(index) },
+                    modifier = Modifier
+                        .padding(horizontal = Theme.dimension.medium)
+                        .padding(bottom = 24.dp)
                 )
             }
             if (pagerState.currentPage != state.pageList.lastIndex) {
@@ -160,7 +142,7 @@ fun OnBoardingScreenContent(
 }
 
 @Composable
-fun OnBoardingPager(
+private fun OnBoardingPager(
     pagerState: PagerState,
     pageList: List<OnBoardingPageContentItem>,
     onNextPageClick: () -> Unit,
@@ -171,14 +153,16 @@ fun OnBoardingPager(
         modifier = modifier.fillMaxWidth()
     ) { page ->
         DialogContainer(
-            pageContent = pageList[pagerState.currentPage],
+            pageContent = pageList[page],
             onNextPageClick = { onNextPageClick() },
+            modifier = Modifier.padding(horizontal = Theme.dimension.medium)
         )
     }
 }
 
+
 @Composable
-fun DialogContainer(
+private fun DialogContainer(
     pageContent: OnBoardingPageContentItem,
     onNextPageClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -188,16 +172,23 @@ fun DialogContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource(pageContent.imageRes),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(width = 296.dp, height = 260.dp)
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(350.dp)
+                .offset(y = 11.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(pageContent.imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Inside,
+                modifier = Modifier.height(260.dp)
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 32.dp)
                 .background(
                     Theme.color.onPrimaryCard,
                     RoundedCornerShape(Theme.dimension.extraLarge)
@@ -237,7 +228,7 @@ fun DialogContainer(
 }
 
 @Composable
-fun PageIndicator(
+private fun PageIndicator(
     currentPage: Int,
     pageCount: Int,
     onIndicatorClick: (Int) -> Unit,
@@ -270,7 +261,7 @@ fun PageIndicator(
 @Composable
 private fun BoardingScreenPreview() {
 
-    val isDarkTheme = true
+    val isDarkTheme = false
 
     var state by remember {
         mutableStateOf(

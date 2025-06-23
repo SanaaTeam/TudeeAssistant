@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.screen.tasks
 
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
@@ -119,27 +120,31 @@ class TaskViewModel(
 
     fun onMoveTaskToAnotherStatus() {
         viewModelScope.launch {
-            if (state.value.selectedTask == null) return@launch
-            state.value.selectedTask?.copy(
-                status = when (state.value.selectedStatusTab) {
-                    TaskUiStatus.TODO -> TaskUiStatus.IN_PROGRESS
-                    TaskUiStatus.IN_PROGRESS -> TaskUiStatus.DONE
-                    TaskUiStatus.DONE -> TaskUiStatus.DONE
-                }
-            )?.let { updatedTask ->
-                runCatching {
-                    taskService.updateTask(
-                        updatedTask.toTask()
-                    )
-                }.onSuccess {
-                    handleOnSuccess(
-                        messageStringId = R.string.snack_bar_success
-                    )
-                }.onFailure {
-                    handleOnError()
-                }
+            var newUpdatedTask: Task
+            state.value.selectedTask?.let {
+               when(it.status){
+                   TaskUiStatus.TODO -> {
+                       newUpdatedTask = it.copy(status = TaskUiStatus.IN_PROGRESS ).toTask()
+                       updateSelectedTaskStatus(newUpdatedTask)
+                   }
+                   TaskUiStatus.IN_PROGRESS -> {
+                       newUpdatedTask = it.copy(status = TaskUiStatus.DONE ).toTask()
+                       updateSelectedTaskStatus(newUpdatedTask)
+                   }
+                   TaskUiStatus.DONE -> {
+                       newUpdatedTask = it.copy(status = TaskUiStatus.DONE ).toTask()
+                       updateSelectedTaskStatus(newUpdatedTask)
+                   }
+               }
             }
         }
+    }
+
+    private suspend fun updateSelectedTaskStatus(newUpdatedTask: Task){
+        runCatching {
+            taskService.updateTask(newUpdatedTask)
+        }.onSuccess { handleOnSuccess(messageStringId = R.string.snack_bar_success)
+        }.onFailure { handleOnError()}
     }
 
     private fun handleOnSuccess(messageStringId: Int? = null) {

@@ -1,73 +1,120 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
+import android.util.Log
 import androidx.core.net.toUri
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toNewCategory
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class CategoryViewModel(
     private val categoryService: CategoryService,
     private val taskService: TaskService,
     private val imageProcessor: ImageProcessor,
 
-    ) : ViewModel() {
-
-    private val _state = MutableStateFlow(CategoryScreenUiState())
-    val state: StateFlow<CategoryScreenUiState>
-        get() = _state
+    ) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState()), CategoryInteractionListener {
 
     init {
         loadCategoriesWithTasks()
     }
 
     private fun loadCategoriesWithTasks() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+        _state.update { it.copy(isLoading = true) }
 
-            categoryService.getCategories().collect { categoryList ->
-                val mappedList = categoryList.map { category ->
-                    val taskCount = taskService
-                        .getTaskCountByCategoryId(category.id)
-                        .first()
-                    category.toState(taskCount)
-                }
+        tryToExecute(
+            { loadCategoriesWithTasksInternal() },
+            ::onLoadCategoriesSuccess,
+            ::onLoadCategoriesError
+        )
+    }
 
-                _state.update {
-                    it.copy(
-                        currentDateCategory = mappedList, isLoading = false
-                    )
-                }
-            }
+    private suspend fun loadCategoriesWithTasksInternal(): List<CategoryUiState> {
+        val categoryList = categoryService.getCategories().first()
+
+        return categoryList.map { category ->
+            val taskCount = taskService
+                .getTaskCountByCategoryId(category.id)
+                .first()
+            category.toState(taskCount)
         }
     }
 
-    fun addNewCategory(categoryUiState: CategoryUiState) {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            val imagePath = imageProcessor.saveImageToInternalStorage(
-                imageProcessor.processImage(categoryUiState.imagePath.toUri())
+    private fun onLoadCategoriesSuccess(categories: List<CategoryUiState>) {
+        _state.update {
+            it.copy(
+                currentDateCategory = categories,
+                isLoading = false
             )
+        }
+    }
 
-            val newCategory = CategoryUiState(
-                id = 0,
-                name = categoryUiState.name,
-                imagePath = imagePath,
-                isDefault = false,
-                tasksCount = 0,
+    private fun onLoadCategoriesError(exception: Exception) {
+        Log.e("Category", "Error Load category", exception)
+
+        _state.update {
+            it.copy(
+                isLoading = false,
+                errorMessage = "Failed to load categories "
             )
+        }
+    }
 
-            categoryService.addCategory(newCategory.toNewCategory())
-            _state.update { it.copy(isLoading = false) }
+    override fun onAddCategory(categoryUiState: CategoryUiState) {
+        _state.update { it.copy(isLoading = true) }
+
+        tryToExecute(
+            { addCategory(categoryUiState) },
+            ::onAddCategorySuccess,
+            ::onAddCategoryError,
+        )
+    }
+
+    private suspend fun addCategory(categoryUiState: CategoryUiState) {
+        val imagePath = imageProcessor.saveImageToInternalStorage(
+            imageProcessor.processImage(categoryUiState.imagePath.toUri())
+        )
+
+        val newCategory = CategoryUiState(
+            id = 0,
+            name = categoryUiState.name,
+            imagePath = imagePath,
+            isDefault = false,
+            tasksCount = 0,
+        )
+
+        categoryService.addCategory(newCategory.toNewCategory())
+    }
+
+    private fun onAddCategorySuccess(unit: Unit) {
+        _state.update {
+            it.copy(
+                isLoading = false,
+                isAddCategorySheetVisible = false,
+                isOperationSuccessful = true,
+                successMessage = "Category added successfully"
+            )
+        }
+
+        loadCategoriesWithTasks()
+    }
+
+    private fun onAddCategoryError(exception: Exception) {
+        _state.update { it.copy(isLoading = false) }
+        Log.e("Category", "Error adding category", exception)
+    }
+
+    override fun onToggleAddCategorySheet(isVisible: Boolean) {
+        _state.update { it.copy(isAddCategorySheetVisible = isVisible) }
+    }
+
+    override fun onSnackBarShown() {
+        _state.update {
+            it.copy(successMessage = null, errorMessage = null)
         }
     }
 }

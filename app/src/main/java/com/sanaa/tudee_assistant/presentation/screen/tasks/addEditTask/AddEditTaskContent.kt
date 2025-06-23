@@ -35,10 +35,12 @@ import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayAt
 
 @Composable
-fun TaskForm(
+fun AddEditTaskContent(
     uiState: AddTaskUiState,
     categories: List<CategoryUiState>,
     isEditMode: Boolean,
@@ -196,6 +198,12 @@ fun TaskForm(
                 }
             },
             onDismiss = onDatePickerDismiss,
+            minDateMillis = Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+                .date
+                .atStartOfDayIn(TimeZone.currentSystemDefault())
+                .toEpochMilliseconds()
+
         )
     }
 }

@@ -16,7 +16,8 @@ class HomeScreenViewModel(
     private val preferencesManager: PreferencesManager,
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()), HomeScreenActionsListener {
+) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()),
+    HomeScreenActionsListener {
 
     init {
         loadScreen()
@@ -68,8 +69,12 @@ class HomeScreenViewModel(
 
     }
 
-    override fun onTaskClick(categoryTaskState: TaskUiState) {
+    override fun onTaskClick(taskUiState: TaskUiState) {
+        _state.update { it.copy(clickedTask = taskUiState) }
+    }
 
+    override fun onDismissTaskDetails() {
+        _state.update { it.copy(clickedTask = null) }
     }
 
     override fun onOpenCategory(taskUiStatus: TaskUiStatus) {

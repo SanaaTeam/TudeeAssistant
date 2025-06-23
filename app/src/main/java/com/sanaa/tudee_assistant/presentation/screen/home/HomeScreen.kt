@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
@@ -155,6 +156,14 @@ fun HomeScreenContent(
                 onError = { errorMessage ->
                     actionsListener.onAddTaskHasError(errorMessage)
                 }
+            )
+        }
+        if (state.clickedTask != null) {
+            TaskDetailsComponent(
+                task = state.clickedTask,
+                onDismiss = { actionsListener.onDismissTaskDetails() },
+                onEditClick = {},
+                onMoveToClicked = {}
             )
         }
     }
@@ -444,6 +453,7 @@ fun PreviewHomeScreen() {
 
             override fun onAddTask() {}
             override fun onTaskClick(task: TaskUiState) {}
+            override fun onDismissTaskDetails() {}
             override fun onOpenCategory(status: TaskUiStatus) {}
             override fun onAddTaskSuccess() {}
             override fun onAddTaskHasError(error: String) {}
@@ -461,7 +471,8 @@ fun PreviewHomeScreen() {
                     ),
                     Pair(list.filter { it.status == TaskUiStatus.TODO }.size, TaskUiStatus.TODO),
                 ),
-                tasks = list
+                tasks = list,
+                clickedTask = TaskUiState()
             ),
             actionsListener = previewActions
         )

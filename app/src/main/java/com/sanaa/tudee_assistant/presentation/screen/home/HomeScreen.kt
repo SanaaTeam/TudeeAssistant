@@ -9,6 +9,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -131,7 +132,8 @@ fun HomeScreenContent(
             CategoryList(
                 scrollState,
                 state,
-                onTaskClick = { actionsListener.onTaskClick(it) }
+                onTaskClick = { actionsListener.onTaskClick(it) },
+                onTaskCountContainerClicked = { actionsListener.onTaskCountContainerClicked(it) }
             )
         }
 
@@ -208,6 +210,7 @@ private fun CategoryList(
     scrollState: LazyListState,
     state: HomeScreenUiState,
     onTaskClick: (TaskUiState) -> Unit,
+    onTaskCountContainerClicked: (TaskUiStatus) -> Unit
 ) {
     LazyColumn(
         state = scrollState,
@@ -251,6 +254,8 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.done_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
+                    taskUiStatus = TaskUiStatus.DONE,
+                    onTaskCountContainerClicked = onTaskCountContainerClicked
                 )
             }
         }
@@ -268,7 +273,8 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.in_progress_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
-                )
+                    taskUiStatus = TaskUiStatus.IN_PROGRESS,
+                    onTaskCountContainerClicked = onTaskCountContainerClicked                )
             }
         }
 
@@ -285,7 +291,8 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.todo_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
-                )
+                    taskUiStatus = TaskUiStatus.TODO,
+                    onTaskCountContainerClicked = onTaskCountContainerClicked                )
             }
         }
 
@@ -392,6 +399,8 @@ private fun HomeOverviewCard(state: HomeScreenUiState) {
 private fun Title(
     text: String,
     tasksCount: Int,
+    taskUiStatus: TaskUiStatus,
+    onTaskCountContainerClicked: (TaskUiStatus) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -412,7 +421,8 @@ private fun Title(
             modifier = Modifier
                 .clip(RoundedCornerShape(100.dp))
                 .background(Theme.color.surfaceHigh)
-                .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
+                .padding(vertical = 6.dp, horizontal = Theme.dimension.small)
+                .clickable { onTaskCountContainerClicked(taskUiStatus) },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -468,6 +478,8 @@ fun PreviewHomeScreen() {
 
             override fun onTaskClick(task: TaskUiState) {}
             override fun onDismissTaskDetails() {}
+            override fun onTaskCountContainerClicked(taskUiStatus: TaskUiStatus) {}
+
             override fun onAddTaskSuccess() {}
             override fun onAddTaskHasError(error: String) {}
             override fun onSnackBarShown() {}

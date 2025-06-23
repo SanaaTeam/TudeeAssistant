@@ -9,7 +9,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -141,7 +140,6 @@ fun HomeScreenContent(
             CategoryList(
                 scrollState,
                 state,
-                onOpenCategory = { actionsListener.onOpenCategory(it) },
                 onTaskClick = { actionsListener.onTaskClick(it) }
             )
         }
@@ -219,7 +217,6 @@ private fun Line() {
 private fun CategoryList(
     scrollState: LazyListState,
     state: HomeScreenUiState,
-    onOpenCategory: (TaskUiStatus) -> Unit,
     onTaskClick: (TaskUiState) -> Unit,
 ) {
     LazyColumn(
@@ -264,7 +261,6 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.done_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
-                    onOpenClick = { onOpenCategory(TaskUiStatus.DONE) }
                 )
             }
         }
@@ -282,7 +278,6 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.in_progress_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
-                    onOpenClick = { onOpenCategory(TaskUiStatus.IN_PROGRESS) }
                 )
             }
         }
@@ -300,7 +295,6 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.todo_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
-                    onOpenClick = { onOpenCategory(TaskUiStatus.TODO) }
                 )
             }
         }
@@ -408,7 +402,6 @@ private fun HomeOverviewCard(state: HomeScreenUiState) {
 private fun Title(
     text: String,
     tasksCount: Int,
-    onOpenClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -428,7 +421,6 @@ private fun Title(
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(100.dp))
-                .clickable { onOpenClick() }
                 .background(Theme.color.surfaceHigh)
                 .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
             verticalAlignment = Alignment.CenterVertically
@@ -487,7 +479,6 @@ fun PreviewHomeScreen() {
             override fun onAddTask() {}
             override fun onTaskClick(task: TaskUiState) {}
             override fun onDismissTaskDetails() {}
-            override fun onOpenCategory(status: TaskUiStatus) {}
             override fun onAddTaskSuccess() {}
             override fun onAddTaskHasError(error: String) {}
             override fun onSnackBarShown() {}

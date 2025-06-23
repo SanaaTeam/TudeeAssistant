@@ -5,7 +5,6 @@ import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
@@ -81,9 +80,5 @@ class HomeScreenViewModel(
 
     override fun onDismissTaskDetails() {
         _state.update { it.copy(clickedTask = null) }
-    }
-
-    override fun onOpenCategory(taskUiStatus: TaskUiStatus) {
-
     }
 }

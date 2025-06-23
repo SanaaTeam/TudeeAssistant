@@ -16,6 +16,6 @@ data class HomeScreenUiState(
     val taskCounts: List<Pair<Int, TaskUiStatus>> = emptyList(),
     val tasks: List<TaskUiState> = emptyList(),
     val categories: List<CategoryUiState> = emptyList(),
-    val clickedTask: TaskUiState?=null,
-    val snackBarState: SnackBarState? = null
+    val clickedTask: TaskUiState? = null,
+    val snackBarState: SnackBarState? = null,
 )

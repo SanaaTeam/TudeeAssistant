@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
+import android.R.attr.category
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -30,6 +31,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Prim
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
@@ -39,17 +41,18 @@ fun AddNewCategory(
     onImageSelected: (Uri?) -> Unit,
     onAddClick: (title: String, imageUri: Uri?) -> Unit,
     onDismiss: () -> Unit,
+    category: CategoryUiState,
+    onCategoryTitleChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var internalShowBottomSheet by remember { mutableStateOf(true) }
-    var categoryTitle by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     AddNewCategoryContent(
-        onAddClick = { onAddClick(categoryTitle, selectedImageUri) },
+        onAddClick = { onAddClick(category.name, selectedImageUri) },
         showBottomSheet = internalShowBottomSheet,
-        categoryTitle = categoryTitle,
-        onCategoryTitleChange = { categoryTitle = it },
+        categoryUiState = category,
+        onCategoryTitleChange = onCategoryTitleChange,
         onDismiss = {
             internalShowBottomSheet = false
             onDismiss()
@@ -68,10 +71,11 @@ fun AddNewCategoryContent(
     modifier: Modifier = Modifier,
     onImageSelected: (Uri?) -> Unit,
     onAddClick: () -> Unit,
+    onEditClick: () -> Unit = {},
     onCategoryTitleChange: (String) -> Unit,
     onDismiss: () -> Unit = {},
     showBottomSheet: Boolean = true,
-    categoryTitle: String = "",
+    categoryUiState: CategoryUiState,
 ) {
     var processedImageBytes by remember { mutableStateOf<Bitmap?>(null) }
 
@@ -98,7 +102,7 @@ fun AddNewCategoryContent(
                         )
                         TudeeTextField(
                             placeholder = stringResource(R.string.category_title),
-                            value = categoryTitle,
+                            value = categoryUiState.name,
                             icon = painterResource(R.drawable.menu),
                             onValueChange = onCategoryTitleChange,
                             modifier = Modifier.padding(top = Theme.dimension.regular)
@@ -137,7 +141,7 @@ fun AddNewCategoryContent(
                     ) {
                         PrimaryButton(
                             label = stringResource(R.string.add),
-                            enabled = processedImageBytes != null && categoryTitle.isNotBlank(),
+                            enabled = processedImageBytes != null && categoryUiState.name.isNotBlank(),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = Theme.dimension.regular),
@@ -156,8 +160,3 @@ fun AddNewCategoryContent(
     }
 }
 
-@Preview
-@Composable
-fun AddNewCategoryScreenPreview() {
-    AddNewCategory(onImageSelected = {}, onAddClick = { _, _ -> }, onDismiss = {})
-}

@@ -78,17 +78,7 @@ fun TasksScreen(
 
     TasksScreenContent(
         state = state,
-        onDateSelected = { date -> viewModel.onDueDateChange(date) },
-        onTaskSwipe = { task ->
-            viewModel.onTaskSwipeToDelete(task)
-            false
-        },
-        onTaskClick = viewModel::onTaskClick,
-        onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
-        onMoveToTaskViewDetails = viewModel::onMoveTaskToAnotherStatus,
-        onDeleteClick = viewModel::onTaskDeleted,
-        onDeleteDismiss = viewModel::onTaskDeletedDismiss,
-        onShowSnackBar = viewModel::onSnackBarShown,
+        interactionListener = viewModel,
         modifier = modifier,
     )
 }
@@ -97,14 +87,7 @@ fun TasksScreen(
 @Composable
 fun TasksScreenContent(
     state: TasksScreenUiState,
-    onTaskSwipe: (TaskUiState) -> Boolean,
-    onDateSelected: (LocalDate) -> Unit,
-    onTaskClick: (TaskUiState) -> Unit,
-    onDismissTaskViewDetails: () -> Unit,
-    onMoveToTaskViewDetails: () -> Unit,
-    onDeleteClick: () -> Unit,
-    onDeleteDismiss: () -> Unit,
-    onShowSnackBar: () -> Unit,
+    interactionListener: TaskInteractionListener,
     modifier: Modifier = Modifier,
 ) {
 
@@ -152,7 +135,7 @@ fun TasksScreenContent(
                         .padding(6.dp)
                         .clickable {
                             val nextMonth = state.selectedDate.minus(1, DateTimeUnit.MONTH)
-                            onDateSelected(nextMonth)
+                            interactionListener.onDateSelected(nextMonth)
                             daysInMonth =
                                 (DateFormater.getLocalDatesInMonth(
                                     nextMonth.year,
@@ -198,7 +181,7 @@ fun TasksScreenContent(
                         .padding(6.dp)
                         .clickable {
                             val previousMonth = state.selectedDate.plus(1, DateTimeUnit.MONTH)
-                            onDateSelected(previousMonth)
+                            interactionListener.onDateSelected(previousMonth)
                             daysInMonth =
                                 (DateFormater.getLocalDatesInMonth(
                                     previousMonth.year,
@@ -239,7 +222,7 @@ fun TasksScreenContent(
                         dayDate = date,
                         isSelected = date == state.selectedDate,
                         onClick = {
-                            onDateSelected(date)
+                            interactionListener.onDateSelected(date)
                         }
                     )
                 }
@@ -250,7 +233,7 @@ fun TasksScreenContent(
                     onDateSelected = { selectedDateMillis: Long? ->
                         selectedDateMillis?.let {
                             val date = DateFormater.formatLongToDate(selectedDateMillis)
-                            onDateSelected(date)
+                            interactionListener.onDateSelected(date)
                             daysInMonth =
                                 (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
                         }
@@ -259,25 +242,23 @@ fun TasksScreenContent(
                     initialSelectedDate = state.selectedDate
                 )
             }
-            TaskStatusTabs(state, onTaskSwipe, onTaskClick)
+            TaskStatusTabs(state, interactionListener::onTaskSwipeToDelete, interactionListener::onTaskClicked)
             if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
                 TaskDetailsComponent(
                     task = state.selectedTask,
-                    onDismiss = onDismissTaskViewDetails,
+                    onDismiss = { interactionListener.onDismissTaskDetails(false) },
                     onEditClick = { task ->
-                        onDismissTaskViewDetails()
+                        interactionListener.onDismissTaskDetails(false)
                         taskToEdit = task
                         showEditTaskBottomSheet = true
                     },
-                    onMoveToClicked = onMoveToTaskViewDetails,
+                    onMoveToClicked = interactionListener::onMoveTaskToAnotherStatus,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
                 DeleteComponent(
-                    onDismiss = onDeleteDismiss,
-                    onDeleteClicked = {
-                        onDeleteClick()
-                    },
+                    onDismiss = interactionListener::onDeleteDismiss,
+                    onDeleteClicked = interactionListener::onDeleteTask,
                     title = stringResource(R.string.delete_task_title),
                 )
             if (showAddTaskBottomSheet) {
@@ -357,7 +338,7 @@ fun TasksScreenContent(
         LaunchedEffect(state.successMessageStringId) {
             state.successMessageStringId?.let {
                 snackBarHostState.showSnackbar(successMessageText!!)
-                onShowSnackBar()
+                interactionListener.onShowSnackbar()
             }
         }
         var errorMessageText : String? = null
@@ -367,7 +348,7 @@ fun TasksScreenContent(
         LaunchedEffect(state.successMessageStringId) {
             state.errorMessageStringId?.let {
                 snackBarHostState.showSnackbar(errorMessageText!!)
-                onShowSnackBar()
+                interactionListener.onShowSnackbar()
             }
         }
 
@@ -378,45 +359,52 @@ fun TasksScreenContent(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun TasksScreenPreview() {
-
-    var tasksState by remember {
-        mutableStateOf(
-            TasksScreenUiState(
-                currentDateTasks = DataProvider.getTasksSample(),
-                errorMessageStringId = null,
-                successMessageStringId = null,
-                showAddTaskBottomSheet = false,
-                showEditTaskBottomSheet = false,
-                showTaskDetailsBottomSheet = false,
-                showDeleteTaskBottomSheet = false,
-                selectedStatusTab = TaskUiStatus.DONE,
-                selectedTask = null,
-                selectedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-            )
-        )
-    }
-
-    TasksScreenContent(
-        tasksState,
-        onDateSelected = { date ->
-            tasksState = tasksState.copy(selectedDate = date)
-            tasksState = tasksState.copy(currentDateTasks = DataProvider.getTasksSample())
-        },
-        onTaskSwipe = { task ->
-            tasksState =
-                tasksState.copy(currentDateTasks = tasksState.currentDateTasks.filterNot { item -> item == task })
-            false
-        },
-        onTaskClick = { task ->
-            tasksState = tasksState.copy(selectedTask = task, showTaskDetailsBottomSheet = true)
-        },
-        onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsBottomSheet = false) },
-        onMoveToTaskViewDetails = {},
-        onDeleteClick = {},
-        onDeleteDismiss = {},
-        onShowSnackBar = {},
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun TasksScreenPreview() {
+//    var tasksState by remember {
+//        mutableStateOf(
+//            TasksScreenUiState(
+//                currentDateTasks = DataProvider.getTasksSample(),
+//                selectedStatusTab = TaskUiStatus.DONE,
+//                selectedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+//            )
+//        )
+//    }
+//
+//    val previewInteraction = object : TaskInteractionListener {
+//        override fun onDateSelected(date: LocalDate) {
+//            tasksState = tasksState.copy(
+//                selectedDate = date,
+//                currentDateTasks = DataProvider.getTasksSample() // Simulate fetch
+//            )
+//        }
+//
+//        override fun onTaskSwiped(task: TaskUiState) {
+//            tasksState = tasksState.copy(
+//                currentDateTasks = tasksState.currentDateTasks.filterNot { it == task }
+//            )
+//        }
+//
+//        override fun onTaskClicked(task: TaskUiState) {
+//            tasksState = tasksState.copy(
+//                selectedTask = task,
+//                showTaskDetailsBottomSheet = true
+//            )
+//        }
+//
+//        override fun onDismissTaskDetailsDialog() {
+//            tasksState = tasksState.copy(showTaskDetailsBottomSheet = false)
+//        }
+//
+//        override fun onMoveTaskToAnotherStatus() = Unit
+//        override fun onTaskDeleted() = Unit
+//        override fun onTaskDeletedDismissed() = Unit
+//        override fun onSnackbarShown() = Unit
+//    }
+//
+//    TasksScreenContent(
+//        state = tasksState,
+//        interactionListener = previewInteraction
+//    )
+//}

@@ -7,10 +7,10 @@ import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toNewTask
+import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
-class TaskFormViewModel(
+class AddEditTaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
 ) : ViewModel() {
@@ -27,7 +27,10 @@ class TaskFormViewModel(
     private val _uiState = MutableStateFlow(AddTaskUiState())
     val uiState: StateFlow<AddTaskUiState> = _uiState.asStateFlow()
 
-    init{
+    private var originalTaskUiState: TaskUiState? = null
+    private var isEditMode: Boolean = false
+
+    init {
         viewModelScope.launch {
             categoryService.getCategories().collect { categoryList ->
                 _uiState.update {
@@ -40,10 +43,12 @@ class TaskFormViewModel(
     }
 
     fun loadTask(task: TaskUiState) {
+        isEditMode = true
         viewModelScope.launch(Dispatchers.IO) {
             taskService.getTaskCountByCategoryId(task.categoryId).collect { taskCount ->
                 val category = categoryService
                     .getCategoryById(task.categoryId).toState(taskCount)
+                originalTaskUiState = task.copy()
                 _uiState.update {
                     it.copy(taskUiState = task, selectedCategory = category)
                 }
@@ -58,6 +63,8 @@ class TaskFormViewModel(
     }
 
     fun loadCategoriesForNewTask() {
+        isEditMode = false
+        originalTaskUiState = null
         viewModelScope.launch(Dispatchers.IO) {
             categoryService.getCategories().collect { categories ->
                 _uiState.update { state ->
@@ -78,6 +85,7 @@ class TaskFormViewModel(
         _uiState.update {
             it.copy(taskUiState = it.taskUiState.copy(description = description))
         }
+        validateInputs()
     }
 
     fun onDateSelected(date: LocalDate) {
@@ -91,6 +99,7 @@ class TaskFormViewModel(
         _uiState.update {
             it.copy(taskUiState = it.taskUiState.copy(priority = priority))
         }
+        validateInputs()
     }
 
     fun onCategorySelected(category: CategoryUiState) {
@@ -134,6 +143,8 @@ class TaskFormViewModel(
     }
 
     fun resetState() {
+        isEditMode = false
+        originalTaskUiState = null
         _uiState.update {
             AddTaskUiState(categories = it.categories)
         }
@@ -147,11 +158,20 @@ class TaskFormViewModel(
 
     private fun validateInputs() {
         val state = _uiState.value
+        val isButtonEnabled = if (isEditMode) {
+            originalTaskUiState?.let { original ->
+                state.taskUiState.title != original.title ||
+                        state.taskUiState.description != original.description ||
+                        state.taskUiState.dueDate != original.dueDate ||
+                        state.taskUiState.priority != original.priority ||
+                        state.taskUiState.categoryId != original.categoryId
+            } == true
+        } else {
+            state.taskUiState.title.isNotBlank() && state.selectedCategory != null
+        }
+
         _uiState.update {
-            it.copy(
-                isButtonEnabled = state.taskUiState.title.isNotBlank() &&
-                        state.selectedCategory != null
-            )
+            it.copy(isButtonEnabled = isButtonEnabled)
         }
     }
 }

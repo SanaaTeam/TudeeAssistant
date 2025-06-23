@@ -353,13 +353,14 @@ fun TasksScreenContent(
         state.successMessageStringId?.let {
             successMessageText = stringResource(state.successMessageStringId)
         }
-
         LaunchedEffect(state.successMessageStringId) {
             state.successMessageStringId?.let {
                 snackBarHostState.showSnackbar(successMessageText!!)
                 onShowSnackBar()
             }
         }
+
+
         var errorMessageText : String? = null
         state.errorMessageStringId?.let {
             successMessageText = stringResource(state.errorMessageStringId)

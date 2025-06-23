@@ -32,7 +32,7 @@ import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
-fun CategoryTaskCard(
+fun TaskItemCard(
     task: TaskUiState,
     categoryImagePath: String,
     modifier: Modifier = Modifier,
@@ -136,7 +136,7 @@ private fun Preview() {
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             items(DataProvider.getTasksSample()) {
-                CategoryTaskCard(
+                TaskItemCard(
                     task = it,
                     categoryImagePath = "file:///android_asset/categories/agriculture.png",
                 )

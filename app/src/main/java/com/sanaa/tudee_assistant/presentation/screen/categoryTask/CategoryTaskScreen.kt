@@ -3,14 +3,18 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -27,12 +32,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.TaskListColumn
+import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.screen.category.AddNewCategory
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.compose.koinInject
 
 @Composable
@@ -90,7 +97,9 @@ fun CategoryTaskScreenContent(
                     modifier = Modifier.padding(start = Theme.dimension.regular)
                 )
             }
-            OutlinedIconButton()
+            OutlinedIconButton(
+                onClick = { listener.onEditClicked() },
+            )
         }
 
         TudeeScrollableTabs(
@@ -99,36 +108,30 @@ fun CategoryTaskScreenContent(
                     label = stringResource(R.string.in_progress_task_status),
                     count = state.filteredTasks.size,
                     content = {
-                        TaskListColumn(
-                            taskList = state.filteredTasks,
-                            onTaskClick = { },
-                            categories = listOf(state.currentCategory),
+                        TasksList(
+                            tasks = state.filteredTasks,
+                            category = state.currentCategory,
                         )
-
                     }
                 ),
                 TabItem(
                     label = stringResource(R.string.todo_task_status),
                     count = state.filteredTasks.size,
                     content = {
-                        TaskListColumn(
-                            taskList = state.filteredTasks,
-                            onTaskClick = { },
-                            categories = listOf(state.currentCategory),
+                        TasksList(
+                            tasks = state.filteredTasks,
+                            category = state.currentCategory,
                         )
-
                     }
                 ),
                 TabItem(
                     label = stringResource(R.string.done_task_status),
                     count = state.filteredTasks.size,
                     content = {
-                        TaskListColumn(
-                            taskList = state.filteredTasks,
-                            onTaskClick = { },
-                            categories = listOf(state.currentCategory),
+                        TasksList(
+                            tasks = state.filteredTasks,
+                            category = state.currentCategory,
                         )
-
                     }
                 ),
 
@@ -138,6 +141,13 @@ fun CategoryTaskScreenContent(
             modifier = Modifier.fillMaxSize()
         )
 
+        if (state.showEditCategoryBottomSheet) {
+            AddNewCategory(
+                onImageSelected = { },
+                onAddClick = { _, _ -> },
+                onDismiss = { listener.onEditDismissClicked() }
+            )
+        }
     }
 
 }
@@ -230,11 +240,37 @@ private fun CategoryTaskScreenPreview() {
 }
  */
 
+@Composable
+fun TasksList(
+    tasks: List<TaskUiState>,
+    category: CategoryUiState,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Theme.color.surface),
+        contentPadding = PaddingValues(
+            vertical = Theme.dimension.regular,
+            horizontal = Theme.dimension.medium
+        ),
+        verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
+    ) {
+        itemsIndexed(tasks, key = { _, item -> item.hashCode() }) { _, task ->
+            CategoryTaskCard(
+                task = task,
+                categoryImagePath = category.imagePath,
+                onClick = {}
+            )
+        }
+    }
+}
+
 
 @Composable
 fun OutlinedIconButton(
     modifier: Modifier = Modifier,
-    painter: Painter = painterResource(R.drawable.pencil_edit),
+    painter: Painter = painterResource(R.drawable.edit),
     tint: Color = Theme.color.body,
     contentDescription: String? = null,
     onClick: () -> Unit = {},
@@ -243,6 +279,7 @@ fun OutlinedIconButton(
         modifier = modifier
             .size(40.dp)
             .border(width = 1.dp, color = Theme.color.stroke, shape = CircleShape)
+            .clip(CircleShape)
             .clickable(
                 onClick = { onClick() }),
         contentAlignment = Alignment.Center

@@ -8,6 +8,7 @@ interface HomeScreenActionsListener {
     fun onChangeTheme(isDarkTheme: Boolean)
     fun onAddTaskSuccess()
     fun onAddTaskHasError(errorMessage: String)
-    fun onTaskClick(categoryTaskState: TaskUiState)
-    fun onOpenCategory(taskUiStatus: TaskUiStatus)
+    fun onSnackBarShown()
+    fun onTaskClick(taskUiState: TaskUiState)
+    fun onDismissTaskDetails()
 }

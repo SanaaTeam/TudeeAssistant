@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.TaskService
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
@@ -19,7 +19,8 @@ class HomeScreenViewModel(
     private val preferencesManager: PreferencesManager,
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()), HomeScreenActionsListener {
+) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()),
+    HomeScreenActionsListener {
 
     init {
         loadScreen()
@@ -68,17 +69,22 @@ class HomeScreenViewModel(
 
     override fun onAddTaskSuccess() {
         getTasks()
+        _state.update { it.copy(snackBarState = SnackBarState.Success("Task added successfully!")) }
     }
 
     override fun onAddTaskHasError(errorMessage: String) {
-
+        _state.update { it.copy(snackBarState = SnackBarState.Error(errorMessage)) }
     }
 
-    override fun onTaskClick(categoryTaskState: TaskUiState) {
-
+    override fun onSnackBarShown() {
+        _state.update { it.copy(snackBarState = null) }
     }
 
-    override fun onOpenCategory(taskUiStatus: TaskUiStatus) {
+    override fun onTaskClick(taskUiState: TaskUiState) {
+        _state.update { it.copy(clickedTask = taskUiState) }
+    }
 
+    override fun onDismissTaskDetails() {
+        _state.update { it.copy(clickedTask = null) }
     }
 }

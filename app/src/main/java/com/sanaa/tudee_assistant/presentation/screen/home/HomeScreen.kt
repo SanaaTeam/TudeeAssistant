@@ -2,11 +2,13 @@ package com.sanaa.tudee_assistant.presentation.screen.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
@@ -53,9 +56,12 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskCountByStatusCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBar
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.design_system.color.LocalColorThemeController
+import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -92,7 +98,15 @@ fun HomeScreenContent(
     val scrollState = rememberLazyListState()
     var showEditTaskBottomSheet by remember { mutableStateOf(false) }
     var isScrolled by remember { mutableStateOf(false) }
+    var snackBarDataToShow by remember { mutableStateOf<SnackBarState?>(null) }
 
+    LaunchedEffect(state.snackBarState) {
+        if (state.snackBarState != null) {
+            snackBarDataToShow = state.snackBarState
+            kotlinx.coroutines.delay(3000)
+            actionsListener.onSnackBarShown()
+        }
+    }
     LaunchedEffect(scrollState) {
         snapshotFlow {
             Pair(scrollState.firstVisibleItemIndex, scrollState.firstVisibleItemScrollOffset)
@@ -126,7 +140,6 @@ fun HomeScreenContent(
             CategoryList(
                 scrollState,
                 state,
-                onOpenCategory = { actionsListener.onOpenCategory(it) },
                 onTaskClick = { actionsListener.onTaskClick(it) }
             )
         }
@@ -157,6 +170,33 @@ fun HomeScreenContent(
                 }
             )
         }
+        if (state.clickedTask != null) {
+            TaskDetailsComponent(
+                task = state.clickedTask,
+                onDismiss = { actionsListener.onDismissTaskDetails() },
+                onEditClick = {},
+                onMoveToClicked = {}
+            )
+        }
+
+        AnimatedVisibility(
+            visible = state.snackBarState != null,
+            modifier = Modifier
+                .align(Alignment.TopCenter),
+            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
+            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+        ) {
+            snackBarDataToShow?.let { data ->
+                val (message, status) = when (data) {
+                    is SnackBarState.Success -> Pair(data.message, SnackBarStatus.SUCCESS)
+                    is SnackBarState.Error -> Pair(data.message, SnackBarStatus.ERROR)
+                }
+                SnackBar(
+                    message = message,
+                    snackBarStatus = status
+                )
+            }
+        }
     }
 }
 
@@ -177,7 +217,6 @@ private fun Line() {
 private fun CategoryList(
     scrollState: LazyListState,
     state: HomeScreenUiState,
-    onOpenCategory: (TaskUiStatus) -> Unit,
     onTaskClick: (TaskUiState) -> Unit,
 ) {
     LazyColumn(
@@ -222,7 +261,6 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.done_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
-                    onOpenClick = { onOpenCategory(TaskUiStatus.DONE) }
                 )
             }
         }
@@ -240,7 +278,6 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.in_progress_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
-                    onOpenClick = { onOpenCategory(TaskUiStatus.IN_PROGRESS) }
                 )
             }
         }
@@ -258,7 +295,6 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.todo_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
-                    onOpenClick = { onOpenCategory(TaskUiStatus.TODO) }
                 )
             }
         }
@@ -366,7 +402,6 @@ private fun HomeOverviewCard(state: HomeScreenUiState) {
 private fun Title(
     text: String,
     tasksCount: Int,
-    onOpenClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -386,7 +421,6 @@ private fun Title(
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(100.dp))
-                .clickable { onOpenClick() }
                 .background(Theme.color.surfaceHigh)
                 .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
             verticalAlignment = Alignment.CenterVertically
@@ -444,9 +478,10 @@ fun PreviewHomeScreen() {
 
             override fun onAddTask() {}
             override fun onTaskClick(task: TaskUiState) {}
-            override fun onOpenCategory(status: TaskUiStatus) {}
+            override fun onDismissTaskDetails() {}
             override fun onAddTaskSuccess() {}
             override fun onAddTaskHasError(error: String) {}
+            override fun onSnackBarShown() {}
         }
 
         HomeScreenContent(
@@ -454,14 +489,21 @@ fun PreviewHomeScreen() {
                 isDarkTheme = isDark,
                 dayDate = dayDate,
                 taskCounts = listOf(
-                    Pair(list.filter { it.status == TaskUiStatus.DONE }.size, TaskUiStatus.DONE),
+                    Pair(
+                        list.filter { it.status == TaskUiStatus.DONE }.size,
+                        TaskUiStatus.DONE
+                    ),
                     Pair(
                         list.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
                         TaskUiStatus.IN_PROGRESS
                     ),
-                    Pair(list.filter { it.status == TaskUiStatus.TODO }.size, TaskUiStatus.TODO),
+                    Pair(
+                        list.filter { it.status == TaskUiStatus.TODO }.size,
+                        TaskUiStatus.TODO
+                    ),
                 ),
-                tasks = list
+                tasks = list,
+                clickedTask = TaskUiState()
             ),
             actionsListener = previewActions
         )

@@ -61,7 +61,6 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.Sn
 import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.design_system.color.LocalColorThemeController
 import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
@@ -75,15 +74,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(viewModel: HomeScreenViewModel = koinViewModel()) {
-    val themeController = LocalColorThemeController.current
     val state by viewModel.state.collectAsState()
 
-    val actionsListener = object : HomeScreenActionsListener by viewModel {
-        override fun onChangeTheme(isDark: Boolean) {
-            viewModel.onChangeTheme(isDark)
-            themeController.toggleTheme()
-        }
-    }
+    val actionsListener = object : HomeScreenActionsListener by viewModel {}
 
     HomeScreenContent(
         state = state,
@@ -154,7 +147,6 @@ fun HomeScreenContent(
             iconRes = R.drawable.note_add,
         ) {
             showEditTaskBottomSheet = true
-            actionsListener.onAddTask()
         }
 
         if (showEditTaskBottomSheet) {
@@ -486,7 +478,6 @@ fun PreviewHomeScreen() {
                 isDark = isDarkValue
             }
 
-            override fun onAddTask() {}
             override fun onTaskClick(task: TaskUiState) {}
             override fun onDismissTaskDetails() {}
             override fun onTaskCountContainerClicked(taskUiStatus: TaskUiStatus) {}

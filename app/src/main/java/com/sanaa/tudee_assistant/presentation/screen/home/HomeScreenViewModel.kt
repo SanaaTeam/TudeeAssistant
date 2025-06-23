@@ -59,9 +59,6 @@ class HomeScreenViewModel(
         }
     }
 
-    override fun onAddTask() {
-    }
-
     override fun onChangeTheme(isDarkTheme: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             preferencesManager.setDarkTheme(isDarkTheme)

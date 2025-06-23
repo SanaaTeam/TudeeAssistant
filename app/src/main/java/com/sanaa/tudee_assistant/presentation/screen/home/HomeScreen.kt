@@ -2,8 +2,11 @@ package com.sanaa.tudee_assistant.presentation.screen.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,9 +57,12 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskCountByStatusCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBar
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.design_system.color.LocalColorThemeController
+import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -93,7 +99,15 @@ fun HomeScreenContent(
     val scrollState = rememberLazyListState()
     var showEditTaskBottomSheet by remember { mutableStateOf(false) }
     var isScrolled by remember { mutableStateOf(false) }
+    var snackBarDataToShow by remember { mutableStateOf<SnackBarState?>(null) }
 
+    LaunchedEffect(state.snackBarState) {
+        if (state.snackBarState != null) {
+            snackBarDataToShow = state.snackBarState
+            kotlinx.coroutines.delay(3000)
+            actionsListener.onSnackBarShown()
+        }
+    }
     LaunchedEffect(scrollState) {
         snapshotFlow {
             Pair(scrollState.firstVisibleItemIndex, scrollState.firstVisibleItemScrollOffset)
@@ -165,6 +179,25 @@ fun HomeScreenContent(
                 onEditClick = {},
                 onMoveToClicked = {}
             )
+        }
+
+        AnimatedVisibility(
+            visible = state.snackBarState != null,
+            modifier = Modifier
+                .align(Alignment.TopCenter),
+            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
+            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+        ) {
+            snackBarDataToShow?.let { data ->
+                val (message, status) = when (data) {
+                    is SnackBarState.Success -> Pair(data.message, SnackBarStatus.SUCCESS)
+                    is SnackBarState.Error -> Pair(data.message, SnackBarStatus.ERROR)
+                }
+                SnackBar(
+                    message = message,
+                    snackBarStatus = status
+                )
+            }
         }
     }
 }
@@ -457,6 +490,7 @@ fun PreviewHomeScreen() {
             override fun onOpenCategory(status: TaskUiStatus) {}
             override fun onAddTaskSuccess() {}
             override fun onAddTaskHasError(error: String) {}
+            override fun onSnackBarShown() {}
         }
 
         HomeScreenContent(
@@ -464,12 +498,18 @@ fun PreviewHomeScreen() {
                 isDarkTheme = isDark,
                 dayDate = dayDate,
                 taskCounts = listOf(
-                    Pair(list.filter { it.status == TaskUiStatus.DONE }.size, TaskUiStatus.DONE),
+                    Pair(
+                        list.filter { it.status == TaskUiStatus.DONE }.size,
+                        TaskUiStatus.DONE
+                    ),
                     Pair(
                         list.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
                         TaskUiStatus.IN_PROGRESS
                     ),
-                    Pair(list.filter { it.status == TaskUiStatus.TODO }.size, TaskUiStatus.TODO),
+                    Pair(
+                        list.filter { it.status == TaskUiStatus.TODO }.size,
+                        TaskUiStatus.TODO
+                    ),
                 ),
                 tasks = list,
                 clickedTask = TaskUiState()

@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
@@ -63,10 +64,15 @@ class HomeScreenViewModel(
 
     override fun onAddTaskSuccess() {
         getTasks()
+        _state.update { it.copy(snackBarState = SnackBarState.Success("Task added successfully!")) }
     }
 
     override fun onAddTaskHasError(errorMessage: String) {
+        _state.update { it.copy(snackBarState = SnackBarState.Error(errorMessage)) }
+    }
 
+    override fun onSnackBarShown() {
+        _state.update { it.copy(snackBarState = null) }
     }
 
     override fun onTaskClick(taskUiState: TaskUiState) {

@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,8 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,18 +34,39 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
 fun CategoryScreen(
     modifier: Modifier = Modifier,
     viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
-    screenNavController: NavHostController
-) {
-    val state by viewModel.state.collectAsState()
-    val showBottomSheet = remember { mutableStateOf(false) }
+    screenNavController: NavHostController,
 
+    ) {
+    val state by viewModel.state.collectAsState()
+
+    CategoryScreenContent(
+        modifier = modifier,
+        state = state,
+        listener = viewModel,
+        onShowTasksByCategoryClick = { categoryId ->
+            screenNavController.navigate(CategoryTasksScreenRoute(categoryId))
+        }
+
+
+    )
+}
+
+@Composable
+fun CategoryScreenContent(
+    modifier: Modifier = Modifier,
+    state: CategoryScreenUiState,
+    listener: CategoryInteractionListener,
+    onShowTasksByCategoryClick: (Int) -> Unit
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -81,8 +101,10 @@ fun CategoryScreen(
                 items(state.currentDateCategory) { category ->
                     CategoryItem(
                         category = category,
-                        onClick = {},
-                        // condition
+                        onClick = {
+                            Log.d("category", "category id: ${category.id}")
+                            onShowTasksByCategoryClick(category.id)
+                        },
                         topContent = { CategoryCount(category.tasksCount.toString()) }
                     )
                 }
@@ -105,7 +127,7 @@ fun CategoryScreen(
                         )
                     )
                     .clickable {
-                        showBottomSheet.value = true
+                        listener.onToggleAddCategorySheet(true)
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -119,7 +141,7 @@ fun CategoryScreen(
         }
     }
 
-    if (showBottomSheet.value) {
+    if (state.isAddCategorySheetVisible) {
         AddNewCategory(
             onAddClick = { title, imageUri ->
                 val newCategory = CategoryUiState(
@@ -129,17 +151,16 @@ fun CategoryScreen(
                     isDefault = false,
                     tasksCount = 0
                 )
-                viewModel.addNewCategory(newCategory)
-                showBottomSheet.value = false
+                listener.onAddCategory(newCategory)
+                listener.onToggleAddCategorySheet(false)
             },
             onDismiss = {
-                showBottomSheet.value = false
+                listener.onToggleAddCategorySheet(false)
             },
             onImageSelected = { uri -> }
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

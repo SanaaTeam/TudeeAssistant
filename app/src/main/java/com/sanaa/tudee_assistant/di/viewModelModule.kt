@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.di
 
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsBottomSheetViewModel
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.TaskFormViewModel
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryViewModel
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskViewModel
@@ -14,4 +15,5 @@ val viewModelModule = module {
     viewModelOf(::HomeScreenViewModel)
     viewModelOf(::TaskViewModel)
     viewModelOf(::TaskFormViewModel)
+    viewModelOf(::TaskDetailsBottomSheetViewModel)
 }

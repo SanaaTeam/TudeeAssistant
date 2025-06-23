@@ -48,7 +48,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
@@ -262,7 +262,7 @@ fun TasksScreenContent(
             TaskStatusTabs(state, onTaskSwipe, onTaskClick)
             if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
                 TaskDetailsComponent(
-                    task = state.selectedTask,
+                    selectedTaskId = state.selectedTask.id,
                     onDismiss = onDismissTaskViewDetails,
                     onEditClick = { task ->
                         onDismissTaskViewDetails()

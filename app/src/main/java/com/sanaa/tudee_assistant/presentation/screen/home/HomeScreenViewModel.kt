@@ -56,6 +56,5 @@ class HomeScreenViewModel(
     }
 
     fun onOpenCategory(taskUiStatus: TaskUiStatus) {
-
     }
 }

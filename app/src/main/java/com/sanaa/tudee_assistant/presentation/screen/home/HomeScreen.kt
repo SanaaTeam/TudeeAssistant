@@ -75,11 +75,11 @@ fun HomeScreen(
         isDark = isDark,
         state = state,
         onChangeTheme = onChangeTheme,
-        viewModel::onAddTask,
-        viewModel::onTaskClick,
-        viewModel::onOpenCategory,
-        viewModel::onAddTaskSuccess,
-        viewModel::onAddTaskHasError,
+        onAddTask = viewModel::onAddTask,
+        onTaskClick = viewModel::onTaskClick,
+        onOpenCategory = viewModel::onOpenCategory,
+        onAddTaskSuccess = viewModel::onAddTaskSuccess,
+        onAddTaskHasError = viewModel::onAddTaskHasError,
     )
 }
 

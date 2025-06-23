@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
@@ -11,6 +12,7 @@ import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -21,6 +23,7 @@ class TaskViewModel(
     private val categoryService: CategoryService,
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()) {
 
+
     init {
         viewModelScope.launch {
             categoryService.getCategories().collect { categoryList ->
@@ -29,23 +32,28 @@ class TaskViewModel(
                         categories = categoryList.map { category -> category.toState(0) }
                     )
                 }
+
             }
         }
         getTasksByDueDate()
-        addFakeTask()
     }
 
+    private var dateJob: Job? = null
     private fun getTasksByDueDate() {
-        viewModelScope.launch {
 
-            taskService.getTasksByDueDate(_state.value.selectedDate)
-                .collect { taskList ->
-                    _state.update {
-                        it.copy(
-                            currentDateTasks = taskList.map { task -> task.toState() },
-                        )
+        dateJob?.takeIf { it.isActive }?.cancel()
+
+           dateJob =  viewModelScope.launch {
+                taskService.getTasksByDueDate(_state.value.selectedDate)
+                    .collect { taskList ->
+                        _state.update {
+                            it.copy(
+                                currentDateTasks = taskList.map { task ->
+                                    task.toState() },
+                            )
+                        }
                     }
-                }
+
         }
     }
 
@@ -62,24 +70,6 @@ class TaskViewModel(
         onShowTaskDetailsDialogChange(true)
     }
 
-
-    fun addFakeTask() {
-        viewModelScope.launch {
-            runCatching {
-                taskService.addTask(
-                    AddTaskRequest(
-                        title = "Organize ",
-                        description = "Hello world ",
-                        status = Task.TaskStatus.TODO,
-                        dueDate = LocalDate(2025, 6, 19),
-                        priority = Task.TaskPriority.HIGH,
-                        categoryId = 1,
-                    )
-                )
-            }
-
-        }
-    }
 
     fun onTaskDeleted() {
         _state.value.selectedTask.let {

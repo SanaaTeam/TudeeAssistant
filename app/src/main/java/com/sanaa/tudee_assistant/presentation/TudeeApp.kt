@@ -32,8 +32,6 @@ fun TudeeApp(isDarkTheme: Boolean, preferencesManager: PreferencesManager, isFir
 
     var statusBarColor by remember { mutableStateOf(Color.White) }
 
-
-
     TudeeTheme(isDark = isDarkTheme) {
         Scaffold(containerColor = statusBarColor) { innerPadding ->
             AppNavigation(
@@ -46,7 +44,6 @@ fun TudeeApp(isDarkTheme: Boolean, preferencesManager: PreferencesManager, isFir
                     }
                 },
                 onStatusBarColor = { color -> statusBarColor = color },
-                preferencesManager = preferencesManager
             )
         }
     }
@@ -59,7 +56,6 @@ private fun AppNavigation(
     isDarkTheme: Boolean,
     onChangeTheme: () -> Unit,
     onStatusBarColor: (Color) -> Unit,
-    preferencesManager: PreferencesManager,
 ) {
     val navHostController = rememberNavController()
     NavHost(
@@ -72,10 +68,7 @@ private fun AppNavigation(
         }
 
         composable<OnBoardingScreenRoute> {
-            OnBoardingScreen(
-                navController = navHostController,
-                preferencesManager = preferencesManager
-            )
+            OnBoardingScreen(navHostController = navHostController)
         }
 
         composable<MainScreenRoute> {

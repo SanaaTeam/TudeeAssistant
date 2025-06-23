@@ -27,8 +27,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 
 @Composable
-fun SplashScreen(
-) {
+fun SplashScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -40,7 +39,7 @@ fun SplashScreen(
                 .background(Theme.color.overlay)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.background_ellipse),
+                painter = painterResource(id = R.drawable.ellipse_background),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -99,7 +98,6 @@ fun SplashScreen(
 private fun SplashScreenPreview() {
 
     TudeeTheme(false) {
-        //  SplashScreen { showSplash = false }
-
+          SplashScreen()
     }
 }

@@ -1,5 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.utils
 
+import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -66,4 +68,24 @@ object DataProvider {
             categoryId = 6
         ),
     )
+
+    fun getOnBoardingPageContent(): List<OnBoardingPageContentItem> {
+        return listOf(
+            OnBoardingPageContentItem(
+                title = R.string.onboarding_title_0,
+                description = R.string.onboarding_desc_0,
+                imageRes = R.drawable.boarding_screen1
+            ),
+            OnBoardingPageContentItem(
+                title = R.string.onboarding_title_1,
+                description = R.string.onboarding_desc_1,
+                imageRes = R.drawable.boarding_screen2
+            ),
+            OnBoardingPageContentItem(
+                title = R.string.onboarding_title_2,
+                description = R.string.onboarding_desc_2,
+                imageRes = R.drawable.boarding_screen3
+            ),
+        )
+    }
 }

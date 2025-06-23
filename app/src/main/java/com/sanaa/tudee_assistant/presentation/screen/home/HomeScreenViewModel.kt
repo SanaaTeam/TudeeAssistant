@@ -11,6 +11,9 @@ import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class HomeScreenViewModel(
     private val preferencesManager: PreferencesManager,
@@ -33,10 +36,13 @@ class HomeScreenViewModel(
 
     private fun getTasks() {
         viewModelScope.launch(Dispatchers.IO) {
+            val today = Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault()).date
             taskService.getAllTasks().collect { tasks ->
+                val todayTasks = tasks.filter { it.dueDate == today }
                 _state.update { state ->
                     state.copy(
-                        tasks = tasks.map { it.toState() }
+                        tasks = todayTasks.map { it.toState() }
                     )
                 }
 

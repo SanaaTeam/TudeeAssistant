@@ -32,11 +32,12 @@ fun MainScreen(
     onChangeTheme: () -> Unit,
     onStatusBarColor: (Color) -> Unit,
     navHostController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     val navBackStackEntry by screenNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    Column {
+    Column(modifier = modifier) {
         NavHost(
             modifier = Modifier.weight(1f),
             navController = screenNavController,
@@ -52,7 +53,7 @@ fun MainScreen(
             }
 
             composable<TasksScreenRoute> {
-                onStatusBarColor(Theme.color.surface)
+                onStatusBarColor(Theme.color.surfaceHigh)
                 TasksScreen(screenRoute = it.toRoute<TasksScreenRoute>())
             }
 

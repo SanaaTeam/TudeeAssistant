@@ -36,7 +36,7 @@ fun TudeeApp(isDarkTheme: Boolean, preferencesManager: PreferencesManager, isFir
         Scaffold(containerColor = statusBarColor) { innerPadding ->
             AppNavigation(
                 startDestination = if (isFirstLaunch) OnBoardingScreenRoute else MainScreenRoute,
-                modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
+                modifier = Modifier.padding(innerPadding),
                 isDarkTheme = isDarkTheme,
                 onChangeTheme = {
                     scope.launch {
@@ -59,7 +59,6 @@ private fun AppNavigation(
 ) {
     val navHostController = rememberNavController()
     NavHost(
-        modifier = modifier,
         navController = navHostController,
         startDestination = startDestination
     ) {
@@ -68,7 +67,7 @@ private fun AppNavigation(
         }
 
         composable<OnBoardingScreenRoute> {
-            OnBoardingScreen(navHostController = navHostController)
+            OnBoardingScreen(navHostController = navHostController, modifier = modifier)
         }
 
         composable<MainScreenRoute> {
@@ -79,24 +78,13 @@ private fun AppNavigation(
                 isDarkTheme = isDarkTheme,
                 onChangeTheme = onChangeTheme,
                 onStatusBarColor,
-                navHostController = navHostController
-            )
-        }
-
-        composable<MainScreenRoute> {
-            val screenNavController = rememberNavController()
-            MainScreen(
-                startDestination = HomeScreenRoute,
-                screenNavController,
-                isDarkTheme = isDarkTheme,
-                onChangeTheme = onChangeTheme,
-                onStatusBarColor,
-                navHostController = navHostController
+                navHostController = navHostController,
+                modifier = modifier
             )
         }
 
         composable<CategoryTasksScreenRoute> {
-            CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id)
+            CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id, modifier = modifier)
         }
     }
 }

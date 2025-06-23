@@ -28,7 +28,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTas
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.design_system.component.DateChip
+import com.sanaa.tudee_assistant.presentation.designSystem.component.DateChip
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider

@@ -1,10 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
-import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
@@ -78,10 +75,10 @@ class TaskViewModel(
                     if (it?.id == null) return@launch
                     taskService.deleteTaskById(it.id)
                 }.onSuccess {
-                    handleOnSuccess(message = R.string.snack_bar_success.toString())
+                    handleOnSuccess(messageStringId = R.string.snack_bar_success)
                     getTasksByDueDate()
                 }.onFailure {
-                    handleOnError(message = R.string.snack_bar_error.toString())
+                    handleOnError( messageStringId = R.string.snack_bar_error)
 
                 }
             }
@@ -105,7 +102,7 @@ class TaskViewModel(
 
     fun onSnackBarShown() {
         _state.update {
-            it.copy(successMessage = null, errorMessage = null)
+            it.copy(successMessageStringId = null, errorMessageStringId = null)
         }
     }
 
@@ -136,7 +133,7 @@ class TaskViewModel(
                     )
                 }.onSuccess {
                     handleOnSuccess(
-                        message = R.string.snack_bar_success.toString()
+                        messageStringId = R.string.snack_bar_success
                     )
                 }.onFailure {
                     handleOnError()
@@ -145,22 +142,22 @@ class TaskViewModel(
         }
     }
 
-    private fun handleOnSuccess(message: String? = null) {
+    private fun handleOnSuccess(messageStringId: Int? = null) {
         _state.update {
             it.copy(
-                successMessage = message,
-                errorMessage = null,
+                successMessageStringId = messageStringId,
+                errorMessageStringId = null,
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false
             )
         }
     }
 
-    private fun handleOnError(message: String? = null) {
+    private fun handleOnError(messageStringId: Int? = null) {
         _state.update {
             it.copy(
-                successMessage = null,
-                errorMessage = message,
+                successMessageStringId = null,
+                errorMessageStringId = messageStringId,
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false
             )

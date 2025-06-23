@@ -268,7 +268,8 @@ fun TasksScreenContent(
                         onDismissTaskViewDetails()
                         taskToEdit = task
                         showEditTaskBottomSheet = true
-                    }, onMoveToClicked = onMoveToTaskViewDetails,
+                    },
+                    onMoveToClicked = onMoveToTaskViewDetails,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
@@ -348,22 +349,31 @@ fun TasksScreenContent(
             iconRes = R.drawable.note_add
         )
 
-        LaunchedEffect(state.successMessage) {
-            state.successMessage?.let {
-                snackBarHostState.showSnackbar(it)
+        var successMessageText : String? = null
+        state.successMessageStringId?.let {
+            successMessageText = stringResource(state.successMessageStringId)
+        }
+
+        LaunchedEffect(state.successMessageStringId) {
+            state.successMessageStringId?.let {
+                snackBarHostState.showSnackbar(successMessageText!!)
                 onShowSnackBar()
             }
         }
-        LaunchedEffect(state.successMessage) {
-            state.errorMessage?.let {
-                snackBarHostState.showSnackbar(it)
+        var errorMessageText : String? = null
+        state.errorMessageStringId?.let {
+            successMessageText = stringResource(state.errorMessageStringId)
+        }
+        LaunchedEffect(state.successMessageStringId) {
+            state.errorMessageStringId?.let {
+                snackBarHostState.showSnackbar(errorMessageText!!)
                 onShowSnackBar()
             }
         }
 
         TudeeSnackBar(
             snackBarHostState = snackBarHostState,
-            isError = state.errorMessage != null
+            isError = state.errorMessageStringId != null
         )
     }
 }
@@ -376,8 +386,8 @@ private fun TasksScreenPreview() {
         mutableStateOf(
             TasksScreenUiState(
                 currentDateTasks = DataProvider.getTasksSample(),
-                errorMessage = null,
-                successMessage = null,
+                errorMessageStringId = null,
+                successMessageStringId = null,
                 showAddTaskBottomSheet = false,
                 showEditTaskBottomSheet = false,
                 showTaskDetailsBottomSheet = false,

@@ -11,8 +11,8 @@ import kotlinx.datetime.toLocalDateTime
 
 data class TasksScreenUiState(
     val currentDateTasks: List<TaskUiState> = emptyList(),
-    val errorMessage: String? = null,
-    val successMessage: String? = null,
+    val errorMessageStringId: Int? = null,
+    val successMessageStringId: Int? = null,
     val showAddTaskBottomSheet: Boolean = false,
     val showEditTaskBottomSheet: Boolean = false,
     val showTaskDetailsBottomSheet: Boolean = false,

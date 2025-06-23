@@ -74,17 +74,17 @@ object DataProvider {
             OnBoardingPageContentItem(
                 title = R.string.onboarding_title_0,
                 description = R.string.onboarding_desc_0,
-                imageRes = R.drawable.boarding_screen1
+                imageRes = R.drawable.robot_onboarding_page0
             ),
             OnBoardingPageContentItem(
                 title = R.string.onboarding_title_1,
                 description = R.string.onboarding_desc_1,
-                imageRes = R.drawable.boarding_screen2
+                imageRes = R.drawable.robot_onboarding_page1
             ),
             OnBoardingPageContentItem(
                 title = R.string.onboarding_title_2,
                 description = R.string.onboarding_desc_2,
-                imageRes = R.drawable.boarding_screen3
+                imageRes = R.drawable.robot_onboarding_page2
             ),
         )
     }

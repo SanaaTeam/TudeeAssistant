@@ -18,7 +18,7 @@ import kotlinx.datetime.LocalDate
 class TaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()) {
+) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()), TaskInteractionListener {
 
 
     init {
@@ -62,13 +62,12 @@ class TaskViewModel(
         _state.update { it.copy(selectedTask = task) }
     }
 
-    fun onTaskClick(task: TaskUiState) {
+    override fun onTaskClicked(task: TaskUiState) {
         onTaskSelected(task)
-        onShowTaskDetailsDialogChange(true)
+        onDismissTaskDetails(true)
     }
 
-
-    fun onTaskDeleted() {
+    override fun onDeleteTask() {
         _state.value.selectedTask.let {
             viewModelScope.launch {
                 runCatching {
@@ -85,7 +84,7 @@ class TaskViewModel(
         }
     }
 
-    fun onDueDateChange(date: LocalDate) {
+    override fun onDateSelected(date: LocalDate) {
         _state.update {
             it.copy(selectedDate = date)
         }
@@ -96,28 +95,29 @@ class TaskViewModel(
         _state.update { it.copy(showDeleteTaskBottomSheet = show) }
     }
 
-    fun onShowTaskDetailsDialogChange(show: Boolean) {
+    override fun onDismissTaskDetails(show: Boolean) {
         _state.update { it.copy(showTaskDetailsBottomSheet = show) }
     }
 
-    fun onSnackBarShown() {
+    override fun onShowSnackbar() {
         _state.update {
             it.copy(successMessageStringId = null, errorMessageStringId = null)
         }
     }
 
-    fun onTaskDeletedDismiss() {
+    override fun onDeleteDismiss() {
         _state.update { it.copy(showDeleteTaskBottomSheet = false) }
     }
 
-    fun onTaskSwipeToDelete(task: TaskUiState) {
+    override fun onTaskSwipeToDelete(task: TaskUiState): Boolean {
         viewModelScope.launch {
             onTaskSelected(task)
             onShowDeleteDialogChange(true)
         }
+        return false
     }
 
-    fun onMoveTaskToAnotherStatus() {
+    override fun onMoveTaskToAnotherStatus() {
         viewModelScope.launch {
             if (state.value.selectedTask == null) return@launch
             state.value.selectedTask?.copy(

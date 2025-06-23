@@ -1,23 +1,29 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -72,28 +78,83 @@ fun CategoryTaskScreenContent(
                     label = stringResource(R.string.in_progress_task_status),
                     count = state.filteredTasks.size,
                     content = {
-                        TasksList(
-                            tasks = state.filteredTasks,
-                            category = state.currentCategory,
-                        )
+                        AnimatedVisibility(visible = state.filteredTasks.isEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(end = 20.dp, top = 172.dp),
+                                contentAlignment = Alignment.TopEnd
+                            ) {
+                                EmptyScreen(
+                                    title = stringResource(
+                                        R.string.no_tasks_in,
+                                        state.currentCategory.name,
+                                    ),
+                                    caption = null
+                                )
+                            }
+                        }
+                        AnimatedVisibility(visible = state.filteredTasks.isNotEmpty()) {
+                            TasksList(
+                                tasks = state.filteredTasks,
+                                category = state.currentCategory,
+                            )
+                        }
                     }),
                 TabItem(
                     label = stringResource(R.string.todo_task_status),
                     count = state.filteredTasks.size,
                     content = {
-                        TasksList(
-                            tasks = state.filteredTasks,
-                            category = state.currentCategory,
-                        )
+                        AnimatedVisibility(visible = state.filteredTasks.isEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(end = 20.dp, top = 172.dp),
+                                contentAlignment = Alignment.TopEnd
+                            ) {
+                                EmptyScreen(
+                                    title = stringResource(
+                                        R.string.no_tasks_in,
+                                        state.currentCategory.name,
+                                    ),
+                                    caption = null
+                                )
+                            }
+                        }
+
+                        AnimatedVisibility(visible = state.filteredTasks.isNotEmpty()) {
+                            TasksList(
+                                tasks = state.filteredTasks,
+                                category = state.currentCategory,
+                            )
+                        }
                     }),
                 TabItem(
                     label = stringResource(R.string.done_task_status),
                     count = state.filteredTasks.size,
                     content = {
-                        TasksList(
-                            tasks = state.filteredTasks,
-                            category = state.currentCategory,
-                        )
+                        AnimatedVisibility(visible = state.filteredTasks.isEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(end = 20.dp, top = 172.dp),
+                                contentAlignment = Alignment.TopEnd
+                            ) {
+                                EmptyScreen(
+                                    title = stringResource(
+                                        R.string.no_tasks_in,
+                                        state.currentCategory.name,
+                                    ),
+                                    caption = null
+                                )
+                            }
+                        }
+                        AnimatedVisibility(visible = state.filteredTasks.isNotEmpty()) {
+                            TasksList(
+                                tasks = state.filteredTasks,
+                                category = state.currentCategory,
+                            )
+                        }
                     }),
 
                 ),

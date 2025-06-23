@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation
+package com.sanaa.tudee_assistant.presentation.app
 
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager

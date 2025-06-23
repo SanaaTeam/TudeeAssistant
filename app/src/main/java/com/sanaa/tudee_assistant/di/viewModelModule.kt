@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.di
 
-import com.sanaa.tudee_assistant.presentation.TudeeAppViewModel
+import com.sanaa.tudee_assistant.presentation.app.TudeeAppViewModel
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryViewModel
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskViewModel
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenViewModel

@@ -1,8 +1,9 @@
-package com.sanaa.tudee_assistant.presentation
+package com.sanaa.tudee_assistant.presentation.app
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,10 +16,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
-import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
-import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.LocalNavController
+import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingScreen
@@ -31,11 +33,14 @@ fun TudeeApp(appViewModel: TudeeAppViewModel = koinViewModel()) {
 
     TudeeTheme(isDark = state.isDarkTheme) {
         Scaffold(containerColor = statusBarColor) { innerPadding ->
-            AppNavigation(
-                startDestination = if (state.isFirstLaunch) OnBoardingScreenRoute else MainScreenRoute,
-                modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
-                onStatusBarColor = { color -> statusBarColor = color },
-            )
+            val appNavController = rememberNavController()
+            CompositionLocalProvider(LocalNavController provides appNavController) {
+                AppNavigation(
+                    startDestination = if (state.isFirstLaunch) OnBoardingScreenRoute else MainScreenRoute,
+                    modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
+                    onStatusBarColor = { color -> statusBarColor = color },
+                )
+            }
         }
     }
 }
@@ -46,23 +51,20 @@ private fun AppNavigation(
     modifier: Modifier = Modifier,
     onStatusBarColor: (Color) -> Unit,
 ) {
-    val navHostController = rememberNavController()
+    val navHostController = LocalNavController.current
     NavHost(
         modifier = modifier,
         navController = navHostController,
         startDestination = startDestination
     ) {
         composable<OnBoardingScreenRoute> {
-            OnBoardingScreen(navController = navHostController)
+            OnBoardingScreen()
         }
 
         composable<MainScreenRoute> {
-            val screenNavController = rememberNavController()
             MainScreen(
                 startDestination = HomeScreenRoute,
-                screenNavController,
-                onStatusBarColor,
-                navHostController = navHostController
+                onStatusBarColor = onStatusBarColor,
             )
         }
 

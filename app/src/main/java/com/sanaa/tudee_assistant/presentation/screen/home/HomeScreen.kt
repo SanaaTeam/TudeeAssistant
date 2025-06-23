@@ -75,11 +75,9 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreen(viewModel: HomeScreenViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
 
-    val actionsListener = object : HomeScreenActionsListener by viewModel {}
-
     HomeScreenContent(
         state = state,
-        actionsListener = actionsListener,
+        actionsListener = viewModel,
     )
 }
 

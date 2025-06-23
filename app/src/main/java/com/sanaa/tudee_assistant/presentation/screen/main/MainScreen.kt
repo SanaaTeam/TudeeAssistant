@@ -11,15 +11,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBarItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.route.CategoriesScreenRoute
-import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
-import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.CategoriesScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryScreen
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
 import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
@@ -27,10 +28,9 @@ import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
 @Composable
 fun MainScreen(
     startDestination: Any,
-    screenNavController: NavHostController,
     onStatusBarColor: (Color) -> Unit,
-    navHostController: NavHostController,
 ) {
+    val screenNavController = rememberNavController()
     val navBackStackEntry by screenNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -52,7 +52,7 @@ fun MainScreen(
 
             composable<CategoriesScreenRoute> {
                 onStatusBarColor(Theme.color.surfaceHigh)
-                CategoryScreen(screenNavController = navHostController)
+                CategoryScreen()
             }
         }
 
@@ -82,7 +82,7 @@ fun MainScreen(
     }
 }
 
-fun <T : Any> NavHostController.navigateTo(route: T) {
+private fun <T : Any> NavHostController.navigateTo(route: T) {
     navigate(route) {
         popUpTo(graph.findStartDestination().id) {
             saveState = true

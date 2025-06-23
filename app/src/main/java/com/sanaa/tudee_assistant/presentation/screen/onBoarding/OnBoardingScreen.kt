@@ -42,8 +42,9 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
-import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.LocalNavController
+import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -75,9 +76,9 @@ fun getOnBoardingContent(page: Int): OnBoardingContent {
 @Composable
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
-    navController: NavController,
     preferencesManager: PreferencesManager = koinInject<PreferencesManager>(),
 ) {
+    val navController = LocalNavController.current
     val isInPreview = LocalView.current.isInEditMode
 
     if (!isInPreview) {

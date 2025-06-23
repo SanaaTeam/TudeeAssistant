@@ -39,27 +39,6 @@ class CategoryTaskViewModel(
         )
     }
 
-
-    private fun onSuccess(message: String?) {
-        _state.update {
-            it.copy(
-                isLoading = false,
-                error = null,
-                success = message
-            )
-        }
-    }
-
-    private fun onError(message: String?) {
-        _state.update {
-            it.copy(
-                isLoading = false,
-                error = message,
-                success = null
-            )
-        }
-    }
-
     override fun onDeleteClicked() {
         _state.update {
             it.copy(showDeleteCategoryBottomSheet = true)
@@ -118,6 +97,19 @@ class CategoryTaskViewModel(
             it.copy(
                 currentCategory = _state.value.currentCategory.copy(name = title)
             )
+        }
+    }
+
+
+    private fun onSuccess(message: String?) {
+        _state.update {
+            it.copy(isLoading = false, error = null, success = message)
+        }
+    }
+
+    private fun onError(message: String?) {
+        _state.update {
+            it.copy(isLoading = false, error = message, success = null)
         }
     }
 }

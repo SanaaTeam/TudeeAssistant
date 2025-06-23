@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
+import android.net.Uri
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
@@ -14,21 +15,22 @@ class CategoryTaskViewModel(
 ) : BaseViewModel<CategoryTaskScreenUiState>(initialState = CategoryTaskScreenUiState()),
     CategoryTaskInteractionListener {
 
-        init {
-            loadCategoryTasks(1)
-        }
     fun loadCategoryTasks(categoryId: Int) {
         tryToExecute(
             function = {
                 _state.update { it.copy(isLoading = true) }
                 val category = categoryService.getCategoryById(categoryId)
-                val tasks = taskService.getTasksByCategoryId(categoryId).first()
+                val tasks = taskService
+                    .getTasksByCategoryId(categoryId)
+                    .first()
+                    .map { it.toState() }
+                val currentStatus = _state.value.currentSelectedTaskStatus
+
                 _state.update {
                     it.copy(
                         currentCategory = category.toState(tasksCount = tasks.size),
-                        allCategoryTasks = tasks.map { task -> task.toState() },
-                        filteredTasks = _state.value.allCategoryTasks
-                            .filter { task -> task.status == _state.value.currentSelectedTaskStatus },
+                        allCategoryTasks = tasks,
+                        filteredTasks = tasks.filter { task -> task.status == currentStatus }
                     )
                 }
             },
@@ -99,6 +101,22 @@ class CategoryTaskViewModel(
                 currentSelectedTaskStatus = status,
                 filteredTasks = _state.value.allCategoryTasks.filter { task -> task.status == status },
                 selectedTapIndex = index
+            )
+        }
+    }
+
+    override fun onImageSelect(image: Uri?) {
+        _state.update {
+            it.copy(
+                currentCategory = _state.value.currentCategory.copy(imagePath = image.toString())
+            )
+        }
+    }
+
+    override fun onTitleChange(title: String) {
+        _state.update {
+            it.copy(
+                currentCategory = _state.value.currentCategory.copy(name = title)
             )
         }
     }

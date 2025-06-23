@@ -12,8 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
-import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.TaskForm
-import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.TaskFormViewModel
+import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskContent
+import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskViewModel
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.androidx.compose.koinViewModel
 
@@ -25,7 +25,7 @@ fun AddEditTaskScreen(
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
-    viewModel: TaskFormViewModel = koinViewModel(),
+    viewModel: AddEditTaskViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showBottomSheet by remember { mutableStateOf(true) }
@@ -53,7 +53,7 @@ fun AddEditTaskScreen(
         BaseBottomSheet(
             content = {
                 Column(modifier = Modifier.fillMaxHeight(0.81f)) {
-                    TaskForm(
+                    AddEditTaskContent(
                         uiState = uiState,
                         categories = uiState.categories,
                         isEditMode = isEditMode,

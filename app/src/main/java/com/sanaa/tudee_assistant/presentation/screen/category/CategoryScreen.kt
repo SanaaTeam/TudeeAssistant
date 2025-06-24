@@ -27,7 +27,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.sanaa.tudee_assistant.R
@@ -35,7 +34,6 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCou
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -55,8 +53,6 @@ fun CategoryScreen(
         onShowTasksByCategoryClick = { categoryId ->
             screenNavController.navigate(CategoryTasksScreenRoute(categoryId))
         }
-
-
     )
 }
 
@@ -140,30 +136,21 @@ fun CategoryScreenContent(
             }
         }
     }
-
     if (state.isAddCategorySheetVisible) {
-        AddNewCategory(
-            onAddClick = { title, imageUri ->
-                val newCategory = CategoryUiState(
-                    id = 0,
-                    name = title,
-                    imagePath = imageUri.toString(),
-                    isDefault = false,
-                    tasksCount = 0
-                )
-                listener.onAddCategory(newCategory)
+        AddEditCategoryBottomSheet(
+            category = state.currentCategory,
+            isEditMode = false,
+            onTitleChange = { listener.onCategoryTitleChange(it) },
+            onImageSelected = { listener.onCategoryImageSelected(it) },
+            onSaveClick = {
+                listener.onAddCategory(it)
                 listener.onToggleAddCategorySheet(false)
             },
             onDismiss = {
                 listener.onToggleAddCategorySheet(false)
             },
-            onImageSelected = { uri -> }
+            isFormValid = { state.categoryTitle.isNotBlank() }
         )
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-private fun CategoryScreenPreview() {
-//    CategoryScreen(screenNavController = navHostController)
 }

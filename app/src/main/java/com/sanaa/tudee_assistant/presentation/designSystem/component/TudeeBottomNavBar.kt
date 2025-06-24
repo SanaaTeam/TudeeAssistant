@@ -40,7 +40,7 @@ fun TudeeBottomNavBar(
             .background(Theme.color.surfaceHigh)
             .fillMaxWidth()
             .padding(vertical = Theme.dimension.medium, horizontal = Theme.dimension.extraLarge),
-        Arrangement.Absolute.SpaceBetween
+        Arrangement.SpaceBetween
     ) { content() }
 }
 

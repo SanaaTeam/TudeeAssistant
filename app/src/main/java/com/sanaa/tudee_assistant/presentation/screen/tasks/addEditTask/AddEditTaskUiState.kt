@@ -8,8 +8,6 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-
-//////   TODO: change date passed on the selected date
 data class AddTaskUiState(
     val taskUiState: TaskUiState = TaskUiState(
         id = 0,

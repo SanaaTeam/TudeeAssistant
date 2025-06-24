@@ -58,6 +58,7 @@ import kotlinx.datetime.plus
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+import java.util.Locale
 
 @Composable
 fun TasksScreen(
@@ -190,13 +191,15 @@ fun TasksScreenContent(
                     listState.animateScrollToItem(state.selectedDate.dayOfMonth - 1)
                 }
             }
+            val isArabic = Locale.getDefault().language == "arabic"
             LazyRow(
                 state = listState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 24.dp),
+                reverseLayout = isArabic
             ) {
                 itemsIndexed(daysInMonth) { index, date ->
                     DayItem(

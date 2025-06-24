@@ -11,6 +11,7 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -38,10 +39,26 @@ fun CustomDatePickerDialog(
     onDateSelected: (Long?) -> Unit = {},
     onDismiss: () -> Unit = {},
     initialSelectedDate: LocalDate? = null,
+    minDateMillis: Long? = null
 ) {
     val initialSelectedDateMillis = DateFormater.localDateToEpochMillis(initialSelectedDate)
-    val datePickerState =
-        rememberDatePickerState(initialSelectedDateMillis = initialSelectedDateMillis)
+
+    val selectableDates = if (minDateMillis != null) {
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= minDateMillis
+            }
+        }
+    } else {
+        DatePickerDefaults.AllDates
+    }
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialSelectedDateMillis,
+        selectableDates = selectableDates
+    )
+
+
 
     DatePickerDialog(
         onDismissRequest = onDismiss,

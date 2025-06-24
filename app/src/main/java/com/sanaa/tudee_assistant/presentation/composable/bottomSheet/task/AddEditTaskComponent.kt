@@ -8,14 +8,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
-import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.TaskForm
-import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.TaskFormViewModel
+import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskContent
+import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskViewModel
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.androidx.compose.koinViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,52 +26,49 @@ fun AddEditTaskScreen(
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
-    viewModel: TaskFormViewModel = koinViewModel(),
+    viewModel: AddEditTaskViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showBottomSheet by remember { mutableStateOf(true) }
-    var showDatePickerDialog by remember { mutableStateOf(false) }
+    val showDatePickerDialog by viewModel.showDatePickerDialog.collectAsState()
+    var isInitialized by rememberSaveable { mutableStateOf(false) }
 
-
-    LaunchedEffect(isEditMode, taskToEdit) {
-        if (!isEditMode) {
-            viewModel.resetState()
+    LaunchedEffect(isEditMode, taskToEdit, isInitialized) {
+        if (!isInitialized) {
+            if (!isEditMode) {
+                viewModel.resetState()
+                viewModel.loadCategoriesForNewTask()
+            } else if (taskToEdit != null) {
+                viewModel.loadTask(taskToEdit)
+            }
+            isInitialized = true
         }
-        if (taskToEdit == null)
-            viewModel.loadCategoriesForNewTask()
-        else
-            viewModel.loadTask(taskToEdit)
     }
+
     LaunchedEffect(uiState.isOperationSuccessful, uiState.error) {
         if (uiState.isOperationSuccessful) {
-            showBottomSheet = false
             onSuccess()
             viewModel.resetState()
         }
+        uiState.error?.let {
+            onError(it)
+        }
     }
 
-    if (showBottomSheet) {
         BaseBottomSheet(
             content = {
                 Column(modifier = Modifier.fillMaxHeight(0.81f)) {
-                    TaskForm(
+                    AddEditTaskContent(
                         uiState = uiState,
                         categories = uiState.categories,
                         isEditMode = isEditMode,
                         showDatePickerDialog = showDatePickerDialog,
-                        onTitleChange = viewModel::onTitleChange,
-                        onDescriptionChange = viewModel::onDescriptionChange,
-                        onDateSelected = viewModel::onDateSelected,
-                        onPrioritySelected = viewModel::onPrioritySelected,
-                        onCategorySelected = viewModel::onCategorySelected,
-                        onPrimaryButtonClick = if (isEditMode) viewModel::updateTask else viewModel::addTask,
-                        onDismiss = onDismiss,
-                        onDatePickerShow = { showDatePickerDialog = true },
-                        onDatePickerDismiss = { showDatePickerDialog = false }
+                        listener = viewModel
                     )
                 }
             },
-            onDismiss = onDismiss
+            onDismiss = {
+                onDismiss()
+            }
         )
-    }
+
 }

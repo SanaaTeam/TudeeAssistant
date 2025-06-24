@@ -8,8 +8,9 @@ interface TaskInteractionListener {
     fun onTaskClicked(task: TaskUiState)
     fun onTaskSwipeToDelete(task: TaskUiState): Boolean
     fun onDismissTaskDetails(show: Boolean)
-    fun onMoveTaskToAnotherStatus()
     fun onDeleteTask()
     fun onDeleteDismiss()
     fun onShowSnackbar()
-}
+    fun handleOnMoveToStatusSuccess()
+    fun handleOnMoveToStatusFail()
+    }

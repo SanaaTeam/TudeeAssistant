@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,12 +42,12 @@ import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortMonthName
@@ -55,19 +56,17 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
+
 import java.util.Locale
 
 @Composable
 fun TasksScreen(
     screenRoute: TasksScreenRoute,
     modifier: Modifier = Modifier,
-    viewModel: TaskViewModel = koinViewModel<TaskViewModel>(),
+    viewModel: TaskViewModel = koinViewModel<TaskViewModel>(parameters = { parametersOf(screenRoute.taskStatus) }),
 ) {
     val state by viewModel.state.collectAsState()
-
-    LaunchedEffect(key1 = Unit) {
-        viewModel.onTaskStatusSelectedChange(screenRoute.taskStatus)
-    }
 
     TasksScreenContent(
         state = state,
@@ -86,10 +85,10 @@ fun TasksScreenContent(
 
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    var showEditTaskBottomSheet by remember { mutableStateOf(false) }
-    var taskToEdit by remember { mutableStateOf<TaskUiState?>(null) }
+    var showEditTaskBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var taskToEdit by rememberSaveable { mutableStateOf<TaskUiState?>(null) }
     var showDialog by remember { mutableStateOf(false) }
-    var showAddTaskBottomSheet by remember { mutableStateOf(false) }
+    var showAddTaskBottomSheet by rememberSaveable { mutableStateOf(false) }
     var daysInMonth by remember {
         mutableStateOf(
             DateFormater.getLocalDatesInMonth(
@@ -213,36 +212,40 @@ fun TasksScreenContent(
             if (showDialog) {
                 CustomDatePickerDialog(
                     onDateSelected = { selectedDateMillis: Long? ->
-                    selectedDateMillis?.let {
-                        val date = DateFormater.formatLongToDate(selectedDateMillis)
-                        interactionListener.onDateSelected(date)
-                        daysInMonth =
-                            (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
-                    }
-                }, onDismiss = { showDialog = false }, initialSelectedDate = state.selectedDate
+                        selectedDateMillis?.let {
+                            val date = DateFormater.formatLongToDate(selectedDateMillis)
+                            interactionListener.onDateSelected(date)
+                            daysInMonth =
+                                (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
+                        }
+                    }, onDismiss = { showDialog = false }, initialSelectedDate = state.selectedDate
                 )
             }
+
             TaskStatusTabs(
                 state,
                 interactionListener::onTaskSwipeToDelete,
                 interactionListener::onTaskClicked
             )
-            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) TaskDetailsComponent(
-                task = state.selectedTask,
-                onDismiss = { interactionListener.onDismissTaskDetails(false) },
-                onEditClick = { task ->
-                    interactionListener.onDismissTaskDetails(false)
-                    taskToEdit = task
-                    showEditTaskBottomSheet = true
-                },
-                onMoveToClicked = interactionListener::onMoveTaskToAnotherStatus,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            if (state.selectedTask != null && state.showDeleteTaskBottomSheet) DeleteComponent(
-                onDismiss = interactionListener::onDeleteDismiss,
-                onDeleteClicked = interactionListener::onDeleteTask,
-                title = stringResource(R.string.delete_task_title),
-            )
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
+                TaskDetailsComponent(
+                    selectedTaskId = state.selectedTask.id,
+                    onDismiss = { interactionListener.onDismissTaskDetails(false) },
+                    onEditClick = { task ->
+                        interactionListener.onDismissTaskDetails(false)
+                        taskToEdit = task
+                        showEditTaskBottomSheet = true
+                    },
+                    onMoveStatusSuccess = {interactionListener.handleOnMoveToStatusSuccess()},
+                    onMoveStatusFail = {interactionListener.handleOnMoveToStatusFail()},
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
+                DeleteComponent(
+                    onDismiss = interactionListener::onDeleteDismiss,
+                    onDeleteClicked = interactionListener::onDeleteTask,
+                    title = stringResource(R.string.delete_task_title),
+                )
             if (showAddTaskBottomSheet) {
                 AddEditTaskScreen(
                     isEditMode = false,
@@ -301,30 +304,24 @@ fun TasksScreenContent(
             iconRes = R.drawable.note_add
         )
 
-        var successMessageText: String? = null
-        state.successMessageStringId?.let {
-            successMessageText = stringResource(state.successMessageStringId)
-        }
-
-        LaunchedEffect(state.successMessageStringId) {
-            state.successMessageStringId?.let {
-                snackBarHostState.showSnackbar(successMessageText!!)
+        LaunchedEffect(state.successMessage) {
+            state.successMessage?.let {
+                snackBarHostState.showSnackbar(it)
                 interactionListener.onShowSnackbar()
             }
         }
-        var errorMessageText: String? = null
-        state.errorMessageStringId?.let {
-            successMessageText = stringResource(state.errorMessageStringId)
-        }
-        LaunchedEffect(state.successMessageStringId) {
-            state.errorMessageStringId?.let {
-                snackBarHostState.showSnackbar(errorMessageText!!)
+
+
+
+        LaunchedEffect(state.successMessage) {
+            state.errorMessage?.let {
+                snackBarHostState.showSnackbar(it)
                 interactionListener.onShowSnackbar()
             }
         }
 
         TudeeSnackBar(
-            snackBarHostState = snackBarHostState, isError = state.errorMessageStringId != null
+            snackBarHostState = snackBarHostState, isError = state.errorMessage != null
         )
     }
 }

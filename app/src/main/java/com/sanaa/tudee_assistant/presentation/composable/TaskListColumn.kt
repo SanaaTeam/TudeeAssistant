@@ -24,7 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
@@ -78,7 +78,7 @@ fun TaskListColumn(
                     }
                 },
                 content = {
-                    CategoryTaskCard(
+                    TaskItemCard(
                         task = task,
                         categoryImagePath = categories.firstOrNull { it.id == task.categoryId }?.imagePath
                             ?: "",

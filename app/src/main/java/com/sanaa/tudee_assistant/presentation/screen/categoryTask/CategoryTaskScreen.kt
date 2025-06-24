@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -306,7 +306,7 @@ private fun TasksList(
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             items(tasks) { task ->
-                CategoryTaskCard(
+                TaskItemCard(
                     task = TaskUiState(
                         id = task.id,
                         title = task.title,

@@ -48,7 +48,7 @@ fun TaskStatusTabs(
                         taskList = state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
                         categories = state.categories,
                         onTaskSwipe = { task -> onTaskSwipe(task) },
-                        onTaskClick = { onTaskClick }
+                        onTaskClick = onTaskClick
                     )
                 } else {
                     Box(

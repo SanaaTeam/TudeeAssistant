@@ -45,7 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
-import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
 import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
 import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
@@ -293,7 +293,7 @@ private fun CategoryList(
     ) {
         items(items = items) { task ->
             val categoryImagePath = categories.first { it.id == task.categoryId }.imagePath
-            CategoryTaskCard(
+            TaskItemCard(
                 modifier = Modifier.width(320.dp),
                 task = task,
                 categoryImagePath = categoryImagePath,

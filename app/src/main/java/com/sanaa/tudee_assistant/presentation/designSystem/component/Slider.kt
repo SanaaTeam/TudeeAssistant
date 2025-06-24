@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -63,6 +64,7 @@ fun Slider(
             }
 
             Text(
+                modifier = Modifier.fillMaxWidth(0.8f),
                 text = when (status) {
                     TudeeUiStatus.GOOD -> {
                         stringResource(R.string.good_status_message)
@@ -131,7 +133,7 @@ fun Slider(
 
 fun getSlideStatus(tasks: List<TaskUiState>): TudeeUiStatus {
     val allTasksDone = tasks.all { it.status == TaskUiStatus.DONE }
-    val allTasksNotFinished = tasks.size > 1 && !tasks.any { it.status == TaskUiStatus.DONE }
+    val allTasksNotFinished = !tasks.any { it.status == TaskUiStatus.DONE }
     return if (tasks.isEmpty())
         TudeeUiStatus.POOR
     else if (allTasksNotFinished)

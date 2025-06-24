@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
@@ -42,7 +41,6 @@ import org.koin.androidx.compose.koinViewModel
 fun CategoryScreen(
     modifier: Modifier = Modifier,
     viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
-    screenNavController: NavHostController
 ) {
     val state by viewModel.state.collectAsState()
     val showBottomSheet = remember { mutableStateOf(false) }

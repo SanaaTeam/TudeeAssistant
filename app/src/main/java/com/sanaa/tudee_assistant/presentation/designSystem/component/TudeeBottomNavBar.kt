@@ -39,11 +39,9 @@ fun TudeeBottomNavBar(
             .shadow(Theme.dimension.regular)
             .background(Theme.color.surfaceHigh)
             .fillMaxWidth()
-            .padding(vertical = Theme.dimension.medium),
-        Arrangement.Absolute.SpaceEvenly
-    ) {
-        content()
-    }
+            .padding(vertical = Theme.dimension.medium, horizontal = Theme.dimension.extraLarge),
+        Arrangement.SpaceBetween
+    ) { content() }
 }
 
 @Composable

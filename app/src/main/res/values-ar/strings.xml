@@ -43,9 +43,9 @@
 
     <string name="today">اليوم</string>
     <string name="overview">نظرة عامة</string>
-    <string name="okay_status_message">لقد أنجزت * من أصل # مهام\nواصل التقدم!</string>
-    <string name="good_status_message">أنت تقوم بعمل رائع!!!\nتودي فخور بك.</string>
-    <string name="bad_status_message">أنت فقط تتصفح، لا تعمل.\nتودي يراقب. عد للعمل!</string>
+    <string name="okay_status_message">لقد أنجزت * من أصل # مهام واصل التقدم!</string>
+    <string name="good_status_message">أنت تقوم بعمل رائع!!!تودي فخور بك.</string>
+    <string name="bad_status_message">أنت فقط تتصفح، لا تعمل. تودي يراقب. عد للعمل!</string>
     <string name="poor_status_message">املأ يومك بشيء رائع.</string>
     <string name="okay_status_message_title">واصل العمل!</string>
     <string name="good_status_message_title">تادا!</string>
@@ -80,4 +80,21 @@
     <string name="edit_category">تعديل الفئة</string>
     <string name="delete_category">حذف الفئة</string>
     <string name="are_you_sure_to_continue">هل أنت متأكد من المتابعة؟</string>
+    <string name="Adoration">العبادة</string>
+    <string name="Agriculture">الزراعة</string>
+    <string name="Budgeting">إدارة الميزانية</string>
+    <string name="SelfCare">العناية الذاتية</string>
+    <string name="Shopping">التسوق</string>
+    <string name="Traveling">السفر</string>
+    <string name="Work">العمل</string>
+    <string name="Cleaning">النظافة</string>
+    <string name="Coding">البرمجة</string>
+    <string name="Cooking">الطبخ</string>
+    <string name="Education">التعليم</string>
+    <string name="Entertainment">الترفيه</string>
+    <string name="Event">المناسبات</string>
+    <string name="FamilyFriends">العائلة والاصدقاء</string>
+    <string name="FixingBugs">إصلاح الأخطاء</string>
+    <string name="Gym">الرياضة</string>
+    <string name="Medical">عناية طبية</string>
 </resources>

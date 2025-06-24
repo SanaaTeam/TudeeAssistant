@@ -102,4 +102,6 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test.v173)
 
     implementation(libs.androidx.core.splashscreen)
+
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
 }

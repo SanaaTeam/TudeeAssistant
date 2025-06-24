@@ -2,8 +2,11 @@ package com.sanaa.tudee_assistant.presentation.screen.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,17 +47,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
 import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
+import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskCountByStatusCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBar
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
+import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.util.navigatePreservingState
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
@@ -65,39 +76,31 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(
-    isDark: Boolean,
-    onChangeTheme: () -> Unit,
-    viewModel: HomeScreenViewModel = koinViewModel(),
-) {
+fun HomeScreen(viewModel: HomeScreenViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     HomeScreenContent(
-        isDark = isDark,
         state = state,
-        onChangeTheme = onChangeTheme,
-        onAddTask = viewModel::onAddTask,
-        onTaskClick = viewModel::onTaskClick,
-        onOpenCategory = viewModel::onOpenCategory,
-        onAddTaskSuccess = viewModel::onAddTaskSuccess,
-        onAddTaskHasError = viewModel::onAddTaskHasError,
+        interactionsListener = viewModel,
     )
 }
 
 @Composable
-fun HomeScreenContent(
-    isDark: Boolean,
+private fun HomeScreenContent(
     state: HomeScreenUiState,
-    onChangeTheme: () -> Unit,
-    onAddTask: () -> Unit,
-    onTaskClick: (TaskUiState) -> Unit,
-    onOpenCategory: (TaskUiStatus) -> Unit,
-    onAddTaskSuccess: () -> Unit,
-    onAddTaskHasError: (String) -> Unit,
+    interactionsListener: HomeScreenInteractionsListener,
 ) {
     val scrollState = rememberLazyListState()
     var showEditTaskBottomSheet by remember { mutableStateOf(false) }
     var isScrolled by remember { mutableStateOf(false) }
+    var snackBarDataToShow by remember { mutableStateOf<SnackBarState?>(null) }
 
+    LaunchedEffect(state.snackBarState) {
+        if (state.snackBarState != null) {
+            snackBarDataToShow = state.snackBarState
+            kotlinx.coroutines.delay(3000)
+            interactionsListener.onSnackBarShown()
+        }
+    }
     LaunchedEffect(scrollState) {
         snapshotFlow {
             Pair(scrollState.firstVisibleItemIndex, scrollState.firstVisibleItemScrollOffset)
@@ -119,18 +122,20 @@ fun HomeScreenContent(
             AppBar(
                 tailComponent = {
                     DarkModeThemeSwitchButton(
-                        isDark,
-                        onCheckedChange = {
-                            onChangeTheme()
-                        })
+                        state.isDarkTheme,
+                        onCheckedChange = { interactionsListener.onToggleColorTheme() }
+                    )
                 }
             )
 
             if (isScrolled) {
                 Line()
             }
-
-            CategoryList(scrollState, state, onOpenCategory, onTaskClick)
+            CategoryList(
+                scrollState,
+                state,
+                onTaskClick = { interactionsListener.onTaskClick(it) },
+            )
         }
 
 
@@ -141,7 +146,6 @@ fun HomeScreenContent(
             iconRes = R.drawable.note_add,
         ) {
             showEditTaskBottomSheet = true
-            onAddTask()
         }
 
         if (showEditTaskBottomSheet) {
@@ -152,15 +156,43 @@ fun HomeScreenContent(
                 },
                 onSuccess = {
                     showEditTaskBottomSheet = false
-                    onAddTaskSuccess()
+                    interactionsListener.onAddTaskSuccess()
                 },
                 onError = { errorMessage ->
-                    onAddTaskHasError(errorMessage)
+                    interactionsListener.onAddTaskHasError(errorMessage)
                 }
             )
         }
+        if (state.selectedTask != null) {
+            TaskDetailsComponent(
+                task = state.selectedTask,
+                onDismiss = { interactionsListener.onDismissTaskDetails() },
+                onEditClick = {},
+                onMoveToClicked = {}
+            )
+        }
+
+        AnimatedVisibility(
+            visible = state.snackBarState != null,
+            modifier = Modifier
+                .align(Alignment.TopCenter),
+            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
+            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+        ) {
+            snackBarDataToShow?.let { data ->
+                val (message, status) = when (data) {
+                    is SnackBarState.Success -> Pair(data.message, SnackBarStatus.SUCCESS)
+                    is SnackBarState.Error -> Pair(data.message, SnackBarStatus.ERROR)
+                }
+                SnackBar(
+                    message = message,
+                    snackBarStatus = status
+                )
+            }
+        }
     }
 }
+
 
 @Composable
 private fun Line() {
@@ -178,7 +210,6 @@ private fun Line() {
 private fun CategoryList(
     scrollState: LazyListState,
     state: HomeScreenUiState,
-    onOpenCategory: (TaskUiStatus) -> Unit,
     onTaskClick: (TaskUiState) -> Unit,
 ) {
     LazyColumn(
@@ -195,7 +226,7 @@ private fun CategoryList(
                         .background(Theme.color.primary)
                 )
 
-                InfoCard(state)
+                HomeOverviewCard(state)
             }
         }
 
@@ -204,8 +235,8 @@ private fun CategoryList(
                 state.tasks.isEmpty(),
                 exit = shrinkVertically(
                     shrinkTowards = Alignment.Top,
-                    animationSpec = tween(1000)
-                ) + fadeOut(tween(500))
+                    animationSpec = tween(500)
+                ) + fadeOut(tween(50))
             ) {
                 Box(
                     modifier = Modifier
@@ -223,7 +254,7 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.done_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
-                    onOpenClick = { onOpenCategory(TaskUiStatus.DONE) }
+                    taskUiStatus = TaskUiStatus.DONE
                 )
             }
         }
@@ -241,7 +272,7 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.in_progress_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
-                    onOpenClick = { onOpenCategory(TaskUiStatus.IN_PROGRESS) }
+                    taskUiStatus = TaskUiStatus.IN_PROGRESS
                 )
             }
         }
@@ -259,7 +290,7 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.todo_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
-                    onOpenClick = { onOpenCategory(TaskUiStatus.TODO) }
+                    taskUiStatus = TaskUiStatus.TODO
                 )
             }
         }
@@ -297,17 +328,26 @@ private fun CategoryList(
                 modifier = Modifier.width(320.dp),
                 task = task,
                 categoryImagePath = categoryImagePath,
-                onClick = { onClick(it) })
+                onClick = { onClick(it) },
+                taskDateAndPriority = {
+                    PriorityTag(
+                        modifier = Modifier.padding(start = Theme.dimension.extraSmall),
+                        priority = task.priority,
+                        enabled = false
+                    )
+                }
+
+            )
+
         }
     }
 }
 
 @Composable
-private fun InfoCard(state: HomeScreenUiState) {
+private fun HomeOverviewCard(state: HomeScreenUiState) {
     Column(
         modifier = Modifier
             .padding(
-                top = Theme.dimension.large,
                 bottom = Theme.dimension.medium,
                 start = Theme.dimension.medium,
                 end = Theme.dimension.medium
@@ -358,8 +398,10 @@ private fun InfoCard(state: HomeScreenUiState) {
 private fun Title(
     text: String,
     tasksCount: Int,
-    onOpenClick: () -> Unit,
+    taskUiStatus: TaskUiStatus,
 ) {
+    val navController = AppNavigation.mainScreen
+
     Row(
         modifier = Modifier
             .background(Theme.color.surface)
@@ -378,7 +420,7 @@ private fun Title(
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(100.dp))
-                .clickable { onOpenClick() }
+                .clickable { navController.navigatePreservingState(TasksScreenRoute(taskUiStatus)) }
                 .background(Theme.color.surfaceHigh)
                 .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
             verticalAlignment = Alignment.CenterVertically
@@ -414,7 +456,7 @@ private fun TopDate(state: HomeScreenUiState) {
 
         Text(
             modifier = Modifier.padding(start = Theme.dimension.small),
-            text = "${stringResource(R.string.today)}, " + state.dayDate.formatDateTime(context = LocalContext.current),
+            text = "${stringResource(R.string.today)}, " + state.todayDate.formatDateTime(context = LocalContext.current),
             color = Theme.color.body,
             style = Theme.textStyle.label.medium
         )
@@ -429,21 +471,40 @@ fun PreviewHomeScreen() {
     TudeeTheme(isDark = isDark) {
         val list = DataProvider.getTasksSample()
 
+        val previewActions = object : HomeScreenInteractionsListener {
+            override fun onToggleColorTheme() {
+                isDark = isDark.not()
+            }
+
+            override fun onTaskClick(taskUiState: TaskUiState) {}
+            override fun onDismissTaskDetails() {}
+            override fun onAddTaskSuccess() {}
+            override fun onAddTaskHasError(errorMessage: String) {}
+            override fun onSnackBarShown() {}
+        }
+
         HomeScreenContent(
-            isDark,
-            HomeScreenUiState(
-                dayDate = dayDate,
+            state = HomeScreenUiState(
+                isDarkTheme = isDark,
+                todayDate = dayDate,
                 taskCounts = listOf(
-                    Pair(list.filter { it.status == TaskUiStatus.DONE }.size, TaskUiStatus.DONE),
+                    Pair(
+                        list.filter { it.status == TaskUiStatus.DONE }.size,
+                        TaskUiStatus.DONE
+                    ),
                     Pair(
                         list.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
                         TaskUiStatus.IN_PROGRESS
                     ),
-                    Pair(list.filter { it.status == TaskUiStatus.TODO }.size, TaskUiStatus.TODO),
+                    Pair(
+                        list.filter { it.status == TaskUiStatus.TODO }.size,
+                        TaskUiStatus.TODO
+                    ),
                 ),
-                tasks = list
+                tasks = list,
+                selectedTask = TaskUiState()
             ),
-            onChangeTheme = { isDark = !isDark }, {}, {}, {}, {}, {}
+            interactionsListener = previewActions
         )
     }
 }

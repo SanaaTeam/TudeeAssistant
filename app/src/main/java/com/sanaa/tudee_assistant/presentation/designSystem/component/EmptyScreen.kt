@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun EmptyScreen(
@@ -51,13 +50,9 @@ fun EmptyScreen(
     var visibleMessageBox by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(200)
         visibleCircular1 = true
-        delay(200)
         visibleCircular2 = true
-        delay(200)
         visibleCircular3 = true
-        delay(200)
         visibleMessageBox = true
     }
 
@@ -77,7 +72,7 @@ fun EmptyScreen(
 
             AnimatedVisibility(
                 visible = visibleMessageBox,
-                enter = fadeIn(animationSpec = tween(600))
+                enter = fadeIn(animationSpec = tween(300))
             ) {
                 MessageBox(
                     modifier = Modifier.align(Alignment.TopEnd),
@@ -129,7 +124,7 @@ fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Bool
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 visible = visibleCirculars[0],
-                enter = scaleIn(animationSpec = tween(800))
+                enter = scaleIn(animationSpec = tween(100))
             ) {
                 Box(
                     modifier = Modifier
@@ -144,7 +139,7 @@ fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Bool
                     .padding(bottom = 9.dp, end = 5.dp)
                     .align(Alignment.BottomEnd),
                 visible = visibleCirculars[1],
-                enter = scaleIn(animationSpec = tween(800))
+                enter = scaleIn(animationSpec = tween(200))
             ) {
                 Box(
                     modifier = Modifier
@@ -157,7 +152,7 @@ fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Bool
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.TopStart),
                 visible = visibleCirculars[2],
-                enter = scaleIn(animationSpec = tween(800))
+                enter = scaleIn(animationSpec = tween(300))
             ) {
                 Box(
                     modifier = Modifier
@@ -189,17 +184,15 @@ fun MessageBox(
     Box(
         modifier = modifier
             .padding(end = 127.dp)
-            .width(203.dp)
+            .fillMaxWidth()
             .height(74.dp)
             .shadow(
-                elevation = Theme.dimension.regular,
-                shape = RoundedCornerShape(
+                elevation = Theme.dimension.regular, shape = RoundedCornerShape(
                     bottomEnd = 2.dp,
                     bottomStart = Theme.dimension.medium,
                     topEnd = Theme.dimension.medium,
                     topStart = Theme.dimension.medium
-                ),
-                spotColor = Color(0x0A000000)
+                ), spotColor = Color(0x0A000000)
             )
             .clip(
                 shape = RoundedCornerShape(
@@ -210,6 +203,7 @@ fun MessageBox(
                 )
             )
             .background(Theme.color.surfaceHigh)
+            .padding(end = 8.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(

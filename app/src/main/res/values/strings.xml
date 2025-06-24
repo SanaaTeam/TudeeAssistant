@@ -79,5 +79,22 @@
     <string name="edit_category">Edit category</string>
     <string name="delete_category">Delete category</string>
     <string name="are_you_sure_to_continue">Are you sure to continue?</string>
-
     <string name="no_tasks_in">No tasks in %1$s category!</string></resources>
+    <string name="Adoration">Adoration</string>
+    <string name="Agriculture">Agriculture</string>
+    <string name="Budgeting">Budgeting</string>
+    <string name="Cleaning">Cleaning</string>
+    <string name="Coding">Coding</string>
+    <string name="Cooking">Cooking</string>
+    <string name="Education">Education</string>
+    <string name="Entertainment">Entertainment</string>
+    <string name="Event">Event</string>
+    <string name="FamilyFriends">FamilyFriends</string>
+    <string name="FixingBugs">FixingBugs</string>
+    <string name="Gym">Gym</string>
+    <string name="Medical">Medical</string>
+    <string name="SelfCare">Self Care</string>
+    <string name="Shopping">Shopping</string>
+    <string name="Traveling">Traveling</string>
+    <string name="Work">Work</string>
+</resources>

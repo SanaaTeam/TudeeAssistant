@@ -4,7 +4,7 @@ import android.net.Uri
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 
 data class CategoryScreenUiState(
-    val currentDateCategory: List<CategoryUiState> = emptyList(),
+    val allCategories: List<CategoryUiState> = emptyList(),
 
     val isLoading: Boolean = false,
     val isAddCategorySheetVisible: Boolean = false,
@@ -17,4 +17,3 @@ data class CategoryScreenUiState(
     val isEditMode: Boolean = false,
     val navigateToCategoryId: Long? = null,
 )
-

@@ -21,34 +21,32 @@ class CategoryViewModel(
     ) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState()), CategoryInteractionListener {
 
     init {
-        loadCategoriesWithTasks()
+        loadCategoriesWithTasksCount()
     }
 
-    private fun loadCategoriesWithTasks() {
+    private fun loadCategoriesWithTasksCount() {
         _state.update { it.copy(isLoading = true) }
 
         tryToExecute(
-            { loadCategoriesWithTasksInternal() },
+            {
+                val categoryList = categoryService.getCategories().first()
+
+                categoryList.map { category ->
+                    val taskCount = taskService
+                        .getTaskCountByCategoryId(category.id)
+                        .first()
+                    category.toState(taskCount)
+                }
+            },
             ::onLoadCategoriesSuccess,
             ::onLoadCategoriesError
         )
     }
 
-    private suspend fun loadCategoriesWithTasksInternal(): List<CategoryUiState> {
-        val categoryList = categoryService.getCategories().first()
-
-        return categoryList.map { category ->
-            val taskCount = taskService
-                .getTaskCountByCategoryId(category.id)
-                .first()
-            category.toState(taskCount)
-        }
-    }
-
     private fun onLoadCategoriesSuccess(categories: List<CategoryUiState>) {
         _state.update {
             it.copy(
-                currentDateCategory = categories,
+                allCategories = categories,
                 isLoading = false
             )
         }
@@ -101,7 +99,7 @@ class CategoryViewModel(
             )
         }
 
-        loadCategoriesWithTasks()
+        this@CategoryViewModel.loadCategoriesWithTasksCount()
     }
 
     private fun onAddCategoryError(exception: Exception) {

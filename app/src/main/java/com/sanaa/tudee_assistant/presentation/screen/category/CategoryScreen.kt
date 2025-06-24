@@ -45,7 +45,6 @@ fun CategoryScreen(
 
     ) {
     val state by viewModel.state.collectAsState()
-
     CategoryScreenContent(
         modifier = modifier,
         state = state,
@@ -55,7 +54,6 @@ fun CategoryScreen(
         }
     )
 }
-
 @Composable
 fun CategoryScreenContent(
     modifier: Modifier = Modifier,
@@ -94,7 +92,7 @@ fun CategoryScreenContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
-                items(state.currentDateCategory) { category ->
+                items(state.allCategories) { category ->
                     CategoryItem(
                         category = category,
                         onClick = {
@@ -152,5 +150,4 @@ fun CategoryScreenContent(
             isFormValid = { state.categoryTitle.isNotBlank() }
         )
     }
-
 }

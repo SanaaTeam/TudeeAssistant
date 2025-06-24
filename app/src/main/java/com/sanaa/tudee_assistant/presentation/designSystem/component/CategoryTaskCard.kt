@@ -33,8 +33,8 @@ import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 fun CategoryTaskCard(
     task: TaskUiState,
     categoryImagePath: String,
-    modifier: Modifier = Modifier,
     onClick: (TaskUiState) -> Unit,
+    modifier: Modifier = Modifier,
     taskDateAndPriority: @Composable RowScope.() -> Unit,
 ) {
     Column(

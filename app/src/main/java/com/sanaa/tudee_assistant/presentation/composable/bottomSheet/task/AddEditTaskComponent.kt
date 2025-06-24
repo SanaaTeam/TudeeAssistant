@@ -62,7 +62,8 @@ fun AddEditTaskScreen(
                         categories = uiState.categories,
                         isEditMode = isEditMode,
                         showDatePickerDialog = showDatePickerDialog,
-                        listener = viewModel
+                        listener = viewModel,
+                        onCancelClick = onDismiss
                     )
                 }
             },

@@ -47,6 +47,7 @@ fun AddEditTaskContent(
     showDatePickerDialog: Boolean,
     listener: AddEditTaskListener,
     modifier: Modifier = Modifier,
+    onCancelClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -179,7 +180,7 @@ fun AddEditTaskContent(
             SecondaryButton(
                 lable = stringResource(R.string.cancel),
                 modifier = Modifier.fillMaxWidth(),
-                onClick = listener::onDismiss
+                onClick = onCancelClick
             )
         }
     }

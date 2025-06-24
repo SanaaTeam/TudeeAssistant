@@ -96,7 +96,6 @@ fun CategoryScreenContent(
                     CategoryItem(
                         category = category,
                         onClick = {
-                            Log.d("category", "category id: ${category.id}")
                             onShowTasksByCategoryClick(category.id)
                         },
                         topContent = { CategoryCount(category.tasksCount.toString()) }

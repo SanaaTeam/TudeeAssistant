@@ -41,9 +41,7 @@ fun TudeeBottomNavBar(
             .fillMaxWidth()
             .padding(vertical = Theme.dimension.medium, horizontal = Theme.dimension.extraLarge),
         Arrangement.Absolute.SpaceBetween
-    ) {
-        content()
-    }
+    ) { content() }
 }
 
 @Composable

@@ -3,6 +3,7 @@ package com.sanaa.tudee_assistant.presentation.screen.main
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -12,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBarItem
@@ -34,6 +36,14 @@ fun MainScreen(
     val screenNavController = rememberNavController()
     val navBackStackEntry by screenNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
+    val systemUiController = rememberSystemUiController()
+    val color = Theme.color.surfaceHigh
+    SideEffect {
+        systemUiController.setNavigationBarColor(
+            color = color, darkIcons = true
+        )
+    }
 
     Column {
         CompositionLocalProvider(LocalMainNavController provides screenNavController) {

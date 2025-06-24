@@ -35,7 +35,7 @@ fun CategoryTaskCard(
     categoryImagePath: String,
     modifier: Modifier = Modifier,
     onClick: (TaskUiState) -> Unit,
-    taskDateAndPriority: @Composable RowScope.() -> Unit
+    taskDateAndPriority: @Composable RowScope.() -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -94,7 +94,7 @@ fun CategoryTaskCard(
 }
 
 
-@Preview(widthDp = 360)
+@Preview(widthDp = 360, showBackground = false)
 @Composable
 private fun Preview() {
     TudeeTheme(false) {
@@ -112,11 +112,11 @@ private fun Preview() {
                     onClick = {},
                     taskDateAndPriority = {
                         DateChip(it.dueDate)
-                            PriorityTag(
-                                modifier = Modifier.padding(start = Theme.dimension.extraSmall),
-                                priority = it.priority,
-                                enabled = false
-                            )
+                        PriorityTag(
+                            modifier = Modifier.padding(start = Theme.dimension.extraSmall),
+                            priority = it.priority,
+                            enabled = false
+                        )
                     }
                 )
             }

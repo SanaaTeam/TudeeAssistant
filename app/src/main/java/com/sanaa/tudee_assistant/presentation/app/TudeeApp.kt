@@ -38,8 +38,11 @@ fun TudeeApp(appViewModel: TudeeAppViewModel = koinViewModel()) {
             CompositionLocalProvider(LocalAppNavController provides appNavController) {
                 AppNavigation(
                     startDestination = if (state.isFirstLaunch) OnBoardingScreenRoute else MainScreenRoute,
-                    modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
-                    onStatusBarColor = { color -> statusBarColor = color },
+                    modifier = Modifier.padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = innerPadding.calculateBottomPadding()
+                    ),
+                    onChangeStatusBarColor = { color -> statusBarColor = color },
                 )
             }
         }
@@ -50,7 +53,7 @@ fun TudeeApp(appViewModel: TudeeAppViewModel = koinViewModel()) {
 private fun AppNavigation(
     startDestination: Any,
     modifier: Modifier = Modifier,
-    onStatusBarColor: (Color) -> Unit,
+    onChangeStatusBarColor: (Color) -> Unit,
 ) {
     NavHost(
         modifier = modifier,
@@ -64,7 +67,7 @@ private fun AppNavigation(
         composable<MainScreenRoute> {
             MainScreen(
                 startDestination = HomeScreenRoute,
-                onStatusBarColor = onStatusBarColor,
+                onStatusBarColor = onChangeStatusBarColor,
             )
         }
 

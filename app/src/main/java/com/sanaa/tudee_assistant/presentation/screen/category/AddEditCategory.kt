@@ -3,7 +3,10 @@ package com.sanaa.tudee_assistant.presentation.screen.category
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
@@ -28,6 +32,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.UploadBox
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.PrimaryButton
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
@@ -35,30 +40,27 @@ import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddEditCategory(
+fun AddEditCategoryBottomSheet(
     onImageSelected: (Uri?) -> Unit,
-    onAddClick: (title: String, imageUri: Uri?) -> Unit,
+    onTitleChange: (String) -> Unit,
+    onSaveClick: (CategoryUiState) -> Unit,
     onDismiss: () -> Unit,
     category: CategoryUiState,
-    onCategoryTitleChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onDeleteClick: () -> Unit = {},
+    isFormValid: () -> Boolean = { false },
+    isEditMode: Boolean = false,
 ) {
-    var internalShowBottomSheet by remember { mutableStateOf(true) }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     AddEditCategoryContent(
-        onAddClick = { onAddClick(category.name, selectedImageUri) },
-        showBottomSheet = internalShowBottomSheet,
-        categoryUiState = category,
-        onCategoryTitleChange = onCategoryTitleChange,
-        onDismiss = {
-            internalShowBottomSheet = false
-            onDismiss()
-        },
-        onImageSelected = { uri ->
-            selectedImageUri = uri
-            onImageSelected(uri)
-        },
+        onSaveClick = onSaveClick,
+        onCategoryTitleChange = onTitleChange,
+        onDismiss = onDismiss,
+        onImageSelected = onImageSelected,
+        category = category,
+        isEditMode = isEditMode,
+        onDeleteClick = onDeleteClick,
+        isFormValid = isFormValid,
         modifier = modifier
     )
 }
@@ -68,93 +70,131 @@ fun AddEditCategory(
 fun AddEditCategoryContent(
     modifier: Modifier = Modifier,
     onImageSelected: (Uri?) -> Unit,
-    onAddClick: () -> Unit,
-    onEditClick: () -> Unit = {},
+    onSaveClick: (CategoryUiState) -> Unit,
     onCategoryTitleChange: (String) -> Unit,
+    category: CategoryUiState,
+    isEditMode: Boolean,
+    isFormValid: () -> Boolean,
+    onDeleteClick: () -> Unit = {},
     onDismiss: () -> Unit = {},
-    showBottomSheet: Boolean = true,
-    categoryUiState: CategoryUiState,
 ) {
     var processedImageBytes by remember { mutableStateOf<Bitmap?>(null) }
-
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-
-    if (showBottomSheet) {
-        BaseBottomSheet(
-            content = {
+    BaseBottomSheet(
+        content = {
+            Column(
+                modifier = modifier
+            ) {
                 Column(
-                    modifier = modifier
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = Theme.dimension.medium)
+                        .background(color = Theme.color.surface)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(rememberScrollState())
-                            .padding(horizontal = Theme.dimension.medium)
-                            .background(color = Theme.color.surface)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(R.string.add_new_category),
+                            text = if (isEditMode)
+                                stringResource(R.string.edit_category)
+                            else
+                                stringResource(R.string.add_new_category),
                             style = Theme.textStyle.title.large,
                             color = Theme.color.title
                         )
-                        TudeeTextField(
-                            placeholder = stringResource(R.string.category_title),
-                            value = categoryUiState.name,
-                            icon = painterResource(R.drawable.menu),
-                            onValueChange = onCategoryTitleChange,
-                            modifier = Modifier.padding(top = Theme.dimension.regular)
-                        )
-                        Text(
-                            text = stringResource(R.string.category_image),
-                            style = Theme.textStyle.title.large,
-                            color = Theme.color.title,
-                            modifier = Modifier.padding(top = Theme.dimension.regular)
-                        )
-                        UploadBox(
-                            modifier = Modifier.padding(top = Theme.dimension.small),
-                            onImageSelected = { uri ->
-                                onImageSelected(uri)
-                                uri?.let {
-                                    scope.launch {
-                                        processedImageBytes =
-                                            HelperFunctions.processImage(context, it)
-                                    }
-                                } ?: run {
-                                    processedImageBytes = null
-                                }
-                            }
-                        )
+                        if (isEditMode) {
+                            Text(
+                                text = stringResource(R.string.delete),
+                                style = Theme.textStyle.title.large,
+                                color = Theme.color.error,
+                                modifier = Modifier.clickable(
+                                    interactionSource = null,
+                                    indication = null,
+                                    onClick = onDeleteClick
+                                )
+                            )
+                        }
                     }
+                    TudeeTextField(
+                        placeholder = stringResource(R.string.category_title),
+                        value = category.name,
+                        icon = painterResource(R.drawable.menu),
+                        onValueChange = onCategoryTitleChange,
+                        modifier = Modifier.padding(top = Theme.dimension.regular)
+                    )
+                    Text(
+                        text = stringResource(R.string.category_image),
+                        style = Theme.textStyle.title.medium,
+                        color = Theme.color.title,
+                        modifier = Modifier.padding(top = Theme.dimension.regular)
+                    )
+                    UploadBox(
+                        modifier = Modifier.padding(top = Theme.dimension.small),
+                        onImageSelected = { uri ->
+                            onImageSelected(uri)
+                            uri?.let {
+                                scope.launch {
+                                    processedImageBytes =
+                                        HelperFunctions.processImage(context, it)
+                                }
+                            } ?: run {
+                                processedImageBytes = null
+                            }
+                        }
+                    )
+                }
 
-                    Column(
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .dropShadow(offsetY = 4.dp, blur = 20.dp, color = dropShadowColor)
+                        .background(Theme.color.surfaceHigh)
+                        .padding(
+                            vertical = Theme.dimension.regular,
+                            horizontal = Theme.dimension.medium
+                        )
+                ) {
+                    PrimaryButton(
+                        label = if (isEditMode) stringResource(R.string.save) else stringResource(R.string.add),
+                        enabled = isFormValid(),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .dropShadow(offsetY = 4.dp, blur = 20.dp, color = dropShadowColor)
-                            .background(Theme.color.surfaceHigh)
-                            .padding(
-                                vertical = Theme.dimension.regular,
-                                horizontal = Theme.dimension.medium
-                            )
-                    ) {
-                        PrimaryButton(
-                            label = stringResource(R.string.add),
-                            enabled = processedImageBytes != null && categoryUiState.name.isNotBlank(),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = Theme.dimension.regular),
-                            onClick = { onAddClick() }
-                        )
-                        SecondaryButton(
-                            lable = stringResource(R.string.cancel),
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = { onDismiss() },
-                        )
-                    }
+                            .padding(bottom = Theme.dimension.regular),
+                        onClick = { onSaveClick(category) }
+                    )
+                    SecondaryButton(
+                        lable = stringResource(R.string.cancel),
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = onDismiss
+                    )
                 }
-            },
-            onDismiss = { onDismiss() }
+            }
+        },
+        onDismiss = onDismiss
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AddEditCategoryContentPreview() {
+    TudeeTheme {
+        AddEditCategoryContent(
+            onImageSelected = {},
+            onSaveClick = {},
+            onCategoryTitleChange = {},
+            onDismiss = {},
+            category = CategoryUiState(
+                id = 0,
+                name = "Work",
+                imagePath = "",
+                isDefault = false,
+                tasksCount = 0
+            ),
+            isEditMode = true,
+            isFormValid = { true },
         )
     }
 }
-

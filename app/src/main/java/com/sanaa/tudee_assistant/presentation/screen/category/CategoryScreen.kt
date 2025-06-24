@@ -87,7 +87,7 @@ fun CategoryScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(color = Theme.color.surface),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                contentPadding = PaddingValues( vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {

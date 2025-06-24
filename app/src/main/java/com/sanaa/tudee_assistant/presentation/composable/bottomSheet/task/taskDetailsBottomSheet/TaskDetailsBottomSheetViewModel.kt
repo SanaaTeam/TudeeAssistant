@@ -30,7 +30,6 @@ class TaskDetailsBottomSheetViewModel(
             val task: Task = taskService.getTaskById(selectedTaskId)
             val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
             val detailsUiState = task.toDetailsState().copy(categoryImagePath = categoryImagePath)
-            Log.d("TaskDetailsBottomSheetViewModel", "getSelectedTask: selectedTaskStatus:${detailsUiState.status.name}")
             _state.update {
                 detailsUiState
             }

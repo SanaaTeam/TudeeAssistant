@@ -41,13 +41,11 @@ import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
@@ -57,19 +55,16 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 
 @Composable
 fun TasksScreen(
     screenRoute: TasksScreenRoute,
     modifier: Modifier = Modifier,
-    viewModel: TaskViewModel = koinViewModel<TaskViewModel>(),
+    viewModel: TaskViewModel = koinViewModel<TaskViewModel>(parameters = { parametersOf(screenRoute.taskStatus) }),
 ) {
     val state by viewModel.state.collectAsState()
-
-    LaunchedEffect(key1 = Unit) {
-        viewModel.onTaskStatusSelectedChange(screenRoute.taskStatus)
-    }
 
     TasksScreenContent(
         state = state,
@@ -213,57 +208,40 @@ fun TasksScreenContent(
             if (showDialog) {
                 CustomDatePickerDialog(
                     onDateSelected = { selectedDateMillis: Long? ->
-                    selectedDateMillis?.let {
-                        val date = DateFormater.formatLongToDate(selectedDateMillis)
-                        interactionListener.onDateSelected(date)
-                        daysInMonth =
-                            (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
-                    }
-                }, onDismiss = { showDialog = false }, initialSelectedDate = state.selectedDate
+                        selectedDateMillis?.let {
+                            val date = DateFormater.formatLongToDate(selectedDateMillis)
+                            interactionListener.onDateSelected(date)
+                            daysInMonth =
+                                (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
+                        }
+                    }, onDismiss = { showDialog = false }, initialSelectedDate = state.selectedDate
                 )
             }
-            TaskStatusTabs(state, onTaskSwipe, onTaskClick)
-            if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
-                TaskDetailsComponent(
-                    selectedTaskId = state.selectedTask.id,
-                    onDismiss = onDismissTaskViewDetails,
-                    onEditClick = { task ->
-                        onDismissTaskViewDetails()
-                        taskToEdit = task
-                        showEditTaskBottomSheet = true
-                    },
-                    onMoveToClicked = onMoveToTaskViewDetails,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
-                DeleteComponent(
-                    onDismiss = onDeleteDismiss,
-                    onDeleteClicked = {
-                        onDeleteClick()
-                    },
-                    title = stringResource(R.string.delete_task_title),
-                )
+
             TaskStatusTabs(
                 state,
                 interactionListener::onTaskSwipeToDelete,
                 interactionListener::onTaskClicked
             )
-            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) TaskDetailsComponent(
-                task = state.selectedTask,
-                onDismiss = { interactionListener.onDismissTaskDetails(false) },
-                onEditClick = { task ->
-                    interactionListener.onDismissTaskDetails(false)
-                    taskToEdit = task
-                    showEditTaskBottomSheet = true
-                },
-                onMoveToClicked = interactionListener::onMoveTaskToAnotherStatus,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            if (state.selectedTask != null && state.showDeleteTaskBottomSheet) DeleteComponent(
-                onDismiss = interactionListener::onDeleteDismiss,
-                onDeleteClicked = interactionListener::onDeleteTask,
-                title = stringResource(R.string.delete_task_title),
-            )
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
+                TaskDetailsComponent(
+                    selectedTaskId = state.selectedTask.id,
+                    onDismiss = { interactionListener.onDismissTaskDetails(false) },
+                    onEditClick = { task ->
+                        interactionListener.onDismissTaskDetails(false)
+                        taskToEdit = task
+                        showEditTaskBottomSheet = true
+                    },
+                    onMoveStatusSuccess = {interactionListener.handleOnMoveToStatusSuccess()},
+                    onMoveStatusFail = {interactionListener.handleOnMoveToStatusFail()},
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
+                DeleteComponent(
+                    onDismiss = interactionListener::onDeleteDismiss,
+                    onDeleteClicked = interactionListener::onDeleteTask,
+                    title = stringResource(R.string.delete_task_title),
+                )
             if (showAddTaskBottomSheet) {
                 AddEditTaskScreen(
                     isEditMode = false,
@@ -334,7 +312,7 @@ fun TasksScreenContent(
         }
 
 
-        var errorMessageText : String? = null
+        var errorMessageText: String? = null
         state.errorMessageStringId?.let {
             successMessageText = stringResource(state.errorMessageStringId)
         }

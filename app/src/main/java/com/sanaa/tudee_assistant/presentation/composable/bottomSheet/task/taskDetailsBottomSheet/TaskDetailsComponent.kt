@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,30 +30,26 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Seco
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryIconButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskDetailsComponent(
     selectedTaskId: Int,
     onDismiss: () -> Unit,
+    viewModel: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(
+        key = "new $selectedTaskId",
+        parameters = {parametersOf(selectedTaskId)}),
     onEditClick: (TaskUiState) -> Unit,
-    onMoveToClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    onMoveStatusSuccess: () -> Unit,
+    onMoveStatusFail: () -> Unit,
 ) {
 
-    val viewMode: TaskDetailsBottomSheetViewModel = koinViewModel()
-    LaunchedEffect(selectedTaskId) {
-        viewMode.getSelectedTask(selectedTaskId)
-    }
-    val state: State<TaskUiState> = viewMode.state.collectAsState()
-    val categoryImagePath = viewMode.selectedTaskCategoryImagePath.collectAsState()
+    val state: State<DetailsUiState> = viewModel.state.collectAsState()
 
     val changeStatusTo = when (state.value.status) {
         TaskUiStatus.TODO -> stringResource(R.string.mark_as_in_progress)
@@ -80,7 +78,7 @@ fun TaskDetailsComponent(
                 CategoryImageContainer(){
                     CategoryThumbnail(
                         modifier.size(32.dp),
-                        imagePath = categoryImagePath.value
+                        imagePath = state.value.categoryImagePath
                     )
                 }
                 Column(
@@ -129,11 +127,15 @@ fun TaskDetailsComponent(
                         ) {
                             SecondaryIconButton(
                                 iconRes = painterResource(R.drawable.pencil_edit),
-                                onClick = { onEditClick(state.value) }
+                                onClick = { onEditClick(state.value.toTaskUiState()) }
                             )
                             SecondaryButton(
                                 lable = changeStatusTo,
-                                onClick = onMoveToClicked,
+                                onClick = {
+                                    viewModel.onMoveTaskToAnotherStatus(
+                                        onMoveStatusSuccess ,onMoveStatusFail
+                                    )
+                                          },
                                 modifier = Modifier.weight(1f)
                             )
 
@@ -154,7 +156,7 @@ private fun PreviewUpdateTaskStatus() {
             selectedTaskId = 1,
             onDismiss = {},
             onEditClick = {},
-            onMoveToClicked = {}
-        )
+            onMoveStatusSuccess = {},
+        ) {}
     }
 }

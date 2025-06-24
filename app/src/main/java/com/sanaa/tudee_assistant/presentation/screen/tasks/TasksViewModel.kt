@@ -2,13 +2,11 @@ package com.sanaa.tudee_assistant.presentation.screen.tasks
 
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
@@ -19,10 +17,12 @@ import kotlinx.datetime.LocalDate
 class TaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
+    private val selectedStatusTab: TaskUiStatus
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()), TaskInteractionListener {
 
 
     init {
+        _state.update { it.copy(selectedStatusTab = selectedStatusTab) }
         viewModelScope.launch {
             categoryService.getCategories().collect { categoryList ->
                 _state.update {
@@ -55,9 +55,7 @@ class TaskViewModel(
         }
     }
 
-    fun onTaskStatusSelectedChange(taskUiStatus: TaskUiStatus) {
-        _state.update { it.copy(selectedStatusTab = taskUiStatus) }
-    }
+
 
     fun onTaskSelected(task: TaskUiState) {
         _state.update { it.copy(selectedTask = task) }
@@ -75,7 +73,7 @@ class TaskViewModel(
                     if (it?.id == null) return@launch
                     taskService.deleteTaskById(it.id)
                 }.onSuccess {
-                    handleOnSuccess(messageStringId = R.string.snack_bar_success)
+                    handleOnSuccess(messageStringId = R.string.task_delete_success)
                     getTasksByDueDate()
                 }.onFailure {
                     handleOnError( messageStringId = R.string.snack_bar_error)
@@ -118,34 +116,42 @@ class TaskViewModel(
         return false
     }
 
-    override fun onMoveTaskToAnotherStatus() {
-        viewModelScope.launch {
-            var newUpdatedTask: Task
-            state.value.selectedTask?.let {
-               when(it.status){
-                   TaskUiStatus.TODO -> {
-                       newUpdatedTask = it.copy(status = TaskUiStatus.IN_PROGRESS ).toTask()
-                       updateSelectedTaskStatus(newUpdatedTask)
-                   }
-                   TaskUiStatus.IN_PROGRESS -> {
-                       newUpdatedTask = it.copy(status = TaskUiStatus.DONE ).toTask()
-                       updateSelectedTaskStatus(newUpdatedTask)
-                   }
-                   TaskUiStatus.DONE -> {
-                       newUpdatedTask = it.copy(status = TaskUiStatus.DONE ).toTask()
-                       updateSelectedTaskStatus(newUpdatedTask)
-                   }
-               }
-            }
-        }
+//    override fun onMoveTaskToAnotherStatus() {
+//        viewModelScope.launch {
+//            var newUpdatedTask: Task
+//            state.value.selectedTask?.let {
+//               when(it.status){
+//                   TaskUiStatus.TODO -> {
+//                       newUpdatedTask = it.copy(status = TaskUiStatus.IN_PROGRESS ).toTask()
+//                       updateSelectedTaskStatus(newUpdatedTask)
+//                   }
+//                   TaskUiStatus.IN_PROGRESS -> {
+//                       newUpdatedTask = it.copy(status = TaskUiStatus.DONE ).toTask()
+//                       updateSelectedTaskStatus(newUpdatedTask)
+//                   }
+//                   TaskUiStatus.DONE -> {
+//                       newUpdatedTask = it.copy(status = TaskUiStatus.DONE ).toTask()
+//                       updateSelectedTaskStatus(newUpdatedTask)
+//                   }
+//               }
+//            }
+//        }
+//    }
+//
+//    private suspend fun updateSelectedTaskStatus(newUpdatedTask: Task){
+//        runCatching {
+//            taskService.updateTask(newUpdatedTask)
+//        }.onSuccess {
+//        }.onFailure { handleOnError()}
+//    }
+
+    override fun handleOnMoveToStatusSuccess(){
+        handleOnSuccess(messageStringId = R.string.task_update_success)
+    }
+    override fun handleOnMoveToStatusFail(){
+        handleOnError()
     }
 
-    private suspend fun updateSelectedTaskStatus(newUpdatedTask: Task){
-        runCatching {
-            taskService.updateTask(newUpdatedTask)
-        }.onSuccess { handleOnSuccess(messageStringId = R.string.snack_bar_success)
-        }.onFailure { handleOnError()}
-    }
 
     private fun handleOnSuccess(messageStringId: Int? = null) {
         _state.update {

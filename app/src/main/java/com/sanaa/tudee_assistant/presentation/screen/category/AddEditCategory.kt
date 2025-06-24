@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
-import android.R.attr.category
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -21,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
@@ -37,7 +35,7 @@ import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddNewCategory(
+fun AddEditCategory(
     onImageSelected: (Uri?) -> Unit,
     onAddClick: (title: String, imageUri: Uri?) -> Unit,
     onDismiss: () -> Unit,
@@ -48,7 +46,7 @@ fun AddNewCategory(
     var internalShowBottomSheet by remember { mutableStateOf(true) }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    AddNewCategoryContent(
+    AddEditCategoryContent(
         onAddClick = { onAddClick(category.name, selectedImageUri) },
         showBottomSheet = internalShowBottomSheet,
         categoryUiState = category,
@@ -67,7 +65,7 @@ fun AddNewCategory(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNewCategoryContent(
+fun AddEditCategoryContent(
     modifier: Modifier = Modifier,
     onImageSelected: (Uri?) -> Unit,
     onAddClick: () -> Unit,

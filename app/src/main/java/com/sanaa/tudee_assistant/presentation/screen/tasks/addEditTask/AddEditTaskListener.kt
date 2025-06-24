@@ -12,5 +12,4 @@ interface AddEditTaskListener {
     fun onPrimaryButtonClick()
     fun onDatePickerShow()
     fun onDatePickerDismiss()
-    fun onDismiss()
 }

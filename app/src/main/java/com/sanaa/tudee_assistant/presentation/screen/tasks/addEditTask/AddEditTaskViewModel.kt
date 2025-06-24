@@ -140,10 +140,6 @@ class AddEditTaskViewModel(
         _showDatePickerDialog.update { false }
     }
 
-    override fun onDismiss() {
-        resetState()
-    }
-
     private fun addTask() {
         viewModelScope.launch {
             try {

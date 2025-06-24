@@ -8,7 +8,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -31,7 +30,6 @@ fun AddEditTaskScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val showDatePickerDialog by viewModel.showDatePickerDialog.collectAsState()
-    var showBottomSheet by rememberSaveable { mutableStateOf(true) }
     var isInitialized by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(isEditMode, taskToEdit, isInitialized) {
@@ -48,7 +46,6 @@ fun AddEditTaskScreen(
 
     LaunchedEffect(uiState.isOperationSuccessful, uiState.error) {
         if (uiState.isOperationSuccessful) {
-            showBottomSheet = false
             onSuccess()
             viewModel.resetState()
         }
@@ -57,7 +54,6 @@ fun AddEditTaskScreen(
         }
     }
 
-    if (showBottomSheet) {
         BaseBottomSheet(
             content = {
                 Column(modifier = Modifier.fillMaxHeight(0.81f)) {
@@ -71,9 +67,8 @@ fun AddEditTaskScreen(
                 }
             },
             onDismiss = {
-                showBottomSheet = false
-                viewModel.onDismiss()
+                onDismiss()
             }
         )
-    }
+
 }

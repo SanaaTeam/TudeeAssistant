@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
@@ -40,17 +41,18 @@ fun CategoryItem(
                 .size(78.dp),
         ) {
             Box(
-                modifier = Modifier.align(Alignment.TopEnd),
-            ) {
-                topContent()
-            }
-            Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .clip(RoundedCornerShape(100.dp))
                     .clickable { onClick() },
                 contentAlignment = Alignment.Center,
             ) {
                 CategoryThumbnail(modifier = Modifier.size(32.dp), imagePath = category.imagePath)
+            }
+            Box(
+                modifier = Modifier.align(Alignment.TopEnd),
+            ) {
+                topContent()
             }
         }
 

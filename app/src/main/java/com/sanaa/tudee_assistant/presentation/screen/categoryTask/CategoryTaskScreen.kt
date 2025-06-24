@@ -41,7 +41,6 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.category.UpdateCurrentCategory
-import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DateChip
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem

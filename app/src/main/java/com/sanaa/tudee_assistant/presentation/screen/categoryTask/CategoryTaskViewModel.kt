@@ -1,20 +1,23 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
+import androidx.core.net.toUri
+import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toCategory
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 
 class CategoryTaskViewModel(
-    val categoryService: CategoryService,
-    val taskService: TaskService,
-    val categoryId: Int
+    private val categoryService: CategoryService,
+    private val taskService: TaskService,
+    val categoryId: Int,
+    private val imageProcessor: ImageProcessor,
 ) : BaseViewModel<CategoryTaskScreenUiState>(initialState = CategoryTaskScreenUiState()),
     CategoryTaskInteractionListener {
 
@@ -100,7 +103,7 @@ class CategoryTaskViewModel(
     override fun onImageSelect(image: Uri?) {
         _state.update {
             it.copy(
-                currentCategory = _state.value.currentCategory.copy(imagePath = image.toString())
+                editCategory = _state.value.editCategory.copy(imagePath = image.toString())
             )
         }
     }
@@ -108,7 +111,7 @@ class CategoryTaskViewModel(
     override fun onTitleChange(title: String) {
         _state.update {
             it.copy(
-                currentCategory = _state.value.currentCategory.copy(name = title)
+                editCategory = _state.value.editCategory.copy(name = title)
             )
         }
     }
@@ -117,9 +120,19 @@ class CategoryTaskViewModel(
         tryToExecute(
             function = {
                 _state.update { it.copy(isLoading = true) }
-                categoryService.updateCategory(category.toCategory())
+                val imagePath = imageProcessor.saveImageToInternalStorage(
+                    imageProcessor.processImage(category.imagePath.toUri())
+                )
+                categoryService.updateCategory(
+                    Category(
+                        id = category.id,
+                        name = category.name,
+                        imagePath = imagePath,
+                        isDefault = category.isDefault
+                    )
+                )
             },
-            onSuccess = {},
+            onSuccess = { onSuccess(message = "message") },
             onError = {},
         )
     }
@@ -134,5 +147,16 @@ class CategoryTaskViewModel(
         _state.update {
             it.copy(isLoading = false, error = message, success = null)
         }
+    }
+
+    fun isValidForm(): Boolean {
+        val current = _state.value.currentCategory
+        val edited = _state.value.editCategory
+
+        val isNameChanged = edited.name != current.name
+        val isImageChanged = edited.imagePath != current.imagePath
+        val isNameNotEmpty = edited.name.isNotBlank()
+
+        return isNameNotEmpty && (isNameChanged || isImageChanged)
     }
 }

@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
+import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
 import com.sanaa.tudee_assistant.domain.service.CategoryService
@@ -117,4 +118,28 @@ class CategoryViewModel(
             it.copy(successMessage = null, errorMessage = null)
         }
     }
+
+    override fun onCategoryTitleChange(title: String) {
+        _state.update {
+            it.copy(
+                categoryTitle = title,
+                currentCategory = it.currentCategory.copy(name = title)
+            )
+        }
+    }
+
+    override fun onCategoryImageSelected(uri: Uri?) {
+        _state.update {
+            it.copy(
+                selectedImageUri = uri,
+                currentCategory = it.currentCategory.copy(imagePath = uri?.toString().orEmpty())
+            )
+        }
+    }
+
+    override fun isFormValid(): Boolean {
+        return _state.value.categoryTitle.isNotBlank()
+    }
+
+
 }

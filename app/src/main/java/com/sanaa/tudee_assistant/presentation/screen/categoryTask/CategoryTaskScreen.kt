@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.category.UpdateCurrentCategory
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.DateChip
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
@@ -85,7 +86,7 @@ fun CategoryTaskScreenContent(
     modifier: Modifier = Modifier,
     onEditCategory: (Int) -> Unit = {},
     onDeleteCategory: () -> Unit = {},
-    viewModel: CategoryTaskViewModel
+    viewModel: CategoryTaskViewModel,
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var showBottomSheetState by remember { mutableStateOf(false) }
@@ -320,6 +321,8 @@ private fun TasksList(
                     categoryImagePath = categoryImagePath,
                     onClick = {},
                     taskDateAndPriority = {
+                        DateChip(task.dueDate)
+
                         PriorityTag(
                             modifier = Modifier.padding(start = Theme.dimension.extraSmall),
                             priority = task.priority,

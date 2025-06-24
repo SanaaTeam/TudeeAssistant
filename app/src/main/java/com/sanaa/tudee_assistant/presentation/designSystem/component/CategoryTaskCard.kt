@@ -111,7 +111,7 @@ private fun Preview() {
                     categoryImagePath = "file:///android_asset/categories/agriculture.png",
                     onClick = {},
                     taskDateAndPriority = {
-                            it.dueDate?.let { DateChip(it) }
+                        DateChip(it.dueDate)
                             PriorityTag(
                                 modifier = Modifier.padding(start = Theme.dimension.extraSmall),
                                 priority = it.priority,

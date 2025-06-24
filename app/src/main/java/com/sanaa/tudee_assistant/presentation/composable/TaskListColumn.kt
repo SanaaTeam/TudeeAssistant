@@ -28,7 +28,6 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTas
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.designSystem.component.DateChip
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
@@ -82,11 +81,11 @@ fun TaskListColumn(
                 content = {
                     CategoryTaskCard(
                         task = task,
-                        categoryImagePath = categories.firstOrNull { it.id == task.categoryId }?.imagePath
-                            ?: "",
+                        categoryImagePath = categories
+                            .firstOrNull { it.id == task.categoryId }
+                            ?.imagePath ?: "",
                         onClick = { onTaskClick(task) },
                         taskDateAndPriority = {
-                            task.dueDate?.let { DateChip(it) }
                             PriorityTag(
                                 modifier = Modifier.padding(start = Theme.dimension.extraSmall),
                                 priority = task.priority,

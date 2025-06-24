@@ -1,7 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
 import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
@@ -32,33 +31,25 @@ class CategoryViewModel(
                 val categoryList = categoryService.getCategories().first()
 
                 categoryList.map { category ->
-                    val taskCount = taskService
-                        .getTaskCountByCategoryId(category.id)
-                        .first()
+                    val taskCount = taskService.getTaskCountByCategoryId(category.id).first()
                     category.toState(taskCount)
                 }
-            },
-            ::onLoadCategoriesSuccess,
-            ::onLoadCategoriesError
+            }, ::onLoadCategoriesSuccess, ::onLoadCategoriesError
         )
     }
 
     private fun onLoadCategoriesSuccess(categories: List<CategoryUiState>) {
         _state.update {
             it.copy(
-                allCategories = categories,
-                isLoading = false
+                allCategories = categories, isLoading = false
             )
         }
     }
 
     private fun onLoadCategoriesError(exception: Exception) {
-        Log.e("Category", "Error Load category", exception)
-
         _state.update {
             it.copy(
-                isLoading = false,
-                errorMessage = "Failed to load categories "
+                isLoading = false, errorMessage = "Failed to load categories "
             )
         }
     }
@@ -77,15 +68,7 @@ class CategoryViewModel(
         val imagePath = imageProcessor.saveImageToInternalStorage(
             imageProcessor.processImage(categoryUiState.imagePath.toUri())
         )
-
-        val newCategory = CategoryUiState(
-            id = 0,
-            name = categoryUiState.name,
-            imagePath = imagePath,
-            isDefault = false,
-            tasksCount = 0,
-        )
-
+        val newCategory = categoryUiState.copy(imagePath = imagePath)
         categoryService.addCategory(newCategory.toNewCategory())
     }
 
@@ -95,16 +78,16 @@ class CategoryViewModel(
                 isLoading = false,
                 isAddCategorySheetVisible = false,
                 isOperationSuccessful = true,
-                successMessage = "Category added successfully"
+                successMessage = "Category added successfully",
+                newCategory = CategoryUiState()
             )
         }
 
-        this@CategoryViewModel.loadCategoriesWithTasksCount()
+        loadCategoriesWithTasksCount()
     }
 
     private fun onAddCategoryError(exception: Exception) {
         _state.update { it.copy(isLoading = false) }
-        Log.e("Category", "Error adding category", exception)
     }
 
     override fun onToggleAddCategorySheet(isVisible: Boolean) {
@@ -120,8 +103,7 @@ class CategoryViewModel(
     override fun onCategoryTitleChange(title: String) {
         _state.update {
             it.copy(
-                categoryTitle = title,
-                currentCategory = it.currentCategory.copy(name = title)
+                newCategory = it.newCategory.copy(name = title)
             )
         }
     }
@@ -129,15 +111,17 @@ class CategoryViewModel(
     override fun onCategoryImageSelected(uri: Uri?) {
         _state.update {
             it.copy(
-                selectedImageUri = uri,
-                currentCategory = it.currentCategory.copy(imagePath = uri?.toString().orEmpty())
+                newCategory = it.newCategory.copy(imagePath = uri?.toString().orEmpty())
             )
         }
     }
 
     override fun isFormValid(): Boolean {
-        return _state.value.categoryTitle.isNotBlank()
+        return (
+                (_state.value.newCategory.name.isNotBlank()
+                        && (_state.value.newCategory.name.length >= 2
+                        && _state.value.newCategory.name.length <= 24))
+                        && (_state.value.newCategory.imagePath.isNotBlank()))
+
     }
-
-
 }

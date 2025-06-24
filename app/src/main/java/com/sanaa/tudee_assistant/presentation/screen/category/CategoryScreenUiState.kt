@@ -12,8 +12,7 @@ data class CategoryScreenUiState(
     val successMessage: String? = null,
     val errorMessage: String? = null,
     val currentCategory: CategoryUiState = CategoryUiState(),
-    val categoryTitle: String = "",
-    val selectedImageUri: Uri? = null,
+    val newCategory: CategoryUiState = CategoryUiState(),
     val isEditMode: Boolean = false,
     val navigateToCategoryId: Long? = null,
 )

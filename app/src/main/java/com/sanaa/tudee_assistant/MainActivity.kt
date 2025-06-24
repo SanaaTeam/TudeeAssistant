@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
             Log.d("SplashDebug", "Splash visible: $keepSplash")
             TudeeTheme(isDark) {
                 if (showSplash) {
-                    SplashScreen() // Your custom composable splash
+                    SplashScreen()
                 } else {
                     TudeeApp(isDark, preferencesManager, isFirstLaunch)
                 }

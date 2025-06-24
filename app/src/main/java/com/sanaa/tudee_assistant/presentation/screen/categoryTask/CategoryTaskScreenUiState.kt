@@ -15,5 +15,6 @@ data class CategoryTaskScreenUiState(
     val selectedTapIndex: Int = 1,
     val allCategoryTasks: List<TaskUiState> = emptyList(),
     val filteredTasks: List<TaskUiState> = emptyList(),
-    val editCategory: CategoryUiState = CategoryUiState()
+    val editCategory: CategoryUiState = CategoryUiState(),
+
 )

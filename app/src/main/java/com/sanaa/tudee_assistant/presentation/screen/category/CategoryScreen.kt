@@ -135,7 +135,7 @@ fun CategoryScreenContent(
     }
     if (state.isAddCategorySheetVisible) {
         AddEditCategoryBottomSheet(
-            category = state.currentCategory,
+            category = state.newCategory,
             isEditMode = false,
             onTitleChange = { listener.onCategoryTitleChange(it) },
             onImageSelected = { listener.onCategoryImageSelected(it) },
@@ -146,7 +146,7 @@ fun CategoryScreenContent(
             onDismiss = {
                 listener.onToggleAddCategorySheet(false)
             },
-            isFormValid = { state.categoryTitle.isNotBlank() }
+            isFormValid = { listener.isFormValid() }
         )
     }
 }

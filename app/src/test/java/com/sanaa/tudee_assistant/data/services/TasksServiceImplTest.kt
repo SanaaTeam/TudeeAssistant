@@ -6,6 +6,7 @@ import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
 import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
 import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.service.TaskService
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -17,12 +18,17 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TasksServiceImplTest {
-
     private val taskDao = mockk<TaskDao>(relaxed = true)
-    private val tasksService = TaskServiceImpl(taskDao)
+    private lateinit var tasksService: TaskService
+
+    @BeforeEach
+    fun setUp() {
+        tasksService = TaskServiceImpl(taskDao)
+    }
 
 
     @Test
@@ -216,6 +222,19 @@ class TasksServiceImplTest {
             assertThat(result.isFailure).isTrue()
         }
 
+    @Test
+    fun `getTaskCountByCategoryId should invoke getTaskCountByCategoryId in taskDao`() =
+        runTest {
+            // Given
+            val id = 1
+            every { taskDao.getTaskCountByCategoryId(any()) } returns flowOf(10)
+            // When
+            tasksService.getTaskCountByCategoryId(id)
+            // Then
+            coVerify(exactly = 1) {
+                taskDao.getTaskCountByCategoryId(any())
+            }
+        }
 
     val fakeTasks = listOf(
         TaskLocalDto(
@@ -226,11 +245,12 @@ class TasksServiceImplTest {
             dueDate = LocalDate(2023, 1, 1).toString(),
             priority = Task.TaskPriority.HIGH.name,
             categoryId = 1,
-            createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
+            createdAt = Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
         )
     )
 
-    private fun TaskLocalDto.toNewTask() : AddTaskRequest{
+    private fun TaskLocalDto.toNewTask(): AddTaskRequest {
         return AddTaskRequest(
             title = title,
             description = description,

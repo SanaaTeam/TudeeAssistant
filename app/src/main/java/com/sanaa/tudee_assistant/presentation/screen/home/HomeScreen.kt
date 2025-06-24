@@ -80,14 +80,14 @@ fun HomeScreen(viewModel: HomeScreenViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     HomeScreenContent(
         state = state,
-        actionsListener = viewModel,
+        interactionsListener = viewModel,
     )
 }
 
 @Composable
 private fun HomeScreenContent(
     state: HomeScreenUiState,
-    actionsListener: HomeScreenActionsListener,
+    interactionsListener: HomeScreenInteractionsListener,
 ) {
     val scrollState = rememberLazyListState()
     var showEditTaskBottomSheet by remember { mutableStateOf(false) }
@@ -98,7 +98,7 @@ private fun HomeScreenContent(
         if (state.snackBarState != null) {
             snackBarDataToShow = state.snackBarState
             kotlinx.coroutines.delay(3000)
-            actionsListener.onSnackBarShown()
+            interactionsListener.onSnackBarShown()
         }
     }
     LaunchedEffect(scrollState) {
@@ -123,7 +123,7 @@ private fun HomeScreenContent(
                 tailComponent = {
                     DarkModeThemeSwitchButton(
                         state.isDarkTheme,
-                        onCheckedChange = { actionsListener.onChangeTheme(state.isDarkTheme.not()) }
+                        onCheckedChange = { interactionsListener.onToggleColorTheme() }
                     )
                 }
             )
@@ -134,7 +134,7 @@ private fun HomeScreenContent(
             CategoryList(
                 scrollState,
                 state,
-                onTaskClick = { actionsListener.onTaskClick(it) },
+                onTaskClick = { interactionsListener.onTaskClick(it) },
             )
         }
 
@@ -156,17 +156,17 @@ private fun HomeScreenContent(
                 },
                 onSuccess = {
                     showEditTaskBottomSheet = false
-                    actionsListener.onAddTaskSuccess()
+                    interactionsListener.onAddTaskSuccess()
                 },
                 onError = { errorMessage ->
-                    actionsListener.onAddTaskHasError(errorMessage)
+                    interactionsListener.onAddTaskHasError(errorMessage)
                 }
             )
         }
         if (state.selectedTask != null) {
             TaskDetailsComponent(
                 task = state.selectedTask,
-                onDismiss = { actionsListener.onDismissTaskDetails() },
+                onDismiss = { interactionsListener.onDismissTaskDetails() },
                 onEditClick = {},
                 onMoveToClicked = {}
             )
@@ -471,9 +471,9 @@ fun PreviewHomeScreen() {
     TudeeTheme(isDark = isDark) {
         val list = DataProvider.getTasksSample()
 
-        val previewActions = object : HomeScreenActionsListener {
-            override fun onChangeTheme(isDarkTheme: Boolean) {
-                isDark = isDarkTheme
+        val previewActions = object : HomeScreenInteractionsListener {
+            override fun onToggleColorTheme() {
+                isDark = isDark.not()
             }
 
             override fun onTaskClick(taskUiState: TaskUiState) {}
@@ -504,7 +504,7 @@ fun PreviewHomeScreen() {
                 tasks = list,
                 selectedTask = TaskUiState()
             ),
-            actionsListener = previewActions
+            interactionsListener = previewActions
         )
     }
 }

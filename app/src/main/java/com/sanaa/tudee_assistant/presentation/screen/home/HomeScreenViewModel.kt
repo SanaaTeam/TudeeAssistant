@@ -20,7 +20,7 @@ class HomeScreenViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
 ) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()),
-    HomeScreenActionsListener {
+    HomeScreenInteractionsListener {
 
     init {
         loadScreen()
@@ -39,11 +39,10 @@ class HomeScreenViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val today = Clock.System.now()
                 .toLocalDateTime(TimeZone.currentSystemDefault()).date
-            taskService.getAllTasks().collect { tasks ->
-                val todayTasks = tasks.filter { it.dueDate == today }
+            taskService.getTasksByDueDate(today).collect { tasks ->
                 _state.update { state ->
                     state.copy(
-                        tasks = todayTasks.map { it.toState() }
+                        tasks = tasks.map { it.toState() }
                     )
                 }
 
@@ -58,9 +57,9 @@ class HomeScreenViewModel(
         }
     }
 
-    override fun onChangeTheme(isDarkTheme: Boolean) {
+    override fun onToggleColorTheme() {
         viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.setDarkTheme(isDarkTheme)
+            preferencesManager.setDarkTheme(state.value.isDarkTheme.not())
         }
     }
 

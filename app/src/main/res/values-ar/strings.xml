@@ -31,7 +31,7 @@
     <string name="delete_subtitle">هل أنت متأكد من المتابعة؟</string>
     <string name="delete">حذف</string>
     <string name="no_task_today" translatable="false">لا توجد مهام اليوم!</string>
-    <string name="tap_to_add_task" translatable="false">اضغط على زر + لإضافة\nأول مهمة لك.</string>
+    <string name="tap_to_add_task" translatable="false">اضغط زر + لإضافة أول مهمة لك.</string>
 
     <string name="cancel">إلغاء</string>
     <string name="category_title">عنوان الفئة</string>

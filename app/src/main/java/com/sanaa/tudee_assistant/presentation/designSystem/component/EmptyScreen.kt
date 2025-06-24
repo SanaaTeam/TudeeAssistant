@@ -51,13 +51,13 @@ fun EmptyScreen(
     var visibleMessageBox by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(200)
+        delay(150)
         visibleCircular1 = true
-        delay(200)
+        delay(150)
         visibleCircular2 = true
-        delay(200)
+        delay(150)
         visibleCircular3 = true
-        delay(200)
+        delay(150)
         visibleMessageBox = true
     }
 
@@ -77,7 +77,7 @@ fun EmptyScreen(
 
             AnimatedVisibility(
                 visible = visibleMessageBox,
-                enter = fadeIn(animationSpec = tween(600))
+                enter = fadeIn(animationSpec = tween(300))
             ) {
                 MessageBox(modifier = Modifier.align(Alignment.TopEnd), title = title, caption = caption)
             }

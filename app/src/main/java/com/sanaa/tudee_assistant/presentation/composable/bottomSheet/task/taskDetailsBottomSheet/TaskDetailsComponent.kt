@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,10 +10,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,16 +37,16 @@ import org.koin.core.parameter.parametersOf
 fun TaskDetailsComponent(
     selectedTaskId: Int,
     onDismiss: () -> Unit,
-    viewModel: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(
+    interactionListener: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(
         key = "new $selectedTaskId",
-        parameters = {parametersOf(selectedTaskId)}),
+        parameters = { parametersOf(selectedTaskId) }),
     onEditClick: (TaskUiState) -> Unit,
     modifier: Modifier = Modifier,
     onMoveStatusSuccess: () -> Unit,
     onMoveStatusFail: () -> Unit,
 ) {
 
-    val state: State<DetailsUiState> = viewModel.state.collectAsState()
+    val state: State<DetailsUiState> = interactionListener.state.collectAsState()
 
     val changeStatusTo = when (state.value.status) {
         TaskUiStatus.TODO -> stringResource(R.string.mark_as_in_progress)
@@ -75,7 +72,7 @@ fun TaskDetailsComponent(
                     color = Theme.color.title,
                 )
 
-                CategoryImageContainer(){
+                CategoryImageContainer() {
                     CategoryThumbnail(
                         modifier.size(32.dp),
                         imagePath = state.value.categoryImagePath
@@ -132,10 +129,10 @@ fun TaskDetailsComponent(
                             SecondaryButton(
                                 lable = changeStatusTo,
                                 onClick = {
-                                    viewModel.onMoveTaskToAnotherStatus(
-                                        onMoveStatusSuccess ,onMoveStatusFail
+                                    interactionListener.onMoveTaskToAnotherStatus(
+                                        onMoveStatusSuccess, onMoveStatusFail
                                     )
-                                          },
+                                },
                                 modifier = Modifier.weight(1f)
                             )
 

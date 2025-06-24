@@ -11,11 +11,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+interface TaskDetailsInteractionListener{
+    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit)
+}
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val selectedTaskId: Int,
-) : BaseViewModel<DetailsUiState>(DetailsUiState()) {
+) : BaseViewModel<DetailsUiState>(DetailsUiState()),TaskDetailsInteractionListener{
 
 
     init {
@@ -36,7 +39,7 @@ class TaskDetailsBottomSheetViewModel(
 
 
 
-    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit) {
+    override fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit) {
         viewModelScope.launch {
             var newUpdatedTask: Task
             state.value.let {

@@ -143,8 +143,6 @@ private fun CategoryTaskScreenContent(
 @Composable
 private fun CategoryTaskScreenPreview() {
     TudeeTheme {
-        val viewModel = koinViewModel<CategoryTaskViewModel>()
-
         CategoryTaskScreenContent(
             state = CategoryTaskScreenUiState(
                 currentCategory = CategoryUiState(

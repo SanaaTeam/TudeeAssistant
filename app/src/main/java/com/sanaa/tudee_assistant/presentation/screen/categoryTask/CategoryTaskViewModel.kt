@@ -126,28 +126,36 @@ class CategoryTaskViewModel(
         tryToExecute(
             function = {
                 _state.update { it.copy(isLoading = true) }
-                val imagePath = imageProcessor.saveImageToInternalStorage(
-                    imageProcessor.processImage(category.imagePath.toUri())
-                )
+
+                val currentImagePath = _state.value.currentCategory.imagePath
+                val newImagePath = if (category.imagePath != currentImagePath) {
+                    imageProcessor.saveImageToInternalStorage(
+                        imageProcessor.processImage(category.imagePath.toUri())
+                    )
+                } else {
+                    currentImagePath
+                }
+
                 categoryService.updateCategory(
                     Category(
                         id = category.id,
                         name = category.name,
-                        imagePath = imagePath,
+                        imagePath = newImagePath,
                         isDefault = category.isDefault
                     )
                 )
             },
             onSuccess = {
                 onSuccess(
-                    message = "update task successfully",
+                    message = "Update task successfully",
                     updateState = {
                         it.copy(showEditCategoryBottomSheet = false)
-                    })
+                    }
+                )
+                loadCategoryTasks(category.id)
             },
             onError = {},
         )
-        loadCategoryTasks(_state.value.currentCategory.id)
     }
 
     private fun onSuccess(

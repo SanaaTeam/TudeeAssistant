@@ -106,7 +106,7 @@ fun AddEditCategoryBottomSheet(
                         modifier = Modifier.padding(top = Theme.dimension.regular)
                     )
                     UploadBox(
-                        modifier = Modifier.padding(top = Theme.dimension.small),
+                        modifier = Modifier.padding(top = Theme.dimension.small, bottom = Theme.dimension.large),
                         onImageSelected = { uri ->
                             onImageSelected(uri)
                             uri?.let {

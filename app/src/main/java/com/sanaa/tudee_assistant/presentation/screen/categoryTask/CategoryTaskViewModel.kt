@@ -4,6 +4,8 @@ import android.net.Uri
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toCategory
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.first
@@ -56,7 +58,12 @@ class CategoryTaskViewModel(
     }
 
     override fun onEditClicked() {
-        _state.update { it.copy(showEditCategoryBottomSheet = true) }
+        _state.update {
+            it.copy(
+                showEditCategoryBottomSheet = true,
+                editCategory = _state.value.currentCategory
+            )
+        }
     }
 
     override fun onEditDismissClicked() {
@@ -106,6 +113,16 @@ class CategoryTaskViewModel(
         }
     }
 
+    override fun onSaveEditClicked(category: CategoryUiState) {
+        tryToExecute(
+            function = {
+                _state.update { it.copy(isLoading = true) }
+                categoryService.updateCategory(category.toCategory())
+            },
+            onSuccess = {},
+            onError = {},
+        )
+    }
 
     private fun onSuccess(message: String?) {
         _state.update {

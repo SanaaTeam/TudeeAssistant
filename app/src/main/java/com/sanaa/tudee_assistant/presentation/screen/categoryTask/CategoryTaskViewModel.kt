@@ -80,7 +80,13 @@ class CategoryTaskViewModel(
                 categoryService.deleteCategoryById(_state.value.currentCategory.id)
             },
             onError = { onError(message = "Error deleting category") },
-            onSuccess = { onSuccessDelete(null) }
+            onSuccess = {
+                onSuccess(
+                    message = "Successfully deleted category",
+                    updateState = {
+                        it.copy(showDeleteCategoryBottomSheet = false)
+                    })
+            }
         )
     }
 
@@ -132,27 +138,28 @@ class CategoryTaskViewModel(
                     )
                 )
             },
-            onSuccess = { onSuccess(message = "message") },
+            onSuccess = {
+                onSuccess(
+                    message = "update task successfully",
+                    updateState = {
+                        it.copy(showEditCategoryBottomSheet = false)
+                    })
+            },
             onError = {},
         )
         loadCategoryTasks(_state.value.currentCategory.id)
     }
 
-    private fun onSuccessDelete(message: String?) {
+    private fun onSuccess(
+        message: String?,
+        updateState: (oldState: CategoryTaskScreenUiState) -> CategoryTaskScreenUiState = { it }
+    ) {
         _state.update {
-            it.copy(
+            updateState(it).copy(
                 isLoading = false,
                 error = null,
-                success = message,
-                showDeleteCategoryBottomSheet = false
+                success = message
             )
-        }
-    }
-
-
-    private fun onSuccess(message: String?) {
-        _state.update {
-            it.copy(isLoading = false, error = null, success = message)
         }
     }
 
@@ -166,10 +173,10 @@ class CategoryTaskViewModel(
         val current = _state.value.currentCategory
         val edited = _state.value.editCategory
 
-        val isNameChanged = edited.name != current.name
-        val isImageChanged = edited.imagePath != current.imagePath
-        val isNameNotEmpty = edited.name.isNotBlank()
+        val hasNameChanged = edited.name != current.name
+        val hasImageChanged = edited.imagePath != current.imagePath
+        val isNameValid = edited.name.isNotBlank()
 
-        return isNameNotEmpty && (isNameChanged || isImageChanged)
+        return isNameValid && (hasNameChanged || hasImageChanged)
     }
 }

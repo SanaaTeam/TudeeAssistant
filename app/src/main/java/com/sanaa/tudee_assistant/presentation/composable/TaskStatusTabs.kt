@@ -29,7 +29,7 @@ fun TaskStatusTabs(
 
     var selectedTab by remember {
         mutableIntStateOf(
-            when (state.selectedTaskUiStatus) {
+            when (state.selectedStatusTab) {
                 TaskUiStatus.IN_PROGRESS -> 0
                 TaskUiStatus.TODO -> 1
                 TaskUiStatus.DONE -> 2

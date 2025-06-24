@@ -63,6 +63,9 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
+import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.util.navigatePreservingState
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
@@ -133,7 +136,6 @@ fun HomeScreenContent(
                 scrollState,
                 state,
                 onTaskClick = { actionsListener.onTaskClick(it) },
-                onTaskCountContainerClicked = { actionsListener.onTaskCountContainerClicked(it) }
             )
         }
 
@@ -210,7 +212,6 @@ private fun CategoryList(
     scrollState: LazyListState,
     state: HomeScreenUiState,
     onTaskClick: (TaskUiState) -> Unit,
-    onTaskCountContainerClicked: (TaskUiStatus) -> Unit
 ) {
     LazyColumn(
         state = scrollState,
@@ -254,8 +255,7 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.done_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
-                    taskUiStatus = TaskUiStatus.DONE,
-                    onTaskCountContainerClicked = onTaskCountContainerClicked
+                    taskUiStatus = TaskUiStatus.DONE
                 )
             }
         }
@@ -273,8 +273,8 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.in_progress_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
-                    taskUiStatus = TaskUiStatus.IN_PROGRESS,
-                    onTaskCountContainerClicked = onTaskCountContainerClicked                )
+                    taskUiStatus = TaskUiStatus.IN_PROGRESS
+                )
             }
         }
 
@@ -291,8 +291,8 @@ private fun CategoryList(
                 Title(
                     text = stringResource(R.string.todo_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
-                    taskUiStatus = TaskUiStatus.TODO,
-                    onTaskCountContainerClicked = onTaskCountContainerClicked                )
+                    taskUiStatus = TaskUiStatus.TODO
+                )
             }
         }
 
@@ -400,8 +400,9 @@ private fun Title(
     text: String,
     tasksCount: Int,
     taskUiStatus: TaskUiStatus,
-    onTaskCountContainerClicked: (TaskUiStatus) -> Unit
 ) {
+    val navController = AppNavigation.mainScreen
+
     Row(
         modifier = Modifier
             .background(Theme.color.surface)
@@ -420,9 +421,9 @@ private fun Title(
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(100.dp))
+                .clickable { navController.navigatePreservingState(TasksScreenRoute(taskUiStatus)) }
                 .background(Theme.color.surfaceHigh)
-                .padding(vertical = 6.dp, horizontal = Theme.dimension.small)
-                .clickable { onTaskCountContainerClicked(taskUiStatus) },
+                .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -472,16 +473,14 @@ fun PreviewHomeScreen() {
         val list = DataProvider.getTasksSample()
 
         val previewActions = object : HomeScreenActionsListener {
-            override fun onChangeTheme(isDarkValue: Boolean) {
-                isDark = isDarkValue
+            override fun onChangeTheme(isDarkTheme: Boolean) {
+                isDark = isDarkTheme
             }
 
-            override fun onTaskClick(task: TaskUiState) {}
+            override fun onTaskClick(taskUiState: TaskUiState) {}
             override fun onDismissTaskDetails() {}
-            override fun onTaskCountContainerClicked(taskUiStatus: TaskUiStatus) {}
-
             override fun onAddTaskSuccess() {}
-            override fun onAddTaskHasError(error: String) {}
+            override fun onAddTaskHasError(errorMessage: String) {}
             override fun onSnackBarShown() {}
         }
 

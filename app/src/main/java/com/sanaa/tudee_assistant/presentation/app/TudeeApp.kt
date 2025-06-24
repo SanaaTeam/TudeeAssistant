@@ -16,9 +16,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
-import com.sanaa.tudee_assistant.presentation.navigation.LocalNavController
+import com.sanaa.tudee_assistant.presentation.navigation.LocalAppNavController
 import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskScreen
@@ -34,7 +35,7 @@ fun TudeeApp(appViewModel: TudeeAppViewModel = koinViewModel()) {
     TudeeTheme(isDark = state.isDarkTheme) {
         Scaffold(containerColor = statusBarColor) { innerPadding ->
             val appNavController = rememberNavController()
-            CompositionLocalProvider(LocalNavController provides appNavController) {
+            CompositionLocalProvider(LocalAppNavController provides appNavController) {
                 AppNavigation(
                     startDestination = if (state.isFirstLaunch) OnBoardingScreenRoute else MainScreenRoute,
                     modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
@@ -51,10 +52,9 @@ private fun AppNavigation(
     modifier: Modifier = Modifier,
     onStatusBarColor: (Color) -> Unit,
 ) {
-    val navHostController = LocalNavController.current
     NavHost(
         modifier = modifier,
-        navController = navHostController,
+        navController = AppNavigation.app,
         startDestination = startDestination
     ) {
         composable<OnBoardingScreenRoute> {

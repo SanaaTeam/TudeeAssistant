@@ -42,7 +42,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.navigation.LocalNavController
+import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
 import kotlinx.coroutines.launch
@@ -78,7 +78,7 @@ fun OnBoardingScreen(
     modifier: Modifier = Modifier,
     preferencesManager: PreferencesManager = koinInject<PreferencesManager>(),
 ) {
-    val navController = LocalNavController.current
+    val navController = AppNavigation.app
     val isInPreview = LocalView.current.isInEditMode
 
     if (!isInPreview) {

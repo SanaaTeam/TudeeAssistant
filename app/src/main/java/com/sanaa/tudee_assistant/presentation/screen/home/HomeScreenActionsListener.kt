@@ -9,5 +9,4 @@ interface HomeScreenActionsListener {
     fun onSnackBarShown()
     fun onTaskClick(taskUiState: TaskUiState)
     fun onDismissTaskDetails()
-    fun onTaskCountContainerClicked(taskUiStatus: TaskUiStatus)
 }

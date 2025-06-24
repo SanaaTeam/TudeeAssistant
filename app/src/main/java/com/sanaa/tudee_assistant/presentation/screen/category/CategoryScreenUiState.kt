@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
-import android.net.Uri
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 
 data class CategoryScreenUiState(

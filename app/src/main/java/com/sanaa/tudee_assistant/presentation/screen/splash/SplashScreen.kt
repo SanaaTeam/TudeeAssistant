@@ -68,7 +68,7 @@ fun SplashScreen(
 
             offsets.forEach { offset ->
                 Text(
-                    text = stringResource(R.string.tudee),
+                    text = stringResource(R.string.logoName),
                     fontSize = 48.sp,
                     fontWeight = FontWeight.W400,
                     fontFamily = CherryBomb,
@@ -81,7 +81,7 @@ fun SplashScreen(
             }
 
             Text(
-                text = stringResource(R.string.tudee),
+                text = stringResource(R.string.logoName),
                 fontSize = 48.sp,
                 fontWeight = FontWeight.W400,
                 fontFamily = CherryBomb,

@@ -73,6 +73,7 @@
     <string name="edit_task">Edit Task</string>
     <string name="task_add_success">Add task successfully.</string>
     <string name="task_update_success">Edited task successfully.</string>
+    <string name="task_status_update_success">task status updated successfully.</string>
     <string name="task_delete_success">Deleted task successfully.</string>
 
 

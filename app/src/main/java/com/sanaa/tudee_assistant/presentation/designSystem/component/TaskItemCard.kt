@@ -30,7 +30,7 @@ import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
-fun CategoryTaskCard(
+fun TaskItemCard(
     task: TaskUiState,
     categoryImagePath: String,
     onClick: (TaskUiState) -> Unit,
@@ -106,7 +106,7 @@ private fun Preview() {
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             items(DataProvider.getTasksSample()) {
-                CategoryTaskCard(
+                TaskItemCard(
                     task = it,
                     categoryImagePath = "file:///android_asset/categories/agriculture.png",
                     onClick = {},

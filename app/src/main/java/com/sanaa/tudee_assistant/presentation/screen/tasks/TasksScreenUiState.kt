@@ -11,14 +11,13 @@ import kotlinx.datetime.toLocalDateTime
 
 data class TasksScreenUiState(
     val currentDateTasks: List<TaskUiState> = emptyList(),
-    val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val successMessage: String? = null,
-    val showAddTaskDialog: Boolean = false,
-    val showEditDialog: Boolean = false,
-    val showTaskDetailsDialog: Boolean = false,
-    val showDeleteDialog: Boolean = false,
-    val selectedTaskUiStatus: TaskUiStatus = TaskUiStatus.TODO,
+    val showAddTaskBottomSheet: Boolean = false,
+    val showEditTaskBottomSheet: Boolean = false,
+    val showTaskDetailsBottomSheet: Boolean = false,
+    val showDeleteTaskBottomSheet: Boolean = false,
+    val selectedStatusTab: TaskUiStatus = TaskUiStatus.TODO,
     val selectedTask: TaskUiState? = null,
     val selectedDate: LocalDate = Clock.System.now()
         .toLocalDateTime(TimeZone.currentSystemDefault()).date,

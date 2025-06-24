@@ -1,47 +1,61 @@
 package com.sanaa.tudee_assistant.presentation.utils
 
-import kotlinx.datetime.Instant
+import android.content.Context
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
-import android.content.Context
-import com.sanaa.tudee_assistant.R
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.number
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 object DateFormater {
-    fun LocalDate.getShortDayName(): String {
-        val dayOfWeek = this.dayOfWeek
 
-        return dayOfWeek.name.take(3)
-            .lowercase()
-            .replaceFirstChar { it.uppercase() }
+    fun LocalDate.getShortDayName(locale: Locale = Locale.getDefault()): String {
+        val calendar = Calendar.getInstance().apply {
+            set(
+                this@getShortDayName.year,
+                this@getShortDayName.monthNumber - 1,
+                this@getShortDayName.dayOfMonth
+            )
+        }
+        val sdf = SimpleDateFormat("EEE", locale)
+        return sdf.format(calendar.time)
+    }
+
+    fun LocalDate.getShortMonthName(locale: Locale = Locale.getDefault()): String {
+        val calendar = Calendar.getInstance().apply {
+            set(
+                this@getShortMonthName.year,
+                this@getShortMonthName.monthNumber - 1,
+                this@getShortMonthName.dayOfMonth
+            )
+        }
+        val sdf = SimpleDateFormat("MMM", locale)
+        return sdf.format(calendar.time)
     }
 
     fun LocalDateTime.formatDateTime(context: Context): String {
-        val day = this.dayOfMonth.toString().padStart(2, '0')
-        val month = this.month.number
-        val monthAbbreviations = context.resources.getStringArray(R.array.month_abbreviations)
-        val monthAbbrev = monthAbbreviations[month - 1]
-        return "$day $monthAbbrev $year"
-    }
-
-    fun LocalDate.getShortMonthName(): String {
-
-        return this.month.name.take(3)
-            .lowercase()
-            .replaceFirstChar { it.uppercase() }
+        val calendar = Calendar.getInstance().apply {
+            set(year, monthNumber - 1, dayOfMonth, hour, minute, second)
+        }
+        val sdf = SimpleDateFormat("dd MMM yyyy", context.resources.configuration.locales[0])
+        return sdf.format(calendar.time)
     }
 
     fun formatLongToDate(timestampMillis: Long): LocalDate {
-        val instant = Instant.fromEpochMilliseconds(timestampMillis)
-        return instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val date = Date(timestampMillis)
+        val calendar = Calendar.getInstance().apply { time = date }
+        return LocalDate(
+            year = calendar.get(Calendar.YEAR),
+            monthNumber = calendar.get(Calendar.MONTH) + 1,
+            dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+        )
     }
 
     fun localDateToEpochMillis(date: LocalDate?): Long? {
-        val dateTime = date?.atStartOfDayIn(TimeZone.UTC)
-        return dateTime?.toEpochMilliseconds()
+        return date?.atStartOfDayIn(TimeZone.currentSystemDefault())?.toEpochMilliseconds()
     }
 
     fun getLocalDatesInMonth(year: Int, month: Int): List<LocalDate> {
@@ -49,14 +63,10 @@ object DateFormater {
             1, 3, 5, 7, 8, 10, 12 -> 31
             4, 6, 9, 11 -> 30
             2 -> if (isLeapYear(year)) 29 else 28
-            else -> throw IllegalArgumentException("Invalid month")
+            else -> throw IllegalArgumentException("Invalid month: $month")
         }
-
-        return List(totalDays) { day ->
-            LocalDate(year, month, day + 1)
-        }
+        return List(totalDays) { day -> LocalDate(year, month, day + 1) }
     }
-
 
     private fun isLeapYear(year: Int): Boolean {
         return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)

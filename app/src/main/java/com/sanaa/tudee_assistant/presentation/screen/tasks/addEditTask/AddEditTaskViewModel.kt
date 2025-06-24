@@ -7,10 +7,10 @@ import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toNewTask
+import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,15 +19,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
-class TaskFormViewModel(
+class AddEditTaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-) : ViewModel() {
+) : ViewModel(), AddEditTaskListener {
 
     private val _uiState = MutableStateFlow(AddTaskUiState())
     val uiState: StateFlow<AddTaskUiState> = _uiState.asStateFlow()
 
-    init{
+    private var originalTaskUiState: TaskUiState? = null
+    private var isEditMode: Boolean = false
+
+    private val _showDatePickerDialog = MutableStateFlow(false)
+    val showDatePickerDialog: StateFlow<Boolean> = _showDatePickerDialog.asStateFlow()
+
+    init {
         viewModelScope.launch {
             categoryService.getCategories().collect { categoryList ->
                 _uiState.update {
@@ -40,60 +46,74 @@ class TaskFormViewModel(
     }
 
     fun loadTask(task: TaskUiState) {
+        isEditMode = true
         viewModelScope.launch(Dispatchers.IO) {
-            taskService.getTaskCountByCategoryId(task.categoryId).collect { taskCount ->
-                val category = categoryService
-                    .getCategoryById(task.categoryId).toState(taskCount)
-                _uiState.update {
-                    it.copy(taskUiState = task, selectedCategory = category)
-                }
-
-                categoryService.getCategories().collect { categories ->
-                    _uiState.update { state ->
-                        state.copy(categories = categories.map { it.toState(taskCount) })
+            try {
+                taskService.getTaskCountByCategoryId(task.categoryId).collect { taskCount ->
+                    val category = categoryService
+                        .getCategoryById(task.categoryId).toState(taskCount)
+                    originalTaskUiState = task.copy()
+                    _uiState.update {
+                        it.copy(taskUiState = task, selectedCategory = category)
+                    }
+                    validateInputs()
+                    categoryService.getCategories().collect { categories ->
+                        _uiState.update { state ->
+                            state.copy(categories = categories.map { it.toState(taskCount) })
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                handleError(e)
             }
         }
     }
 
     fun loadCategoriesForNewTask() {
+        isEditMode = false
+        originalTaskUiState = null
         viewModelScope.launch(Dispatchers.IO) {
-            categoryService.getCategories().collect { categories ->
-                _uiState.update { state ->
-                    state.copy(categories = categories.map { it.toState(0) })
+            try {
+                categoryService.getCategories().collect { categories ->
+                    _uiState.update { state ->
+                        state.copy(categories = categories.map { it.toState(0) })
+                    }
                 }
+            } catch (e: Exception) {
+                handleError(e)
             }
         }
     }
 
-    fun onTitleChange(title: String) {
+    override fun onTitleChange(title: String) {
         _uiState.update {
             it.copy(taskUiState = it.taskUiState.copy(title = title))
         }
         validateInputs()
     }
 
-    fun onDescriptionChange(description: String) {
+    override fun onDescriptionChange(description: String) {
         _uiState.update {
             it.copy(taskUiState = it.taskUiState.copy(description = description))
         }
+        validateInputs()
     }
 
-    fun onDateSelected(date: LocalDate) {
+    override fun onDateSelected(date: LocalDate) {
         _uiState.update {
             it.copy(taskUiState = it.taskUiState.copy(dueDate = date.toString()))
         }
         validateInputs()
     }
 
-    fun onPrioritySelected(priority: TaskUiPriority) {
+    override fun onPrioritySelected(priority: TaskUiPriority) {
         _uiState.update {
             it.copy(taskUiState = it.taskUiState.copy(priority = priority))
         }
+        validateInputs()
     }
 
-    fun onCategorySelected(category: CategoryUiState) {
+    override fun onCategorySelected(category: CategoryUiState) {
         _uiState.update {
             it.copy(
                 selectedCategory = category,
@@ -103,8 +123,24 @@ class TaskFormViewModel(
         validateInputs()
     }
 
-    fun addTask() {
+    override fun onPrimaryButtonClick() {
         if (!uiState.value.isButtonEnabled) return
+        if (isEditMode) {
+            updateTask()
+        } else {
+            addTask()
+        }
+    }
+
+    override fun onDatePickerShow() {
+        _showDatePickerDialog.update { true }
+    }
+
+    override fun onDatePickerDismiss() {
+        _showDatePickerDialog.update { false }
+    }
+
+    private fun addTask() {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, error = null) }
@@ -119,8 +155,7 @@ class TaskFormViewModel(
         }
     }
 
-    fun updateTask() {
-        if (!uiState.value.isButtonEnabled) return
+    private fun updateTask() {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, error = null) }
@@ -134,6 +169,9 @@ class TaskFormViewModel(
     }
 
     fun resetState() {
+        isEditMode = false
+        originalTaskUiState = null
+        _showDatePickerDialog.update { false }
         _uiState.update {
             AddTaskUiState(categories = it.categories)
         }
@@ -147,11 +185,20 @@ class TaskFormViewModel(
 
     private fun validateInputs() {
         val state = _uiState.value
+        val isButtonEnabled = if (isEditMode) {
+            originalTaskUiState?.let { original ->
+                state.taskUiState.title != original.title ||
+                        state.taskUiState.description != original.description ||
+                        state.taskUiState.dueDate != original.dueDate ||
+                        state.taskUiState.priority != original.priority ||
+                        state.taskUiState.categoryId != original.categoryId
+            } ?: false
+        } else {
+            state.taskUiState.title.isNotBlank() && state.selectedCategory != null
+        }
+
         _uiState.update {
-            it.copy(
-                isButtonEnabled = state.taskUiState.title.isNotBlank() &&
-                        state.selectedCategory != null
-            )
+            it.copy(isButtonEnabled = isButtonEnabled)
         }
     }
 }

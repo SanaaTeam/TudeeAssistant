@@ -48,9 +48,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
-import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
 import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
@@ -70,6 +70,7 @@ import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.formatDateTime
+import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -97,7 +98,7 @@ private fun HomeScreenContent(
     LaunchedEffect(state.snackBarState) {
         if (state.snackBarState != null) {
             snackBarDataToShow = state.snackBarState
-            kotlinx.coroutines.delay(3000)
+            delay(3000)
             interactionsListener.onSnackBarShown()
         }
     }
@@ -165,10 +166,17 @@ private fun HomeScreenContent(
         }
         if (state.selectedTask != null) {
             TaskDetailsComponent(
-                task = state.selectedTask,
+                selectedTaskId = state.selectedTask.id,
                 onDismiss = { interactionsListener.onDismissTaskDetails() },
-                onEditClick = {},
-                onMoveToClicked = {}
+                onEditClick = {
+                    //Todo
+                },
+                onMoveStatusSuccess = {
+                //Todo}
+                },
+                onMoveStatusFail = {
+                //Todo}
+                }
             )
         }
 
@@ -324,7 +332,7 @@ private fun CategoryList(
     ) {
         items(items = items) { task ->
             val categoryImagePath = categories.first { it.id == task.categoryId }.imagePath
-            CategoryTaskCard(
+            TaskItemCard(
                 modifier = Modifier.width(320.dp),
                 task = task,
                 categoryImagePath = categoryImagePath,

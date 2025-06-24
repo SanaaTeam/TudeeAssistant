@@ -30,10 +30,9 @@ fun BaseBottomSheet(
     content: @Composable () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(Unit) {
         sheetState.expand()
     }
-    if (sheetState.isVisible)
         ModalBottomSheet(
             sheetState = sheetState,
             onDismissRequest = onDismiss,

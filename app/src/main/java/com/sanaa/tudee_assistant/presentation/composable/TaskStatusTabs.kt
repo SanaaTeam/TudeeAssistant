@@ -29,7 +29,7 @@ fun TaskStatusTabs(
 
     var selectedTab by remember {
         mutableIntStateOf(
-            when (state.selectedTaskUiStatus) {
+            when (state.selectedStatusTab) {
                 TaskUiStatus.IN_PROGRESS -> 0
                 TaskUiStatus.TODO -> 1
                 TaskUiStatus.DONE -> 2
@@ -48,7 +48,7 @@ fun TaskStatusTabs(
                         taskList = state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
                         categories = state.categories,
                         onTaskSwipe = { task -> onTaskSwipe(task) },
-                        onTaskClick = { onTaskClick }
+                        onTaskClick = onTaskClick
                     )
                 } else {
                     Box(

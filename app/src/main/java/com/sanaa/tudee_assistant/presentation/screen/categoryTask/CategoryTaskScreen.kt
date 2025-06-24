@@ -13,8 +13,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.screen.category.AddEditCategoryBottomSheet
-import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTaskScreenContainer
+import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.EmptyCategoryTasksComponent
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
@@ -30,6 +30,7 @@ fun CategoryTaskScreen(
     CategoryTaskScreenContent(
         state = state,
         listener = viewModel,
+        isValidForm = viewModel::isValidForm,
         modifier = modifier.fillMaxSize()
     )
 }
@@ -37,6 +38,7 @@ fun CategoryTaskScreen(
 @Composable
 private fun CategoryTaskScreenContent(
     state: CategoryTaskScreenUiState,
+    isValidForm: () -> Boolean,
     listener: CategoryTaskInteractionListener,
     modifier: Modifier = Modifier,
 ) {
@@ -46,7 +48,7 @@ private fun CategoryTaskScreenContent(
                 title = state.currentCategory.name,
                 onEditClick = { listener.onEditClicked() },
                 onBackClick = {},
-                isEditable = !state.currentCategory.isDefault
+                isEditable = state.currentCategory.isDefault
             )
         },
         modifier = modifier
@@ -99,14 +101,16 @@ private fun CategoryTaskScreenContent(
             onTabSelected = { it -> listener.onStatusChanged(it) },
             modifier = Modifier.fillMaxSize()
         )
-        if(state.showEditCategoryBottomSheet){
+        if (state.showEditCategoryBottomSheet) {
             AddEditCategoryBottomSheet(
                 onImageSelected = { listener.onImageSelect(it) },
                 onTitleChange = { listener.onTitleChange(it) },
-                onSaveClick = { listener.onConfirmDeleteClicked() },
+                onSaveClick = { listener.onSaveEditClicked(it) },
                 onDismiss = { listener.onEditDismissClicked() },
-                category = state.currentCategory,
-                isEditMode = !state.currentCategory.isDefault
+                category = state.editCategory,
+                isEditMode = state.currentCategory.isDefault,
+                onDeleteClick = { listener.onDeleteClicked() },
+                isFormValid = isValidForm
             )
         }
     }
@@ -131,7 +135,10 @@ private fun CategoryTaskScreenPreview() {
                 override fun onStatusChanged(index: Int) {}
                 override fun onImageSelect(image: Uri?) {}
                 override fun onTitleChange(title: String) {}
-            }
+                override fun onSaveEditClicked(category: CategoryUiState) {}
+            },
+            isValidForm = TODO(),
+            modifier = TODO()
         )
     }
 }

@@ -163,9 +163,9 @@ private fun HomeScreenContent(
                 }
             )
         }
-        if (state.clickedTask != null) {
+        if (state.selectedTask != null) {
             TaskDetailsComponent(
-                task = state.clickedTask,
+                task = state.selectedTask,
                 onDismiss = { actionsListener.onDismissTaskDetails() },
                 onEditClick = {},
                 onMoveToClicked = {}
@@ -502,7 +502,7 @@ fun PreviewHomeScreen() {
                     ),
                 ),
                 tasks = list,
-                clickedTask = TaskUiState()
+                selectedTask = TaskUiState()
             ),
             actionsListener = previewActions
         )

@@ -78,10 +78,10 @@ class HomeScreenViewModel(
     }
 
     override fun onTaskClick(taskUiState: TaskUiState) {
-        _state.update { it.copy(clickedTask = taskUiState) }
+        _state.update { it.copy(selectedTask = taskUiState) }
     }
 
     override fun onDismissTaskDetails() {
-        _state.update { it.copy(clickedTask = null) }
+        _state.update { it.copy(selectedTask = null) }
     }
 }

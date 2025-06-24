@@ -456,7 +456,7 @@ private fun TopDate(state: HomeScreenUiState) {
 
         Text(
             modifier = Modifier.padding(start = Theme.dimension.small),
-            text = "${stringResource(R.string.today)}, " + state.dayDate.formatDateTime(context = LocalContext.current),
+            text = "${stringResource(R.string.today)}, " + state.todayDate.formatDateTime(context = LocalContext.current),
             color = Theme.color.body,
             style = Theme.textStyle.label.medium
         )
@@ -486,7 +486,7 @@ fun PreviewHomeScreen() {
         HomeScreenContent(
             state = HomeScreenUiState(
                 isDarkTheme = isDark,
-                dayDate = dayDate,
+                todayDate = dayDate,
                 taskCounts = listOf(
                     Pair(
                         list.filter { it.status == TaskUiStatus.DONE }.size,

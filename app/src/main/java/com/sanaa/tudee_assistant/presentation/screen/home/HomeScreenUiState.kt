@@ -11,7 +11,7 @@ import kotlinx.datetime.toLocalDateTime
 
 data class HomeScreenUiState(
     val isDarkTheme: Boolean = false,
-    val dayDate: LocalDateTime = Clock.System.now()
+    val todayDate: LocalDateTime = Clock.System.now()
         .toLocalDateTime(TimeZone.currentSystemDefault()),
     val taskCounts: List<Pair<Int, TaskUiStatus>> = emptyList(),
     val tasks: List<TaskUiState> = emptyList(),

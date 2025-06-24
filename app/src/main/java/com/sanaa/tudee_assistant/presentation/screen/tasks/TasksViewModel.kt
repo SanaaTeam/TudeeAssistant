@@ -3,6 +3,7 @@ package com.sanaa.tudee_assistant.presentation.screen.tasks
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -17,7 +18,8 @@ import kotlinx.datetime.LocalDate
 class TaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-    private val selectedStatusTab: TaskUiStatus
+    private val selectedStatusTab: TaskUiStatus,
+    private val stringProvider: StringProvider
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()), TaskInteractionListener {
 
 
@@ -73,10 +75,10 @@ class TaskViewModel(
                     if (it?.id == null) return@launch
                     taskService.deleteTaskById(it.id)
                 }.onSuccess {
-                    handleOnSuccess(messageStringId = R.string.task_delete_success)
+                    handleOnSuccess(message = stringProvider.getString(R.string.task_delete_success))
                     getTasksByDueDate()
                 }.onFailure {
-                    handleOnError( messageStringId = R.string.snack_bar_error)
+                    handleOnError( message = stringProvider.getString(R.string.snack_bar_error))
 
                 }
             }
@@ -100,7 +102,7 @@ class TaskViewModel(
 
     override fun onShowSnackbar() {
         _state.update {
-            it.copy(successMessageStringId = null, errorMessageStringId = null)
+            it.copy(successMessage = null, errorMessage = null)
         }
     }
 
@@ -116,59 +118,31 @@ class TaskViewModel(
         return false
     }
 
-//    override fun onMoveTaskToAnotherStatus() {
-//        viewModelScope.launch {
-//            var newUpdatedTask: Task
-//            state.value.selectedTask?.let {
-//               when(it.status){
-//                   TaskUiStatus.TODO -> {
-//                       newUpdatedTask = it.copy(status = TaskUiStatus.IN_PROGRESS ).toTask()
-//                       updateSelectedTaskStatus(newUpdatedTask)
-//                   }
-//                   TaskUiStatus.IN_PROGRESS -> {
-//                       newUpdatedTask = it.copy(status = TaskUiStatus.DONE ).toTask()
-//                       updateSelectedTaskStatus(newUpdatedTask)
-//                   }
-//                   TaskUiStatus.DONE -> {
-//                       newUpdatedTask = it.copy(status = TaskUiStatus.DONE ).toTask()
-//                       updateSelectedTaskStatus(newUpdatedTask)
-//                   }
-//               }
-//            }
-//        }
-//    }
-//
-//    private suspend fun updateSelectedTaskStatus(newUpdatedTask: Task){
-//        runCatching {
-//            taskService.updateTask(newUpdatedTask)
-//        }.onSuccess {
-//        }.onFailure { handleOnError()}
-//    }
 
     override fun handleOnMoveToStatusSuccess(){
-        handleOnSuccess(messageStringId = R.string.task_update_success)
+        handleOnSuccess(message = stringProvider.getString(R.string.task_update_success))
     }
     override fun handleOnMoveToStatusFail(){
         handleOnError()
     }
 
 
-    private fun handleOnSuccess(messageStringId: Int? = null) {
+    private fun handleOnSuccess(message: String? = null) {
         _state.update {
             it.copy(
-                successMessageStringId = messageStringId,
-                errorMessageStringId = null,
+                successMessage = message,
+                errorMessage = null,
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false
             )
         }
     }
 
-    private fun handleOnError(messageStringId: Int? = null) {
+    private fun handleOnError(message: String? = stringProvider.getString(R.string.snack_bar_error)) {
         _state.update {
             it.copy(
-                successMessageStringId = null,
-                errorMessageStringId = messageStringId,
+                successMessage = null,
+                errorMessage = message,
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false
             )

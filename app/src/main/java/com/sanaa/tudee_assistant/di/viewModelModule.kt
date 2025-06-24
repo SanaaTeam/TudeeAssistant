@@ -16,7 +16,7 @@ val viewModelModule = module {
     viewModelOf(::CategoryTaskViewModel)
     viewModelOf(::HomeScreenViewModel)
     viewModelOf(::TaskFormViewModel)
-    viewModel{(selectedStatusTab:TaskUiStatus)-> TaskViewModel(taskService = get(), categoryService = get(),selectedStatusTab = selectedStatusTab) }
+    viewModel{(selectedStatusTab:TaskUiStatus)-> TaskViewModel(taskService = get(), categoryService = get(),selectedStatusTab = selectedStatusTab, stringProvider = get()) }
     viewModel{(selectedTaskId:Int)-> TaskDetailsBottomSheetViewModel(taskService = get(), categoryService = get(),selectedTaskId = selectedTaskId)}
 
 

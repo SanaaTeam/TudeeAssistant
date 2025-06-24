@@ -300,31 +300,24 @@ fun TasksScreenContent(
             iconRes = R.drawable.note_add
         )
 
-        var successMessageText: String? = null
-        state.successMessageStringId?.let {
-            successMessageText = stringResource(state.successMessageStringId)
-        }
-        LaunchedEffect(state.successMessageStringId) {
-            state.successMessageStringId?.let {
-                snackBarHostState.showSnackbar(successMessageText!!)
+        LaunchedEffect(state.successMessage) {
+            state.successMessage?.let {
+                snackBarHostState.showSnackbar(it)
                 interactionListener.onShowSnackbar()
             }
         }
 
 
-        var errorMessageText: String? = null
-        state.errorMessageStringId?.let {
-            successMessageText = stringResource(state.errorMessageStringId)
-        }
-        LaunchedEffect(state.successMessageStringId) {
-            state.errorMessageStringId?.let {
-                snackBarHostState.showSnackbar(errorMessageText!!)
+
+        LaunchedEffect(state.successMessage) {
+            state.errorMessage?.let {
+                snackBarHostState.showSnackbar(it)
                 interactionListener.onShowSnackbar()
             }
         }
 
         TudeeSnackBar(
-            snackBarHostState = snackBarHostState, isError = state.errorMessageStringId != null
+            snackBarHostState = snackBarHostState, isError = state.errorMessage != null
         )
     }
 }

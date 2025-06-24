@@ -84,10 +84,13 @@ fun TudeeTextField(
                             .background(color = Theme.color.stroke)
                     )
                 }
+
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .align(if (icon == null) Alignment.Top else Alignment.CenterVertically)
+                    ,
+                    contentAlignment = if (icon == null) Alignment.TopStart else Alignment.CenterStart
                 ) {
                     if (value.isEmpty()) {
                         Text(
@@ -103,7 +106,7 @@ fun TudeeTextField(
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewTudeeTextField() {
     TudeeTheme(false) {

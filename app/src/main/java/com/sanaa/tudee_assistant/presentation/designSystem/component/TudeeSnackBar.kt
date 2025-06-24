@@ -9,6 +9,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 

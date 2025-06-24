@@ -2,27 +2,44 @@ package com.sanaa.tudee_assistant.presentation.screen.home
 
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.TaskService
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class HomeScreenViewModel(
+    private val preferencesManager: PreferencesManager,
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()) {
+) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()),
+    HomeScreenInteractionsListener {
 
     init {
+        loadScreen()
         getTasks()
+    }
+
+    private fun loadScreen() {
+        viewModelScope.launch(Dispatchers.IO) {
+            preferencesManager.isDarkTheme.collect { isDarkTheme ->
+                _state.update { it.copy(isDarkTheme = isDarkTheme) }
+            }
+        }
     }
 
     private fun getTasks() {
         viewModelScope.launch(Dispatchers.IO) {
-            taskService.getAllTasks().collect { tasks ->
+            val today = Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault()).date
+            taskService.getTasksByDueDate(today).collect { tasks ->
                 _state.update { state ->
                     state.copy(
                         tasks = tasks.map { it.toState() }
@@ -40,22 +57,30 @@ class HomeScreenViewModel(
         }
     }
 
-    fun onAddTask() {
+    override fun onToggleColorTheme() {
+        viewModelScope.launch(Dispatchers.IO) {
+            preferencesManager.setDarkTheme(state.value.isDarkTheme.not())
+        }
     }
 
-    fun onAddTaskSuccess() {
+    override fun onAddTaskSuccess() {
         getTasks()
+        _state.update { it.copy(snackBarState = SnackBarState.Success("Task added successfully!")) }
     }
 
-    fun onAddTaskHasError(errorMessage: String) {
-
+    override fun onAddTaskHasError(errorMessage: String) {
+        _state.update { it.copy(snackBarState = SnackBarState.Error(errorMessage)) }
     }
 
-    fun onTaskClick(categoryTaskState: TaskUiState) {
-
+    override fun onSnackBarShown() {
+        _state.update { it.copy(snackBarState = null) }
     }
 
-    fun onOpenCategory(taskUiStatus: TaskUiStatus) {
+    override fun onTaskClick(taskUiState: TaskUiState) {
+        _state.update { it.copy(selectedTask = taskUiState) }
+    }
 
+    override fun onDismissTaskDetails() {
+        _state.update { it.copy(selectedTask = null) }
     }
 }

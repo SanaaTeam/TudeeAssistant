@@ -13,10 +13,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -92,6 +94,7 @@ fun AddEditTaskContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium)
+                        .clip(shape = RoundedCornerShape(Theme.dimension.medium))
                         .clickable { listener.onDatePickerShow() },
                     placeholder = Clock.System.now()
                         .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
@@ -141,13 +144,14 @@ fun AddEditTaskContent(
                     items(categories) { category ->
                         CategoryItem(
                             category = category,
+                            modifier = Modifier
+                                .padding(bottom = Theme.dimension.regular),
                             onClick = { listener.onCategorySelected(category) },
                             topContent = {
                                 if (category == uiState.selectedCategory) {
                                     CheckMarkContainer()
                                 }
                             },
-                            modifier = Modifier
                         )
                     }
                 }

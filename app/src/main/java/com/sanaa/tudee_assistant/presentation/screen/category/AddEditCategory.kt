@@ -39,6 +39,7 @@ import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditCategoryBottomSheet(
     onImageSelected: (Uri?) -> Unit,
@@ -50,33 +51,6 @@ fun AddEditCategoryBottomSheet(
     onDeleteClick: () -> Unit = {},
     isFormValid: () -> Boolean = { false },
     isEditMode: Boolean = false,
-) {
-
-    AddEditCategoryContent(
-        onSaveClick = onSaveClick,
-        onCategoryTitleChange = onTitleChange,
-        onDismiss = onDismiss,
-        onImageSelected = onImageSelected,
-        category = category,
-        isEditMode = isEditMode,
-        onDeleteClick = onDeleteClick,
-        isFormValid = isFormValid,
-        modifier = modifier
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AddEditCategoryContent(
-    modifier: Modifier = Modifier,
-    onImageSelected: (Uri?) -> Unit,
-    onSaveClick: (CategoryUiState) -> Unit,
-    onCategoryTitleChange: (String) -> Unit,
-    category: CategoryUiState,
-    isEditMode: Boolean,
-    isFormValid: () -> Boolean,
-    onDeleteClick: () -> Unit = {},
-    onDismiss: () -> Unit = {},
 ) {
     var processedImageBytes by remember { mutableStateOf<Bitmap?>(null) }
     val context = LocalContext.current
@@ -122,7 +96,7 @@ fun AddEditCategoryContent(
                         placeholder = stringResource(R.string.category_title),
                         value = category.name,
                         icon = painterResource(R.drawable.menu),
-                        onValueChange = onCategoryTitleChange,
+                        onValueChange = onTitleChange,
                         modifier = Modifier.padding(top = Theme.dimension.regular)
                     )
                     Text(
@@ -143,7 +117,9 @@ fun AddEditCategoryContent(
                             } ?: run {
                                 processedImageBytes = null
                             }
-                        }
+
+                        },
+                        initialImagePath = category.imagePath
                     )
                 }
 
@@ -179,12 +155,12 @@ fun AddEditCategoryContent(
 
 @Preview(showBackground = true)
 @Composable
-fun AddEditCategoryContentPreview() {
+fun AddEditCategoryBottomSheetPreview() {
     TudeeTheme {
-        AddEditCategoryContent(
+        AddEditCategoryBottomSheet(
             onImageSelected = {},
             onSaveClick = {},
-            onCategoryTitleChange = {},
+            onTitleChange = {},
             onDismiss = {},
             category = CategoryUiState(
                 id = 0,

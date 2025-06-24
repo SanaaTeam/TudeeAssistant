@@ -1,144 +1,175 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.core.net.toUri
+import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
+import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class CategoryTaskViewModel(
     private val categoryService: CategoryService,
-    private val taskService: TaskService
-) : ViewModel() {
+    private val taskService: TaskService,
+    private val imageProcessor: ImageProcessor,
+) : BaseViewModel<CategoryTaskScreenUiState>(initialState = CategoryTaskScreenUiState()),
+    CategoryTaskInteractionListener {
 
-    private val _state = MutableStateFlow(CategoryTaskScreenUiState())
-    val state: StateFlow<CategoryTaskScreenUiState> = _state.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            val category = categoryService.getCategoryById(_state.value.categoryId)
-            _state.update {
-                _state.value.copy(
-                    categoryName = category.name,
-                    categoryImagePath = category.imagePath,
-                    isDefault = category.isDefault,
-                )
-            }
-        }
-    }
 
     fun loadCategoryTasks(categoryId: Int) {
-        viewModelScope.launch {
-            try {
-                _state.value = _state.value.copy(isLoading = true, error = null)
-
+        tryToExecute(
+            function = {
+                _state.update { it.copy(isLoading = true) }
                 val category = categoryService.getCategoryById(categoryId)
+                val tasks = taskService
+                    .getTasksByCategoryId(categoryId)
+                    .first()
+                    .map { it.toState() }
+                val currentStatus = _state.value.currentSelectedTaskStatus
 
-                _state.value = _state.value.copy(
-                    categoryId = categoryId,
-                    categoryName = category.name,
-                    categoryImagePath = category.imagePath,
-                    isDefault = category.isDefault
-                )
-
-                taskService.getTasksByCategoryId(categoryId)
-                    .catch { exception ->
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            error = exception.message ?: "Failed to load tasks"
-                        )
-                    }
-                    .collect { tasks ->
-                        val uiTasks = tasks.map { it.toState() }
-
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            todoTasks = uiTasks.filter { it.status == TaskUiStatus.TODO },
-                            inProgressTasks = uiTasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
-                            doneTasks = uiTasks.filter { it.status == TaskUiStatus.DONE },
-                            error = null
-                        )
-                    }
-            } catch (e: Exception) {
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    error = e.message ?: "Failed to load category tasks"
-                )
-            }
-        }
-    }
-
-    fun updateCategory(newName: String, uri: Uri?) {
-        viewModelScope.launch {
-            try {
-                val currentCategory = categoryService.getCategoryById(_state.value.categoryId)
-                val updatedCategory = currentCategory.copy(
-                    name = _state.value.categoryName,
-                    imagePath = _state.value.categoryImagePath
-                )
-
-                categoryService.updateCategory(updatedCategory)
-
-                _state.value = _state.value.copy(
-                    categoryName = updatedCategory.name,
-                    categoryImagePath = updatedCategory.imagePath,
-                    error = null
-                )
-
-            } catch (e: Exception) {
-                _state.value = _state.value.copy(
-                    error = e.message ?: "Failed to update category"
-                )
-            }
-        }
-    }
-
-    fun deleteCategory(onSuccess: () -> Unit = {}) {
-        viewModelScope.launch {
-            try {
-                _state.update { it.copy(isLoading = true, error = null) }
-
-                val categoryId = _state.value.categoryId
-
-                if (_state.value.isDefault) {
-                    throw Exception("Cannot delete default category")
-                }
-
-                val tasks = taskService.getTasksByCategoryId(categoryId)
-                tasks.collect { taskList ->
-                    taskList.forEach { task ->
-                            taskService.deleteTaskById(task.id)
-                    }
-
-                    categoryService.deleteCategoryById(categoryId)
-
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            error = null
-                        )
-                    }
-
-                    onSuccess()
-                    return@collect
-                }
-
-            } catch (e: Exception) {
                 _state.update {
                     it.copy(
-                        isLoading = false,
-                        error = e.message ?: "Failed to delete category"
+                        currentCategory = category.toState(tasksCount = tasks.size),
+                        allCategoryTasks = tasks,
+                        filteredTasks = tasks.filter { task -> task.status == currentStatus }
                     )
                 }
-            }
+            },
+            onError = { onError(message = "Error loading category tasks") },
+            onSuccess = { onSuccess("Successfully loaded category tasks") }
+        )
+    }
+
+    override fun onDeleteClicked() {
+        _state.update {
+            it.copy(showDeleteCategoryBottomSheet = true, showEditCategoryBottomSheet = false)
         }
+    }
+
+    override fun onDeleteDismiss() {
+        _state.update {
+            it.copy(
+                showDeleteCategoryBottomSheet = false,
+                showEditCategoryBottomSheet = true
+            )
+        }
+    }
+
+    override fun onEditClicked() {
+        _state.update {
+            it.copy(
+                showEditCategoryBottomSheet = true,
+                editCategory = _state.value.currentCategory
+            )
+        }
+    }
+
+    override fun onEditDismissClicked() {
+        _state.update { it.copy(showEditCategoryBottomSheet = false) }
+    }
+
+    override fun onConfirmDeleteClicked() {
+        tryToExecute(
+            function = {
+                _state.update { it.copy(isLoading = true) }
+                categoryService.deleteCategoryById(_state.value.currentCategory.id)
+            },
+            onError = { onError(message = "Error deleting category") },
+            onSuccess = { onSuccessDelete(null) }
+        )
+    }
+
+    override fun onStatusChanged(index: Int) {
+        val status = when (index) {
+            0 -> TaskUiStatus.IN_PROGRESS
+            1 -> TaskUiStatus.TODO
+            2 -> TaskUiStatus.DONE
+            else -> TaskUiStatus.TODO
+        }
+        _state.update {
+            it.copy(
+                currentSelectedTaskStatus = status,
+                filteredTasks = _state.value.allCategoryTasks.filter { task -> task.status == status },
+                selectedTapIndex = index
+            )
+        }
+    }
+
+    override fun onImageSelect(image: Uri?) {
+        _state.update {
+            it.copy(
+                editCategory = _state.value.editCategory.copy(imagePath = image.toString())
+            )
+        }
+    }
+
+    override fun onTitleChange(title: String) {
+        _state.update {
+            it.copy(
+                editCategory = _state.value.editCategory.copy(name = title)
+            )
+        }
+    }
+
+    override fun onSaveEditClicked(category: CategoryUiState) {
+        tryToExecute(
+            function = {
+                _state.update { it.copy(isLoading = true) }
+                val imagePath = imageProcessor.saveImageToInternalStorage(
+                    imageProcessor.processImage(category.imagePath.toUri())
+                )
+                categoryService.updateCategory(
+                    Category(
+                        id = category.id,
+                        name = category.name,
+                        imagePath = imagePath,
+                        isDefault = category.isDefault
+                    )
+                )
+            },
+            onSuccess = { onSuccess(message = "message") },
+            onError = {},
+        )
+        loadCategoryTasks(_state.value.currentCategory.id)
+    }
+
+    private fun onSuccessDelete(message: String?) {
+        _state.update {
+            it.copy(
+                isLoading = false,
+                error = null,
+                success = message,
+                showDeleteCategoryBottomSheet = false
+            )
+        }
+    }
+
+
+    private fun onSuccess(message: String?) {
+        _state.update {
+            it.copy(isLoading = false, error = null, success = message)
+        }
+    }
+
+    private fun onError(message: String?) {
+        _state.update {
+            it.copy(isLoading = false, error = message, success = null)
+        }
+    }
+
+    fun isValidForm(): Boolean {
+        val current = _state.value.currentCategory
+        val edited = _state.value.editCategory
+
+        val isNameChanged = edited.name != current.name
+        val isImageChanged = edited.imagePath != current.imagePath
+        val isNameNotEmpty = edited.name.isNotBlank()
+
+        return isNameNotEmpty && (isNameChanged || isImageChanged)
     }
 }

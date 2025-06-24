@@ -21,9 +21,9 @@ import com.sanaa.tudee_assistant.presentation.route.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.presentation.route.SplashScreenRoute
-import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingScreen
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
+import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingScreen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -103,7 +103,10 @@ private fun AppNavigation(
         }
 
         composable<CategoryTasksScreenRoute> {
-            CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id)
+            CategoryTaskScreen(
+                categoryId = it.toRoute<CategoryTasksScreenRoute>().id,
+                navController = navHostController
+            )
         }
     }
 }

@@ -41,9 +41,9 @@
 
     <string name="today">اليوم</string>
     <string name="overview">نظرة عامة</string>
-    <string name="okay_status_message">لقد أنجزت * من أصل # مهام\nواصل التقدم!</string>
-    <string name="good_status_message">أنت تقوم بعمل رائع!!!\nتودي فخور بك.</string>
-    <string name="bad_status_message">أنت فقط تتصفح، لا تعمل.\nتودي يراقب. عد للعمل!</string>
+    <string name="okay_status_message">لقد أنجزت * من أصل # مهام واصل التقدم!</string>
+    <string name="good_status_message">أنت تقوم بعمل رائع!!!تودي فخور بك.</string>
+    <string name="bad_status_message">أنت فقط تتصفح، لا تعمل. تودي يراقب. عد للعمل!</string>
     <string name="poor_status_message">املأ يومك بشيء رائع.</string>
     <string name="okay_status_message_title">واصل العمل!</string>
     <string name="good_status_message_title">تادا!</string>

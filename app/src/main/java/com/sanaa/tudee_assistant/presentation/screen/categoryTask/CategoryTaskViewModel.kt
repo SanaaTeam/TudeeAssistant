@@ -16,17 +16,12 @@ import kotlinx.coroutines.flow.update
 class CategoryTaskViewModel(
     private val categoryService: CategoryService,
     private val taskService: TaskService,
-    val categoryId: Int,
     private val imageProcessor: ImageProcessor,
 ) : BaseViewModel<CategoryTaskScreenUiState>(initialState = CategoryTaskScreenUiState()),
     CategoryTaskInteractionListener {
 
 
-    init {
-        loadCategoryTasks(categoryId)
-    }
-
-    private fun loadCategoryTasks(categoryId: Int) {
+    fun loadCategoryTasks(categoryId: Int) {
         tryToExecute(
             function = {
                 _state.update { it.copy(isLoading = true) }
@@ -52,12 +47,17 @@ class CategoryTaskViewModel(
 
     override fun onDeleteClicked() {
         _state.update {
-            it.copy(showDeleteCategoryBottomSheet = true)
+            it.copy(showDeleteCategoryBottomSheet = true, showEditCategoryBottomSheet = false)
         }
     }
 
     override fun onDeleteDismiss() {
-        _state.update { it.copy(showDeleteCategoryBottomSheet = false) }
+        _state.update {
+            it.copy(
+                showDeleteCategoryBottomSheet = false,
+                showEditCategoryBottomSheet = true
+            )
+        }
     }
 
     override fun onEditClicked() {
@@ -80,7 +80,7 @@ class CategoryTaskViewModel(
                 categoryService.deleteCategoryById(_state.value.currentCategory.id)
             },
             onError = { onError(message = "Error deleting category") },
-            onSuccess = { onSuccess("Successfully deleted category") }
+            onSuccess = { onSuccessDelete(null) }
         )
     }
 
@@ -135,7 +135,20 @@ class CategoryTaskViewModel(
             onSuccess = { onSuccess(message = "message") },
             onError = {},
         )
+        loadCategoryTasks(_state.value.currentCategory.id)
     }
+
+    private fun onSuccessDelete(message: String?) {
+        _state.update {
+            it.copy(
+                isLoading = false,
+                error = null,
+                success = message,
+                showDeleteCategoryBottomSheet = false
+            )
+        }
+    }
+
 
     private fun onSuccess(message: String?) {
         _state.update {

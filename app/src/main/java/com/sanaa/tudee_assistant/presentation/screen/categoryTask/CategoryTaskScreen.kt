@@ -3,12 +3,16 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
@@ -23,14 +27,23 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CategoryTaskScreen(
     modifier: Modifier = Modifier,
+    categoryId: Int?,
+    navController: NavController ,
     viewModel: CategoryTaskViewModel = koinViewModel<CategoryTaskViewModel>(),
 ) {
     val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(categoryId) {
+        categoryId?.let {
+            viewModel.loadCategoryTasks(it)
+        }
+    }
 
     CategoryTaskScreenContent(
         state = state,
         listener = viewModel,
         isValidForm = viewModel::isValidForm,
+        onBackClick = { navController.popBackStack() },
         modifier = modifier.fillMaxSize()
     )
 }
@@ -40,6 +53,7 @@ private fun CategoryTaskScreenContent(
     state: CategoryTaskScreenUiState,
     isValidForm: () -> Boolean,
     listener: CategoryTaskInteractionListener,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CategoryTaskScreenContainer(
@@ -47,8 +61,8 @@ private fun CategoryTaskScreenContent(
             CategoryTasksTopBar(
                 title = state.currentCategory.name,
                 onEditClick = { listener.onEditClicked() },
-                onBackClick = {},
-                isEditable = state.currentCategory.isDefault
+                onBackClick = onBackClick,
+                isEditable = !state.currentCategory.isDefault
             )
         },
         modifier = modifier
@@ -108,9 +122,16 @@ private fun CategoryTaskScreenContent(
                 onSaveClick = { listener.onSaveEditClicked(it) },
                 onDismiss = { listener.onEditDismissClicked() },
                 category = state.editCategory,
-                isEditMode = state.currentCategory.isDefault,
+                isEditMode = !state.currentCategory.isDefault,
                 onDeleteClick = { listener.onDeleteClicked() },
                 isFormValid = isValidForm
+            )
+        }
+        if (state.showDeleteCategoryBottomSheet) {
+            DeleteComponent(
+                onDismiss = listener::onDeleteDismiss,
+                onDeleteClicked = listener::onConfirmDeleteClicked,
+                title = stringResource(R.string.delete_category),
             )
         }
     }
@@ -126,7 +147,8 @@ private fun CategoryTaskScreenPreview() {
                 currentCategory = CategoryUiState(
                     id = 1, name = "Work", imagePath = "", isDefault = true, tasksCount = 5
                 ), allCategoryTasks = listOf(), isLoading = false
-            ), listener = object : CategoryTaskInteractionListener {
+            ),
+            listener = object : CategoryTaskInteractionListener {
                 override fun onDeleteClicked() {}
                 override fun onEditClicked() {}
                 override fun onEditDismissClicked() {}
@@ -137,8 +159,8 @@ private fun CategoryTaskScreenPreview() {
                 override fun onTitleChange(title: String) {}
                 override fun onSaveEditClicked(category: CategoryUiState) {}
             },
-            isValidForm = TODO(),
-            modifier = TODO()
+            isValidForm = { true },
+            onBackClick = {},
         )
     }
 }

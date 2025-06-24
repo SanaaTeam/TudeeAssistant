@@ -169,6 +169,7 @@ fun AddEditTaskContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = Theme.dimension.regular),
+                isLoading = uiState.isLoading,
                 onClick = listener::onPrimaryButtonClick,
                 enabled = uiState.isButtonEnabled && !uiState.isLoading
             )

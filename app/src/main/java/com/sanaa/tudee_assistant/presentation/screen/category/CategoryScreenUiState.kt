@@ -5,5 +5,11 @@ import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 data class CategoryScreenUiState(
     val currentDateCategory: List<CategoryUiState> = emptyList(),
     val isLoading: Boolean = false,
-)
+    val isAddCategorySheetVisible: Boolean = false,
+    val isOperationSuccessful: Boolean = true,
+    val errorMessage: String? = null,
+    val successMessage: String? = null,
+
+
+    )
 

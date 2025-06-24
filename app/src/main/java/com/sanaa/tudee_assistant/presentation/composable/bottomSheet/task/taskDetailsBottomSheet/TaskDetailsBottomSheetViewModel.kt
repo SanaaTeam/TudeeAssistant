@@ -27,6 +27,7 @@ class TaskDetailsBottomSheetViewModel(
             val task: Task = taskService.getTaskById(selectedTaskId)
             val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
             val detailsUiState = task.toDetailsState().copy(categoryImagePath = categoryImagePath)
+            Log.d("TaskDetailsBottomSheetViewModel", "getSelectedTask: selectedTaskStatus:${detailsUiState.status.name}")
             _state.update {
                 detailsUiState
             }
@@ -45,6 +46,9 @@ class TaskDetailsBottomSheetViewModel(
                         tryToExecute(
                             function = { taskService.updateTask(newUpdatedTask) },
                             onSuccess = {
+                                _state.update {
+                                    it.copy(status = TaskUiStatus.IN_PROGRESS)
+                                }
                                 onMoveStatusSuccess()
                                 Log.d(
                                     "testing snack bar message : success",
@@ -67,6 +71,9 @@ class TaskDetailsBottomSheetViewModel(
                         tryToExecute(
                             function = { taskService.updateTask(newUpdatedTask) },
                             onSuccess = {
+                                _state.update {
+                                    it.copy(status = TaskUiStatus.DONE)
+                                }
                                 onMoveStatusSuccess()
                                 Log.d(
                                     "testing snack bar message : success",
@@ -83,28 +90,7 @@ class TaskDetailsBottomSheetViewModel(
                             dispatcher = Dispatchers.IO
                         )
                     }
-
-                    TaskUiStatus.DONE -> {
-                        newUpdatedTask = it.copy(status = TaskUiStatus.DONE).toTask()
-                        tryToExecute(
-                            function = { taskService.updateTask(newUpdatedTask) },
-                            onSuccess = {
-                                onMoveStatusSuccess()
-                                Log.d(
-                                    "testing snack bar message : success",
-                                    "updateSelectedTaskStatus: "
-                                )
-                            },
-                            onError = {
-                                onMoveStatusFail()
-                                Log.d(
-                                    "testing snack bar message : failure",
-                                    "updateSelectedTaskStatus: "
-                                )
-                            },
-                            dispatcher = Dispatchers.IO
-                        )
-                    }
+                    else -> {}
                 }
             }
         }

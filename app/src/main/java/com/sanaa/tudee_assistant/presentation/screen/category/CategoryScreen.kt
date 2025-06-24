@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,33 +21,48 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
 import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
 fun CategoryScreen(
     modifier: Modifier = Modifier,
     viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
-    screenNavController: NavHostController
-) {
-    val state by viewModel.state.collectAsState()
-    val showBottomSheet = remember { mutableStateOf(false) }
+    screenNavController: NavHostController,
 
+    ) {
+    val state by viewModel.state.collectAsState()
+
+    CategoryScreenContent(
+        modifier = modifier,
+        state = state,
+        listener = viewModel,
+        onShowTasksByCategoryClick = { categoryId ->
+            screenNavController.navigate(CategoryTasksScreenRoute(categoryId))
+        }
+    )
+}
+
+@Composable
+fun CategoryScreenContent(
+    modifier: Modifier = Modifier,
+    state: CategoryScreenUiState,
+    listener: CategoryInteractionListener,
+    onShowTasksByCategoryClick: (Int) -> Unit
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -81,8 +97,10 @@ fun CategoryScreen(
                 items(state.currentDateCategory) { category ->
                     CategoryItem(
                         category = category,
-                        onClick = {},
-                        // condition
+                        onClick = {
+                            Log.d("category", "category id: ${category.id}")
+                            onShowTasksByCategoryClick(category.id)
+                        },
                         topContent = { CategoryCount(category.tasksCount.toString()) }
                     )
                 }
@@ -105,7 +123,7 @@ fun CategoryScreen(
                         )
                     )
                     .clickable {
-                        showBottomSheet.value = true
+                        listener.onToggleAddCategorySheet(true)
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -118,31 +136,21 @@ fun CategoryScreen(
             }
         }
     }
-
-    if (showBottomSheet.value) {
-        AddNewCategory(
-            onAddClick = { title, imageUri ->
-                val newCategory = CategoryUiState(
-                    id = 0,
-                    name = title,
-                    imagePath = imageUri.toString(),
-                    isDefault = false,
-                    tasksCount = 0
-                )
-                viewModel.addNewCategory(newCategory)
-                showBottomSheet.value = false
+    if (state.isAddCategorySheetVisible) {
+        AddEditCategoryBottomSheet(
+            category = state.currentCategory,
+            isEditMode = false,
+            onTitleChange = { listener.onCategoryTitleChange(it) },
+            onImageSelected = { listener.onCategoryImageSelected(it) },
+            onSaveClick = {
+                listener.onAddCategory(it)
+                listener.onToggleAddCategorySheet(false)
             },
             onDismiss = {
-                showBottomSheet.value = false
+                listener.onToggleAddCategorySheet(false)
             },
-            onImageSelected = { uri -> }
+            isFormValid = { state.categoryTitle.isNotBlank() }
         )
     }
-}
 
-
-@Preview(showBackground = true)
-@Composable
-private fun CategoryScreenPreview() {
-//    CategoryScreen(screenNavController = navHostController)
 }

@@ -1,7 +1,6 @@
 package com.sanaa.tudee_assistant
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -13,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
-import com.sanaa.tudee_assistant.presentation.TudeeApp
+import com.sanaa.tudee_assistant.presentation.app.TudeeApp
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.screen.splash.SplashScreen
 import kotlinx.coroutines.delay
@@ -33,7 +32,6 @@ class MainActivity : ComponentActivity() {
 
             val preferencesManager: PreferencesManager = koinInject()
             val isDark by preferencesManager.isDarkTheme.collectAsState(initial = false)
-            val isFirstLaunch by preferencesManager.isFirstLaunch.collectAsState(initial = true)
             var showSplash by remember { mutableStateOf(true) }
 
             LaunchedEffect(Unit) {
@@ -42,12 +40,11 @@ class MainActivity : ComponentActivity() {
                 keepSplash = false
             }
 
-            Log.d("SplashDebug", "Splash visible: $keepSplash")
             TudeeTheme(isDark) {
                 if (showSplash) {
                     SplashScreen()
                 } else {
-                    TudeeApp(isDark, preferencesManager, isFirstLaunch)
+                    TudeeApp()
                 }
             }
         }

@@ -42,13 +42,13 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
-import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
+import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
-data class OnBoardingContent(
-    val title: String, val description: String, val imageRes: Int
-)
+data class OnBoardingContent(val title: String, val description: String, val imageRes: Int)
 
 @Composable
 fun getOnBoardingContent(page: Int): OnBoardingContent {
@@ -76,9 +76,9 @@ fun getOnBoardingContent(page: Int): OnBoardingContent {
 @Composable
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
-    navController: NavController,
-    preferencesManager: PreferencesManager
+    preferencesManager: PreferencesManager = koinInject<PreferencesManager>(),
 ) {
+    val navController = AppNavigation.app
     val isInPreview = LocalView.current.isInEditMode
 
     if (!isInPreview) {
@@ -148,7 +148,7 @@ fun OnBoardingScreen(
 fun OnBoardingPager(
     pagerState: PagerState,
     preferencesManager: PreferencesManager,
-    navController: NavController
+    navController: NavController,
 ) {
     HorizontalPager(
         state = pagerState, modifier = Modifier
@@ -206,7 +206,7 @@ fun DialogContainer(
     pagerState: PagerState,
     modifier: Modifier = Modifier,
     preferencesManager: PreferencesManager,
-    navController: NavController
+    navController: NavController,
 ) {
     Column(
         modifier = modifier

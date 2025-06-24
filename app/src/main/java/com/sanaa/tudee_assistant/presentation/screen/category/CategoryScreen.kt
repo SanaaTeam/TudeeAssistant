@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,22 +27,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.route.CategoryTasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
+import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import org.koin.androidx.compose.koinViewModel
-
 
 @Composable
 fun CategoryScreen(
     modifier: Modifier = Modifier,
     viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
-    screenNavController: NavHostController,
-
     ) {
+    val screenNavController = AppNavigation.app
     val state by viewModel.state.collectAsState()
     CategoryScreenContent(
         modifier = modifier,
@@ -51,9 +48,9 @@ fun CategoryScreen(
         listener = viewModel,
         onShowTasksByCategoryClick = { categoryId ->
             screenNavController.navigate(CategoryTasksScreenRoute(categoryId))
-        }
-    )
+        })
 }
+
 @Composable
 fun CategoryScreenContent(
     modifier: Modifier = Modifier,
@@ -87,19 +84,15 @@ fun CategoryScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(color = Theme.color.surface),
-                contentPadding = PaddingValues( vertical = 12.dp),
+                contentPadding = PaddingValues(vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
                 items(state.allCategories) { category ->
-                    CategoryItem(
-                        category = category,
-                        onClick = {
-                            onShowTasksByCategoryClick(category.id)
-                        },
-                        topContent = { CategoryCount(category.tasksCount.toString()) }
-                    )
+                    CategoryItem(category = category, onClick = {
+                        onShowTasksByCategoryClick(category.id)
+                    }, topContent = { CategoryCount(category.tasksCount.toString()) })
                 }
             }
         }
@@ -121,8 +114,7 @@ fun CategoryScreenContent(
                     )
                     .clickable {
                         listener.onToggleAddCategorySheet(true)
-                    },
-                contentAlignment = Alignment.Center
+                    }, contentAlignment = Alignment.Center
             ) {
                 Icon(
                     modifier = Modifier.size(28.dp),
@@ -146,7 +138,6 @@ fun CategoryScreenContent(
             onDismiss = {
                 listener.onToggleAddCategorySheet(false)
             },
-            isFormValid = { listener.isFormValid() }
-        )
+            isFormValid = { listener.isFormValid() })
     }
 }

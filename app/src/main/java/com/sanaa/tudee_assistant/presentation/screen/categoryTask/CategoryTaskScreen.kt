@@ -9,13 +9,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.screen.category.AddEditCategoryBottomSheet
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTaskScreenContainer
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
@@ -28,10 +27,11 @@ import org.koin.androidx.compose.koinViewModel
 fun CategoryTaskScreen(
     modifier: Modifier = Modifier,
     categoryId: Int?,
-    navController: NavController ,
     viewModel: CategoryTaskViewModel = koinViewModel<CategoryTaskViewModel>(),
 ) {
     val state by viewModel.state.collectAsState()
+    val navController = AppNavigation.app
+
 
     LaunchedEffect(categoryId) {
         categoryId?.let {
@@ -134,6 +134,7 @@ private fun CategoryTaskScreenContent(
                 title = stringResource(R.string.delete_category),
             )
         }
+
     }
 }
 
@@ -142,6 +143,8 @@ private fun CategoryTaskScreenContent(
 @Composable
 private fun CategoryTaskScreenPreview() {
     TudeeTheme {
+        val viewModel = koinViewModel<CategoryTaskViewModel>()
+
         CategoryTaskScreenContent(
             state = CategoryTaskScreenUiState(
                 currentCategory = CategoryUiState(

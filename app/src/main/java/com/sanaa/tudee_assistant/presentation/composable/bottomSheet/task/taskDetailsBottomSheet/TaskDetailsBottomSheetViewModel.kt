@@ -52,17 +52,10 @@ class TaskDetailsBottomSheetViewModel(
                                     it.copy(status = TaskUiStatus.IN_PROGRESS)
                                 }
                                 onMoveStatusSuccess()
-                                Log.d(
-                                    "testing snack bar message : success",
-                                    "updateSelectedTaskStatus: "
-                                )
+
                             },
                             onError = {
                                 onMoveStatusFail()
-                                Log.d(
-                                    "testing snack bar message : failure",
-                                    "updateSelectedTaskStatus: "
-                                )
                             },
                             dispatcher = Dispatchers.IO
                         )
@@ -77,17 +70,9 @@ class TaskDetailsBottomSheetViewModel(
                                     it.copy(status = TaskUiStatus.DONE)
                                 }
                                 onMoveStatusSuccess()
-                                Log.d(
-                                    "testing snack bar message : success",
-                                    "updateSelectedTaskStatus: "
-                                )
                             },
                             onError = {
                                 onMoveStatusFail()
-                                Log.d(
-                                    "testing snack bar message : failure",
-                                    "updateSelectedTaskStatus: "
-                                )
                             },
                             dispatcher = Dispatchers.IO
                         )

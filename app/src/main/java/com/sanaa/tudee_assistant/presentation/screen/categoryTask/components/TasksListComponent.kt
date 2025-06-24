@@ -10,9 +10,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DateChip
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -33,7 +33,7 @@ fun TasksListComponent(
         verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)
     ) {
         itemsIndexed(tasks, key = { _, item -> item.hashCode() }) { _, task ->
-            CategoryTaskCard(
+            TaskItemCard(
                 task = task, categoryImagePath = category.imagePath,
                 onClick = {},
                 taskDateAndPriority = {

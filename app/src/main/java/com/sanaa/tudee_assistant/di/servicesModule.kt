@@ -7,7 +7,9 @@ import com.sanaa.tudee_assistant.data.utils.PreferencesManagerImpl
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.utils.StringProviderImpl
 import org.koin.dsl.module
 
 val servicesModule = module {
@@ -16,4 +18,5 @@ val servicesModule = module {
 
     single<TaskService> { TaskServiceImpl(get()) }
     single<CategoryService> { CategoryServiceImpl(get()) }
+    single<StringProvider> { StringProviderImpl(context = get()) }
 }

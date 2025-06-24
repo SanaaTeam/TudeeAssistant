@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">تادي</string>
+    <string name="logoName">تادي</string>
     <string name="appBarCaption">مساعدك اللطيف لكل مهمة</string>
     <string name="high">عالية</string>
     <string name="medium">متوسطة</string>
@@ -13,6 +14,7 @@
     <string name="add">إضافة</string>
     <string name="clear">مسح</string>
     <string name="ok">موافق</string>
+    <string name="tasks">مهام</string>
 
     <string name="todo_task_status">للقيام به</string>
     <string name="in_progress_task_status">قيد التنفيذ</string>
@@ -71,6 +73,9 @@
     <string name="edit_task">تعديل المهمة</string>
     <string name="task_add_success">تمت إضافة المهمة بنجاح.</string>
     <string name="task_update_success">تم تعديل المهمة بنجاح.</string>
+    <string name="task_status_update_success">تم تعديل ح</string>
+    <string name="task_delete_success">تم حذف المهمة بنجاح</string>
+
 
     <string name="edit_category">تعديل الفئة</string>
     <string name="delete_category">حذف الفئة</string>

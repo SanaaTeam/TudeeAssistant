@@ -165,4 +165,3 @@ private fun CategoryTaskScreenPreview() {
         )
     }
 }
-

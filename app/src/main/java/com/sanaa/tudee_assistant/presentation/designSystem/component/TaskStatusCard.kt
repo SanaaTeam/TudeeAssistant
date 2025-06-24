@@ -33,7 +33,7 @@ fun TaskStatusCard(
     val textColor = when (taskUiStatus) {
         TaskUiStatus.TODO -> Theme.color.yellowAccent
         TaskUiStatus.IN_PROGRESS -> Theme.color.purpleAccent
-        TaskUiStatus.DONE -> Theme.color.greenVariant
+        TaskUiStatus.DONE -> Theme.color.greenAccent
     }
 
     Row(
@@ -68,6 +68,6 @@ fun TaskStatusCard(
 @Composable
 private fun PreviewTaskStatusCard() {
     TudeeTheme(false) {
-        TaskStatusCard(taskUiStatus = TaskUiStatus.TODO)
+        TaskStatusCard(taskUiStatus = TaskUiStatus.DONE)
     }
 }

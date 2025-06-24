@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,20 +31,14 @@ import com.sanaa.tudee_assistant.presentation.screen.category.AddNewCategory
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTaskHeaderComponent
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import org.koin.compose.koinInject
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoryTaskScreen(
-    viewModel: CategoryTaskViewModel = koinInject<CategoryTaskViewModel>(),
-    categoryId: Int?,
     modifier: Modifier = Modifier,
+    viewModel: CategoryTaskViewModel = koinViewModel<CategoryTaskViewModel>(),
 ) {
     val state by viewModel.state.collectAsState()
-
-
-    LaunchedEffect(categoryId) {
-        if (categoryId != null) viewModel.loadCategoryTasks(categoryId)
-    }
 
     CategoryTaskScreenContent(
         state = state,

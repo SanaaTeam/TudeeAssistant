@@ -12,8 +12,15 @@ import kotlinx.coroutines.flow.update
 class CategoryTaskViewModel(
     val categoryService: CategoryService,
     val taskService: TaskService,
+    val categoryId: Int
 ) : BaseViewModel<CategoryTaskScreenUiState>(initialState = CategoryTaskScreenUiState()),
     CategoryTaskInteractionListener {
+
+
+    init {
+        loadCategoryTasks(categoryId)
+    }
+
 
     fun loadCategoryTasks(categoryId: Int) {
         tryToExecute(

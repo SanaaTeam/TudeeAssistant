@@ -16,7 +16,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 
 @Composable
-fun CategoryTaskHeaderComponent(
+fun CategoryTasksTopBar(
     title: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,

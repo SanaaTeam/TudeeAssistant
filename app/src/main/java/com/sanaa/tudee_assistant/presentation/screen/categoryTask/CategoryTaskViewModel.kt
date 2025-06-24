@@ -21,8 +21,7 @@ class CategoryTaskViewModel(
         loadCategoryTasks(categoryId)
     }
 
-
-    fun loadCategoryTasks(categoryId: Int) {
+    private fun loadCategoryTasks(categoryId: Int) {
         tryToExecute(
             function = {
                 _state.update { it.copy(isLoading = true) }

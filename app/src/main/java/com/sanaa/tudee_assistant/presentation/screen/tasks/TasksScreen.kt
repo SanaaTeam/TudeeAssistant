@@ -39,16 +39,16 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
@@ -62,7 +62,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
-
+import java.util.Locale
 
 @Composable
 fun TasksScreen(
@@ -114,18 +114,15 @@ fun TasksScreenContent(
     var taskToEdit by remember { mutableStateOf<TaskUiState?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     var showAddTaskBottomSheet by remember { mutableStateOf(false) }
-    var daysInMonth by
-    remember {
+    var daysInMonth by remember {
         mutableStateOf(
             DateFormater.getLocalDatesInMonth(
-                state.selectedDate.year,
-                state.selectedDate.monthNumber
+                state.selectedDate.year, state.selectedDate.monthNumber
             )
         )
     }
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = modifier
@@ -153,13 +150,10 @@ fun TasksScreenContent(
                         .clickable {
                             val nextMonth = state.selectedDate.minus(1, DateTimeUnit.MONTH)
                             onDateSelected(nextMonth)
-                            daysInMonth =
-                                (DateFormater.getLocalDatesInMonth(
-                                    nextMonth.year,
-                                    nextMonth.monthNumber
-                                ))
-                        },
-                    contentAlignment = Alignment.Center
+                            daysInMonth = (DateFormater.getLocalDatesInMonth(
+                                nextMonth.year, nextMonth.monthNumber
+                            ))
+                        }, contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.icon_left_arrow),
@@ -187,7 +181,7 @@ fun TasksScreenContent(
                             .rotate(if (LocalLayoutDirection.current == LayoutDirection.Rtl) 90f else -90f)
                             .clickable {
                                 showDialog = true
-                            }
+                            },
                     )
                 }
 
@@ -199,13 +193,10 @@ fun TasksScreenContent(
                         .clickable {
                             val previousMonth = state.selectedDate.plus(1, DateTimeUnit.MONTH)
                             onDateSelected(previousMonth)
-                            daysInMonth =
-                                (DateFormater.getLocalDatesInMonth(
-                                    previousMonth.year,
-                                    previousMonth.monthNumber
-                                ))
-                        },
-                    contentAlignment = Alignment.Center
+                            daysInMonth = (DateFormater.getLocalDatesInMonth(
+                                previousMonth.year, previousMonth.monthNumber
+                            ))
+                        }, contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.icon_left_arrow),
@@ -226,22 +217,21 @@ fun TasksScreenContent(
                     listState.animateScrollToItem(state.selectedDate.dayOfMonth - 1)
                 }
             }
+            val isArabic = Locale.getDefault().language == "arabic"
             LazyRow(
                 state = listState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 24.dp),
+                reverseLayout = isArabic
             ) {
                 itemsIndexed(daysInMonth) { index, date ->
                     DayItem(
-                        dayDate = date,
-                        isSelected = date == state.selectedDate,
-                        onClick = {
+                        dayDate = date, isSelected = date == state.selectedDate, onClick = {
                             onDateSelected(date)
-                        }
-                    )
+                        })
                 }
             }
 
@@ -254,31 +244,28 @@ fun TasksScreenContent(
                             daysInMonth =
                                 (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
                         }
-                    },
-                    onDismiss = { showDialog = false },
-                    initialSelectedDate = state.selectedDate
+                    }, onDismiss = { showDialog = false }, initialSelectedDate = state.selectedDate
                 )
             }
             TaskStatusTabs(state, onTaskSwipe, onTaskClick)
-            if (state.selectedTask != null && state.showTaskDetailsDialog)
-                TaskDetailsComponent(
-                    task = state.selectedTask,
-                    onDismiss = onDismissTaskViewDetails,
-                    onEditClick = { task ->
-                        onDismissTaskViewDetails()
-                        taskToEdit = task
-                        showEditTaskBottomSheet = true
-                    }, onMoveToClicked = onMoveToTaskViewDetails,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            if (state.selectedTask != null && state.showDeleteDialog)
-                DeleteComponent(
-                    onDismiss = onDeleteDismiss,
-                    onDeleteClicked = {
-                        onDeleteClick()
-                    },
-                    title = stringResource(R.string.delete_task_title),
-                )
+            if (state.selectedTask != null && state.showTaskDetailsDialog) TaskDetailsComponent(
+                task = state.selectedTask,
+                onDismiss = onDismissTaskViewDetails,
+                onEditClick = { task ->
+                    onDismissTaskViewDetails()
+                    taskToEdit = task
+                    showEditTaskBottomSheet = true
+                },
+                onMoveToClicked = onMoveToTaskViewDetails,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            if (state.selectedTask != null && state.showDeleteDialog) DeleteComponent(
+                onDismiss = onDeleteDismiss,
+                onDeleteClicked = {
+                    onDeleteClick()
+                },
+                title = stringResource(R.string.delete_task_title),
+            )
             if (showAddTaskBottomSheet) {
                 AddEditTaskScreen(
                     isEditMode = false,
@@ -288,49 +275,38 @@ fun TasksScreenContent(
                         showAddTaskBottomSheet = false
                         coroutineScope.launch {
                             snackBarHostState.showSnackbar(
-                                message = "Task added successfully",
-                                withDismissAction = true
+                                message = "Task added successfully", withDismissAction = true
                             )
                         }
                     },
                     onError = { errorMessage ->
                         coroutineScope.launch {
                             snackBarHostState.showSnackbar(
-                                message = errorMessage,
-                                withDismissAction = true
+                                message = errorMessage, withDismissAction = true
                             )
                         }
-                    }
-                )
+                    })
             }
 
             if (showEditTaskBottomSheet && taskToEdit != null) {
-                AddEditTaskScreen(
-                    isEditMode = true,
-                    taskToEdit = taskToEdit,
-                    onDismiss = {
-                        showEditTaskBottomSheet = false
-                        taskToEdit = null
-                    },
-                    onSuccess = {
-                        showEditTaskBottomSheet = false
-                        taskToEdit = null
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = "Task updated successfully",
-                                withDismissAction = true
-                            )
-                        }
-                    },
-                    onError = { errorMessage ->
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = errorMessage,
-                                withDismissAction = true
-                            )
-                        }
+                AddEditTaskScreen(isEditMode = true, taskToEdit = taskToEdit, onDismiss = {
+                    showEditTaskBottomSheet = false
+                    taskToEdit = null
+                }, onSuccess = {
+                    showEditTaskBottomSheet = false
+                    taskToEdit = null
+                    coroutineScope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = "Task updated successfully", withDismissAction = true
+                        )
                     }
-                )
+                }, onError = { errorMessage ->
+                    coroutineScope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = errorMessage, withDismissAction = true
+                        )
+                    }
+                })
             }
         }
 
@@ -354,6 +330,7 @@ fun TasksScreenContent(
                 onShowSnackBar()
             }
         }
+
         LaunchedEffect(state.successMessage) {
             state.errorMessage?.let {
                 snackBarHostState.showSnackbar(it)
@@ -362,8 +339,7 @@ fun TasksScreenContent(
         }
 
         TudeeSnackBar(
-            snackBarHostState = snackBarHostState,
-            isError = state.errorMessage != null
+            snackBarHostState = snackBarHostState, isError = state.errorMessage != null
         )
     }
 }

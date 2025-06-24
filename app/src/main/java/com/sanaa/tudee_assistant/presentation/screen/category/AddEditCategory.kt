@@ -155,7 +155,7 @@ fun AddEditCategoryBottomSheet(
 
 @Preview(showBackground = true)
 @Composable
-fun AddEditCategoryBottomSheetPreview() {
+private fun AddEditCategoryBottomSheetPreview() {
     TudeeTheme {
         AddEditCategoryBottomSheet(
             onImageSelected = {},

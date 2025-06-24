@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
-import com.sanaa.tudee_assistant.presentation.TudeeApp
+import com.sanaa.tudee_assistant.presentation.app.TudeeApp
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.screen.splash.SplashScreen
 import kotlinx.coroutines.delay
@@ -32,7 +32,6 @@ class MainActivity : ComponentActivity() {
 
             val preferencesManager: PreferencesManager = koinInject()
             val isDark by preferencesManager.isDarkTheme.collectAsState(initial = false)
-            val isFirstLaunch by preferencesManager.isFirstLaunch.collectAsState(initial = true)
             var showSplash by remember { mutableStateOf(true) }
 
             LaunchedEffect(Unit) {
@@ -45,7 +44,7 @@ class MainActivity : ComponentActivity() {
                 if (showSplash) {
                     SplashScreen() // Your custom composable splash
                 } else {
-                    TudeeApp(isDark, preferencesManager, isFirstLaunch)
+                    TudeeApp()
                 }
             }
         }

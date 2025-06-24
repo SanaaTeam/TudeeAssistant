@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.designSystem.component
+package com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -28,8 +28,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 
 @Composable
-fun SplashScreen(
-) {
+fun SplashScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -92,13 +91,10 @@ fun SplashScreen(
     }
 }
 
-
 @Preview()
 @Composable
 private fun SplashScreenPreview() {
-
-    TudeeTheme(false) {
+    TudeeTheme(true) {
           SplashScreen()
-
     }
 }

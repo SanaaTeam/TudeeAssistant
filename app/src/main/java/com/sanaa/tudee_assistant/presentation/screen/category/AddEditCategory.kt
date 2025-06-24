@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
@@ -30,26 +29,28 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Prim
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddNewCategory(
+fun AddEditCategory(
     onImageSelected: (Uri?) -> Unit,
     onAddClick: (title: String, imageUri: Uri?) -> Unit,
     onDismiss: () -> Unit,
+    category: CategoryUiState,
+    onCategoryTitleChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var internalShowBottomSheet by remember { mutableStateOf(true) }
-    var categoryTitle by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    AddNewCategoryContent(
-        onAddClick = { onAddClick(categoryTitle, selectedImageUri) },
+    AddEditCategoryContent(
+        onAddClick = { onAddClick(category.name, selectedImageUri) },
         showBottomSheet = internalShowBottomSheet,
-        categoryTitle = categoryTitle,
-        onCategoryTitleChange = { categoryTitle = it },
+        categoryUiState = category,
+        onCategoryTitleChange = onCategoryTitleChange,
         onDismiss = {
             internalShowBottomSheet = false
             onDismiss()
@@ -64,14 +65,15 @@ fun AddNewCategory(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNewCategoryContent(
+fun AddEditCategoryContent(
     modifier: Modifier = Modifier,
     onImageSelected: (Uri?) -> Unit,
     onAddClick: () -> Unit,
+    onEditClick: () -> Unit = {},
     onCategoryTitleChange: (String) -> Unit,
     onDismiss: () -> Unit = {},
     showBottomSheet: Boolean = true,
-    categoryTitle: String = "",
+    categoryUiState: CategoryUiState,
 ) {
     var processedImageBytes by remember { mutableStateOf<Bitmap?>(null) }
 
@@ -98,7 +100,7 @@ fun AddNewCategoryContent(
                         )
                         TudeeTextField(
                             placeholder = stringResource(R.string.category_title),
-                            value = categoryTitle,
+                            value = categoryUiState.name,
                             icon = painterResource(R.drawable.menu),
                             onValueChange = onCategoryTitleChange,
                             modifier = Modifier.padding(top = Theme.dimension.regular)
@@ -137,7 +139,7 @@ fun AddNewCategoryContent(
                     ) {
                         PrimaryButton(
                             label = stringResource(R.string.add),
-                            enabled = processedImageBytes != null && categoryTitle.isNotBlank(),
+                            enabled = processedImageBytes != null && categoryUiState.name.isNotBlank(),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = Theme.dimension.regular),
@@ -156,8 +158,3 @@ fun AddNewCategoryContent(
     }
 }
 
-@Preview
-@Composable
-fun AddNewCategoryScreenPreview() {
-    AddNewCategory(onImageSelected = {}, onAddClick = { _, _ -> }, onDismiss = {})
-}

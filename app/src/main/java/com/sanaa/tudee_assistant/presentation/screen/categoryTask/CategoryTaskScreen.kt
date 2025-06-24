@@ -41,7 +41,11 @@ fun CategoryTaskScreen(
             viewModel.loadCategoryTasks(it)
         }
     }
-
+    LaunchedEffect(state.navigateBackToCategoryList) {
+        if (state.navigateBackToCategoryList) {
+            navController.popBackStack()
+        }
+    }
     CategoryTaskScreenContent(
         state = state,
         listener = viewModel,

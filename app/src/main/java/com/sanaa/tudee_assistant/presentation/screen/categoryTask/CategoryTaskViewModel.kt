@@ -85,7 +85,10 @@ class CategoryTaskViewModel(
                 onSuccess(
                     message = "Successfully deleted category",
                     updateState = {
-                        it.copy(showDeleteCategoryBottomSheet = false)
+                        it.copy(
+                            showDeleteCategoryBottomSheet = false,
+                            navigateBackToCategoryList = true
+                        )
                     })
             }
         )

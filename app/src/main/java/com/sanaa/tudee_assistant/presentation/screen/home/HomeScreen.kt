@@ -60,22 +60,16 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Floa
 import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.formatDateTime
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(viewModel: HomeScreenViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
-
     HomeScreenContent(
         state = state,
         actionsListener = viewModel,
@@ -83,7 +77,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel = koinViewModel()) {
 }
 
 @Composable
-fun HomeScreenContent(
+private fun HomeScreenContent(
     state: HomeScreenUiState,
     actionsListener: HomeScreenActionsListener,
 ) {
@@ -274,7 +268,8 @@ private fun CategoryList(
                     text = stringResource(R.string.in_progress_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
                     taskUiStatus = TaskUiStatus.IN_PROGRESS,
-                    onTaskCountContainerClicked = onTaskCountContainerClicked                )
+                    onTaskCountContainerClicked = onTaskCountContainerClicked
+                )
             }
         }
 
@@ -292,7 +287,8 @@ private fun CategoryList(
                     text = stringResource(R.string.todo_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
                     taskUiStatus = TaskUiStatus.TODO,
-                    onTaskCountContainerClicked = onTaskCountContainerClicked                )
+                    onTaskCountContainerClicked = onTaskCountContainerClicked
+                )
             }
         }
 
@@ -420,9 +416,9 @@ private fun Title(
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(100.dp))
+                .clickable { onTaskCountContainerClicked(taskUiStatus) }
                 .background(Theme.color.surfaceHigh)
-                .padding(vertical = 6.dp, horizontal = Theme.dimension.small)
-                .clickable { onTaskCountContainerClicked(taskUiStatus) },
+                .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -466,47 +462,47 @@ private fun TopDate(state: HomeScreenUiState) {
 @Preview
 @Composable
 fun PreviewHomeScreen() {
-    val dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-    var isDark by remember { mutableStateOf(false) }
-    TudeeTheme(isDark = isDark) {
-        val list = DataProvider.getTasksSample()
-
-        val previewActions = object : HomeScreenActionsListener {
-            override fun onChangeTheme(isDarkValue: Boolean) {
-                isDark = isDarkValue
-            }
-
-            override fun onTaskClick(task: TaskUiState) {}
-            override fun onDismissTaskDetails() {}
-            override fun onTaskCountContainerClicked(taskUiStatus: TaskUiStatus) {}
-
-            override fun onAddTaskSuccess() {}
-            override fun onAddTaskHasError(error: String) {}
-            override fun onSnackBarShown() {}
-        }
-
-        HomeScreenContent(
-            state = HomeScreenUiState(
-                isDarkTheme = isDark,
-                dayDate = dayDate,
-                taskCounts = listOf(
-                    Pair(
-                        list.filter { it.status == TaskUiStatus.DONE }.size,
-                        TaskUiStatus.DONE
-                    ),
-                    Pair(
-                        list.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
-                        TaskUiStatus.IN_PROGRESS
-                    ),
-                    Pair(
-                        list.filter { it.status == TaskUiStatus.TODO }.size,
-                        TaskUiStatus.TODO
-                    ),
-                ),
-                tasks = list,
-                clickedTask = TaskUiState()
-            ),
-            actionsListener = previewActions
-        )
-    }
+//    val dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+//    var isDark by remember { mutableStateOf(false) }
+//    TudeeTheme(isDark = isDark) {
+//        val list = DataProvider.getTasksSample()
+//
+//        val previewActions = object : HomeScreenActionsListener {
+//            override fun onChangeTheme(isDarkValue: Boolean) {
+//                isDark = isDarkValue
+//            }
+//
+//            override fun onTaskClick(task: TaskUiState) {}
+//            override fun onDismissTaskDetails() {}
+//            override fun onTaskCountContainerClicked(taskUiStatus: TaskUiStatus) {}
+//
+//            override fun onAddTaskSuccess() {}
+//            override fun onAddTaskHasError(error: String) {}
+//            override fun onSnackBarShown() {}
+//        }
+//
+//        HomeScreenContent(
+//            state = HomeScreenUiState(
+//                isDarkTheme = isDark,
+//                dayDate = dayDate,
+//                taskCounts = listOf(
+//                    Pair(
+//                        list.filter { it.status == TaskUiStatus.DONE }.size,
+//                        TaskUiStatus.DONE
+//                    ),
+//                    Pair(
+//                        list.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
+//                        TaskUiStatus.IN_PROGRESS
+//                    ),
+//                    Pair(
+//                        list.filter { it.status == TaskUiStatus.TODO }.size,
+//                        TaskUiStatus.TODO
+//                    ),
+//                ),
+//                tasks = list,
+//                clickedTask = TaskUiState()
+//            ),
+//            actionsListener = previewActions
+//        )
+//    }
 }

@@ -8,6 +8,7 @@ import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.first
@@ -156,6 +157,31 @@ class CategoryTaskViewModel(
             },
             onError = {},
         )
+    }
+
+    override fun onTaskClicked(task: TaskUiState) {
+        _state.update {
+            it.copy(selectedTask = task, showTaskDetailsBottomSheet = true)
+        }
+    }
+
+    override fun onTaskEditClicked(task: TaskUiState) {
+        _state.update {
+            it.copy(showEditTaskBottomSheet = true)
+        }
+    }
+
+    override fun onTaskEditDismiss() {
+        _state.update {
+            it.copy(showEditTaskBottomSheet = false)
+        }
+    }
+
+    override fun onTaskDetailsDismiss() {
+        _state.update {
+            it.copy(showTaskDetailsBottomSheet = false, selectedTask = null)
+        }
+        loadCategoryTasks(state.value.currentCategory.id)
     }
 
     private fun onSuccess(

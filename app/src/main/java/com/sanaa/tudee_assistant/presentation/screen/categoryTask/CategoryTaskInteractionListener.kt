@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 interface CategoryTaskInteractionListener {
     fun onDeleteClicked()
@@ -13,4 +14,8 @@ interface CategoryTaskInteractionListener {
     fun onImageSelect(image:Uri?)
     fun onTitleChange(title:String)
     fun onSaveEditClicked(category: CategoryUiState)
+    fun onTaskClicked(task: TaskUiState)
+    fun onTaskDetailsDismiss()
+    fun onTaskEditClicked(task: TaskUiState)
+    fun onTaskEditDismiss()
 }

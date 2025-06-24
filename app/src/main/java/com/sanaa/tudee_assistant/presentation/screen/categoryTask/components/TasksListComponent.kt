@@ -21,6 +21,7 @@ import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 fun TasksListComponent(
     tasks: List<TaskUiState>,
     category: CategoryUiState,
+    onTaskClicked: (TaskUiState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -35,7 +36,7 @@ fun TasksListComponent(
         itemsIndexed(tasks, key = { _, item -> item.hashCode() }) { _, task ->
             TaskItemCard(
                 task = task, categoryImagePath = category.imagePath,
-                onClick = {},
+                onClick = onTaskClicked,
                 taskDateAndPriority = {
                     Row(
                         modifier = Modifier,

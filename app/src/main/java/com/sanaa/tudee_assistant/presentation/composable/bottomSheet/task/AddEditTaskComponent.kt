@@ -12,9 +12,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskContent
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskViewModel
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -54,22 +54,21 @@ fun AddEditTaskScreen(
         }
     }
 
-        BaseBottomSheet(
-            content = {
-                Column(modifier = Modifier.fillMaxHeight(0.81f)) {
-                    AddEditTaskContent(
-                        uiState = uiState,
-                        categories = uiState.categories,
-                        isEditMode = isEditMode,
-                        showDatePickerDialog = showDatePickerDialog,
-                        listener = viewModel,
-                        onCancelClick = onDismiss
-                    )
-                }
-            },
-            onDismiss = {
-                onDismiss()
+    BaseBottomSheet(
+        content = {
+            Column(modifier = Modifier.fillMaxHeight(0.81f)) {
+                AddEditTaskContent(
+                    uiState = uiState,
+                    categories = uiState.categories,
+                    isEditMode = isEditMode,
+                    showDatePickerDialog = showDatePickerDialog,
+                    listener = viewModel,
+                    onCancelClick = onDismiss
+                )
             }
-        )
-
+        },
+        onDismiss = {
+            onDismiss()
+        }
+    )
 }

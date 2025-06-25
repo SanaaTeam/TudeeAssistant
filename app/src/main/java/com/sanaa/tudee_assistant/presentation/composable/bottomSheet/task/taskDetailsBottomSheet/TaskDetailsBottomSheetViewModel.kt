@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
@@ -17,10 +16,8 @@ interface TaskDetailsInteractionListener{
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-    private val selectedTaskId: Int,
+    selectedTaskId: Int,
 ) : BaseViewModel<DetailsUiState>(DetailsUiState()),TaskDetailsInteractionListener{
-
-
     init {
         getSelectedTask(selectedTaskId)
     }
@@ -36,23 +33,20 @@ class TaskDetailsBottomSheetViewModel(
         }
     }
 
-
-
     override fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit) {
         viewModelScope.launch {
             var newUpdatedTask: Task
-            state.value.let {
-                when (it.status) {
+            state.value.let { state ->
+                when (state.status) {
                     TaskUiStatus.TODO -> {
-                        newUpdatedTask = it.copy(status = TaskUiStatus.IN_PROGRESS).toTask()
+                        newUpdatedTask = state.copy(status = TaskUiStatus.IN_PROGRESS).toTask()
                         tryToExecute(
-                            function = { taskService.updateTask(newUpdatedTask) },
+                            callee = { taskService.updateTask(newUpdatedTask) },
                             onSuccess = {
                                 _state.update {
                                     it.copy(status = TaskUiStatus.IN_PROGRESS)
                                 }
                                 onMoveStatusSuccess()
-
                             },
                             onError = {
                                 onMoveStatusFail()
@@ -62,9 +56,9 @@ class TaskDetailsBottomSheetViewModel(
                     }
 
                     TaskUiStatus.IN_PROGRESS -> {
-                        newUpdatedTask = it.copy(status = TaskUiStatus.DONE).toTask()
+                        newUpdatedTask = state.copy(status = TaskUiStatus.DONE).toTask()
                         tryToExecute(
-                            function = { taskService.updateTask(newUpdatedTask) },
+                            callee = { taskService.updateTask(newUpdatedTask) },
                             onSuccess = {
                                 _state.update {
                                     it.copy(status = TaskUiStatus.DONE)
@@ -82,5 +76,4 @@ class TaskDetailsBottomSheetViewModel(
             }
         }
     }
-
 }

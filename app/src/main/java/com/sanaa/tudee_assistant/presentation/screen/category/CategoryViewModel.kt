@@ -8,10 +8,10 @@ import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toNewCategory
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.model.mapper.toNewCategory
+import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -33,7 +33,7 @@ class CategoryViewModel(
         _state.update { it.copy(isLoading = true) }
 
         tryToExecute(
-            function = ::loadCategoriesWithTasksCountOperation,
+            callee = ::loadCategoriesWithTasksCountOperation,
             onSuccess = ::onLoadCategoriesWithTasksCountSuccess,
             onError = ::onLoadCategoriesWithTasksCountError
         )

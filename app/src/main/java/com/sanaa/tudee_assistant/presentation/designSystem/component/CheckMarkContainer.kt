@@ -22,7 +22,7 @@ fun CheckMarkContainer(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview()
+@Preview
 @Composable
 private fun CheckMarkContainerPreview() {
     TudeeTheme(false) {

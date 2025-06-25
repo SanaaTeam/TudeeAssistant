@@ -1,12 +1,12 @@
 package com.sanaa.tudee_assistant.presentation.utils
 
-import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
 import android.annotation.SuppressLint
 import android.content.Context
+import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

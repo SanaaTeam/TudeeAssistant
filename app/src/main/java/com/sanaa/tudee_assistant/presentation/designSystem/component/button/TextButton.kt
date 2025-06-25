@@ -35,7 +35,7 @@ fun TextButton(
 }
 
 
-@Preview()
+@Preview
 @Composable
 private fun TextButtonLightPreview(modifier: Modifier = Modifier) {
     TudeeTheme(false) {
@@ -74,7 +74,7 @@ private fun TextButtonLightPreview(modifier: Modifier = Modifier) {
 }
 
 
-@Preview()
+@Preview
 @Composable
 private fun TextButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme(true) {

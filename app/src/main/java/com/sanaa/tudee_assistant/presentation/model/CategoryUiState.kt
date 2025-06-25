@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.state
+package com.sanaa.tudee_assistant.presentation.model
 
 data class CategoryUiState(
     val id: Int = 1,

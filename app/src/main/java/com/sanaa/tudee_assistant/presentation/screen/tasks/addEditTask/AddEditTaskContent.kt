@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
@@ -31,8 +33,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeTextFi
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.PrimaryButton
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -79,7 +81,9 @@ fun AddEditTaskContent(
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium),
                     icon = painterResource(R.drawable.task),
-                )
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+
+                    )
 
                 TudeeTextField(
                     placeholder = stringResource(R.string.description),
@@ -89,7 +93,9 @@ fun AddEditTaskContent(
                         .fillMaxWidth()
                         .height(168.dp)
                         .padding(bottom = Theme.dimension.medium),
-                )
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+
+                    )
 
                 TudeeTextField(
                     modifier = Modifier
@@ -138,7 +144,7 @@ fun AddEditTaskContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 100.dp, max = 900.dp),
-                    userScrollEnabled = false,
+                    userScrollEnabled = true,
                     verticalArrangement = Arrangement.spacedBy(Theme.dimension.large),
                     horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
                 ) {
@@ -178,7 +184,7 @@ fun AddEditTaskContent(
                 enabled = uiState.isButtonEnabled && !uiState.isLoading
             )
             SecondaryButton(
-                lable = stringResource(R.string.cancel),
+                label = stringResource(R.string.cancel),
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onCancelClick
             )

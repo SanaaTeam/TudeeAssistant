@@ -1,9 +1,9 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask
 
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

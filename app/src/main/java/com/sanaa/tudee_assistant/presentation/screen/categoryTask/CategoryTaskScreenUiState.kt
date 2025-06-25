@@ -1,9 +1,9 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 data class CategoryTaskScreenUiState(
     val isLoading: Boolean = false,
@@ -22,4 +22,4 @@ data class CategoryTaskScreenUiState(
     val showTaskDetailsBottomSheet: Boolean = false,
     val showEditTaskBottomSheet: Boolean = false,
     val snackBarState: SnackBarState = SnackBarState(),
-    )
+)

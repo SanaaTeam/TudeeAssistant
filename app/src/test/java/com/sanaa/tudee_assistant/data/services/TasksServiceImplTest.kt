@@ -236,7 +236,7 @@ class TasksServiceImplTest {
             }
         }
 
-    val fakeTasks = listOf(
+    private val fakeTasks = listOf(
         TaskLocalDto(
             taskId = 1,
             title = "Task 1",

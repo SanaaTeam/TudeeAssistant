@@ -25,23 +25,21 @@ val databaseModule = module {
             context = get(),
             AppDatabase::class.java,
             DATABASE_NAME
-        )
-            .addCallback(object : RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
-                    get<CoroutineScope>(named("databaseScope")).launch {
-                        try {
-                            val database = get<AppDatabase>()
-                            getDefaultCategories().forEach { defaultCategory ->
-                                database.categoryDao().insertCategory(defaultCategory)
-                            }
-                        } catch (e: Exception) {
-                            Log.e("DB", "Failed to insert defaults", e)
+        ).addCallback(object : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                get<CoroutineScope>(named("databaseScope")).launch {
+                    try {
+                        val database = get<AppDatabase>()
+                        getDefaultCategories().forEach { defaultCategory ->
+                            database.categoryDao().insertCategory(defaultCategory)
                         }
+                    } catch (e: Exception) {
+                        Log.e("DB", "Failed to insert defaults", e)
                     }
                 }
-            })
-            .build()
+            }
+        }).build()
     }
     single { get<AppDatabase>().taskDao() }
     single { get<AppDatabase>().categoryDao() }

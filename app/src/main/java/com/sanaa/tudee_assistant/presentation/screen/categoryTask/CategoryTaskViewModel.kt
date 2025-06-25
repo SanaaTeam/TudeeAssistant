@@ -8,11 +8,11 @@ import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -28,7 +28,7 @@ class CategoryTaskViewModel(
 
     fun loadCategoryTasks(categoryId: Int) {
         tryToExecute(
-            function = {
+            callee = {
                 _state.update { it.copy(isLoading = true) }
                 val category = categoryService.getCategoryById(categoryId)
                 val tasks = taskService
@@ -80,9 +80,14 @@ class CategoryTaskViewModel(
 
     override fun onConfirmDeleteClicked() {
         tryToExecute(
-            function = {
+            callee = {
                 _state.update { it.copy(isLoading = true) }
                 categoryService.deleteCategoryById(_state.value.currentCategory.id)
+                try {
+                    taskService.deleteTaskByCategoryId(_state.value.currentCategory.id)
+                } catch (e: Exception) {
+
+                }
             },
             onError = { onError(message = stringProvider.getString(R.string.error_deleting_category)) },
             onSuccess = {
@@ -96,7 +101,6 @@ class CategoryTaskViewModel(
                                 .getInstance(stringProvider.getString(R.string.successfully_deleted_category)),
                         )
                     })
-
             }
         )
     }
@@ -135,7 +139,7 @@ class CategoryTaskViewModel(
 
     override fun onSaveEditClicked(category: CategoryUiState) {
         tryToExecute(
-            function = {
+            callee = {
                 _state.update { it.copy(isLoading = true) }
 
                 val currentImagePath = _state.value.currentCategory.imagePath

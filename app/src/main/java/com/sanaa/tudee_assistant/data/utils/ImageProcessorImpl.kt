@@ -15,7 +15,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 class ImageProcessorImpl(private val context: Context) : ImageProcessor {
-
     @Throws(IOException::class)
     override suspend fun processImage(uri: Uri): Bitmap = withContext(Dispatchers.IO) {
         try {

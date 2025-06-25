@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks
 
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import kotlinx.datetime.LocalDate
 
 interface TaskInteractionListener {

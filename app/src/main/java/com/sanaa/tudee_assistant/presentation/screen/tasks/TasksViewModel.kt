@@ -67,10 +67,10 @@ class TaskViewModel(
                     if (it?.id == null) return@launch
                     taskService.deleteTaskById(it.id)
                 }.onSuccess {
-                    handleOnSuccess(message = stringProvider.getString(R.string.task_delete_success))
+                    handleOnSuccess(message = stringProvider.task_delete_success)
                     getTasksByDueDate()
                 }.onFailure {
-                    handleOnError(message = stringProvider.getString(R.string.snack_bar_error))
+                    handleOnError(message = stringProvider.unknown_error)
 
                 }
             }
@@ -94,11 +94,11 @@ class TaskViewModel(
 
 
     override fun onAddTaskSuccess() {
-        handleOnSuccess(message = stringProvider.getString(R.string.task_add_success))
+        handleOnSuccess(message = stringProvider.task_added_success)
     }
 
     override fun onEditTaskSuccess() {
-        handleOnSuccess(message = stringProvider.getString(R.string.task_update_success))
+        handleOnSuccess(message = stringProvider.task_update_success)
     }
 
     override fun onDeleteDismiss() {
@@ -115,7 +115,7 @@ class TaskViewModel(
 
 
     override fun handleOnMoveToStatusSuccess() {
-        handleOnSuccess(message = stringProvider.getString(R.string.task_status_update_success))
+        handleOnSuccess(message = stringProvider.task_status_update_success)
     }
 
     override fun handleOnMoveToStatusFail() {
@@ -133,7 +133,7 @@ class TaskViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState.getInstance(
-                    message ?: stringProvider.getString(R.string.unknown_error)
+                    message ?: stringProvider.unknown_error
                 ),
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false
@@ -141,11 +141,11 @@ class TaskViewModel(
         }
     }
 
-    private fun handleOnError(message: String? = stringProvider.getString(R.string.snack_bar_error)) {
+    private fun handleOnError(message: String? = stringProvider.unknown_error) {
         _state.update {
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(
-                    message ?: stringProvider.getString(R.string.unknown_error)
+                    message ?: stringProvider.unknown_error
                 ),
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false

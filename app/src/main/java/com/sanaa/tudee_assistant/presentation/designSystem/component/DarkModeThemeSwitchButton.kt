@@ -52,7 +52,7 @@ import com.sanaa.tudee_assistant.presentation.utils.innerShadow
 fun DarkModeThemeSwitchButton(
     isDarkMode: Boolean,
     modifier: Modifier = Modifier,
-    onCheckedChange: (Boolean) -> Unit = {}
+    onCheckedChange: (Boolean) -> Unit = {},
 ) {
 
     val animationSpecDurationMillis = 800
@@ -158,7 +158,7 @@ private fun DarkModeThemeSwitchButtonPreview() {
 @Composable
 private fun BoxScope.AnimatedSun(
     isDarkMode: Boolean,
-    animationSpecDurationMillis: Int
+    animationSpecDurationMillis: Int,
 ) {
     AnimatedVisibility(
         !isDarkMode,
@@ -200,7 +200,7 @@ private fun BoxScope.AnimatedSun(
 @Composable
 private fun BoxScope.AnimatedMoon(
     isDarkMode: Boolean,
-    animationSpecDurationMillis: Int
+    animationSpecDurationMillis: Int,
 ) {
     AnimatedVisibility(
         isDarkMode,
@@ -281,12 +281,12 @@ private fun BoxScope.MoonLargeCircle() {
 @Composable
 private fun BoxScope.TransformingWhiteCloud(
     isDarkMode: Boolean,
-    animationSpecDurationMillis: Int
+    animationSpecDurationMillis: Int,
 ) {
     AnimatedVisibility(
         !isDarkMode,
         enter = slideIn(
-            initialOffset = { IntOffset((-1.5 * it.width).toInt(), (it.height / 2).toInt()) },
+            initialOffset = { IntOffset((-1.5 * it.width).toInt(), (it.height / 2)) },
             animationSpec = tween(
                 durationMillis = animationSpecDurationMillis,
                 easing = EaseOut
@@ -304,7 +304,7 @@ private fun BoxScope.TransformingWhiteCloud(
             )
         ),
         exit = slideOut(
-            targetOffset = { IntOffset((-1.5 * it.width).toInt(), (it.height / 2).toInt()) },
+            targetOffset = { IntOffset((-1.5 * it.width).toInt(), (it.height / 2)) },
             animationSpec = tween(
                 durationMillis = animationSpecDurationMillis,
                 easing = EaseOut
@@ -337,7 +337,7 @@ private fun BoxScope.TransformingWhiteCloud(
 @Composable
 private fun BoxScope.FirstWhiteCloud(isDarkMode: Boolean) {
     AnimatedCircle(
-        isDarkMode,
+        isClicked = isDarkMode,
         modifier = Modifier.align(Alignment.BottomEnd),
         size = Theme.dimension.medium,
         startOffsetX = 1.dp,
@@ -405,16 +405,16 @@ private fun BoxScope.AnimatedTransformingMoonCircle(
 
 @Composable
 private fun AnimatedCircle(
-    isClicked: Boolean = false,
     size: Dp,
-    color: Color = Color.White,
     startOffsetX: Dp,
     clickedOffsetX: Dp,
     startOffsetY: Dp,
     clickedOffsetY: Dp,
+    modifier: Modifier = Modifier,
+    isClicked: Boolean = false,
+    color: Color = Color.White,
     durationMillis: Int = 800,
     hasInnerShadow: Boolean = false,
-    modifier: Modifier = Modifier
 ) {
 
     val offsetX by animateDpAsState(

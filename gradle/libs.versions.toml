@@ -4,7 +4,6 @@ coilCompose = "2.6.0"
 
 datastorePreferences = "1.1.7"
 
-junitJupiterParams = "5.10.2"
 junitJupiterVersion = "5.10.2"
 kotestAssertionsCore = "5.7.2"
 kotestRunnerJunit5 = "5.7.2"
@@ -26,7 +25,6 @@ serialization = "1.8.1"
 room = "2.7.1"
 koin-bom = "4.0.0"
 ksp = "2.0.21-1.0.27"
-junitJupiter = "5.8.1"
 truth = "1.4.2"
 junitJunitJupiter = "5.8.1"
 
@@ -49,7 +47,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiterParams" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiterVersion" }
 junit-jupiter-v5102 = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiterVersion" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotestAssertionsCore" }
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotestRunnerJunit5" }

@@ -10,7 +10,7 @@ interface TaskInteractionListener {
     fun onDismissTaskDetails(show: Boolean)
     fun onDeleteTask()
     fun onDeleteDismiss()
-    fun onShowSnackbar()
+    fun onShowSnackBar()
     fun handleOnMoveToStatusSuccess()
     fun handleOnMoveToStatusFail()
     fun onHideSnakeBar()

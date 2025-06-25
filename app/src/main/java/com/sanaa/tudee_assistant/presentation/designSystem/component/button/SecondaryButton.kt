@@ -104,7 +104,7 @@ private fun SecondaryButtonPreview(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview()
+@Preview
 @Composable
 private fun SecondaryButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme(true) {

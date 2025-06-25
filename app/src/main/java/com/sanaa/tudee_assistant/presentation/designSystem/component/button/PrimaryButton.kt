@@ -77,7 +77,7 @@ fun PrimaryButton(
 }
 
 
-@Preview()
+@Preview
 @Composable
 private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
     TudeeTheme(false) {
@@ -121,7 +121,7 @@ private fun PrimaryButtonLightPreview(modifier: Modifier = Modifier) {
 }
 
 
-@Preview()
+@Preview
 @Composable
 private fun PrimaryButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme(true) {

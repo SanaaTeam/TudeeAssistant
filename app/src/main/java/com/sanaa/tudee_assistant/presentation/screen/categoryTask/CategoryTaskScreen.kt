@@ -122,7 +122,7 @@ private fun CategoryTaskScreenContent(
 
                 ),
             selectedTabIndex = state.selectedTapIndex,
-            onTabSelected = { it -> listener.onStatusChanged(it) },
+            onTabSelected = { listener.onStatusChanged(it) },
             modifier = Modifier.fillMaxSize()
         )
         if (state.showEditCategoryBottomSheet) {

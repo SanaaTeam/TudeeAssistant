@@ -135,7 +135,7 @@ fun UploadPlaceholder(defaultImagePath: String? = null) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (defaultImagePath != null && defaultImagePath.isNotEmpty() == true) {
+        if (!defaultImagePath.isNullOrEmpty()) {
             Box(
                 contentAlignment = Alignment.Center
             ) {

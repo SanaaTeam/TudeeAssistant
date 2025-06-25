@@ -58,7 +58,7 @@ class TaskViewModel(
     }
 
 
-    fun onTaskSelected(task: TaskUiState) {
+    private fun onTaskSelected(task: TaskUiState) {
         _state.update { it.copy(selectedTask = task) }
     }
 
@@ -91,7 +91,7 @@ class TaskViewModel(
         getTasksByDueDate()
     }
 
-    fun onShowDeleteDialogChange(show: Boolean) {
+    private fun onShowDeleteDialogChange(show: Boolean) {
         _state.update { it.copy(showDeleteTaskBottomSheet = show) }
     }
 
@@ -99,7 +99,7 @@ class TaskViewModel(
         _state.update { it.copy(showTaskDetailsBottomSheet = show) }
     }
 
-    override fun onShowSnackbar() {
+    override fun onShowSnackBar() {
         _state.update {
             it.copy(snackBarState = SnackBarState.hide())
         }

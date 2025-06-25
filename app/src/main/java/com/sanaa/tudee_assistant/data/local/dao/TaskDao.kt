@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.sanaa.tudee_assistant.data.local.dto.CategoryTaskCountDto
 import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.domain.model.Task
 import kotlinx.coroutines.flow.Flow
@@ -45,4 +46,7 @@ interface TaskDao {
 
     @Query("SELECT COUNT(*) FROM tasks WHERE category_id = :categoryId")
     fun getTaskCountByCategoryId(categoryId: Int): Flow<Int>
+
+    @Query("SELECT category_id, COUNT(*) as count FROM tasks GROUP BY category_id")
+    fun getTaskCountsGroupedByCategoryId(): Flow<List<CategoryTaskCountDto>>
 }

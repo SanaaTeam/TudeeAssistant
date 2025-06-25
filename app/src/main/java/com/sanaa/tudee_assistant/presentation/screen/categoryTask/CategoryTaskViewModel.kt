@@ -89,16 +89,16 @@ class CategoryTaskViewModel(
 
                 }
             },
-            onError = { onError(message = stringProvider.getString(R.string.error_deleting_category)) },
+            onError = { onError(message = stringProvider.deleting_category_error) },
             onSuccess = {
                 onSuccess(
-                    message = stringProvider.getString(R.string.successfully_deleted_category),
+                    message = stringProvider.deleted_category_successfully,
                     updateState = {
                         it.copy(
                             showDeleteCategoryBottomSheet = false,
                             navigateBackToCategoryList = true,
                             snackBarState = SnackBarState
-                                .getInstance(stringProvider.getString(R.string.successfully_deleted_category)),
+                                .getInstance(stringProvider.deleted_category_successfully),
                         )
                     })
             }
@@ -167,7 +167,7 @@ class CategoryTaskViewModel(
                         it.copy(
                             showEditCategoryBottomSheet = false,
                             snackBarState = SnackBarState
-                                .getInstance(stringProvider.getString(R.string.category_updated_successfully)),
+                                .getInstance(stringProvider.category_update_successfully),
                             navigateBackToCategoryList = true,
                         )
 
@@ -204,7 +204,7 @@ class CategoryTaskViewModel(
             it.copy(
                 showEditTaskBottomSheet = false, selectedTask = null,
                 snackBarState = SnackBarState
-                    .getInstance(stringProvider.getString(R.string.task_update_success)),
+                    .getInstance(stringProvider.task_update_success),
             )
         }
     }
@@ -213,7 +213,7 @@ class CategoryTaskViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState
-                    .getInstance(stringProvider.getString(R.string.task_status_update_success)),
+                    .getInstance(stringProvider.task_status_update_success ),
                 showTaskDetailsBottomSheet = false,
             )
         }

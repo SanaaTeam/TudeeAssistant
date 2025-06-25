@@ -71,16 +71,15 @@
     <string name="mark_as_in_progress">"Move to in progress"</string>
     <string name="save">Save</string>
     <string name="edit_task">Edit Task</string>
-    <string name="task_add_success">Add task successfully.</string>
-    <string name="task_update_success">Edited task successfully.</string>
-    <string name="task_status_update_success">task status updated successfully.</string>
-    <string name="task_delete_success">Deleted task successfully.</string>
+
 
 
     <string name="edit_category">Edit category</string>
     <string name="delete_category">Delete category</string>
     <string name="are_you_sure_to_continue">Are you sure to continue?</string>
-    <string name="no_tasks_in">No tasks in %1$s category!</string>    <string name="Agriculture">Agriculture</string>
+    <string name="no_tasks_in">No tasks in %1$s category!</string>
+    <string name="Adoration">Adoration</string>
+    <string name="Agriculture">Agriculture</string>
     <string name="Budgeting">Budgeting</string>
     <string name="Cleaning">Cleaning</string>
     <string name="Coding">Coding</string>
@@ -97,11 +96,20 @@
     <string name="Traveling">Traveling</string>
     <string name="Work">Work</string>
     <string name="category_added_successfully">Category added successfully</string>
-    <string name="successfully_deleted_category">Successfully deleted category</string>
+    <string name="category_added_error">Fail adding Category </string>
+    <string name="category_update_successfully">Category updated successfully</string>
+    <string name="update_category_error">Fail Updating Category</string>
+    <string name="deleted_category_successfully">Successfully deleted category</string>
+    <string name="deleting_category_error">Fail Deleting category</string>
     <string name="error_deleting_category">Error deleting category</string>
     <string name="categories">Categories</string>
     <string name="unknown_error">Unknown Error</string>
-    <string name="task_added_successfully">Task added successfully!</string>
-    <string name="category_updated_successfully">Category updated successfully</string>
-
+    <string name="task_added_success">Task added successfully!</string>
+    <string name="task_added_error">Fail adding Task</string>
+    <string name="task_update_success">Edited task successfully.</string>
+    <string name="task_update_error">Fail Updating Task.</string>
+    <string name="task_status_update_success">task status updated successfully.</string>
+    <string name="task_status_update_error">Fail Updating Task status.</string>
+    <string name="task_delete_success">Deleted task successfully.</string>
+    <string name="task_delete_error">Fail Deleting Task.</string>
 </resources>

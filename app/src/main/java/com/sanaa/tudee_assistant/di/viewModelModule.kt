@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.di
 
-import com.sanaa.tudee_assistant.presentation.app.TudeeAppViewModel
+import com.sanaa.tudee_assistant.presentation.mainActivity.MainActivityViewModel
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsBottomSheetViewModel
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryViewModel
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskViewModel
@@ -13,7 +13,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModelOf(::TudeeAppViewModel)
+    viewModelOf(::MainActivityViewModel)
     viewModelOf(::OnBoardingViewModel)
     viewModelOf(::HomeScreenViewModel)
     viewModelOf(::CategoryViewModel)

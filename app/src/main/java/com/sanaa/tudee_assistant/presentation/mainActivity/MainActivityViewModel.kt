@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.app
+package com.sanaa.tudee_assistant.presentation.mainActivity
 
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
@@ -8,14 +8,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class TudeeAppViewModel(
+class MainActivityViewModel(
     private val preferencesManager: PreferencesManager,
-) : BaseViewModel<TudeeAppUiState>(TudeeAppUiState()) {
+) : BaseViewModel<MainActivityUiState>(MainActivityUiState()) {
     init {
-        loadData()
+        loadScreen()
     }
 
-    private fun loadData() {
+    private fun loadScreen() {
+        _state.update { it.copy(isLoading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             preferencesManager.isDarkTheme.combine(preferencesManager.isFirstLaunch) { isDarkTheme, isFirstLaunch ->
                 Pair(isDarkTheme, isFirstLaunch)
@@ -23,7 +24,8 @@ class TudeeAppViewModel(
                 _state.update {
                     it.copy(
                         isDarkTheme = isDarkTheme,
-                        isFirstLaunch = isFirstLaunch
+                        isFirstLaunch = isFirstLaunch,
+                        isLoading = false
                     )
                 }
             }

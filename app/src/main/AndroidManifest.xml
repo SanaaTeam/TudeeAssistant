@@ -13,7 +13,7 @@
         android:theme="@style/Theme.TudeeAssistant"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.mainActivity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.StartingScreen">
             <intent-filter>

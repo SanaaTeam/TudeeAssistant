@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,7 +15,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
@@ -26,26 +24,22 @@ import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingScreen
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun TudeeApp(appViewModel: TudeeAppViewModel = koinViewModel()) {
+fun TudeeApp(isFirstLaunch: Boolean) {
     var statusBarColor by remember { mutableStateOf(Color.White) }
-    val state by appViewModel.state.collectAsState()
 
-    TudeeTheme(isDark = state.isDarkTheme) {
-        Scaffold(containerColor = statusBarColor) { innerPadding ->
-            val appNavController = rememberNavController()
-            CompositionLocalProvider(LocalAppNavController provides appNavController) {
-                AppNavigation(
-                    startDestination = if (state.isFirstLaunch) OnBoardingScreenRoute else MainScreenRoute,
-                    modifier = Modifier.padding(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = innerPadding.calculateBottomPadding()
-                    ),
-                    onChangeStatusBarColor = { color -> statusBarColor = color },
-                )
-            }
+    Scaffold(containerColor = statusBarColor) { innerPadding ->
+        val appNavController = rememberNavController()
+        CompositionLocalProvider(LocalAppNavController provides appNavController) {
+            AppNavigation(
+                startDestination = if (isFirstLaunch) OnBoardingScreenRoute else MainScreenRoute,
+                modifier = Modifier.padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding()
+                ),
+                onChangeStatusBarColor = { color -> statusBarColor = color },
+            )
         }
     }
 }

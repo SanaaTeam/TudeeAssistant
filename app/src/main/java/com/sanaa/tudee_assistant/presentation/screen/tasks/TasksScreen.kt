@@ -307,7 +307,7 @@ fun TasksScreenContent(
             enabled = true,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 10.dp, bottom = 12.dp),
+                .padding(end = 10.dp, bottom = Theme.dimension.regular),
             onClick = {
                 coroutineScope.launch {
                     snackBarHostState.currentSnackbarData?.dismiss()

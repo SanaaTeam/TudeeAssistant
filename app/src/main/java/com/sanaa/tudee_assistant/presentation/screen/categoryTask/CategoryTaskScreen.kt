@@ -7,6 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sanaa.tudee_assistant.R
@@ -24,6 +25,7 @@ import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.Cat
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.EmptyCategoryTasksComponent
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
+import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -63,10 +65,16 @@ private fun CategoryTaskScreenContent(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
+    val categoryName = if (state.currentCategory.isDefault) DataProvider.getStringResourceByName(
+        state.currentCategory.name,
+        LocalContext.current
+    ) else state.currentCategory.name
+
     CategoryTaskScreenContainer(
         topBar = {
             CategoryTasksTopBar(
-                title = state.currentCategory.name,
+                title = categoryName,
                 onEditClick = { listener.onEditClicked() },
                 onBackClick = onBackClick,
                 isEditable = !state.currentCategory.isDefault
@@ -82,7 +90,7 @@ private fun CategoryTaskScreenContent(
                     count = state.filteredTasks.size,
                     content = {
                         if (state.filteredTasks.isEmpty()) {
-                            EmptyCategoryTasksComponent(state.currentCategory.name)
+                            EmptyCategoryTasksComponent(categoryName)
                         } else {
                             TasksListComponent(
                                 tasks = state.filteredTasks,
@@ -96,7 +104,7 @@ private fun CategoryTaskScreenContent(
                     count = state.filteredTasks.size,
                     content = {
                         if (state.filteredTasks.isEmpty()) {
-                            EmptyCategoryTasksComponent(state.currentCategory.name)
+                            EmptyCategoryTasksComponent(categoryName)
                         } else {
                             TasksListComponent(
                                 tasks = state.filteredTasks,
@@ -110,7 +118,7 @@ private fun CategoryTaskScreenContent(
                     count = state.filteredTasks.size,
                     content = {
                         if (state.filteredTasks.isEmpty()) {
-                            EmptyCategoryTasksComponent(state.currentCategory.name)
+                            EmptyCategoryTasksComponent(categoryName)
                         } else {
                             TasksListComponent(
                                 tasks = state.filteredTasks,

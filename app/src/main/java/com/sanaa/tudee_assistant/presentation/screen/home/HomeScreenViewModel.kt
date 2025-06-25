@@ -7,7 +7,7 @@ import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.Clock
@@ -44,17 +44,11 @@ class HomeScreenViewModel(
                 val today = Clock.System.now()
                     .toLocalDateTime(TimeZone.currentSystemDefault()).date
                 taskService.getTasksByDueDate(today).collect { tasks ->
-                    _state.update { state ->
-                        state.copy(
-                            tasks = tasks.map { it.toState() }
-                        )
-                    }
+                    _state.update { state -> state.copy(tasks = tasks.toStateList()) }
 
                     categoryService.getCategories().collect { categories ->
                         _state.update { state ->
-                            state.copy(
-                                categories = categories.map { it.toState(tasks.size) }
-                            )
+                            state.copy(categories = categories.toStateList(tasks.size))
                         }
                     }
                 }

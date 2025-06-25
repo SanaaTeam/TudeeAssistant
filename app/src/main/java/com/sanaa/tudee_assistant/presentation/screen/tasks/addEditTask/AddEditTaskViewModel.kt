@@ -10,6 +10,7 @@ import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toNewTask
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.state.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +39,7 @@ class AddEditTaskViewModel(
             categoryService.getCategories().collect { categoryList ->
                 _uiState.update {
                     it.copy(
-                        categories = categoryList.map { category -> category.toState(0) }
+                        categories = categoryList.toStateList(0)
                     )
                 }
             }
@@ -59,7 +60,7 @@ class AddEditTaskViewModel(
                     validateInputs()
                     categoryService.getCategories().collect { categories ->
                         _uiState.update { state ->
-                            state.copy(categories = categories.map { it.toState(taskCount) })
+                            state.copy(categories = categories.toStateList(taskCount))
                         }
                     }
                 }
@@ -76,7 +77,7 @@ class AddEditTaskViewModel(
             try {
                 categoryService.getCategories().collect { categories ->
                     _uiState.update { state ->
-                        state.copy(categories = categories.map { it.toState(0) })
+                        state.copy(categories = categories.toStateList(0))
                     }
                 }
             } catch (e: Exception) {

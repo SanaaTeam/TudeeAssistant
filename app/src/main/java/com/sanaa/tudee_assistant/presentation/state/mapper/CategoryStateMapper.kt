@@ -1,7 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.state.mapper
 
-import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
+import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 
 fun CategoryUiState.toCategory(): Category {
@@ -28,4 +28,8 @@ fun Category.toState(tasksCount: Int): CategoryUiState {
         isDefault = isDefault,
         tasksCount = tasksCount
     )
+}
+
+fun List<Category>.toStateList(tasksCount: Int): List<CategoryUiState> {
+    return this.map { it.toState(tasksCount) }
 }

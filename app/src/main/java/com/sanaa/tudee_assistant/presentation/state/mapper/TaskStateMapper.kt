@@ -24,6 +24,10 @@ fun Task.toState(): TaskUiState {
     )
 }
 
+fun List<Task>.toStateList(): List<TaskUiState> {
+    return this.map { task -> task.toState() }
+}
+
 fun TaskPriority.toState(): TaskUiPriority {
     return when (this) {
         TaskPriority.LOW -> TaskUiPriority.LOW

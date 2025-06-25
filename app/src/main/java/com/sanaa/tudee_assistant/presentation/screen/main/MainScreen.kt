@@ -18,7 +18,6 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBarItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.navigation.CategoriesScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
@@ -33,7 +32,6 @@ import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
 fun MainScreen(
     startDestination: Any,
     onStatusBarColor: (Color) -> Unit,
-    onUpdateSnackBar: (SnackBarState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val screenNavController = rememberNavController()
@@ -68,7 +66,7 @@ fun MainScreen(
 
                 composable<CategoriesScreenRoute> {
                     onStatusBarColor(Theme.color.surfaceHigh)
-                    CategoryScreen(onUpdateSnackBarState = onUpdateSnackBar)
+                    CategoryScreen()
                 }
             }
         }

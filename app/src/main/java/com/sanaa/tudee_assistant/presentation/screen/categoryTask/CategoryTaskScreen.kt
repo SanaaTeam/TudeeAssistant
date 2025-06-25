@@ -8,45 +8,37 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
-import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
+import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category.AddEditCategoryBottomSheet
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTaskScreenContainer
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.EmptyCategoryTasksComponent
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
+import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import kotlinx.coroutines.delay
+import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoryTaskScreen(
     modifier: Modifier = Modifier,
-    onUpdateSnackBarState: (SnackBarState) -> Unit,
     categoryId: Int?,
     viewModel: CategoryTaskViewModel = koinViewModel<CategoryTaskViewModel>(),
 ) {
     val state by viewModel.state.collectAsState()
     val navController = AppNavigation.app
-
-    LaunchedEffect(state.snackBarState) {
-        if (state.snackBarState.isVisible) {
-            onUpdateSnackBarState(state.snackBarState)
-            viewModel.onHideSnackBar()
-        }
-    }
-
     LaunchedEffect(categoryId) {
         categoryId?.let {
             viewModel.loadCategoryTasks(it)
@@ -61,7 +53,12 @@ fun CategoryTaskScreen(
         state = state,
         listener = viewModel,
         isValidForm = viewModel::isValidForm,
-        onBackClick = { navController.popBackStack() },
+        onBackClick = {
+            navController.popBackStack(
+                route = MainScreenRoute,
+                inclusive = false
+            )
+        },
         modifier = modifier.fillMaxSize()
     )
 }
@@ -74,20 +71,25 @@ private fun CategoryTaskScreenContent(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-//    LaunchedEffect(state.snackBarState) {
-//        if (state.snackBarState.isVisible) {
-//            delay(3000)
-//            listener.onHideSnackBar()
-//        }
-//    }
 
+    val snackBarState = LocalSnackBarState.current
+
+    val categoryName = DataProvider.getStringResourceByName(
+        state.currentCategory.name,
+        LocalContext.current
+    )
+
+    LaunchedEffect(state.snackBarState) {
+        if (state.snackBarState.isVisible) {
+            snackBarState.value = state.snackBarState
+            listener.onHideSnackBar()
+        }
+    }
 
     CategoryTaskScreenContainer(
-//        snackBar = { SnackBar(state = state.snackBarState) },
-//        snackBarState = state.snackBarState,
         topBar = {
             CategoryTasksTopBar(
-                title = state.currentCategory.name,
+                title = categoryName,
                 onEditClick = { listener.onEditClicked() },
                 onBackClick = onBackClick,
                 isEditable = !state.currentCategory.isDefault
@@ -104,7 +106,7 @@ private fun CategoryTaskScreenContent(
                         count = state.filteredTasks.size,
                         content = {
                             if (state.filteredTasks.isEmpty()) {
-                                EmptyCategoryTasksComponent(state.currentCategory.name)
+                                EmptyCategoryTasksComponent(categoryName)
                             } else {
                                 TasksListComponent(
                                     tasks = state.filteredTasks,
@@ -118,7 +120,7 @@ private fun CategoryTaskScreenContent(
                         count = state.filteredTasks.size,
                         content = {
                             if (state.filteredTasks.isEmpty()) {
-                                EmptyCategoryTasksComponent(state.currentCategory.name)
+                                EmptyCategoryTasksComponent(categoryName)
                             } else {
                                 TasksListComponent(
                                     tasks = state.filteredTasks,
@@ -132,7 +134,7 @@ private fun CategoryTaskScreenContent(
                         count = state.filteredTasks.size,
                         content = {
                             if (state.filteredTasks.isEmpty()) {
-                                EmptyCategoryTasksComponent(state.currentCategory.name)
+                                EmptyCategoryTasksComponent(categoryName)
                             } else {
                                 TasksListComponent(
                                     tasks = state.filteredTasks,
@@ -173,7 +175,9 @@ private fun CategoryTaskScreenContent(
                         listener.onTaskEditClicked(state.selectedTask)
                     },
                     onDismiss = listener::onTaskDetailsDismiss,
-                    onMoveStatusSuccess = {},
+                    onMoveStatusSuccess = {
+                        listener.onMoveStatusSuccess()
+                    },
                     onMoveStatusFail = {}
                 )
             if (state.showEditTaskBottomSheet) {
@@ -183,7 +187,7 @@ private fun CategoryTaskScreenContent(
                     taskToEdit = state.selectedTask,
                     onSuccess = {
                         listener.onTaskDetailsDismiss()
-                        listener.onTaskEditDismiss()
+                        listener.onTaskEditSuccess()
                     },
                     onError = {},
                 )
@@ -218,6 +222,8 @@ private fun CategoryTaskScreenPreview() {
                 override fun onTaskEditDismiss() {}
                 override fun onHideSnackBar() {}
                 override fun onTaskDetailsDismiss() {}
+                override fun onTaskEditSuccess(){}
+                override fun onMoveStatusSuccess() {}
             },
             isValidForm = { true },
             onBackClick = {},

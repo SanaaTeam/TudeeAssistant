@@ -1,7 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 
 data class CategoryScreenUiState(
     val allCategories: List<CategoryUiState> = emptyList(),

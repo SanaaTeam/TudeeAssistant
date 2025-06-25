@@ -31,8 +31,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeTextFi
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.PrimaryButton
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone

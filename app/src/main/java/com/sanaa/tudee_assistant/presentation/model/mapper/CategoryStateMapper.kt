@@ -1,8 +1,8 @@
-package com.sanaa.tudee_assistant.presentation.state.mapper
+package com.sanaa.tudee_assistant.presentation.model.mapper
 
 import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
 import com.sanaa.tudee_assistant.domain.model.Category
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 
 fun CategoryUiState.toCategory(): Category {
     return Category(

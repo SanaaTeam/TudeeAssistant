@@ -13,4 +13,5 @@ interface TaskInteractionListener {
     fun onShowSnackbar()
     fun handleOnMoveToStatusSuccess()
     fun handleOnMoveToStatusFail()
-    }
+    fun onHideSnakeBar()
+}

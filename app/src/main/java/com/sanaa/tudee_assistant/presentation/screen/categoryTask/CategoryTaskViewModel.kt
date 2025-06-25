@@ -2,9 +2,11 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
 import androidx.core.net.toUri
+import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
+import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
@@ -18,6 +20,7 @@ class CategoryTaskViewModel(
     private val categoryService: CategoryService,
     private val taskService: TaskService,
     private val imageProcessor: ImageProcessor,
+    private val stringProvider: StringProvider,
 ) : BaseViewModel<CategoryTaskScreenUiState>(initialState = CategoryTaskScreenUiState()),
     CategoryTaskInteractionListener {
 
@@ -80,10 +83,10 @@ class CategoryTaskViewModel(
                 _state.update { it.copy(isLoading = true) }
                 categoryService.deleteCategoryById(_state.value.currentCategory.id)
             },
-            onError = { onError(message = "Error deleting category") },
+            onError = { onError(message = stringProvider.getString(R.string.error_deleting_category)) },
             onSuccess = {
                 onSuccess(
-                    message = "Successfully deleted category",
+                    message = stringProvider.getString(R.string.successfully_deleted_category),
                     updateState = {
                         it.copy(
                             showDeleteCategoryBottomSheet = false,
@@ -189,7 +192,7 @@ class CategoryTaskViewModel(
 
     private fun onSuccess(
         message: String?,
-        updateState: (oldState: CategoryTaskScreenUiState) -> CategoryTaskScreenUiState = { it }
+        updateState: (oldState: CategoryTaskScreenUiState) -> CategoryTaskScreenUiState = { it },
     ) {
         _state.update {
             updateState(it).copy(

@@ -1,15 +1,13 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 
 data class CategoryScreenUiState(
     val allCategories: List<CategoryUiState> = emptyList(),
-
     val isLoading: Boolean = false,
     val isAddCategorySheetVisible: Boolean = false,
-    val isOperationSuccessful: Boolean = false,
-    val successMessage: String? = null,
-    val errorMessage: String? = null,
+    val snackBarState: SnackBarState = SnackBarState(),
     val currentCategory: CategoryUiState = CategoryUiState(),
     val newCategory: CategoryUiState = CategoryUiState(),
     val isEditMode: Boolean = false,

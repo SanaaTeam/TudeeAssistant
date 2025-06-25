@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar
+package com.sanaa.tudee_assistant.presentation.designSystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 
 @Composable
 fun SnackBar(
+    state: SnackBarState,
     modifier: Modifier = Modifier,
-    snackBarStatus: SnackBarStatus = SnackBarStatus.SUCCESS,
-    message: String,
 ) {
     Row(
         modifier = modifier
@@ -49,23 +49,23 @@ fun SnackBar(
         Box(
             modifier = Modifier
                 .background(
-                    color = if (snackBarStatus == SnackBarStatus.ERROR) Theme.color.errorVariant else Theme.color.greenVariant,
+                    color = if (state.snackBarStatus == SnackBarStatus.ERROR) Theme.color.errorVariant else Theme.color.greenVariant,
                     shape = RoundedCornerShape(Theme.dimension.regular)
                 )
                 .padding(Theme.dimension.small)
         ) {
             Image(
                 painter = painterResource(
-                    id = if (snackBarStatus == SnackBarStatus.ERROR) R.drawable.snack_bar_error else R.drawable.snack_bar_success
+                    id = if (state.snackBarStatus == SnackBarStatus.ERROR) R.drawable.snack_bar_error else R.drawable.snack_bar_success
                 ),
-                contentDescription = message,
+                contentDescription = state.message,
                 modifier = Modifier.size(Theme.dimension.large),
 
                 )
         }
 
         Text(
-            text = message,
+            text = state.message,
             color = Theme.color.body,
             style = Theme.textStyle.body.medium,
             modifier = Modifier.padding(start = Theme.dimension.regular)
@@ -82,7 +82,7 @@ private fun SnackBarDarkPreview() {
                 .background(color = Theme.color.surface)
                 .padding(Theme.dimension.extraSmall)
         ) {
-            SnackBar(message = stringResource(R.string.snack_bar_success))
+            SnackBar(state = SnackBarState.getInstance(stringResource(R.string.snack_bar_success)))
         }
     }
 }
@@ -97,8 +97,7 @@ private fun SnackBarLightPreview() {
                 .padding(Theme.dimension.extraSmall)
         ) {
             SnackBar(
-                snackBarStatus = SnackBarStatus.ERROR,
-                message = stringResource(R.string.snack_bar_success)
+                state = SnackBarState.getInstance(stringResource(R.string.snack_bar_success)),
             )
         }
     }

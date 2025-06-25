@@ -3,9 +3,12 @@ package com.sanaa.tudee_assistant.presentation.screen.category
 import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
+import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toNewCategory
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
@@ -19,14 +22,14 @@ class CategoryViewModel(
     private val categoryService: CategoryService,
     private val taskService: TaskService,
     private val imageProcessor: ImageProcessor,
-
-    ) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState()), CategoryInteractionListener {
+    private val stringProvider: StringProvider,
+) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState()), CategoryInteractionListener {
 
     init {
         loadCategoriesWithTasksCount()
     }
 
-    fun loadCategoriesWithTasksCount() {
+    private fun loadCategoriesWithTasksCount() {
         _state.update { it.copy(isLoading = true) }
 
         tryToExecute(
@@ -61,15 +64,21 @@ class CategoryViewModel(
 
     private fun onLoadCategoriesWithTasksCountError(exception: Exception) {
         _state.update {
-            it.copy(isLoading = false, errorMessage = exception.message)
+            it.copy(
+                isLoading = false,
+                snackBarState = SnackBarState.getErrorInstance(
+                    exception.message
+                        ?: stringProvider.getString(R.string.unknown_error)
+                )
+            )
         }
     }
 
-    override fun onAddCategory(categoryUiState: CategoryUiState) {
+    override fun onAddCategory(newCategory: CategoryUiState) {
         _state.update { it.copy(isLoading = true) }
 
         tryToExecute(
-            { addCategory(categoryUiState) },
+            { addCategory(newCategory) },
             ::onAddCategorySuccess,
             ::onAddCategoryError,
         )
@@ -88,13 +97,10 @@ class CategoryViewModel(
             it.copy(
                 isLoading = false,
                 isAddCategorySheetVisible = false,
-                isOperationSuccessful = true,
-                successMessage = "Category added successfully",
+                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.category_added_successfully)),
                 newCategory = CategoryUiState()
             )
         }
-
-        //     loadCategoriesWithTasksCount()
     }
 
     private fun onAddCategoryError(exception: Exception) {
@@ -107,7 +113,7 @@ class CategoryViewModel(
 
     override fun onSnackBarShown() {
         _state.update {
-            it.copy(successMessage = null, errorMessage = null)
+            it.copy(snackBarState = SnackBarState.hide())
         }
     }
 
@@ -130,9 +136,14 @@ class CategoryViewModel(
     override fun isFormValid(): Boolean {
         return (
                 (_state.value.newCategory.name.isNotBlank()
-                        && (_state.value.newCategory.name.length >= 2
-                        && _state.value.newCategory.name.length <= 24))
+                        && (_state.value.newCategory.name.length in 2..24))
                         && (_state.value.newCategory.imagePath.isNotBlank()))
 
+    }
+
+    override fun onHideSnakeBar() {
+        _state.update {
+            it.copy(snackBarState = SnackBarState.hide())
+        }
     }
 }

@@ -97,4 +97,10 @@
     <string name="FixingBugs">إصلاح الأخطاء</string>
     <string name="Gym">الرياضة</string>
     <string name="Medical">عناية طبية</string>
+    <string name="category_added_successfully">تم اضافة المجموعة بنجاح</string>
+    <string name="successfully_deleted_category">تم حذف المجموعة بنجاح</string>
+    <string name="error_deleting_category">مشكلة في حذف المجموعة</string>
+    <string name="categories">المجموعات</string>
+    <string name="unknown_error">خطاء غير معروف</string>
+    <string name="task_added_successfully">تم اضافة المهمة بنجاح</string>
 </resources>

@@ -5,6 +5,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
@@ -19,10 +20,8 @@ class TaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val selectedStatusTab: TaskUiStatus,
-    private val stringProvider: StringProvider
+    private val stringProvider: StringProvider,
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()), TaskInteractionListener {
-
-
     init {
         _state.update { it.copy(selectedStatusTab = selectedStatusTab) }
         viewModelScope.launch {
@@ -43,20 +42,20 @@ class TaskViewModel(
 
         dateJob?.takeIf { it.isActive }?.cancel()
 
-           dateJob =  viewModelScope.launch {
-                taskService.getTasksByDueDate(_state.value.selectedDate)
-                    .collect { taskList ->
-                        _state.update {
-                            it.copy(
-                                currentDateTasks = taskList.map { task ->
-                                    task.toState() },
-                            )
-                        }
+        dateJob = viewModelScope.launch {
+            taskService.getTasksByDueDate(_state.value.selectedDate)
+                .collect { taskList ->
+                    _state.update {
+                        it.copy(
+                            currentDateTasks = taskList.map { task ->
+                                task.toState()
+                            },
+                        )
                     }
+                }
 
         }
     }
-
 
 
     fun onTaskSelected(task: TaskUiState) {
@@ -78,7 +77,7 @@ class TaskViewModel(
                     handleOnSuccess(message = stringProvider.getString(R.string.task_delete_success))
                     getTasksByDueDate()
                 }.onFailure {
-                    handleOnError( message = stringProvider.getString(R.string.snack_bar_error))
+                    handleOnError(message = stringProvider.getString(R.string.snack_bar_error))
 
                 }
             }
@@ -102,7 +101,7 @@ class TaskViewModel(
 
     override fun onShowSnackbar() {
         _state.update {
-            it.copy(successMessage = null, errorMessage = null)
+            it.copy(snackBarState = SnackBarState.hide())
         }
     }
 
@@ -119,19 +118,27 @@ class TaskViewModel(
     }
 
 
-    override fun handleOnMoveToStatusSuccess(){
+    override fun handleOnMoveToStatusSuccess() {
         handleOnSuccess(message = stringProvider.getString(R.string.task_update_success))
     }
-    override fun handleOnMoveToStatusFail(){
+
+    override fun handleOnMoveToStatusFail() {
         handleOnError()
+    }
+
+    override fun onHideSnakeBar() {
+        _state.update {
+            it.copy(snackBarState = SnackBarState.hide())
+        }
     }
 
 
     private fun handleOnSuccess(message: String? = null) {
         _state.update {
             it.copy(
-                successMessage = message,
-                errorMessage = null,
+                snackBarState = SnackBarState.getInstance(
+                    message ?: stringProvider.getString(R.string.unknown_error)
+                ),
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false
             )
@@ -141,8 +148,9 @@ class TaskViewModel(
     private fun handleOnError(message: String? = stringProvider.getString(R.string.snack_bar_error)) {
         _state.update {
             it.copy(
-                successMessage = null,
-                errorMessage = message,
+                snackBarState = SnackBarState.getErrorInstance(
+                    message ?: stringProvider.getString(R.string.unknown_error)
+                ),
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false
             )

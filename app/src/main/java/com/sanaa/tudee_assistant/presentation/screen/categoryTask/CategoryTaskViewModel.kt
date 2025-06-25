@@ -189,7 +189,28 @@ class CategoryTaskViewModel(
 
     override fun onTaskEditDismiss() {
         _state.update {
-            it.copy(showEditTaskBottomSheet = false)
+            it.copy(
+                showEditTaskBottomSheet = false, selectedTask = null,
+            )
+        }
+    }
+
+    override fun onTaskEditSuccess() {
+        _state.update {
+            it.copy(
+                showEditTaskBottomSheet = false, selectedTask = null,
+                snackBarState = SnackBarState
+                    .getInstance(stringProvider.getString(R.string.task_update_success)),
+            )
+        }
+    }
+
+    override fun onMoveStatusSuccess() {
+        _state.update {
+            it.copy(
+                snackBarState = SnackBarState
+                    .getInstance(stringProvider.getString(R.string.task_status_update_success)),
+            )
         }
     }
 
@@ -231,7 +252,8 @@ class CategoryTaskViewModel(
 
         val hasNameChanged = edited.name != current.name
         val hasImageChanged = edited.imagePath != current.imagePath
-        val isNameValid = edited.name.isNotBlank()
+        val isNameValid =
+            edited.name.isNotBlank() && (edited.name.length <= 24 && edited.name.length >= 2)
 
         return isNameValid && (hasNameChanged || hasImageChanged)
     }

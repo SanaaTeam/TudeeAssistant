@@ -111,12 +111,6 @@ class CategoryViewModel(
         _state.update { it.copy(isAddCategorySheetVisible = isVisible) }
     }
 
-    override fun onSnackBarShown() {
-        _state.update {
-            it.copy(snackBarState = SnackBarState.hide())
-        }
-    }
-
     override fun onCategoryTitleChange(title: String) {
         _state.update {
             it.copy(

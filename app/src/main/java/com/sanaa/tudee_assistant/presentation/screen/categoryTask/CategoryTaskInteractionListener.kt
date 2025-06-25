@@ -18,4 +18,7 @@ interface CategoryTaskInteractionListener {
     fun onTaskDetailsDismiss()
     fun onTaskEditClicked(task: TaskUiState)
     fun onTaskEditDismiss()
+    fun onTaskEditSuccess()
+    fun onMoveStatusSuccess()
+    fun onHideSnackBar()
 }

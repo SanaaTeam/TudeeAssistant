@@ -50,7 +50,14 @@ fun CategoryItem(
                     .clickable { onClick() },
                 contentAlignment = Alignment.Center,
             ) {
-                CategoryThumbnail(modifier = Modifier.size(32.dp), imagePath = category.imagePath)
+                CategoryThumbnail(
+                    modifier =
+                        Modifier.then(
+                            if (category.isDefault) Modifier.size(32.dp)
+                            else Modifier.fillMaxSize()
+                        ),
+                    imagePath = category.imagePath
+                )
             }
             Box(
                 modifier = Modifier.align(Alignment.TopEnd),

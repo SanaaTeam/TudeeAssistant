@@ -73,9 +73,8 @@
     <string name="edit_task">تعديل المهمة</string>
     <string name="task_add_success">تمت إضافة المهمة بنجاح.</string>
     <string name="task_update_success">تم تعديل المهمة بنجاح.</string>
-    <string name="task_status_update_success">تم تعديل ح</string>
+    <string name="task_status_update_success">تم تحديث حالة المهمة بنجاح</string>
     <string name="task_delete_success">تم حذف المهمة بنجاح</string>
-
     <string name="edit_category">تعديل الفئة</string>
     <string name="delete_category">حذف الفئة</string>
     <string name="are_you_sure_to_continue">هل أنت متأكد من المتابعة؟</string>
@@ -102,5 +101,6 @@
     <string name="categories">المجموعات</string>
     <string name="unknown_error">خطاء غير معروف</string>
     <string name="task_added_successfully">تم اضافة المهمة بنجاح</string>
+    <string name="category_updated_successfully"> تم تحدّثت الفئة بنجاح</string>
     <string name="no_tasks_in">لا توجد مهام في فئة %1$s!</string>
 </resources>

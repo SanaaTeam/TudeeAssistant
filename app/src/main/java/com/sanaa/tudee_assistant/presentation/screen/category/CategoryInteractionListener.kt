@@ -6,7 +6,6 @@ import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 interface CategoryInteractionListener {
     fun onAddCategory(newCategory: CategoryUiState)
     fun onToggleAddCategorySheet(isVisible: Boolean)
-    fun onSnackBarShown()
     fun onCategoryTitleChange(title: String)
     fun onCategoryImageSelected(uri: Uri?)
     fun isFormValid(): Boolean

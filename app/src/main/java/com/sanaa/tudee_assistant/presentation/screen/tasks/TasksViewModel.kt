@@ -30,6 +30,7 @@ class TaskViewModel(
                     it.copy(categories = categoryList.toStateList(0))
                 }
 
+
             }
         }
         getTasksByDueDate()
@@ -83,7 +84,7 @@ class TaskViewModel(
         getTasksByDueDate()
     }
 
-    private fun onShowDeleteDialogChange(show: Boolean) {
+    fun onShowDeleteDialogChange(show: Boolean) {
         _state.update { it.copy(showDeleteTaskBottomSheet = show) }
     }
 
@@ -91,10 +92,13 @@ class TaskViewModel(
         _state.update { it.copy(showTaskDetailsBottomSheet = show) }
     }
 
-    override fun onShowSnackBar() {
-        _state.update {
-            it.copy(snackBarState = SnackBarState.hide())
-        }
+
+    override fun onAddTaskSuccess() {
+        handleOnSuccess(message = stringProvider.getString(R.string.task_add_success))
+    }
+
+    override fun onEditTaskSuccess() {
+        handleOnSuccess(message = stringProvider.getString(R.string.task_update_success))
     }
 
     override fun onDeleteDismiss() {
@@ -111,7 +115,7 @@ class TaskViewModel(
 
 
     override fun handleOnMoveToStatusSuccess() {
-        handleOnSuccess(message = stringProvider.getString(R.string.task_update_success))
+        handleOnSuccess(message = stringProvider.getString(R.string.task_status_update_success))
     }
 
     override fun handleOnMoveToStatusFail() {
@@ -120,7 +124,7 @@ class TaskViewModel(
 
     override fun onHideSnakeBar() {
         _state.update {
-            it.copy(snackBarState = SnackBarState.hide())
+            it.copy(snackBarState = SnackBarState())
         }
     }
 

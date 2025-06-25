@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
 
             val preferencesManager: PreferencesManager = koinInject()
             val isDark by preferencesManager.isDarkTheme.collectAsState(initial = false)
+            preferencesManager.isFirstLaunch.collectAsState(initial = true)
             var showSplash by remember { mutableStateOf(true) }
 
             LaunchedEffect(Unit) {
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
 
             TudeeTheme(isDark) {
                 if (showSplash) {
-                    SplashScreen()
+                    SplashScreen(isDark)
                 } else {
                     TudeeApp()
                 }

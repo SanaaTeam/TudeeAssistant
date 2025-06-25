@@ -1,5 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.utils
 
+import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
 import android.annotation.SuppressLint
 import android.content.Context
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
@@ -71,7 +73,6 @@ object DataProvider {
 
     @SuppressLint("DiscouragedApi")
     fun getStringResourceByName(resourceName: String, context: Context): String {
-        val context = context
         val allowedResourceName = resourceName.filter { it.isLetterOrDigit() || it == '_' }
         val resourceId = context.resources.getIdentifier(allowedResourceName, "string", context.packageName)
         return if (resourceId != 0) {
@@ -79,5 +80,25 @@ object DataProvider {
         } else {
             resourceName
         }
+    }
+
+    fun getOnBoardingPageContent(): List<OnBoardingPageContentItem> {
+        return listOf(
+            OnBoardingPageContentItem(
+                title = R.string.onboarding_title_0,
+                description = R.string.onboarding_desc_0,
+                imageRes = R.drawable.robot_onboarding_page0
+            ),
+            OnBoardingPageContentItem(
+                title = R.string.onboarding_title_1,
+                description = R.string.onboarding_desc_1,
+                imageRes = R.drawable.robot_onboarding_page1
+            ),
+            OnBoardingPageContentItem(
+                title = R.string.onboarding_title_2,
+                description = R.string.onboarding_desc_2,
+                imageRes = R.drawable.robot_onboarding_page2
+            ),
+        )
     }
 }

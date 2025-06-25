@@ -32,8 +32,8 @@
     <string name="delete_task_title">حذف المهمة</string>
     <string name="delete_subtitle">هل أنت متأكد من المتابعة؟</string>
     <string name="delete">حذف</string>
-    <string name="no_task_today" translatable="false">لا توجد مهام اليوم!</string>
-    <string name="tap_to_add_task" translatable="false">اضغط زر + لإضافة أول مهمة لك.</string>
+    <string name="no_task_today">لا توجد مهام اليوم!</string>
+    <string name="tap_to_add_task">اضغط زر + لإضافة أول مهمة لك.</string>
 
     <string name="cancel">إلغاء</string>
     <string name="category_title">عنوان الفئة</string>
@@ -79,6 +79,7 @@
     <string name="edit_category">تعديل الفئة</string>
     <string name="delete_category">حذف الفئة</string>
     <string name="are_you_sure_to_continue">هل أنت متأكد من المتابعة؟</string>
+    <string name="no_tasks_in">لا يوجد مهمة في مجموعة %1$!</string>
     <string name="Adoration">العبادة</string>
     <string name="Agriculture">الزراعة</string>
     <string name="Budgeting">إدارة الميزانية</string>

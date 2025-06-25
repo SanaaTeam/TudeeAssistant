@@ -31,7 +31,7 @@ import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 fun DeleteCurrentCategory(
     onDeleteClick: () -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var internalShowBottomSheet by remember { mutableStateOf(true) }
 
@@ -80,6 +80,7 @@ fun DeleteCurrentCategoryContent(
                             color = Theme.color.body
                         )
                     }
+
                     Image(
                         painter = painterResource(R.drawable.delete_tudee),
                         contentDescription = null,
@@ -105,7 +106,7 @@ fun DeleteCurrentCategoryContent(
                             onClick = { onDeleteClick() }
                         )
                         SecondaryButton(
-                            lable = stringResource(R.string.cancel),
+                            label = stringResource(R.string.cancel),
                             modifier = Modifier.fillMaxWidth(),
                             onClick = { onDismiss() },
                         )

@@ -6,9 +6,9 @@ import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
@@ -27,9 +27,7 @@ class TaskViewModel(
         viewModelScope.launch {
             categoryService.getCategories().collect { categoryList ->
                 _state.update {
-                    it.copy(
-                        categories = categoryList.map { category -> category.toState(0) }
-                    )
+                    it.copy(categories = categoryList.toStateList(0))
                 }
 
             }
@@ -45,20 +43,14 @@ class TaskViewModel(
         dateJob = viewModelScope.launch {
             taskService.getTasksByDueDate(_state.value.selectedDate)
                 .collect { taskList ->
-                    _state.update {
-                        it.copy(
-                            currentDateTasks = taskList.map { task ->
-                                task.toState()
-                            },
-                        )
-                    }
+                    _state.update { it.copy(currentDateTasks = taskList.toStateList()) }
                 }
 
         }
     }
 
 
-    fun onTaskSelected(task: TaskUiState) {
+    private fun onTaskSelected(task: TaskUiState) {
         _state.update { it.copy(selectedTask = task) }
     }
 
@@ -91,7 +83,7 @@ class TaskViewModel(
         getTasksByDueDate()
     }
 
-    fun onShowDeleteDialogChange(show: Boolean) {
+    private fun onShowDeleteDialogChange(show: Boolean) {
         _state.update { it.copy(showDeleteTaskBottomSheet = show) }
     }
 
@@ -99,7 +91,7 @@ class TaskViewModel(
         _state.update { it.copy(showTaskDetailsBottomSheet = show) }
     }
 
-    override fun onShowSnackbar() {
+    override fun onShowSnackBar() {
         _state.update {
             it.copy(snackBarState = SnackBarState.hide())
         }

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -139,7 +138,6 @@ private fun AppBar() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
             .background(color = Theme.color.surfaceHigh)
     ) {
         Text(
@@ -148,7 +146,7 @@ private fun AppBar() {
             color = Theme.color.title,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 20.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
         )
     }
 }

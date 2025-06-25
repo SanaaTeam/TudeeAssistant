@@ -27,7 +27,6 @@ fun NegativeButton(
         false -> Theme.color.stroke
     }
 
-
     Box {
         PrimaryButton(
             label = label,
@@ -40,7 +39,6 @@ fun NegativeButton(
         )
     }
 }
-
 
 @Preview
 @Composable
@@ -76,11 +74,8 @@ private fun NegativeButtonLightPreview(modifier: Modifier = Modifier) {
             )
 
         }
-
     }
-
 }
-
 
 @Preview
 @Composable
@@ -114,9 +109,6 @@ private fun NegativeButtonDarkPreview(modifier: Modifier = Modifier) {
                 isLoading = false,
                 onClick = {}
             )
-
         }
-
     }
-
 }

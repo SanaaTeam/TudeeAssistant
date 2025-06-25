@@ -29,7 +29,7 @@ class HomeScreenViewModel(
 
     private fun loadScreen() {
         tryToExecute(
-            onExecute = {
+            callee = {
                 preferencesManager.isDarkTheme.collect { isDarkTheme ->
                     _state.update { it.copy(isDarkTheme = isDarkTheme) }
                 }
@@ -40,7 +40,7 @@ class HomeScreenViewModel(
 
     private fun getTasks() {
         tryToExecute(
-            onExecute = {
+            callee = {
                 val today = Clock.System.now()
                     .toLocalDateTime(TimeZone.currentSystemDefault()).date
                 taskService.getTasksByDueDate(today).collect { tasks ->
@@ -59,7 +59,7 @@ class HomeScreenViewModel(
 
     override fun onToggleColorTheme() {
         tryToExecute(
-            onExecute = {
+            callee = {
                 preferencesManager.setDarkTheme(state.value.isDarkTheme.not())
             },
             onError = ::showErrorMessage

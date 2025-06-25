@@ -47,7 +47,6 @@ class TaskDetailsBottomSheetViewModel(
                                     it.copy(status = TaskUiStatus.IN_PROGRESS)
                                 }
                                 onMoveStatusSuccess()
-
                             },
                             onError = {
                                 onMoveStatusFail()

@@ -105,7 +105,7 @@ fun DeleteCurrentCategoryContent(
                             onClick = { onDeleteClick() }
                         )
                         SecondaryButton(
-                            lable = stringResource(R.string.cancel),
+                            label = stringResource(R.string.cancel),
                             modifier = Modifier.fillMaxWidth(),
                             onClick = { onDismiss() },
                         )

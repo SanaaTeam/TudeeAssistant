@@ -178,7 +178,7 @@ fun AddEditTaskContent(
                 enabled = uiState.isButtonEnabled && !uiState.isLoading
             )
             SecondaryButton(
-                lable = stringResource(R.string.cancel),
+                label = stringResource(R.string.cancel),
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onCancelClick
             )

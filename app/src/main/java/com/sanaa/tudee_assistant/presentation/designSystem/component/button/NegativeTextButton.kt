@@ -20,7 +20,6 @@ fun NegativeTextButton(
     isLoading: Boolean = false,
     onClick: () -> Unit
 ) {
-
     val contentColor = when (enabled) {
         true -> Theme.color.error
         false -> Theme.color.stroke
@@ -42,8 +41,6 @@ fun NegativeTextButton(
             contentColor = contentColor
         )
     }
-
-
 }
 
 @Preview
@@ -67,26 +64,22 @@ private fun NegativeTextButtonLightPreview(modifier: Modifier = Modifier) {
                 onClick = {}
             )
 
-
-
             NegativeTextButton(
                 label = "Submit",
                 enabled = false,
                 isLoading = false,
                 onClick = {}
             )
+
             NegativeTextButton(
                 label = "Submit",
                 enabled = false,
                 isLoading = true,
                 onClick = {}
             )
-
-
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -109,8 +102,6 @@ private fun NegativeTextButtonDarkPreview(modifier: Modifier = Modifier) {
                 onClick = {}
             )
 
-
-
             NegativeTextButton(
                 label = "Submit",
                 enabled = false,
@@ -123,8 +114,6 @@ private fun NegativeTextButtonDarkPreview(modifier: Modifier = Modifier) {
                 isLoading = true,
                 onClick = {}
             )
-
-
         }
     }
 }

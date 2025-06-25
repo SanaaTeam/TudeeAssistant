@@ -50,7 +50,6 @@ fun UpdateCurrentCategory(
     var categoryTitle by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    // Show delete confirmation dialog (appears after edit sheet is dismissed)
     if (showDeleteDialog) {
         DeleteCurrentCategory(
             onDeleteClick = {
@@ -59,12 +58,11 @@ fun UpdateCurrentCategory(
             },
             onDismiss = {
                 showDeleteDialog = false
-                onDismiss() // Call parent dismiss when delete is cancelled
+                onDismiss()
             }
         )
     }
 
-    // Show edit bottom sheet
     if (showEditBottomSheet) {
         UpdateCurrentCategoryContent(
             onEditClick = {
@@ -84,7 +82,6 @@ fun UpdateCurrentCategory(
             },
             modifier = modifier,
             onDeleteClick = {
-                // First dismiss the edit sheet, then show delete confirmation
                 showEditBottomSheet = false
                 showDeleteDialog = true
             }
@@ -139,7 +136,7 @@ fun UpdateCurrentCategoryContent(
                                 enabled = true,
                                 isLoading = false,
                                 onClick = {
-                                    onDeleteClick() // This will trigger the sheet dismissal and show delete dialog
+                                    onDeleteClick()
                                 }
                             )
                         }
@@ -194,7 +191,7 @@ fun UpdateCurrentCategoryContent(
                             onClick = { onEditClick() }
                         )
                         SecondaryButton(
-                            lable = stringResource(R.string.cancel),
+                            label = stringResource(R.string.cancel),
                             modifier = Modifier.fillMaxWidth(),
                             onClick = { onDismiss() },
                         )

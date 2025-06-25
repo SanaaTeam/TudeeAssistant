@@ -88,7 +88,7 @@ fun DeleteComponent(
                     )
                     SecondaryButton(
                         onClick = onDismiss,
-                        lable = stringResource(R.string.cancel),
+                        label = stringResource(R.string.cancel),
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }

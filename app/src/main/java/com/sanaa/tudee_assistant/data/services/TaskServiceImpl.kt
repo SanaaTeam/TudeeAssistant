@@ -17,14 +17,12 @@ import kotlinx.datetime.LocalDate
 class TaskServiceImpl(
     private val taskDao: TaskDao,
 ) : TaskService {
-
     override fun getAllTasks(): Flow<List<Task>> {
         return taskDao.getAllTasks()
             .map { list ->
                 list.map { it.toDomain() }
             }
     }
-
 
     override suspend fun addTask(addTaskRequest: AddTaskRequest) {
         if (taskDao.insertTask(addTaskRequest.toLocalDto()) == -1L) {

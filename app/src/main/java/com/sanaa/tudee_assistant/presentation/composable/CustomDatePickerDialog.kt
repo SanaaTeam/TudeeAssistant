@@ -58,8 +58,6 @@ fun CustomDatePickerDialog(
         selectableDates = selectableDates
     )
 
-
-
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -139,12 +137,10 @@ fun CustomDatePickerDialog(
 @Preview(widthDp = 360, locale = "ar")
 @Composable
 private fun CustomDatePickerDialogPreview() {
-
     var selectedDateText by remember { mutableStateOf("No Date") }
     var showDialog by remember { mutableStateOf(true) }
 
     TudeeTheme(isDark = true) {
-
         Box(
             modifier = Modifier
                 .fillMaxSize()

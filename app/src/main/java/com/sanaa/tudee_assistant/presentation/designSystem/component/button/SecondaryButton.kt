@@ -20,17 +20,16 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 @Composable
 fun SecondaryButton(
     modifier: Modifier = Modifier,
-    lable: String,
+    label: String,
     enabled: Boolean = true,
     isLoading: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
-
-
     val borderColor = when (enabled) {
         true -> Theme.color.stroke
         false -> Theme.color.disable
     }
+
     val contentColor = when (enabled) {
         true -> Theme.color.primary
         false -> Theme.color.stroke
@@ -62,13 +61,11 @@ fun SecondaryButton(
     ) {
 
         ButtonContent(
-            label = lable,
+            label = label,
             isLoading = isLoading,
             enabled = enabled,
             contentColor = contentColor
         )
-
-
     }
 }
 
@@ -78,38 +75,34 @@ fun SecondaryButton(
 private fun SecondaryButtonPreview(modifier: Modifier = Modifier) {
     Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
         SecondaryButton(
-            lable = "Submit",
+            label = "Submit",
             enabled = true,
             isLoading = true,
             onClick = { }
         )
+
         SecondaryButton(
-            lable = "Submit",
+            label = "Submit",
             enabled = true,
             isLoading = false,
             onClick = { }
         )
 
         SecondaryButton(
-            lable = "Submit",
+            label = "Submit",
             enabled = false,
             isLoading = false,
             onClick = { }
         )
 
         SecondaryButton(
-            lable = "Submit",
+            label = "Submit",
             enabled = false,
             isLoading = true,
             onClick = { }
         )
-
-
     }
-
-
 }
-
 
 @Preview()
 @Composable
@@ -117,34 +110,32 @@ private fun SecondaryButtonDarkPreview(modifier: Modifier = Modifier) {
     TudeeTheme(true) {
         Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             SecondaryButton(
-                lable = "Submit",
+                label = "Submit",
                 enabled = true,
                 isLoading = true,
                 onClick = { }
             )
+
             SecondaryButton(
-                lable = "Submit",
+                label = "Submit",
                 enabled = true,
                 isLoading = false,
                 onClick = { }
             )
 
             SecondaryButton(
-                lable = "Submit",
+                label = "Submit",
                 enabled = false,
                 isLoading = false,
                 onClick = { }
             )
 
             SecondaryButton(
-                lable = "Submit",
+                label = "Submit",
                 enabled = false,
                 isLoading = true,
                 onClick = { }
             )
-
-
         }
     }
-
 }

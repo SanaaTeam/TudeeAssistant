@@ -39,7 +39,6 @@ fun TaskListColumn(
     onTaskSwipe: (TaskUiState) -> Boolean = { true },
     onTaskClick: (TaskUiState) -> Unit,
 ) {
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()

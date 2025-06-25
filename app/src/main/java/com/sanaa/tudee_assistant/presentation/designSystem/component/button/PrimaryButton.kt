@@ -20,7 +20,6 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.util
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 
-
 @Composable
 fun PrimaryButton(
     modifier: Modifier = Modifier,

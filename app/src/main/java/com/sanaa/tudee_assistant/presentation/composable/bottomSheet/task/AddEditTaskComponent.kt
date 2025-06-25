@@ -54,22 +54,21 @@ fun AddEditTaskScreen(
         }
     }
 
-        BaseBottomSheet(
-            content = {
-                Column(modifier = Modifier.fillMaxHeight(0.81f)) {
-                    AddEditTaskContent(
-                        uiState = uiState,
-                        categories = uiState.categories,
-                        isEditMode = isEditMode,
-                        showDatePickerDialog = showDatePickerDialog,
-                        listener = viewModel,
-                        onCancelClick = onDismiss
-                    )
-                }
-            },
-            onDismiss = {
-                onDismiss()
+    BaseBottomSheet(
+        content = {
+            Column(modifier = Modifier.fillMaxHeight(0.81f)) {
+                AddEditTaskContent(
+                    uiState = uiState,
+                    categories = uiState.categories,
+                    isEditMode = isEditMode,
+                    showDatePickerDialog = showDatePickerDialog,
+                    listener = viewModel,
+                    onCancelClick = onDismiss
+                )
             }
-        )
-
+        },
+        onDismiss = {
+            onDismiss()
+        }
+    )
 }

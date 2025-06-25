@@ -2,7 +2,6 @@ package com.sanaa.tudee_assistant.di
 
 import com.sanaa.tudee_assistant.presentation.app.TudeeAppViewModel
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsBottomSheetViewModel
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryViewModel
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskViewModel
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenViewModel
@@ -21,6 +20,6 @@ val viewModelModule = module {
     viewModelOf(::CategoryTaskViewModel)
     viewModelOf(::TaskViewModel)
     viewModelOf(::AddEditTaskViewModel)
-    viewModel{(selectedStatusTab:TaskUiStatus)-> TaskViewModel(get(),get(),get(),get()) }
-    viewModel{(selectedTaskId:Int)-> TaskDetailsBottomSheetViewModel(get(),get(),get())}
+    viewModel { TaskViewModel(get(), get(), get(), get()) }
+    viewModel { TaskDetailsBottomSheetViewModel(get(), get(), get()) }
 }

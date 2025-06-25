@@ -144,7 +144,7 @@ fun AddEditTaskContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 100.dp, max = 900.dp),
-                    userScrollEnabled = false,
+                    userScrollEnabled = true,
                     verticalArrangement = Arrangement.spacedBy(Theme.dimension.large),
                     horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
                 ) {

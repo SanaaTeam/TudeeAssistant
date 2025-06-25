@@ -33,7 +33,7 @@ class CategoryViewModel(
         _state.update { it.copy(isLoading = true) }
 
         tryToExecute(
-            function = ::loadCategoriesWithTasksCountOperation,
+            callee = ::loadCategoriesWithTasksCountOperation,
             onSuccess = ::onLoadCategoriesWithTasksCountSuccess,
             onError = ::onLoadCategoriesWithTasksCountError
         )

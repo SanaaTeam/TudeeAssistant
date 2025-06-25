@@ -27,7 +27,7 @@ class CategoryTaskViewModel(
 
     fun loadCategoryTasks(categoryId: Int) {
         tryToExecute(
-            function = {
+            callee = {
                 _state.update { it.copy(isLoading = true) }
                 val category = categoryService.getCategoryById(categoryId)
                 val tasks = taskService
@@ -79,7 +79,7 @@ class CategoryTaskViewModel(
 
     override fun onConfirmDeleteClicked() {
         tryToExecute(
-            function = {
+            callee = {
                 _state.update { it.copy(isLoading = true) }
                 categoryService.deleteCategoryById(_state.value.currentCategory.id)
             },
@@ -131,7 +131,7 @@ class CategoryTaskViewModel(
 
     override fun onSaveEditClicked(category: CategoryUiState) {
         tryToExecute(
-            function = {
+            callee = {
                 _state.update { it.copy(isLoading = true) }
 
                 val currentImagePath = _state.value.currentCategory.imagePath

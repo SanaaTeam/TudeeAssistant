@@ -15,21 +15,33 @@ abstract class BaseViewModel<T>(initialState: T) : ViewModel() {
     protected val _state: MutableStateFlow<T> by lazy { MutableStateFlow(initialState) }
     val state: StateFlow<T> by lazy { _state.asStateFlow() }
 
-
     protected fun <T> tryToExecute(
-        function: suspend () -> T,
+        callee: suspend () -> T,
         onSuccess: (T) -> Unit,
         onError: (exception: Exception) -> Unit,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO
+        dispatcher: CoroutineDispatcher = Dispatchers.IO,
     ) {
         viewModelScope.launch(dispatcher) {
             try {
-                val result = function()
+                val result = callee()
                 onSuccess(result)
             } catch (exception: Exception) {
                 onError(exception)
             }
         }
+    }
 
+    protected fun <T> tryToExecute(
+        onExecute: suspend () -> T,
+        onError: (exception: Exception) -> Unit,
+        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    ) {
+        viewModelScope.launch(dispatcher) {
+            try {
+                onExecute()
+            } catch (exception: Exception) {
+                onError(exception)
+            }
+        }
     }
 }

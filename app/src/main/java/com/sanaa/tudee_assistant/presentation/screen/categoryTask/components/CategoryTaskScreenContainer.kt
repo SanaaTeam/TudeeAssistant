@@ -20,6 +20,5 @@ fun CategoryTaskScreenContainer(
     ) {
         topBar()
         content()
-
     }
 }

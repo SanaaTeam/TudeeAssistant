@@ -11,7 +11,6 @@ import java.util.Date
 import java.util.Locale
 
 object DateFormater {
-
     fun LocalDate.getShortDayName(locale: Locale = Locale.getDefault()): String {
         val calendar = Calendar.getInstance().apply {
             set(

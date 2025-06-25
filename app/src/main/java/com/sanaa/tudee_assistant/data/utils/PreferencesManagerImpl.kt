@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.map
 
 
 class PreferencesManagerImpl(private val context: Context) : PreferencesManager {
-
     override val isFirstLaunch: Flow<Boolean> = context.dataStore.data
         .map { preferences ->
             preferences[IS_FIRST_LAUNCH] ?: true
@@ -24,12 +23,10 @@ class PreferencesManagerImpl(private val context: Context) : PreferencesManager 
         }
     }
 
-
     override val isDarkTheme: Flow<Boolean> = context.dataStore.data
         .map { preferences ->
             preferences[DARK_THEME_KEY] ?: false
         }
-
 
     override suspend fun setDarkTheme(enabled: Boolean) {
         context.dataStore.edit { prefs ->
@@ -42,6 +39,4 @@ class PreferencesManagerImpl(private val context: Context) : PreferencesManager 
         val DARK_THEME_KEY = booleanPreferencesKey("is_dark_theme")
         val IS_FIRST_LAUNCH = booleanPreferencesKey("is_first_launch")
     }
-
-
 }

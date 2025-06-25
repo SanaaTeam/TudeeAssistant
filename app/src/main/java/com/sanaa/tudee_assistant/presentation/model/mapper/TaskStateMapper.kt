@@ -1,12 +1,12 @@
-package com.sanaa.tudee_assistant.presentation.state.mapper
+package com.sanaa.tudee_assistant.presentation.model.mapper
 
 import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
 import com.sanaa.tudee_assistant.domain.model.Task.TaskStatus
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
@@ -24,6 +24,10 @@ fun Task.toState(): TaskUiState {
     )
 }
 
+fun List<Task>.toStateList(): List<TaskUiState> {
+    return this.map { task -> task.toState() }
+}
+
 fun TaskPriority.toState(): TaskUiPriority {
     return when (this) {
         TaskPriority.LOW -> TaskUiPriority.LOW
@@ -39,7 +43,6 @@ fun TaskStatus.toState(): TaskUiStatus {
         TaskStatus.DONE -> TaskUiStatus.DONE
     }
 }
-
 
 fun TaskUiState.toTask(): Task {
     return Task(

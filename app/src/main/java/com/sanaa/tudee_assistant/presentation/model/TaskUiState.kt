@@ -1,7 +1,5 @@
-package com.sanaa.tudee_assistant.presentation.state
+package com.sanaa.tudee_assistant.presentation.model
 
-import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

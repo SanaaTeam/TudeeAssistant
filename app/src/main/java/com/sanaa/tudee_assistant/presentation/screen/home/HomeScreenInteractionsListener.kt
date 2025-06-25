@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 
 interface HomeScreenInteractionsListener {
     fun onToggleColorTheme()

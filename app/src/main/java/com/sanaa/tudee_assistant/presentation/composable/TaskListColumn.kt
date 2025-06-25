@@ -28,8 +28,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
@@ -39,7 +39,6 @@ fun TaskListColumn(
     onTaskSwipe: (TaskUiState) -> Boolean = { true },
     onTaskClick: (TaskUiState) -> Unit,
 ) {
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()

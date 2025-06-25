@@ -4,13 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toNewTask
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toTask
+import com.sanaa.tudee_assistant.presentation.model.mapper.toNewTask
+import com.sanaa.tudee_assistant.presentation.model.mapper.toState
+import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
+import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,7 +39,7 @@ class AddEditTaskViewModel(
             categoryService.getCategories().collect { categoryList ->
                 _uiState.update {
                     it.copy(
-                        categories = categoryList.map { category -> category.toState(0) }
+                        categories = categoryList.toStateList(0)
                     )
                 }
             }
@@ -59,7 +60,7 @@ class AddEditTaskViewModel(
                     validateInputs()
                     categoryService.getCategories().collect { categories ->
                         _uiState.update { state ->
-                            state.copy(categories = categories.map { it.toState(taskCount) })
+                            state.copy(categories = categories.toStateList(taskCount))
                         }
                     }
                 }
@@ -76,7 +77,7 @@ class AddEditTaskViewModel(
             try {
                 categoryService.getCategories().collect { categories ->
                     _uiState.update { state ->
-                        state.copy(categories = categories.map { it.toState(0) })
+                        state.copy(categories = categories.toStateList(0))
                     }
                 }
             } catch (e: Exception) {

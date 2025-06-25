@@ -2,11 +2,11 @@ package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskD
 
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toTaskPriority
-import com.sanaa.tudee_assistant.presentation.state.mapper.toTaskStatus
+import com.sanaa.tudee_assistant.presentation.model.mapper.toState
+import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskPriority
+import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -27,7 +27,7 @@ data class DetailsUiState(
 )
 
 
-fun DetailsUiState.toTaskUiState(): TaskUiState{
+fun DetailsUiState.toTaskUiState(): TaskUiState {
     return TaskUiState(
         id = this.id,
         title = this.title,

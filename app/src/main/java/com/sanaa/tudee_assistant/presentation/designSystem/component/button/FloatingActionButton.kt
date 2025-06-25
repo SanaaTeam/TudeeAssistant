@@ -30,7 +30,6 @@ fun FloatingActionButton(
     @DrawableRes iconRes: Int = R.drawable.ic_loading,
     onClick: () -> Unit = {}
 ) {
-
     val backgroundModifier = when (enabled) {
         true -> Modifier.background(
             brush = Brush.linearGradient(
@@ -67,7 +66,6 @@ fun FloatingActionButton(
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -140,8 +138,6 @@ private fun FloatingActionButtonDarkPreview(modifier: Modifier = Modifier) {
                 onClick = {},
                 iconRes = R.drawable.ic_loading
             )
-
-
         }
     }
 }

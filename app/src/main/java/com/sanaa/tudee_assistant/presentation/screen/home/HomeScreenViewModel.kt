@@ -1,18 +1,15 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import com.sanaa.tudee_assistant.presentation.state.mapper.toState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -31,39 +28,42 @@ class HomeScreenViewModel(
     }
 
     private fun loadScreen() {
-        viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.isDarkTheme.collect { isDarkTheme ->
-                _state.update { it.copy(isDarkTheme = isDarkTheme) }
-            }
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.isDarkTheme.collect { isDarkTheme ->
+                    _state.update { it.copy(isDarkTheme = isDarkTheme) }
+                }
+            },
+            onError = ::showErrorMessage
+        )
     }
 
     private fun getTasks() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val today = Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault()).date
-            taskService.getTasksByDueDate(today).collect { tasks ->
-                _state.update { state ->
-                    state.copy(
-                        tasks = tasks.map { it.toState() }
-                    )
-                }
+        tryToExecute(
+            callee = {
+                val today = Clock.System.now()
+                    .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                taskService.getTasksByDueDate(today).collect { tasks ->
+                    _state.update { state -> state.copy(tasks = tasks.toStateList()) }
 
-                categoryService.getCategories().collect { categories ->
-                    _state.update { state ->
-                        state.copy(
-                            categories = categories.map { it.toState(tasks.size) }
-                        )
+                    categoryService.getCategories().collect { categories ->
+                        _state.update { state ->
+                            state.copy(categories = categories.toStateList(tasks.size))
+                        }
                     }
                 }
-            }
-        }
+            },
+            onError = ::showErrorMessage
+        )
     }
 
     override fun onToggleColorTheme() {
-        viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.setDarkTheme(state.value.isDarkTheme.not())
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.setDarkTheme(state.value.isDarkTheme.not())
+            },
+            onError = ::showErrorMessage
+        )
     }
 
     override fun snackBarSuccess(message: String) {
@@ -85,5 +85,15 @@ class HomeScreenViewModel(
 
     override fun onDismissTaskDetails() {
         _state.update { it.copy(selectedTask = null) }
+    }
+
+    private fun showErrorMessage(exception: Exception) {
+        _state.update {
+            it.copy(
+                snackBarState = SnackBarState.getErrorInstance(
+                    exception.message ?: stringProvider.getString(R.string.unknown_error)
+                )
+            )
+        }
     }
 }

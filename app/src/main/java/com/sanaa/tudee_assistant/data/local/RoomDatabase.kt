@@ -12,7 +12,6 @@ import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
     version = 1,
     exportSchema = false
 )
-
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun categoryDao(): CategoryDao

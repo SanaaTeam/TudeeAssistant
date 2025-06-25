@@ -27,9 +27,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Seco
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryIconButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -38,15 +37,14 @@ import org.koin.core.parameter.parametersOf
 fun TaskDetailsComponent(
     selectedTaskId: Int,
     onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
     interactionListener: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(
         key = "new $selectedTaskId",
         parameters = { parametersOf(selectedTaskId) }),
-    onEditClick: (TaskUiState) -> Unit,
-    modifier: Modifier = Modifier,
-    onMoveStatusSuccess: () -> Unit,
-    onMoveStatusFail: () -> Unit,
+    onEditClick: (TaskUiState) -> Unit = {},
+    onMoveStatusSuccess: (TaskUiStatus) -> Unit = {},
+    onMoveStatusFail: () -> Unit = {},
 ) {
-
     val state: State<DetailsUiState> = interactionListener.state.collectAsState()
 
     val changeStatusTo = when (state.value.status) {
@@ -73,7 +71,7 @@ fun TaskDetailsComponent(
                     color = Theme.color.title,
                 )
 
-                CategoryImageContainer() {
+                CategoryImageContainer {
                     CategoryThumbnail(
                         modifier.size(32.dp),
                         imagePath = state.value.categoryImagePath
@@ -128,16 +126,10 @@ fun TaskDetailsComponent(
                                 onClick = { onEditClick(state.value.toTaskUiState()) }
                             )
                             SecondaryButton(
-                                lable = changeStatusTo,
+                                label = changeStatusTo,
                                 onClick = {
                                     interactionListener.onMoveTaskToAnotherStatus(
-                                        onMoveStatusSuccess = { it ->
-                                            onMoveStatusSuccess()
-                                            if (it == TaskUiStatus.DONE) {
-                                                onDismiss()
-                                            }
-                                        },
-                                        onMoveStatusFail = onMoveStatusFail
+                                        onMoveStatusSuccess, onMoveStatusFail
                                     )
                                 },
                                 modifier = Modifier.weight(1f)
@@ -151,7 +143,6 @@ fun TaskDetailsComponent(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun PreviewUpdateTaskStatus() {
@@ -159,8 +150,6 @@ private fun PreviewUpdateTaskStatus() {
         TaskDetailsComponent(
             selectedTaskId = 1,
             onDismiss = {},
-            onEditClick = {},
-            onMoveStatusSuccess = {},
         ) {}
     }
 }

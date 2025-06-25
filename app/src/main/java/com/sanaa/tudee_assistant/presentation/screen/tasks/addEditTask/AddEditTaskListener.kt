@@ -1,7 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask
 
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 
 interface AddEditTaskListener {
     fun onTitleChange(title: String)

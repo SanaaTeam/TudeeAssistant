@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -40,7 +42,10 @@ fun TudeeTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     icon: Painter? = null,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
     val borderColor = if (isFocused) Theme.color.primary else Theme.color.stroke
@@ -61,6 +66,8 @@ fun TudeeTextField(
             ),
         textStyle = Theme.textStyle.body.medium.copy(color = Theme.color.body),
         singleLine = true,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         decorationBox = { innerTextField ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,

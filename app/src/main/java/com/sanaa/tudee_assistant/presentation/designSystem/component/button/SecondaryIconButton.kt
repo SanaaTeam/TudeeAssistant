@@ -21,7 +21,6 @@ fun SecondaryIconButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onClick: () -> Unit = {}
-
 ) {
     Row(
         modifier = modifier

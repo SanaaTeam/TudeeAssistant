@@ -34,7 +34,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Seco
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
-import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
 import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
@@ -142,7 +142,7 @@ fun AddEditCategoryBottomSheet(
                         onClick = { onSaveClick(category) }
                     )
                     SecondaryButton(
-                        lable = stringResource(R.string.cancel),
+                        label = stringResource(R.string.cancel),
                         modifier = Modifier.fillMaxWidth(),
                         onClick = onDismiss
                     )

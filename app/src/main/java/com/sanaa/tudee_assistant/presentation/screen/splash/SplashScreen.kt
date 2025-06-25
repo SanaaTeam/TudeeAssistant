@@ -91,7 +91,7 @@ fun SplashScreen(isDarkTheme: Boolean) {
     }
 }
 
-@Preview()
+@Preview
 @Composable
 private fun SplashScreenPreview() {
     val isDarkTheme = true

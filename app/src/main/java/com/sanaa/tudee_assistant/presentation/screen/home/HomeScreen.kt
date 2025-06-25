@@ -164,15 +164,6 @@ private fun HomeScreenContent(
             TaskDetailsComponent(
                 selectedTaskId = state.selectedTask.id,
                 onDismiss = { interactionsListener.onDismissTaskDetails() },
-                onEditClick = {
-                    //Todo
-                },
-                onMoveStatusSuccess = {
-                    //Todo}
-                },
-                onMoveStatusFail = {
-                    //Todo}
-                }
             )
         }
 

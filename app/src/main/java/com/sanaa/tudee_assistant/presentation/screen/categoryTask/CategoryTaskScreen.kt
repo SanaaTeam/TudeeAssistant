@@ -151,8 +151,6 @@ private fun CategoryTaskScreenContent(
                     listener.onTaskEditClicked(state.selectedTask)
                 },
                 onDismiss = listener::onTaskDetailsDismiss,
-                onMoveStatusSuccess = {},
-                onMoveStatusFail = {}
             )
         if (state.showEditTaskBottomSheet) {
             AddEditTaskScreen(

@@ -41,9 +41,9 @@ fun TaskDetailsComponent(
     interactionListener: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(
         key = "new $selectedTaskId",
         parameters = { parametersOf(selectedTaskId) }),
-    onEditClick: (TaskUiState) -> Unit,
-    onMoveStatusSuccess: () -> Unit,
-    onMoveStatusFail: () -> Unit,
+    onEditClick: (TaskUiState) -> Unit = {},
+    onMoveStatusSuccess: () -> Unit = {},
+    onMoveStatusFail: () -> Unit = {},
 ) {
     val state: State<DetailsUiState> = interactionListener.state.collectAsState()
 
@@ -150,8 +150,6 @@ private fun PreviewUpdateTaskStatus() {
         TaskDetailsComponent(
             selectedTaskId = 1,
             onDismiss = {},
-            onEditClick = {},
-            onMoveStatusSuccess = {},
         ) {}
     }
 }

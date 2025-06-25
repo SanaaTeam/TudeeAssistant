@@ -23,7 +23,7 @@ fun TudeeSnackBar(snackBarHostState: SnackbarHostState, isError: Boolean) {
         SnackbarHost(
             hostState = snackBarHostState,
             modifier = Modifier
-                .align(Alignment.Center)
+                .align(Alignment.TopCenter)
                 .padding(horizontal = Theme.dimension.medium)
         ) { data ->
             SnackBar(

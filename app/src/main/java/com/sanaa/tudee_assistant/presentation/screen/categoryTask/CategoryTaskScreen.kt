@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,9 +14,11 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
+import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.screen.category.AddEditCategoryBottomSheet
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTaskScreenContainer
@@ -24,17 +27,25 @@ import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.Emp
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CategoryTaskScreen(
     modifier: Modifier = Modifier,
+    onUpdateSnackBarState: (SnackBarState) -> Unit,
     categoryId: Int?,
     viewModel: CategoryTaskViewModel = koinViewModel<CategoryTaskViewModel>(),
 ) {
     val state by viewModel.state.collectAsState()
     val navController = AppNavigation.app
 
+    LaunchedEffect(state.snackBarState) {
+        if (state.snackBarState.isVisible) {
+            onUpdateSnackBarState(state.snackBarState)
+            viewModel.onHideSnackBar()
+        }
+    }
 
     LaunchedEffect(categoryId) {
         categoryId?.let {
@@ -63,7 +74,17 @@ private fun CategoryTaskScreenContent(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+//    LaunchedEffect(state.snackBarState) {
+//        if (state.snackBarState.isVisible) {
+//            delay(3000)
+//            listener.onHideSnackBar()
+//        }
+//    }
+
+
     CategoryTaskScreenContainer(
+//        snackBar = { SnackBar(state = state.snackBarState) },
+//        snackBarState = state.snackBarState,
         topBar = {
             CategoryTasksTopBar(
                 title = state.currentCategory.name,
@@ -75,96 +96,98 @@ private fun CategoryTaskScreenContent(
         modifier = modifier
 
     ) {
-        TudeeScrollableTabs(
-            tabs = listOf(
-                TabItem(
-                    label = stringResource(R.string.in_progress_task_status),
-                    count = state.filteredTasks.size,
-                    content = {
-                        if (state.filteredTasks.isEmpty()) {
-                            EmptyCategoryTasksComponent(state.currentCategory.name)
-                        } else {
-                            TasksListComponent(
-                                tasks = state.filteredTasks,
-                                category = state.currentCategory,
-                                onTaskClicked = listener::onTaskClicked
-                            )
-                        }
-                    }),
-                TabItem(
-                    label = stringResource(R.string.todo_task_status),
-                    count = state.filteredTasks.size,
-                    content = {
-                        if (state.filteredTasks.isEmpty()) {
-                            EmptyCategoryTasksComponent(state.currentCategory.name)
-                        } else {
-                            TasksListComponent(
-                                tasks = state.filteredTasks,
-                                category = state.currentCategory,
-                                onTaskClicked = listener::onTaskClicked
-                            )
-                        }
-                    }),
-                TabItem(
-                    label = stringResource(R.string.done_task_status),
-                    count = state.filteredTasks.size,
-                    content = {
-                        if (state.filteredTasks.isEmpty()) {
-                            EmptyCategoryTasksComponent(state.currentCategory.name)
-                        } else {
-                            TasksListComponent(
-                                tasks = state.filteredTasks,
-                                category = state.currentCategory,
-                                onTaskClicked = listener::onTaskClicked
-                            )
-                        }
-                    }),
+        Box {
+            TudeeScrollableTabs(
+                tabs = listOf(
+                    TabItem(
+                        label = stringResource(R.string.in_progress_task_status),
+                        count = state.filteredTasks.size,
+                        content = {
+                            if (state.filteredTasks.isEmpty()) {
+                                EmptyCategoryTasksComponent(state.currentCategory.name)
+                            } else {
+                                TasksListComponent(
+                                    tasks = state.filteredTasks,
+                                    category = state.currentCategory,
+                                    onTaskClicked = listener::onTaskClicked
+                                )
+                            }
+                        }),
+                    TabItem(
+                        label = stringResource(R.string.todo_task_status),
+                        count = state.filteredTasks.size,
+                        content = {
+                            if (state.filteredTasks.isEmpty()) {
+                                EmptyCategoryTasksComponent(state.currentCategory.name)
+                            } else {
+                                TasksListComponent(
+                                    tasks = state.filteredTasks,
+                                    category = state.currentCategory,
+                                    onTaskClicked = listener::onTaskClicked
+                                )
+                            }
+                        }),
+                    TabItem(
+                        label = stringResource(R.string.done_task_status),
+                        count = state.filteredTasks.size,
+                        content = {
+                            if (state.filteredTasks.isEmpty()) {
+                                EmptyCategoryTasksComponent(state.currentCategory.name)
+                            } else {
+                                TasksListComponent(
+                                    tasks = state.filteredTasks,
+                                    category = state.currentCategory,
+                                    onTaskClicked = listener::onTaskClicked
+                                )
+                            }
+                        }),
 
-                ),
-            selectedTabIndex = state.selectedTapIndex,
-            onTabSelected = { it -> listener.onStatusChanged(it) },
-            modifier = Modifier.fillMaxSize()
-        )
-        if (state.showEditCategoryBottomSheet) {
-            AddEditCategoryBottomSheet(
-                onImageSelected = { listener.onImageSelect(it) },
-                onTitleChange = { listener.onTitleChange(it) },
-                onSaveClick = { listener.onSaveEditClicked(it) },
-                onDismiss = { listener.onEditDismissClicked() },
-                category = state.editCategory,
-                isEditMode = !state.currentCategory.isDefault,
-                onDeleteClick = { listener.onDeleteClicked() },
-                isFormValid = isValidForm
+                    ),
+                selectedTabIndex = state.selectedTapIndex,
+                onTabSelected = { it -> listener.onStatusChanged(it) },
+                modifier = Modifier.fillMaxSize()
             )
-        }
-        if (state.showDeleteCategoryBottomSheet) {
-            DeleteComponent(
-                onDismiss = listener::onDeleteDismiss,
-                onDeleteClicked = listener::onConfirmDeleteClicked,
-                title = stringResource(R.string.delete_category),
-            )
-        }
-        if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
-            TaskDetailsComponent(
-                selectedTaskId = state.selectedTask.id,
-                onEditClick = {
-                    listener.onTaskEditClicked(state.selectedTask)
-                },
-                onDismiss = listener::onTaskDetailsDismiss,
-                onMoveStatusSuccess = {},
-                onMoveStatusFail = {}
-            )
-        if (state.showEditTaskBottomSheet) {
-            AddEditTaskScreen(
-                onDismiss = { listener.onTaskEditDismiss() },
-                isEditMode = true,
-                taskToEdit = state.selectedTask,
-                onSuccess = {
-                    listener.onTaskDetailsDismiss()
-                    listener.onTaskEditDismiss()
-                },
-                onError = {},
-            )
+            if (state.showEditCategoryBottomSheet) {
+                AddEditCategoryBottomSheet(
+                    onImageSelected = { listener.onImageSelect(it) },
+                    onTitleChange = { listener.onTitleChange(it) },
+                    onSaveClick = { listener.onSaveEditClicked(it) },
+                    onDismiss = { listener.onEditDismissClicked() },
+                    category = state.editCategory,
+                    isEditMode = !state.currentCategory.isDefault,
+                    onDeleteClick = { listener.onDeleteClicked() },
+                    isFormValid = isValidForm
+                )
+            }
+            if (state.showDeleteCategoryBottomSheet) {
+                DeleteComponent(
+                    onDismiss = listener::onDeleteDismiss,
+                    onDeleteClicked = listener::onConfirmDeleteClicked,
+                    title = stringResource(R.string.delete_category),
+                )
+            }
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
+                TaskDetailsComponent(
+                    selectedTaskId = state.selectedTask.id,
+                    onEditClick = {
+                        listener.onTaskEditClicked(state.selectedTask)
+                    },
+                    onDismiss = listener::onTaskDetailsDismiss,
+                    onMoveStatusSuccess = {},
+                    onMoveStatusFail = {}
+                )
+            if (state.showEditTaskBottomSheet) {
+                AddEditTaskScreen(
+                    onDismiss = { listener.onTaskEditDismiss() },
+                    isEditMode = true,
+                    taskToEdit = state.selectedTask,
+                    onSuccess = {
+                        listener.onTaskDetailsDismiss()
+                        listener.onTaskEditDismiss()
+                    },
+                    onError = {},
+                )
+            }
         }
     }
 }
@@ -193,6 +216,7 @@ private fun CategoryTaskScreenPreview() {
                 override fun onTaskClicked(task: TaskUiState) {}
                 override fun onTaskEditClicked(task: TaskUiState) {}
                 override fun onTaskEditDismiss() {}
+                override fun onHideSnackBar() {}
                 override fun onTaskDetailsDismiss() {}
             },
             isValidForm = { true },

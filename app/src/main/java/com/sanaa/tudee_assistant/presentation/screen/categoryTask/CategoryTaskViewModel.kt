@@ -8,6 +8,7 @@ import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -90,9 +91,12 @@ class CategoryTaskViewModel(
                     updateState = {
                         it.copy(
                             showDeleteCategoryBottomSheet = false,
-                            navigateBackToCategoryList = true
+                            navigateBackToCategoryList = true,
+                            snackBarState = SnackBarState
+                                .getInstance(stringProvider.getString(R.string.successfully_deleted_category)),
                         )
                     })
+
             }
         )
     }
@@ -156,7 +160,13 @@ class CategoryTaskViewModel(
                 onSuccess(
                     message = "Update task successfully",
                     updateState = {
-                        it.copy(showEditCategoryBottomSheet = false)
+                        it.copy(
+                            showEditCategoryBottomSheet = false,
+                            snackBarState = SnackBarState
+                                .getInstance(stringProvider.getString(R.string.category_updated_successfully)),
+                            navigateBackToCategoryList = true,
+                        )
+
                     }
                 )
                 loadCategoryTasks(category.id)
@@ -180,6 +190,12 @@ class CategoryTaskViewModel(
     override fun onTaskEditDismiss() {
         _state.update {
             it.copy(showEditTaskBottomSheet = false)
+        }
+    }
+
+    override fun onHideSnackBar() {
+        _state.update {
+            it.copy(snackBarState = SnackBarState.hide())
         }
     }
 

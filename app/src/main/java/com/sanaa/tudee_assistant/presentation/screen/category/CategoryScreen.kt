@@ -33,6 +33,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryIte
 import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import kotlinx.coroutines.delay
@@ -41,6 +42,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun CategoryScreen(
     modifier: Modifier = Modifier,
+    onUpdateSnackBarState: (SnackBarState) -> Unit = {},
     viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
 ) {
     val state by viewModel.state.collectAsState()

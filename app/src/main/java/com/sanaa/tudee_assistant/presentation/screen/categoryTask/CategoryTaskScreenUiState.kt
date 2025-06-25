@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -20,4 +21,5 @@ data class CategoryTaskScreenUiState(
     val selectedTask: TaskUiState? = null,
     val showTaskDetailsBottomSheet: Boolean = false,
     val showEditTaskBottomSheet: Boolean = false,
+    val snackBarState: SnackBarState = SnackBarState(),
     )

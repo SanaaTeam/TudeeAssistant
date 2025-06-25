@@ -77,6 +77,7 @@
     <string name="edit_category">تعديل الفئة</string>
     <string name="delete_category">حذف الفئة</string>
     <string name="are_you_sure_to_continue">هل أنت متأكد من المتابعة؟</string>
+    <string name="no_tasks_in">لا توجد مهام في فئة %1$s!</string>
     <string name="Adoration">العبادة</string>
     <string name="Agriculture">الزراعة</string>
     <string name="Budgeting">إدارة الميزانية</string>

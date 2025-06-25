@@ -3,8 +3,8 @@ package com.sanaa.tudee_assistant.presentation.screen.onBoarding
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
-import com.sanaa.tudee_assistant.presentation.route.MainScreenRoute
-import com.sanaa.tudee_assistant.presentation.route.OnBoardingScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import kotlinx.coroutines.flow.update

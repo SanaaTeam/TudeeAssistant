@@ -40,11 +40,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
+import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,9 +57,12 @@ fun OnBoardingScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    val navController = AppNavigation.app
+
     OnBoardingScreenContent(
         state = state,
         interactionListener = viewModel,
+        navController = navController,
         modifier = modifier,
     )
 }
@@ -66,10 +71,10 @@ fun OnBoardingScreen(
 private fun OnBoardingScreenContent(
     state: OnBoardingScreenUiState,
     interactionListener: OnBoardingScreenInteractionListener,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    val navController = AppNavigation.app
-    val isInPreview = LocalView.current.isInEditMode
+
 
     val pagerState = rememberPagerState(
         pageCount = { state.pageList.size },
@@ -101,12 +106,13 @@ private fun OnBoardingScreenContent(
                 .fillMaxSize()
                 .align(Alignment.TopCenter),
         )
-        Box(modifier = modifier.fillMaxSize()) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())) {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter)
-                    .verticalScroll(rememberScrollState())
             ) {
 
                 OnBoardingPager(
@@ -124,16 +130,16 @@ private fun OnBoardingScreenContent(
                         .padding(bottom = 24.dp)
                 )
             }
-            if (pagerState.currentPage != state.pageList.lastIndex) {
-                Box(Modifier.padding(16.dp)) {
-                    Text(
-                        text = stringResource(R.string.skip),
-                        color = Theme.color.primary,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier
-                            .clickable { interactionListener.onSkipClick(navController) }
-                    )
-                }
+        }
+        if (pagerState.currentPage != state.pageList.lastIndex) {
+            Box(modifier.padding(16.dp)) {
+                Text(
+                    text = stringResource(R.string.skip),
+                    color = Theme.color.primary,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .clickable { interactionListener.onSkipClick(navController) }
+                )
             }
         }
     }
@@ -291,6 +297,7 @@ private fun BoardingScreenPreview() {
             OnBoardingScreenContent(
                 state = state,
                 interactionListener = previewActions,
+                navController = rememberNavController(),
             )
         }
     }

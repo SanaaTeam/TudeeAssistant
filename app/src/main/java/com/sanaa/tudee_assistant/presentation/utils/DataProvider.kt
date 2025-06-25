@@ -73,7 +73,6 @@ object DataProvider {
 
     @SuppressLint("DiscouragedApi")
     fun getStringResourceByName(resourceName: String, context: Context): String {
-        val context = context
         val allowedResourceName = resourceName.filter { it.isLetterOrDigit() || it == '_' }
         val resourceId = context.resources.getIdentifier(allowedResourceName, "string", context.packageName)
         return if (resourceId != 0) {

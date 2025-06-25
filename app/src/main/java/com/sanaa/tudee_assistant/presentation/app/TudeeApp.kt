@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
@@ -56,23 +57,25 @@ private fun AppNavigation(
     onChangeStatusBarColor: (Color) -> Unit,
 ) {
     NavHost(
-        modifier = modifier,
+        modifier = Modifier,
         navController = AppNavigation.app,
         startDestination = startDestination
     ) {
         composable<OnBoardingScreenRoute> {
-            OnBoardingScreen()
+            onChangeStatusBarColor(Theme.color.surface)
+            OnBoardingScreen(modifier = modifier)
         }
 
         composable<MainScreenRoute> {
             MainScreen(
                 startDestination = HomeScreenRoute,
                 onStatusBarColor = onChangeStatusBarColor,
+                modifier = modifier
             )
         }
 
         composable<CategoryTasksScreenRoute> {
-            CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id)
+            CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id, modifier = modifier)
         }
     }
 }

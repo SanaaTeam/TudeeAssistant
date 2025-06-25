@@ -210,8 +210,10 @@ class CategoryTaskViewModel(
             it.copy(
                 snackBarState = SnackBarState
                     .getInstance(stringProvider.getString(R.string.task_status_update_success)),
+                showTaskDetailsBottomSheet = false,
             )
         }
+        loadCategoryTasks(state.value.currentCategory.id)
     }
 
     override fun onHideSnackBar() {

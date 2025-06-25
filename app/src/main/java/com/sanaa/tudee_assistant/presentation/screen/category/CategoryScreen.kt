@@ -16,10 +16,14 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
@@ -39,7 +44,7 @@ import org.koin.androidx.compose.koinViewModel
 fun CategoryScreen(
     modifier: Modifier = Modifier,
     viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
-    ) {
+) {
     val screenNavController = AppNavigation.app
     val state by viewModel.state.collectAsState()
     CategoryScreenContent(
@@ -58,6 +63,9 @@ fun CategoryScreenContent(
     listener: CategoryInteractionListener,
     onShowTasksByCategoryClick: (Int) -> Unit
 ) {
+    val snackBarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -140,4 +148,21 @@ fun CategoryScreenContent(
             },
             isFormValid = { listener.isFormValid() })
     }
+    LaunchedEffect(state.successMessage) {
+        state.successMessage?.let {
+            snackBarHostState.showSnackbar(it)
+            listener.onShowSnackbar()
+        }
+    }
+
+    LaunchedEffect(state.successMessage) {
+        state.errorMessage?.let {
+            snackBarHostState.showSnackbar(it)
+            listener.onShowSnackbar()
+        }
+    }
+
+    TudeeSnackBar(
+        snackBarHostState = snackBarHostState, isError = state.errorMessage != null
+    )
 }

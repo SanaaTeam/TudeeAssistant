@@ -1,0 +1,35 @@
+package com.sanaa.tudee_assistant.mainActivity
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.sanaa.tudee_assistant.presentation.app.TudeeApp
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import org.koin.androidx.compose.koinViewModel
+
+class MainActivity() : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+        val mySplashScreen = installSplashScreen()
+
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
+        setContent {
+            val mainViewModel: MainViewModel = koinViewModel<MainViewModel>()
+
+            var state = mainViewModel.state.collectAsState()
+
+            mySplashScreen.setKeepOnScreenCondition { state.value.isLoading }
+
+            if (!state.value.isLoading) {
+                TudeeTheme(state.value.isDarkTheme) {
+                    TudeeApp(isFirstLaunch = state.value.isFirstLaunch)
+                }
+            }
+        }
+    }
+}

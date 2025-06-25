@@ -71,5 +71,4 @@ fun AddEditTaskScreen(
                 onDismiss()
             }
         )
-
 }

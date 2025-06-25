@@ -22,22 +22,20 @@ class TaskDetailsBottomSheetViewModel(
 
 
     init {
-        getSelectedTask(selectedTaskId)
+        observeSelectedTask(selectedTaskId)
     }
 
-    private fun getSelectedTask(selectedTaskId: Int) {
+    private fun observeSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
-            val task: Task = taskService.getTaskById(selectedTaskId)
-            val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-            val detailsUiState = task.toDetailsState().copy(categoryImagePath = categoryImagePath)
-            _state.update {
-                detailsUiState
+            taskService.getTaskById(selectedTaskId).collect { task ->
+                val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
+                val detailsUiState = task.toDetailsState().copy(categoryImagePath = categoryImagePath)
+                _state.update {
+                    detailsUiState
+                }
             }
         }
     }
-
-
-
     override fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: (TaskUiStatus) -> Unit, onMoveStatusFail: () -> Unit) {
         viewModelScope.launch {
             var newUpdatedTask: Task
@@ -52,7 +50,6 @@ class TaskDetailsBottomSheetViewModel(
                                     it.copy(status = TaskUiStatus.IN_PROGRESS)
                                 }
                                 onMoveStatusSuccess(TaskUiStatus.IN_PROGRESS)
-
                             },
                             onError = {
                                 onMoveStatusFail()
@@ -82,5 +79,4 @@ class TaskDetailsBottomSheetViewModel(
             }
         }
     }
-
 }

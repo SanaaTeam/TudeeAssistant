@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.mainActivity
+package com.sanaa.tudee_assistant.presentation.mainActivity
 
 data class MainActivityUiState(
     val isLoading: Boolean = false,

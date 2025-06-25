@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.mainActivity
+package com.sanaa.tudee_assistant.presentation.mainActivity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,9 +19,9 @@ class MainActivity() : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val mainViewModel: MainViewModel = koinViewModel<MainViewModel>()
+            val mainActivityViewModel: MainActivityViewModel = koinViewModel<MainActivityViewModel>()
 
-            var state = mainViewModel.state.collectAsState()
+            var state = mainActivityViewModel.state.collectAsState()
 
             mySplashScreen.setKeepOnScreenCondition { state.value.isLoading }
 

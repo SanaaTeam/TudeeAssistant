@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.mainActivity
+package com.sanaa.tudee_assistant.presentation.mainActivity
 
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MainViewModel(
+class MainActivityViewModel(
     private val preferencesManager: PreferencesManager,
 ) : BaseViewModel<MainActivityUiState>(MainActivityUiState()) {
     init {

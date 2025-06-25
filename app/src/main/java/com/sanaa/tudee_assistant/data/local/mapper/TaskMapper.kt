@@ -41,3 +41,7 @@ fun AddTaskRequest.toLocalDto(): TaskLocalDto = TaskLocalDto(
     categoryId = categoryId,
     createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
 )
+fun List<TaskLocalDto>.toDomainList(): List<Task> {
+    return this.map { task ->
+        task.toDomain() }
+}

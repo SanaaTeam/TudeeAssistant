@@ -41,6 +41,11 @@ class TaskServiceImpl(
             throw FailedToDeleteException("Failed to delete task")
         }
     }
+    override suspend fun deleteTaskByCategoryId(categoryId: Int) {
+        if (taskDao.deleteTaskByCategoryId(categoryId) <= 0) {
+            throw FailedToDeleteException("Failed to delete task")
+        }
+    }
 
     override suspend fun deleteAllTasks() {
         if (taskDao.deleteAllTasks() <= 0) {

@@ -102,6 +102,5 @@
     <string name="categories">المجموعات</string>
     <string name="unknown_error">خطاء غير معروف</string>
     <string name="task_added_successfully">تم اضافة المهمة بنجاح</string>
-    <string name="no_tasks_in">لا توجد مهام في فئة %1$s!</string>
     <string name="category_updated_successfully"> تم تحدّثت الفئة بنجاح</string>
 </resources>

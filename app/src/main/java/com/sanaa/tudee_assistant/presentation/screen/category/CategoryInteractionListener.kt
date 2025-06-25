@@ -10,4 +10,5 @@ interface CategoryInteractionListener {
     fun onCategoryTitleChange(title: String)
     fun onCategoryImageSelected(uri: Uri?)
     fun isFormValid(): Boolean
+    fun onShowSnackbar()
 }

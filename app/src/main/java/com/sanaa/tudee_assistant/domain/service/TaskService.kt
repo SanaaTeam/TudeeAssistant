@@ -16,4 +16,5 @@ interface TaskService {
     fun getTasksByStatus(status: Task.TaskStatus): Flow<List<Task>>
     fun getTasksByDueDate(dueDate: LocalDate): Flow<List<Task>>
     fun getTaskCountByCategoryId(categoryId: Int): Flow<Int>
+    fun getTaskCountsGroupedByCategoryId(): Flow<Map<Int, Int>>
 }

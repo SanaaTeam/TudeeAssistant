@@ -1,5 +1,10 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -42,26 +48,22 @@ import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
-import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeSnackBar
+import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortMonthName
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-
 import java.util.Locale
 
 @Composable
@@ -86,7 +88,6 @@ fun TasksScreenContent(
     interactionListener: TaskInteractionListener,
     modifier: Modifier = Modifier,
 ) {
-
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     var showEditTaskBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -100,6 +101,14 @@ fun TasksScreenContent(
             )
         )
     }
+
+    LaunchedEffect(state.snackBarState) {
+        if (state.snackBarState.isVisible) {
+            delay(3000)
+            interactionListener.onHideSnakeBar()
+        }
+    }
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -240,8 +249,8 @@ fun TasksScreenContent(
                         taskToEdit = task
                         showEditTaskBottomSheet = true
                     },
-                    onMoveStatusSuccess = {interactionListener.handleOnMoveToStatusSuccess()},
-                    onMoveStatusFail = {interactionListener.handleOnMoveToStatusFail()},
+                    onMoveStatusSuccess = { interactionListener.handleOnMoveToStatusSuccess() },
+                    onMoveStatusFail = { interactionListener.handleOnMoveToStatusFail() },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
@@ -308,24 +317,15 @@ fun TasksScreenContent(
             iconRes = R.drawable.note_add
         )
 
-        LaunchedEffect(state.successMessage) {
-            state.successMessage?.let {
-                snackBarHostState.showSnackbar(it)
-                interactionListener.onShowSnackbar()
-            }
+        AnimatedVisibility(
+            visible = state.snackBarState.isVisible,
+            modifier = Modifier
+                .statusBarsPadding()
+                .align(Alignment.TopCenter),
+            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
+            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+        ) {
+            SnackBar(state = state.snackBarState)
         }
-
-
-
-        LaunchedEffect(state.successMessage) {
-            state.errorMessage?.let {
-                snackBarHostState.showSnackbar(it)
-                interactionListener.onShowSnackbar()
-            }
-        }
-
-        TudeeSnackBar(
-            snackBarHostState = snackBarHostState, isError = state.errorMessage != null
-        )
     }
 }

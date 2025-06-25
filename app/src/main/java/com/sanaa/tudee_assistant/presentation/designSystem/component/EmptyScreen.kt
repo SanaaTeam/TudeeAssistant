@@ -41,7 +41,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 fun EmptyScreen(
     modifier: Modifier = Modifier,
     title: String = stringResource(R.string.no_task_today),
-    caption: String = stringResource(R.string.tap_to_add_task),
+    caption: String? = stringResource(R.string.tap_to_add_task),
 ) {
 
     var visibleCircular1 by remember { mutableStateOf(false) }
@@ -74,7 +74,11 @@ fun EmptyScreen(
                 visible = visibleMessageBox,
                 enter = fadeIn(animationSpec = tween(300))
             ) {
-                MessageBox(modifier = Modifier.align(Alignment.TopEnd), title = title, caption = caption)
+                MessageBox(
+                    modifier = Modifier.align(Alignment.TopEnd),
+                    title = title,
+                    caption = caption
+                )
             }
         }
     }
@@ -173,7 +177,7 @@ fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Bool
 @Composable
 fun MessageBox(
     title: String,
-    caption: String,
+    caption: String?,
     modifier: Modifier = Modifier
 ) {
 
@@ -211,15 +215,16 @@ fun MessageBox(
                     top = Theme.dimension.small
                 )
             )
-            Text(
-                text = caption,
-                style = Theme.textStyle.body.small,
-                color = Theme.color.hint,
-                modifier = Modifier.padding(
-                    start = Theme.dimension.regular,
-                    top = Theme.dimension.extraSmall
+            if (caption != null)
+                Text(
+                    text = caption,
+                    style = Theme.textStyle.body.small,
+                    color = Theme.color.hint,
+                    modifier = Modifier.padding(
+                        start = Theme.dimension.regular,
+                        top = Theme.dimension.extraSmall
+                    )
                 )
-            )
         }
     }
 }
@@ -228,7 +233,12 @@ fun MessageBox(
 @Composable
 private fun PreviewEmptyScreen() {
     TudeeTheme(isDark = false) {
-        Box(modifier = Modifier.fillMaxSize().background(Theme.color.surface), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Theme.color.surface),
+            contentAlignment = Alignment.Center
+        ) {
             EmptyScreen()
         }
     }

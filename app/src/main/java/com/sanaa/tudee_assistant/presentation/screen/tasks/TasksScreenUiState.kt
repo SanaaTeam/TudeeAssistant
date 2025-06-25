@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks
 
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -11,8 +12,7 @@ import kotlinx.datetime.toLocalDateTime
 
 data class TasksScreenUiState(
     val currentDateTasks: List<TaskUiState> = emptyList(),
-    val errorMessage: String? = null,
-    val successMessage: String? = null,
+    val snackBarState: SnackBarState = SnackBarState(),
     val showAddTaskBottomSheet: Boolean = false,
     val showEditTaskBottomSheet: Boolean = false,
     val showTaskDetailsBottomSheet: Boolean = false,

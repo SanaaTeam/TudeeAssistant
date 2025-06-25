@@ -82,4 +82,11 @@ class TaskServiceImpl(
         return taskDao.getTaskCountByCategoryId(categoryId)
     }
 
+    override fun getTaskCountsGroupedByCategoryId(): Flow<Map<Int, Int>> {
+        return taskDao.getTaskCountsGroupedByCategoryId()
+            .map { list ->
+                list.associate { it.categoryId to it.count }
+            }
+    }
+
 }

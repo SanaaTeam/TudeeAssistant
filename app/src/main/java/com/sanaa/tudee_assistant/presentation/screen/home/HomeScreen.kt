@@ -50,18 +50,16 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
-import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
 import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
+import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskCountByStatusCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
-import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBar
-import com.sanaa.tudee_assistant.presentation.designSystem.component.snackBar.SnackBarState
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.SnackBarStatus
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
@@ -93,13 +91,11 @@ private fun HomeScreenContent(
     val scrollState = rememberLazyListState()
     var showEditTaskBottomSheet by remember { mutableStateOf(false) }
     var isScrolled by remember { mutableStateOf(false) }
-    var snackBarDataToShow by remember { mutableStateOf<SnackBarState?>(null) }
 
     LaunchedEffect(state.snackBarState) {
-        if (state.snackBarState != null) {
-            snackBarDataToShow = state.snackBarState
+        if (state.snackBarState.isVisible) {
             delay(3000)
-            interactionsListener.onSnackBarShown()
+            interactionsListener.onHideSnackBar()
         }
     }
     LaunchedEffect(scrollState) {
@@ -172,31 +168,22 @@ private fun HomeScreenContent(
                     //Todo
                 },
                 onMoveStatusSuccess = {
-                //Todo}
+                    //Todo}
                 },
                 onMoveStatusFail = {
-                //Todo}
+                    //Todo}
                 }
             )
         }
 
         AnimatedVisibility(
-            visible = state.snackBarState != null,
+            visible = state.snackBarState.isVisible,
             modifier = Modifier
                 .align(Alignment.TopCenter),
             enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
             exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
         ) {
-            snackBarDataToShow?.let { data ->
-                val (message, status) = when (data) {
-                    is SnackBarState.Success -> Pair(data.message, SnackBarStatus.SUCCESS)
-                    is SnackBarState.Error -> Pair(data.message, SnackBarStatus.ERROR)
-                }
-                SnackBar(
-                    message = message,
-                    snackBarStatus = status
-                )
-            }
+            SnackBar(state = state.snackBarState)
         }
     }
 }
@@ -488,7 +475,7 @@ fun PreviewHomeScreen() {
             override fun onDismissTaskDetails() {}
             override fun onAddTaskSuccess() {}
             override fun onAddTaskHasError(errorMessage: String) {}
-            override fun onSnackBarShown() {}
+            override fun onHideSnackBar() {}
         }
 
         HomeScreenContent(

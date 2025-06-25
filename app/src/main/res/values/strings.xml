@@ -80,6 +80,7 @@
     <string name="edit_category">Edit category</string>
     <string name="delete_category">Delete category</string>
     <string name="are_you_sure_to_continue">Are you sure to continue?</string>
+    <string name="no_tasks_in">No tasks in %1$s category!</string>
     <string name="Adoration">Adoration</string>
     <string name="Agriculture">Agriculture</string>
     <string name="Budgeting">Budgeting</string>
@@ -97,4 +98,10 @@
     <string name="Shopping">Shopping</string>
     <string name="Traveling">Traveling</string>
     <string name="Work">Work</string>
+    <string name="category_added_successfully">Category added successfully</string>
+    <string name="successfully_deleted_category">Successfully deleted category</string>
+    <string name="error_deleting_category">Error deleting category</string>
+    <string name="categories">Categories</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="task_added_successfully">Task added successfully!</string>
 </resources>

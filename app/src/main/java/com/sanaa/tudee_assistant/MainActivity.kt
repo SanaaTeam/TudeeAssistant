@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
 
             TudeeTheme(isDark) {
                 if (showSplash) {
-                    SplashScreen(isDark) // Your custom composable splash
+                    SplashScreen(isDark)
                 } else {
                     TudeeApp()
                 }

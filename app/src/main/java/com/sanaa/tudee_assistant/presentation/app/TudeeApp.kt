@@ -75,7 +75,10 @@ private fun AppNavigation(
         }
 
         composable<CategoryTasksScreenRoute> {
-            CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id, modifier = modifier)
+            CategoryTaskScreen(
+                categoryId = it.toRoute<CategoryTasksScreenRoute>().id,
+                modifier = modifier
+            )
         }
     }
 }

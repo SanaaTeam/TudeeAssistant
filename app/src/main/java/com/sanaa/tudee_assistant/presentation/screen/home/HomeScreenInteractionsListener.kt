@@ -6,7 +6,7 @@ interface HomeScreenInteractionsListener {
     fun onToggleColorTheme()
     fun onAddTaskSuccess()
     fun onAddTaskHasError(errorMessage: String)
-    fun onSnackBarShown()
+    fun onHideSnackBar()
     fun onTaskClick(taskUiState: TaskUiState)
     fun onDismissTaskDetails()
 }

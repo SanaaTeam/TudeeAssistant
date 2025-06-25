@@ -1,24 +1,23 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 data class CategoryTaskScreenUiState(
     val isLoading: Boolean = false,
-    val categoryId: Int = 1,
-    val categoryName: String = "",
-    val categoryImagePath: String = "",
-    val isDefault: Boolean = true,
-    val todoTasks: List<TaskUiState> = emptyList(),
-    val inProgressTasks: List<TaskUiState> = emptyList(),
-    val doneTasks: List<TaskUiState> = emptyList(),
-    val error: String? = null
-) {
-    val todoTasksCount: Int get() = todoTasks.size
-    val inProgressTasksCount: Int get() = inProgressTasks.size
-    val doneTasksCount: Int get() = doneTasks.size
-    val totalTasksCount: Int get() = todoTasksCount + inProgressTasksCount + doneTasksCount
-
-    fun isEmptyState(): Boolean = totalTasksCount == 0 && !isLoading && error == null
-    fun hasError(): Boolean = error != null
-    fun canEdit(): Boolean = !isDefault && categoryId != -1
-}
+    val error: String? = null,
+    val success: String? = null,
+    val currentCategory: CategoryUiState = CategoryUiState(),
+    val showDeleteCategoryBottomSheet: Boolean = false,
+    val navigateBackToCategoryList: Boolean = false,
+    val showEditCategoryBottomSheet: Boolean = false,
+    val currentSelectedTaskStatus: TaskUiStatus = TaskUiStatus.TODO,
+    val selectedTapIndex: Int = 1,
+    val allCategoryTasks: List<TaskUiState> = emptyList(),
+    val filteredTasks: List<TaskUiState> = emptyList(),
+    val editCategory: CategoryUiState = CategoryUiState(),
+    val selectedTask: TaskUiState? = null,
+    val showTaskDetailsBottomSheet: Boolean = false,
+    val showEditTaskBottomSheet: Boolean = false,
+    )

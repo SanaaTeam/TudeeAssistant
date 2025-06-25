@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.utils.drawDashedBorder
@@ -42,7 +43,8 @@ fun UploadBox(
     modifier: Modifier = Modifier,
     strokeColor: Color = Theme.color.stroke,
     onImageSelected: (Uri?) -> Unit,
-    cornerRadius: Dp = Theme.dimension.medium
+    cornerRadius: Dp = Theme.dimension.medium,
+    initialImagePath: String? = null
 ) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(
@@ -58,6 +60,7 @@ fun UploadBox(
         launcher = launcher,
         onImageSelected = onImageSelected,
         cornerRadius = cornerRadius,
+        defaultImagePath = initialImagePath
     )
 }
 
@@ -67,6 +70,7 @@ fun UploadBoxContent(
     modifier: Modifier = Modifier,
     launcher: ManagedActivityResultLauncher<String, Uri?>,
     onImageSelected: (Uri?) -> Unit,
+    defaultImagePath: String? = null,
     strokeColor: Color = Theme.color.stroke,
     cornerRadius: Dp = Theme.dimension.medium
 ) {
@@ -83,7 +87,7 @@ fun UploadBoxContent(
         imageUri?.let { uri ->
             SelectedImageView(strokeColor, cornerRadius, uri, launcher)
         } ?: run {
-            UploadPlaceholder()
+            UploadPlaceholder(defaultImagePath)
         }
     }
 }
@@ -102,6 +106,7 @@ fun SelectedImageView(
         contentAlignment = Alignment.Center,
 
         ) {
+
         AsyncImage(
             model = imageUri,
             contentDescription = "Selected Image",
@@ -125,23 +130,38 @@ fun SelectedImageView(
 }
 
 @Composable
-fun UploadPlaceholder() {
+fun UploadPlaceholder(defaultImagePath: String? = null) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource(R.drawable.uplaoad_image),
-            contentDescription = "Upload Icon",
-            modifier = Modifier.size(Theme.dimension.large),
-        )
-
-        Text(
-            text = stringResource(R.string.upload),
-            style = Theme.textStyle.label.medium,
-            color = Theme.color.hint,
-            modifier = Modifier.padding(top = Theme.dimension.small),
-        )
+        if (defaultImagePath != null && defaultImagePath.isNotEmpty() == true) {
+            Box(
+                contentAlignment = Alignment.Center
+            ) {
+                CategoryThumbnail(
+                    modifier = Modifier.fillMaxSize(),
+                    imagePath = defaultImagePath
+                )
+                Image(
+                    painter = painterResource(R.drawable.edit_icon),
+                    contentDescription = "Edit Icon",
+                    modifier = Modifier.size(Theme.dimension.extraLarge),
+                )
+            }
+        }else {
+            Image(
+                painter = painterResource(R.drawable.uplaoad_image),
+                contentDescription = "Upload Icon",
+                modifier = Modifier.size(Theme.dimension.large),
+            )
+            Text(
+                text = stringResource(R.string.upload),
+                style = Theme.textStyle.label.medium,
+                color = Theme.color.hint,
+                modifier = Modifier.padding(top = Theme.dimension.small),
+            )
+        }
     }
 }
 

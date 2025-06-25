@@ -36,6 +36,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -89,8 +90,11 @@ private fun HomeScreenContent(
     interactionsListener: HomeScreenInteractionsListener,
 ) {
     val scrollState = rememberLazyListState()
+    var showAddTaskBottomSheet by remember { mutableStateOf(false) }
     var showEditTaskBottomSheet by remember { mutableStateOf(false) }
     var isScrolled by remember { mutableStateOf(false) }
+    var taskToEdit by rememberSaveable { mutableStateOf<TaskUiState?>(null) }
+
 
     LaunchedEffect(state.snackBarState) {
         if (state.snackBarState.isVisible) {
@@ -143,18 +147,35 @@ private fun HomeScreenContent(
                 .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
             iconRes = R.drawable.note_add,
         ) {
-            showEditTaskBottomSheet = true
+            showAddTaskBottomSheet = true
         }
 
-        if (showEditTaskBottomSheet) {
+        if (showAddTaskBottomSheet) {
             AddEditTaskScreen(
                 isEditMode = false,
+                onDismiss = {
+                    showAddTaskBottomSheet = false
+                },
+                onSuccess = {
+                    showAddTaskBottomSheet = false
+                    interactionsListener.snackBarSuccess(context.getString(R.string.task_added_successfully))
+                },
+                onError = { errorMessage ->
+                    interactionsListener.snackBarError(errorMessage)
+                }
+            )
+        }
+        if (showEditTaskBottomSheet) {
+            AddEditTaskScreen(
+                isEditMode = true,
+                taskToEdit = taskToEdit,
                 onDismiss = {
                     showEditTaskBottomSheet = false
                 },
                 onSuccess = {
                     showEditTaskBottomSheet = false
-                    interactionsListener.snackBarSuccess(context.getString(R.string.task_added_successfully))
+                    interactionsListener.onDismissTaskDetails()
+                    interactionsListener.snackBarSuccess(context.getString(R.string.task_edited_successfully))
                 },
                 onError = { errorMessage ->
                     interactionsListener.snackBarError(errorMessage)
@@ -166,7 +187,8 @@ private fun HomeScreenContent(
                 selectedTaskId = state.selectedTask.id,
                 onDismiss = { interactionsListener.onDismissTaskDetails() },
                 onEditClick = {
-                    //Todo
+                    taskToEdit = it
+                    showEditTaskBottomSheet = true
                 },
                 onMoveStatusSuccess = {
                     interactionsListener.snackBarSuccess(context.getString(R.string.task_status_update_success))

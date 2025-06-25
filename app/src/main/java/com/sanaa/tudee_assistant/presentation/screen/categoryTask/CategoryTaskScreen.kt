@@ -1,7 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,13 +20,11 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
-import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category.AddEditCategoryBottomSheet
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTaskScreenContainer
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.EmptyCategoryTasksComponent
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
-import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import org.koin.androidx.compose.koinViewModel
 
@@ -39,6 +36,8 @@ fun CategoryTaskScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val navController = AppNavigation.app
+
+
     LaunchedEffect(categoryId) {
         categoryId?.let {
             viewModel.loadCategoryTasks(it)
@@ -53,12 +52,7 @@ fun CategoryTaskScreen(
         state = state,
         listener = viewModel,
         isValidForm = viewModel::isValidForm,
-        onBackClick = {
-            navController.popBackStack(
-                route = MainScreenRoute,
-                inclusive = false
-            )
-        },
+        onBackClick = { navController.popBackStack() },
         modifier = modifier.fillMaxSize()
     )
 }
@@ -72,19 +66,10 @@ private fun CategoryTaskScreenContent(
     modifier: Modifier = Modifier,
 ) {
 
-    val snackBarState = LocalSnackBarState.current
-
-    val categoryName = DataProvider.getStringResourceByName(
+    val categoryName = if (state.currentCategory.isDefault) DataProvider.getStringResourceByName(
         state.currentCategory.name,
         LocalContext.current
-    )
-
-    LaunchedEffect(state.snackBarState) {
-        if (state.snackBarState.isVisible) {
-            snackBarState.value = state.snackBarState
-            listener.onHideSnackBar()
-        }
-    }
+    ) else state.currentCategory.name
 
     CategoryTaskScreenContainer(
         topBar = {
@@ -98,51 +83,50 @@ private fun CategoryTaskScreenContent(
         modifier = modifier
 
     ) {
-        Box {
-            TudeeScrollableTabs(
-                tabs = listOf(
-                    TabItem(
-                        label = stringResource(R.string.in_progress_task_status),
-                        count = state.filteredTasks.size,
-                        content = {
-                            if (state.filteredTasks.isEmpty()) {
-                                EmptyCategoryTasksComponent(categoryName)
-                            } else {
-                                TasksListComponent(
-                                    tasks = state.filteredTasks,
-                                    category = state.currentCategory,
-                                    onTaskClicked = listener::onTaskClicked
-                                )
-                            }
-                        }),
-                    TabItem(
-                        label = stringResource(R.string.todo_task_status),
-                        count = state.filteredTasks.size,
-                        content = {
-                            if (state.filteredTasks.isEmpty()) {
-                                EmptyCategoryTasksComponent(categoryName)
-                            } else {
-                                TasksListComponent(
-                                    tasks = state.filteredTasks,
-                                    category = state.currentCategory,
-                                    onTaskClicked = listener::onTaskClicked
-                                )
-                            }
-                        }),
-                    TabItem(
-                        label = stringResource(R.string.done_task_status),
-                        count = state.filteredTasks.size,
-                        content = {
-                            if (state.filteredTasks.isEmpty()) {
-                                EmptyCategoryTasksComponent(categoryName)
-                            } else {
-                                TasksListComponent(
-                                    tasks = state.filteredTasks,
-                                    category = state.currentCategory,
-                                    onTaskClicked = listener::onTaskClicked
-                                )
-                            }
-                        }),
+        TudeeScrollableTabs(
+            tabs = listOf(
+                TabItem(
+                    label = stringResource(R.string.in_progress_task_status),
+                    count = state.filteredTasks.size,
+                    content = {
+                        if (state.filteredTasks.isEmpty()) {
+                            EmptyCategoryTasksComponent(categoryName)
+                        } else {
+                            TasksListComponent(
+                                tasks = state.filteredTasks,
+                                category = state.currentCategory,
+                                onTaskClicked = listener::onTaskClicked
+                            )
+                        }
+                    }),
+                TabItem(
+                    label = stringResource(R.string.todo_task_status),
+                    count = state.filteredTasks.size,
+                    content = {
+                        if (state.filteredTasks.isEmpty()) {
+                            EmptyCategoryTasksComponent(categoryName)
+                        } else {
+                            TasksListComponent(
+                                tasks = state.filteredTasks,
+                                category = state.currentCategory,
+                                onTaskClicked = listener::onTaskClicked
+                            )
+                        }
+                    }),
+                TabItem(
+                    label = stringResource(R.string.done_task_status),
+                    count = state.filteredTasks.size,
+                    content = {
+                        if (state.filteredTasks.isEmpty()) {
+                            EmptyCategoryTasksComponent(categoryName)
+                        } else {
+                            TasksListComponent(
+                                tasks = state.filteredTasks,
+                                category = state.currentCategory,
+                                onTaskClicked = listener::onTaskClicked
+                            )
+                        }
+                    }),
 
                     ),
                 selectedTabIndex = state.selectedTapIndex,
@@ -222,8 +206,7 @@ private fun CategoryTaskScreenPreview() {
                 override fun onTaskEditDismiss() {}
                 override fun onHideSnackBar() {}
                 override fun onTaskDetailsDismiss() {}
-                override fun onTaskEditSuccess() {}
-                override fun onMoveStatusSuccess() {}
+
             },
             isValidForm = { true },
             onBackClick = {},

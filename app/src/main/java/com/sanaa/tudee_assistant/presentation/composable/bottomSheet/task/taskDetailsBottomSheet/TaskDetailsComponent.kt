@@ -29,6 +29,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -130,7 +131,13 @@ fun TaskDetailsComponent(
                                 lable = changeStatusTo,
                                 onClick = {
                                     interactionListener.onMoveTaskToAnotherStatus(
-                                        onMoveStatusSuccess, onMoveStatusFail
+                                        onMoveStatusSuccess = { it ->
+                                            onMoveStatusSuccess()
+                                            if (it == TaskUiStatus.DONE) {
+                                                onDismiss()
+                                            }
+                                        },
+                                        onMoveStatusFail = onMoveStatusFail
                                     )
                                 },
                                 modifier = Modifier.weight(1f)

@@ -88,10 +88,10 @@ class CategoryTaskViewModel(
 
                 }
             },
-            onError = { onError(message = stringProvider.getString(R.string.error_deleting_category)) },
+            onError = { onError(message = stringProvider.deleting_category_error) },
             onSuccess = {
                 onSuccess(
-                    message = stringProvider.getString(R.string.successfully_deleted_category),
+                    message = stringProvider.deleted_category_successfully,
                     updateState = {
                         it.copy(
                             showDeleteCategoryBottomSheet = false,

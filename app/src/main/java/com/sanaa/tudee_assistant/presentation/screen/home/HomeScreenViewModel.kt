@@ -71,9 +71,8 @@ class HomeScreenViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState.getInstance(
-                    stringProvider.getString(
-                        R.string.task_added_successfully
-                    )
+                    stringProvider.task_added_success
+
                 )
             )
         }
@@ -99,7 +98,7 @@ class HomeScreenViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(
-                    exception.message ?: stringProvider.getString(R.string.unknown_error)
+                    exception.message ?: stringProvider.unknown_error
                 )
             )
         }

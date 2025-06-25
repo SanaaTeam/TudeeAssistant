@@ -1,10 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -50,14 +44,13 @@ import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteCompo
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
-import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
+import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortMonthName
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
@@ -89,7 +82,6 @@ fun TasksScreenContent(
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
     var showEditTaskBottomSheet by rememberSaveable { mutableStateOf(false) }
     var taskToEdit by rememberSaveable { mutableStateOf<TaskUiState?>(null) }
     var showDialog by remember { mutableStateOf(false) }
@@ -102,9 +94,10 @@ fun TasksScreenContent(
         )
     }
 
+    val snackBarState = LocalSnackBarState.current
     LaunchedEffect(state.snackBarState) {
         if (state.snackBarState.isVisible) {
-            delay(3000)
+            snackBarState.value = state.snackBarState
             interactionListener.onHideSnakeBar()
         }
     }
@@ -266,11 +259,7 @@ fun TasksScreenContent(
                     onDismiss = { showAddTaskBottomSheet = false },
                     onSuccess = {
                         showAddTaskBottomSheet = false
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = "Task added successfully", withDismissAction = true
-                            )
-                        }
+                        interactionListener.onAddTaskSuccess()
                     },
                     onError = { errorMessage ->
                         coroutineScope.launch {
@@ -288,11 +277,7 @@ fun TasksScreenContent(
                 }, onSuccess = {
                     showEditTaskBottomSheet = false
                     taskToEdit = null
-                    coroutineScope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = "Task updated successfully", withDismissAction = true
-                        )
-                    }
+                    interactionListener.onEditTaskSuccess()
                 }, onError = { errorMessage ->
                     coroutineScope.launch {
                         snackBarHostState.showSnackbar(
@@ -309,23 +294,9 @@ fun TasksScreenContent(
                 .align(Alignment.BottomEnd)
                 .padding(end = 10.dp, bottom = 12.dp),
             onClick = {
-                coroutineScope.launch {
-                    snackBarHostState.currentSnackbarData?.dismiss()
-                }
                 showAddTaskBottomSheet = true
             },
             iconRes = R.drawable.note_add
         )
-
-        AnimatedVisibility(
-            visible = state.snackBarState.isVisible,
-            modifier = Modifier
-                .statusBarsPadding()
-                .align(Alignment.TopCenter),
-            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
-            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
-        ) {
-            SnackBar(state = state.snackBarState)
-        }
     }
 }

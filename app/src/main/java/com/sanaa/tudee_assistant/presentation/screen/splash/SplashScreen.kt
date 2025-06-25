@@ -15,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -27,7 +28,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(isDarkTheme: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -39,7 +40,7 @@ fun SplashScreen() {
                 .background(Theme.color.overlay)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.background_ellipse),
+                painter = painterResource(id = if (isDarkTheme) R.drawable.ellipse_background_dark else R.drawable.ellipse_background),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -66,7 +67,7 @@ fun SplashScreen() {
 
             offsets.forEach { offset ->
                 Text(
-                    text = "Tudee",
+                    text = stringResource(R.string.logoName),
                     fontSize = 48.sp,
                     fontWeight = FontWeight.W400,
                     fontFamily = CherryBomb,
@@ -79,7 +80,7 @@ fun SplashScreen() {
             }
 
             Text(
-                text = "Tudee",
+                text = stringResource(R.string.logoName),
                 fontSize = 48.sp,
                 fontWeight = FontWeight.W400,
                 fontFamily = CherryBomb,
@@ -93,7 +94,8 @@ fun SplashScreen() {
 @Preview()
 @Composable
 private fun SplashScreenPreview() {
-    TudeeTheme(true) {
-        SplashScreen()
+    val isDarkTheme = true
+    TudeeTheme(isDarkTheme) {
+          SplashScreen(isDarkTheme)
     }
 }

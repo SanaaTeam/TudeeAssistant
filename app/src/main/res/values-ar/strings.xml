@@ -14,8 +14,8 @@
     <string name="add">إضافة</string>
     <string name="clear">مسح</string>
     <string name="ok">موافق</string>
-    <string name="tasks">مهام</string>
 
+    <string name="tasks">المهام</string>
     <string name="todo_task_status">للقيام به</string>
     <string name="in_progress_task_status">قيد التنفيذ</string>
     <string name="done_task_status">منجز</string>
@@ -23,12 +23,12 @@
     <string name="snack_bar_success">تم بنجاح.</string>
     <string name="loading_spinner">جاري التحميل</string>
     <string name="skip">تخطي</string>
-    <string name="onboarding_title_0">تشعر بالإرهاق من كثرة المهام؟\n</string>
-    <string name="onboarding_desc_0">دعنا نُعيد بعض النظام إلى الفوضى.\nتودي هنا ليساعدك على الترتيب والتخطيط والتنفس براحة.</string>
-    <string name="onboarding_title_1">أوه لا! تؤجل المهام مجددًا؟\n</string>
-    <string name="onboarding_desc_1">تودي ليس غاضبًا… فقط يشعر بقليل من خيبة الأمل.\nلنعد إلى المسار الصحيح معًا.</string>
+    <string name="onboarding_title_0">تشعر بالإرهاق من كثرة المهام؟</string>
+    <string name="onboarding_desc_0">دعنا نُعيد بعض النظام إلى الفوضى. تادي هنا ليساعدك على الترتيب والتخطيط والتنفس براحة.</string>
+    <string name="onboarding_title_1">أوه لا! تؤجل المهام مجددًا؟</string>
+    <string name="onboarding_desc_1">تادي ليس غاضبًا… فقط يشعر بقليل من خيبة الأمل. لنعد إلى المسار الصحيح معًا.</string>
     <string name="onboarding_title_2">لننجز المهام ونحتفل سويًا.</string>
-    <string name="onboarding_desc_2">التقدّم هو تقدّم. تودي سيحتفل بكل إنجاز، كبيرًا كان أو صغيرًا.</string>
+    <string name="onboarding_desc_2">التقدّم هو تقدّم. تادي سيحتفل بكل إنجاز، كبيرًا كان أو صغيرًا.</string>
     <string name="delete_task_title">حذف المهمة</string>
     <string name="delete_subtitle">هل أنت متأكد من المتابعة؟</string>
     <string name="delete">حذف</string>
@@ -44,8 +44,8 @@
     <string name="today">اليوم</string>
     <string name="overview">نظرة عامة</string>
     <string name="okay_status_message">لقد أنجزت * من أصل # مهام واصل التقدم!</string>
-    <string name="good_status_message">أنت تقوم بعمل رائع!!!تودي فخور بك.</string>
-    <string name="bad_status_message">أنت فقط تتصفح، لا تعمل. تودي يراقب. عد للعمل!</string>
+    <string name="good_status_message">أنت تقوم بعمل رائع!!! تادي فخور بك.</string>
+    <string name="bad_status_message">أنت فقط تتصفح، لا تعمل. تادي يراقب. عد للعمل!</string>
     <string name="poor_status_message">املأ يومك بشيء رائع.</string>
     <string name="okay_status_message_title">واصل العمل!</string>
     <string name="good_status_message_title">تادا!</string>
@@ -75,7 +75,6 @@
     <string name="task_update_success">تم تعديل المهمة بنجاح.</string>
     <string name="task_status_update_success">تم تعديل ح</string>
     <string name="task_delete_success">تم حذف المهمة بنجاح</string>
-
 
     <string name="edit_category">تعديل الفئة</string>
     <string name="delete_category">حذف الفئة</string>

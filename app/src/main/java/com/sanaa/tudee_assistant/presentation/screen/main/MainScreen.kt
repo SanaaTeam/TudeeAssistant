@@ -34,10 +34,12 @@ fun MainScreen(
     startDestination: Any,
     onStatusBarColor: (Color) -> Unit,
     onUpdateSnackBar: (SnackBarState) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val screenNavController = rememberNavController()
     val navBackStackEntry by screenNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
 
     val systemUiController = rememberSystemUiController()
     val color = Theme.color.surfaceHigh
@@ -47,7 +49,7 @@ fun MainScreen(
         )
     }
 
-    Column {
+    Column(modifier = modifier) {
         CompositionLocalProvider(LocalMainNavController provides screenNavController) {
             NavHost(
                 modifier = Modifier.weight(1f),

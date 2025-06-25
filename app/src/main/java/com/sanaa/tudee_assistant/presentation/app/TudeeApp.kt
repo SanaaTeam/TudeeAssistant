@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
@@ -88,12 +89,13 @@ private fun AppNavigation(
     onUpdateSnackBar: (SnackBarState) -> Unit,
 ) {
     NavHost(
-        modifier = modifier,
+        modifier = Modifier,
         navController = AppNavigation.app,
         startDestination = startDestination
     ) {
         composable<OnBoardingScreenRoute> {
-            OnBoardingScreen()
+            onChangeStatusBarColor(Theme.color.surface)
+            OnBoardingScreen(modifier = modifier)
         }
 
         composable<MainScreenRoute> {
@@ -101,6 +103,7 @@ private fun AppNavigation(
                 onUpdateSnackBar = onUpdateSnackBar,
                 startDestination = HomeScreenRoute,
                 onStatusBarColor = onChangeStatusBarColor,
+                modifier = modifier
             )
         }
 
@@ -108,6 +111,7 @@ private fun AppNavigation(
             CategoryTaskScreen(
                 onUpdateSnackBarState = onUpdateSnackBar,
                 categoryId = it.toRoute<CategoryTasksScreenRoute>().id,
+                modifier = modifier
             )
         }
     }

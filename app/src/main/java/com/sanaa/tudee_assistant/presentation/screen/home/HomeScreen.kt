@@ -110,6 +110,7 @@ private fun HomeScreenContent(
         }
     }
 
+    val context = LocalContext.current
     Box(Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -153,10 +154,10 @@ private fun HomeScreenContent(
                 },
                 onSuccess = {
                     showEditTaskBottomSheet = false
-                    interactionsListener.onAddTaskSuccess()
+                    interactionsListener.snackBarSuccess(context.getString(R.string.task_added_successfully))
                 },
                 onError = { errorMessage ->
-                    interactionsListener.onAddTaskHasError(errorMessage)
+                    interactionsListener.snackBarError(errorMessage)
                 }
             )
         }
@@ -168,10 +169,10 @@ private fun HomeScreenContent(
                     //Todo
                 },
                 onMoveStatusSuccess = {
-                    //Todo}
+                    interactionsListener.snackBarSuccess(context.getString(R.string.task_status_update_success))
                 },
                 onMoveStatusFail = {
-                    //Todo}
+                    interactionsListener.snackBarSuccess(context.getString(R.string.task_was_not_updated))
                 }
             )
         }
@@ -471,10 +472,10 @@ fun PreviewHomeScreen() {
                 isDark = isDark.not()
             }
 
+            override fun snackBarSuccess(message: String) {}
             override fun onTaskClick(taskUiState: TaskUiState) {}
             override fun onDismissTaskDetails() {}
-            override fun onAddTaskSuccess() {}
-            override fun onAddTaskHasError(errorMessage: String) {}
+            override fun snackBarError(errorMessage: String) {}
             override fun onHideSnackBar() {}
         }
 

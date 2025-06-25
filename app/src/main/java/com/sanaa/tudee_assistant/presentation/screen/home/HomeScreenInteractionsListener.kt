@@ -4,8 +4,8 @@ import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 
 interface HomeScreenInteractionsListener {
     fun onToggleColorTheme()
-    fun onAddTaskSuccess()
-    fun onAddTaskHasError(errorMessage: String)
+    fun snackBarSuccess(message: String)
+    fun snackBarError(errorMessage: String)
     fun onHideSnackBar()
     fun onTaskClick(taskUiState: TaskUiState)
     fun onDismissTaskDetails()

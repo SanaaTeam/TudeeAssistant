@@ -66,12 +66,12 @@ class HomeScreenViewModel(
         }
     }
 
-    override fun onAddTaskSuccess() {
+    override fun snackBarSuccess(message: String) {
         getTasks()
-        _state.update { it.copy(snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.task_added_successfully))) }
+        _state.update { it.copy(snackBarState = SnackBarState.getInstance(message)) }
     }
 
-    override fun onAddTaskHasError(errorMessage: String) {
+    override fun snackBarError(errorMessage: String) {
         _state.update { it.copy(snackBarState = SnackBarState.getErrorInstance(errorMessage)) }
     }
 

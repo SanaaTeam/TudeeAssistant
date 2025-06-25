@@ -104,4 +104,5 @@
     <string name="categories">Categories</string>
     <string name="unknown_error">Unknown Error</string>
     <string name="task_added_successfully">Task added successfully!</string>
+    <string name="task_was_not_updated">task was not updated</string>
 </resources>

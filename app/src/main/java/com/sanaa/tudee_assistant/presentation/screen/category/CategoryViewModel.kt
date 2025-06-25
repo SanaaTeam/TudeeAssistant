@@ -135,10 +135,4 @@ class CategoryViewModel(
                         && (_state.value.newCategory.imagePath.isNotBlank()))
 
     }
-
-    override fun onShowSnackbar() {
-        _state.update {
-            it.copy(successMessage = null, errorMessage = null)
-        }
-    }
 }

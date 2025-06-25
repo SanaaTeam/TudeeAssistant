@@ -23,7 +23,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,7 +63,6 @@ fun CategoryScreenContent(
     onShowTasksByCategoryClick: (Int) -> Unit
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = modifier
@@ -151,14 +149,14 @@ fun CategoryScreenContent(
     LaunchedEffect(state.successMessage) {
         state.successMessage?.let {
             snackBarHostState.showSnackbar(it)
-            listener.onShowSnackbar()
+            listener.onSnackBarShown()
         }
     }
 
     LaunchedEffect(state.successMessage) {
         state.errorMessage?.let {
             snackBarHostState.showSnackbar(it)
-            listener.onShowSnackbar()
+            listener.onSnackBarShown()
         }
     }
 

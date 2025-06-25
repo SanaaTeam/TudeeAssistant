@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.screen.category
 
 import android.net.Uri
 import androidx.core.net.toUri
+import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.TaskService
@@ -9,8 +10,10 @@ import com.sanaa.tudee_assistant.presentation.state.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.state.mapper.toNewCategory
 import com.sanaa.tudee_assistant.presentation.state.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class CategoryViewModel(
     private val categoryService: CategoryService,
@@ -23,34 +26,42 @@ class CategoryViewModel(
         loadCategoriesWithTasksCount()
     }
 
-    private fun loadCategoriesWithTasksCount() {
+    fun loadCategoriesWithTasksCount() {
         _state.update { it.copy(isLoading = true) }
 
         tryToExecute(
-            {
-                val categoryList = categoryService.getCategories().first()
-
-                categoryList.map { category ->
-                    val taskCount = taskService.getTaskCountByCategoryId(category.id).first()
-                    category.toState(taskCount)
-                }
-            }, ::onLoadCategoriesSuccess, ::onLoadCategoriesError
+            function = ::loadCategoriesWithTasksCountOperation,
+            onSuccess = ::onLoadCategoriesWithTasksCountSuccess,
+            onError = ::onLoadCategoriesWithTasksCountError
         )
     }
 
-    private fun onLoadCategoriesSuccess(categories: List<CategoryUiState>) {
-        _state.update {
-            it.copy(
-                allCategories = categories, isLoading = false
-            )
+    private fun loadCategoriesWithTasksCountOperation() = combine(
+        categoryService.getCategories(),
+        taskService.getTaskCountsGroupedByCategoryId()
+    ) { categories, taskCountsMap ->
+        categories.map { category ->
+            val count = taskCountsMap[category.id] ?: 0
+            category.toState(count)
         }
     }
 
-    private fun onLoadCategoriesError(exception: Exception) {
+    private fun onLoadCategoriesWithTasksCountSuccess(flow: Flow<List<CategoryUiState>>) {
+        viewModelScope.launch {
+            flow.collect { mappedList ->
+                _state.update {
+                    it.copy(
+                        allCategories = mappedList,
+                        isLoading = false
+                    )
+                }
+            }
+        }
+    }
+
+    private fun onLoadCategoriesWithTasksCountError(exception: Exception) {
         _state.update {
-            it.copy(
-                isLoading = false, errorMessage = "Failed to load categories "
-            )
+            it.copy(isLoading = false, errorMessage = exception.message)
         }
     }
 
@@ -83,7 +94,7 @@ class CategoryViewModel(
             )
         }
 
-        loadCategoriesWithTasksCount()
+        //     loadCategoriesWithTasksCount()
     }
 
     private fun onAddCategoryError(exception: Exception) {
@@ -123,5 +134,11 @@ class CategoryViewModel(
                         && _state.value.newCategory.name.length <= 24))
                         && (_state.value.newCategory.imagePath.isNotBlank()))
 
+    }
+
+    override fun onShowSnackbar() {
+        _state.update {
+            it.copy(successMessage = null, errorMessage = null)
+        }
     }
 }

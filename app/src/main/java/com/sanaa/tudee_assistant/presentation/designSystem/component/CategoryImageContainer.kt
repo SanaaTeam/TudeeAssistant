@@ -13,12 +13,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 
 @Composable
 fun CategoryImageContainer(
-    modifier: Modifier = Modifier, painter: Painter
+    modifier: Modifier = Modifier, content: @Composable ()-> Unit
 ) {
     Box(
         modifier = modifier
@@ -26,11 +27,7 @@ fun CategoryImageContainer(
             .background(color = Theme.color.surfaceHigh, shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painter,
-            contentDescription = null,
-            modifier = Modifier.size(32.dp),
-        )
+        content()
     }
 }
 
@@ -38,6 +35,8 @@ fun CategoryImageContainer(
 @Composable
 private fun PreviewCategoryImage() {
     TudeeTheme(false) {
-        CategoryImageContainer(painter = painterResource(id = R.drawable.birthday_cake))
+        CategoryImageContainer(){
+            CategoryThumbnail(modifier = Modifier.size(32.dp), imagePath = "file:///android_asset/categories/adoration.png")
+        }
     }
 }

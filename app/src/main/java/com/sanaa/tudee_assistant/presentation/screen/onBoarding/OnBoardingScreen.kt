@@ -40,7 +40,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -51,7 +50,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun OnBoardingScreen(
-    navHostController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: OnBoardingViewModel = koinViewModel<OnBoardingViewModel>(),
 ) {
@@ -61,17 +59,17 @@ fun OnBoardingScreen(
         state = state,
         interactionListener = viewModel,
         modifier = modifier,
-        navHostController = navHostController
     )
 }
 
 @Composable
 private fun OnBoardingScreenContent(
     state: OnBoardingScreenUiState,
-    navHostController: NavHostController,
     interactionListener: OnBoardingScreenInteractionListener,
     modifier: Modifier = Modifier,
 ) {
+    val navController = AppNavigation.app
+    val isInPreview = LocalView.current.isInEditMode
 
     val pagerState = rememberPagerState(
         pageCount = { state.pageList.size },
@@ -114,7 +112,7 @@ private fun OnBoardingScreenContent(
                 OnBoardingPager(
                     pagerState = pagerState,
                     pageList = state.pageList,
-                    onNextPageClick = { interactionListener.onNextPageClick(navHostController) },
+                    onNextPageClick = { interactionListener.onNextPageClick(navController) },
                 )
 
                 PageIndicator(
@@ -133,7 +131,7 @@ private fun OnBoardingScreenContent(
                         color = Theme.color.primary,
                         textAlign = TextAlign.Start,
                         modifier = Modifier
-                            .clickable { interactionListener.onSkipClick(navHostController) }
+                            .clickable { interactionListener.onSkipClick(navController) }
                     )
                 }
             }
@@ -293,7 +291,6 @@ private fun BoardingScreenPreview() {
             OnBoardingScreenContent(
                 state = state,
                 interactionListener = previewActions,
-                navHostController = rememberNavController()
             )
         }
     }

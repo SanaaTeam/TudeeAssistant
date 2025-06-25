@@ -2,6 +2,8 @@ package com.sanaa.tudee_assistant.presentation.utils
 
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
+import android.annotation.SuppressLint
+import android.content.Context
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
@@ -68,6 +70,18 @@ object DataProvider {
             categoryId = 6
         ),
     )
+
+    @SuppressLint("DiscouragedApi")
+    fun getStringResourceByName(resourceName: String, context: Context): String {
+        val context = context
+        val allowedResourceName = resourceName.filter { it.isLetterOrDigit() || it == '_' }
+        val resourceId = context.resources.getIdentifier(allowedResourceName, "string", context.packageName)
+        return if (resourceId != 0) {
+            context.getString(resourceId)
+        } else {
+            resourceName
+        }
+    }
 
     fun getOnBoardingPageContent(): List<OnBoardingPageContentItem> {
         return listOf(

@@ -15,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -66,7 +67,7 @@ fun SplashScreen() {
 
             offsets.forEach { offset ->
                 Text(
-                    text = "Tudee",
+                    text = stringResource(R.string.logoName),
                     fontSize = 48.sp,
                     fontWeight = FontWeight.W400,
                     fontFamily = CherryBomb,
@@ -78,10 +79,8 @@ fun SplashScreen() {
                 )
             }
 
-
-
             Text(
-                text = "Tudee",
+                text = stringResource(R.string.logoName),
                 fontSize = 48.sp,
                 fontWeight = FontWeight.W400,
                 fontFamily = CherryBomb,
@@ -92,11 +91,9 @@ fun SplashScreen() {
     }
 }
 
-
 @Preview()
 @Composable
 private fun SplashScreenPreview() {
-
     TudeeTheme(false) {
           SplashScreen()
     }

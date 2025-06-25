@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,61 +35,46 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeSnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.route.TasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.TaskDetailsComponent
+import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
-import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortMonthName
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
+import java.util.Locale
 
 @Composable
 fun TasksScreen(
     screenRoute: TasksScreenRoute,
     modifier: Modifier = Modifier,
-    viewModel: TaskViewModel = koinViewModel<TaskViewModel>(),
+    viewModel: TaskViewModel = koinViewModel<TaskViewModel>(parameters = { parametersOf(screenRoute.taskStatus) }),
 ) {
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.onTaskStatusSelectedChange(screenRoute.taskStatus)
-    }
-
     TasksScreenContent(
         state = state,
-        onDateSelected = { date -> viewModel.onDueDateChange(date) },
-        onTaskSwipe = { task ->
-            viewModel.onTaskSwipeToDelete(task)
-            false
-        },
-        onTaskClick = viewModel::onTaskClick,
-        onDismissTaskViewDetails = { viewModel.onShowTaskDetailsDialogChange(false) },
-        onMoveToTaskViewDetails = viewModel::onMoveTaskToAnotherStatus,
-        onDeleteClick = viewModel::onTaskDeleted,
-        onDeleteDismiss = viewModel::onTaskDeletedDismiss,
-        onShowSnackBar = viewModel::onSnackBarShown,
+        interactionListener = viewModel,
         modifier = modifier,
     )
 }
@@ -97,35 +83,25 @@ fun TasksScreen(
 @Composable
 fun TasksScreenContent(
     state: TasksScreenUiState,
-    onTaskSwipe: (TaskUiState) -> Boolean,
-    onDateSelected: (LocalDate) -> Unit,
-    onTaskClick: (TaskUiState) -> Unit,
-    onDismissTaskViewDetails: () -> Unit,
-    onMoveToTaskViewDetails: () -> Unit,
-    onDeleteClick: () -> Unit,
-    onDeleteDismiss: () -> Unit,
-    onShowSnackBar: () -> Unit,
+    interactionListener: TaskInteractionListener,
     modifier: Modifier = Modifier,
 ) {
 
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    var showEditTaskBottomSheet by remember { mutableStateOf(false) }
-    var taskToEdit by remember { mutableStateOf<TaskUiState?>(null) }
+    var showEditTaskBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var taskToEdit by rememberSaveable { mutableStateOf<TaskUiState?>(null) }
     var showDialog by remember { mutableStateOf(false) }
-    var showAddTaskBottomSheet by remember { mutableStateOf(false) }
-    var daysInMonth by
-    remember {
+    var showAddTaskBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var daysInMonth by remember {
         mutableStateOf(
             DateFormater.getLocalDatesInMonth(
-                state.selectedDate.year,
-                state.selectedDate.monthNumber
+                state.selectedDate.year, state.selectedDate.monthNumber
             )
         )
     }
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = modifier
@@ -152,14 +128,11 @@ fun TasksScreenContent(
                         .padding(6.dp)
                         .clickable {
                             val nextMonth = state.selectedDate.minus(1, DateTimeUnit.MONTH)
-                            onDateSelected(nextMonth)
-                            daysInMonth =
-                                (DateFormater.getLocalDatesInMonth(
-                                    nextMonth.year,
-                                    nextMonth.monthNumber
-                                ))
-                        },
-                    contentAlignment = Alignment.Center
+                            interactionListener.onDateSelected(nextMonth)
+                            daysInMonth = (DateFormater.getLocalDatesInMonth(
+                                nextMonth.year, nextMonth.monthNumber
+                            ))
+                        }, contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.icon_left_arrow),
@@ -187,8 +160,7 @@ fun TasksScreenContent(
                             .rotate(if (LocalLayoutDirection.current == LayoutDirection.Rtl) 90f else -90f)
                             .clickable {
                                 showDialog = true
-                            }
-                    )
+                            })
                 }
 
                 Box(
@@ -198,14 +170,11 @@ fun TasksScreenContent(
                         .padding(6.dp)
                         .clickable {
                             val previousMonth = state.selectedDate.plus(1, DateTimeUnit.MONTH)
-                            onDateSelected(previousMonth)
-                            daysInMonth =
-                                (DateFormater.getLocalDatesInMonth(
-                                    previousMonth.year,
-                                    previousMonth.monthNumber
-                                ))
-                        },
-                    contentAlignment = Alignment.Center
+                            interactionListener.onDateSelected(previousMonth)
+                            daysInMonth = (DateFormater.getLocalDatesInMonth(
+                                previousMonth.year, previousMonth.monthNumber
+                            ))
+                        }, contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.icon_left_arrow),
@@ -226,22 +195,21 @@ fun TasksScreenContent(
                     listState.animateScrollToItem(state.selectedDate.dayOfMonth - 1)
                 }
             }
+            val isArabic = Locale.getDefault().language == "arabic"
             LazyRow(
                 state = listState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 24.dp),
+                reverseLayout = isArabic
             ) {
                 itemsIndexed(daysInMonth) { index, date ->
                     DayItem(
-                        dayDate = date,
-                        isSelected = date == state.selectedDate,
-                        onClick = {
-                            onDateSelected(date)
-                        }
-                    )
+                        dayDate = date, isSelected = date == state.selectedDate, onClick = {
+                            interactionListener.onDateSelected(date)
+                        })
                 }
             }
 
@@ -250,33 +218,36 @@ fun TasksScreenContent(
                     onDateSelected = { selectedDateMillis: Long? ->
                         selectedDateMillis?.let {
                             val date = DateFormater.formatLongToDate(selectedDateMillis)
-                            onDateSelected(date)
+                            interactionListener.onDateSelected(date)
                             daysInMonth =
                                 (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
                         }
-                    },
-                    onDismiss = { showDialog = false },
-                    initialSelectedDate = state.selectedDate
+                    }, onDismiss = { showDialog = false }, initialSelectedDate = state.selectedDate
                 )
             }
-            TaskStatusTabs(state, onTaskSwipe, onTaskClick)
-            if (state.selectedTask != null && state.showTaskDetailsDialog)
+
+            TaskStatusTabs(
+                state,
+                interactionListener::onTaskSwipeToDelete,
+                interactionListener::onTaskClicked
+            )
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
                 TaskDetailsComponent(
-                    task = state.selectedTask,
-                    onDismiss = onDismissTaskViewDetails,
+                    selectedTaskId = state.selectedTask.id,
+                    onDismiss = { interactionListener.onDismissTaskDetails(false) },
                     onEditClick = { task ->
-                        onDismissTaskViewDetails()
+                        interactionListener.onDismissTaskDetails(false)
                         taskToEdit = task
                         showEditTaskBottomSheet = true
-                    }, onMoveToClicked = onMoveToTaskViewDetails,
+                    },
+                    onMoveStatusSuccess = {interactionListener.handleOnMoveToStatusSuccess()},
+                    onMoveStatusFail = {interactionListener.handleOnMoveToStatusFail()},
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
-            if (state.selectedTask != null && state.showDeleteDialog)
+            if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
                 DeleteComponent(
-                    onDismiss = onDeleteDismiss,
-                    onDeleteClicked = {
-                        onDeleteClick()
-                    },
+                    onDismiss = interactionListener::onDeleteDismiss,
+                    onDeleteClicked = interactionListener::onDeleteTask,
                     title = stringResource(R.string.delete_task_title),
                 )
             if (showAddTaskBottomSheet) {
@@ -288,49 +259,38 @@ fun TasksScreenContent(
                         showAddTaskBottomSheet = false
                         coroutineScope.launch {
                             snackBarHostState.showSnackbar(
-                                message = "Task added successfully",
-                                withDismissAction = true
+                                message = "Task added successfully", withDismissAction = true
                             )
                         }
                     },
                     onError = { errorMessage ->
                         coroutineScope.launch {
                             snackBarHostState.showSnackbar(
-                                message = errorMessage,
-                                withDismissAction = true
+                                message = errorMessage, withDismissAction = true
                             )
                         }
-                    }
-                )
+                    })
             }
 
             if (showEditTaskBottomSheet && taskToEdit != null) {
-                AddEditTaskScreen(
-                    isEditMode = true,
-                    taskToEdit = taskToEdit,
-                    onDismiss = {
-                        showEditTaskBottomSheet = false
-                        taskToEdit = null
-                    },
-                    onSuccess = {
-                        showEditTaskBottomSheet = false
-                        taskToEdit = null
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = "Task updated successfully",
-                                withDismissAction = true
-                            )
-                        }
-                    },
-                    onError = { errorMessage ->
-                        coroutineScope.launch {
-                            snackBarHostState.showSnackbar(
-                                message = errorMessage,
-                                withDismissAction = true
-                            )
-                        }
+                AddEditTaskScreen(isEditMode = true, taskToEdit = taskToEdit, onDismiss = {
+                    showEditTaskBottomSheet = false
+                    taskToEdit = null
+                }, onSuccess = {
+                    showEditTaskBottomSheet = false
+                    taskToEdit = null
+                    coroutineScope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = "Task updated successfully", withDismissAction = true
+                        )
                     }
-                )
+                }, onError = { errorMessage ->
+                    coroutineScope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = errorMessage, withDismissAction = true
+                        )
+                    }
+                })
             }
         }
 
@@ -351,63 +311,21 @@ fun TasksScreenContent(
         LaunchedEffect(state.successMessage) {
             state.successMessage?.let {
                 snackBarHostState.showSnackbar(it)
-                onShowSnackBar()
+                interactionListener.onShowSnackbar()
             }
         }
+
+
+
         LaunchedEffect(state.successMessage) {
             state.errorMessage?.let {
                 snackBarHostState.showSnackbar(it)
-                onShowSnackBar()
+                interactionListener.onShowSnackbar()
             }
         }
 
         TudeeSnackBar(
-            snackBarHostState = snackBarHostState,
-            isError = state.errorMessage != null
+            snackBarHostState = snackBarHostState, isError = state.errorMessage != null
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TasksScreenPreview() {
-
-    var tasksState by remember {
-        mutableStateOf(
-            TasksScreenUiState(
-                currentDateTasks = DataProvider.getTasksSample(),
-                isLoading = false,
-                errorMessage = null,
-                successMessage = null,
-                showAddTaskDialog = false,
-                showEditDialog = false,
-                showTaskDetailsDialog = false,
-                showDeleteDialog = false,
-                selectedTaskUiStatus = TaskUiStatus.DONE,
-                selectedTask = null,
-                selectedDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-            )
-        )
-    }
-
-    TasksScreenContent(
-        tasksState,
-        onDateSelected = { date ->
-            tasksState = tasksState.copy(selectedDate = date)
-            tasksState = tasksState.copy(currentDateTasks = DataProvider.getTasksSample())
-        },
-        onTaskSwipe = { task ->
-            tasksState =
-                tasksState.copy(currentDateTasks = tasksState.currentDateTasks.filterNot { item -> item == task })
-            false
-        },
-        onTaskClick = { task ->
-            tasksState = tasksState.copy(selectedTask = task, showTaskDetailsDialog = true)
-        },
-        onDismissTaskViewDetails = { tasksState = tasksState.copy(showTaskDetailsDialog = false) },
-        onMoveToTaskViewDetails = {},
-        onDeleteClick = {},
-        onDeleteDismiss = {},
-        onShowSnackBar = {},
-    )
 }

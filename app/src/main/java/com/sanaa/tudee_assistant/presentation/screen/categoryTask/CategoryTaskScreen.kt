@@ -39,14 +39,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryTaskCard
+import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
+import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.category.UpdateCurrentCategory
+import com.sanaa.tudee_assistant.presentation.designSystem.component.DateChip
+import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.category.UpdateCurrentCategory
 import com.sanaa.tudee_assistant.presentation.state.TaskUiState
 import org.koin.androidx.compose.koinViewModel
 
@@ -85,7 +87,7 @@ fun CategoryTaskScreenContent(
     modifier: Modifier = Modifier,
     onEditCategory: (Int) -> Unit = {},
     onDeleteCategory: () -> Unit = {},
-    viewModel: CategoryTaskViewModel
+    viewModel: CategoryTaskViewModel,
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var showBottomSheetState by remember { mutableStateOf(false) }
@@ -307,7 +309,7 @@ private fun TasksList(
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             items(tasks) { task ->
-                CategoryTaskCard(
+                TaskItemCard(
                     task = TaskUiState(
                         id = task.id,
                         title = task.title,
@@ -317,7 +319,17 @@ private fun TasksList(
                         status = task.status,
                         categoryId = task.categoryId
                     ),
-                    categoryImagePath = categoryImagePath
+                    categoryImagePath = categoryImagePath,
+                    onClick = {},
+                    taskDateAndPriority = {
+                        DateChip(task.dueDate)
+
+                        PriorityTag(
+                            modifier = Modifier.padding(start = Theme.dimension.extraSmall),
+                            priority = task.priority,
+                            enabled = false
+                        )
+                    }
                 )
             }
         }

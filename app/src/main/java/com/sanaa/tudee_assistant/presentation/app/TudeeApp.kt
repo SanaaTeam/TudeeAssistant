@@ -13,7 +13,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +27,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
@@ -41,56 +39,50 @@ import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingScreen
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import kotlinx.coroutines.delay
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun TudeeApp(appViewModel: TudeeAppViewModel = koinViewModel()) {
+fun TudeeApp(isFirstLaunch: Boolean) {
     var statusBarColor by remember { mutableStateOf(Color.White) }
-    val state by appViewModel.state.collectAsState()
-    TudeeTheme(isDark = state.isDarkTheme) {
-        val appNavController = rememberNavController()
-        val snackBarState = remember { mutableStateOf(SnackBarState()) }
-
-        Box(modifier = Modifier.fillMaxSize()) {
-            Scaffold(
-                containerColor = statusBarColor
-            ) { innerPadding ->
-                CompositionLocalProvider(
-                    LocalAppNavController provides appNavController,
-                    LocalSnackBarState provides snackBarState
-                ) {
-                    AppNavigation(
-                        startDestination = if (state.isFirstLaunch) OnBoardingScreenRoute else MainScreenRoute,
-                        modifier = Modifier.padding(
-                            top = innerPadding.calculateTopPadding(),
-                            bottom = innerPadding.calculateBottomPadding()
-                        ),
-                        onChangeStatusBarColor = { color -> statusBarColor = color },
-                    )
-                }
-            }
-
-            AnimatedVisibility(
-                visible = snackBarState.value.isVisible,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .systemBarsPadding()
-                    .padding(top = 16.dp),
-                enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
-                exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+    val snackBarState = remember { mutableStateOf(SnackBarState()) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(containerColor = statusBarColor) { innerPadding ->
+            val appNavController = rememberNavController()
+            CompositionLocalProvider(
+                LocalAppNavController provides appNavController,
+                LocalSnackBarState provides snackBarState
             ) {
-                SnackBar(state = snackBarState.value)
+                AppNavigation(
+                    startDestination = if (isFirstLaunch) OnBoardingScreenRoute else MainScreenRoute,
+                    modifier = Modifier.padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = innerPadding.calculateBottomPadding()
+                    ),
+                    onChangeStatusBarColor = { color -> statusBarColor = color },
+                )
             }
+        }
 
-            LaunchedEffect(snackBarState.value) {
-                if (snackBarState.value.isVisible) {
-                    delay(3000)
-                    snackBarState.value = snackBarState.value.copy(isVisible = false)
-                }
+        AnimatedVisibility(
+            visible = snackBarState.value.isVisible,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .systemBarsPadding()
+                .padding(top = 16.dp),
+            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
+            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+        ) {
+            SnackBar(state = snackBarState.value)
+        }
+
+        LaunchedEffect(snackBarState.value) {
+            if (snackBarState.value.isVisible) {
+                delay(3000)
+                snackBarState.value = snackBarState.value.copy(isVisible = false)
             }
         }
     }
 }
+
 
 @Composable
 private fun AppNavigation(

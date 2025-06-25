@@ -125,7 +125,8 @@ private fun AppBar() {
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp)
-            .background(color = Theme.color.surfaceHigh)
+            .background(color = Theme.color.surfaceHigh),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             stringResource(R.string.categories),
@@ -133,7 +134,7 @@ private fun AppBar() {
             color = Theme.color.title,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 20.dp)
+                .padding(horizontal = 16.dp)
         )
     }
 }

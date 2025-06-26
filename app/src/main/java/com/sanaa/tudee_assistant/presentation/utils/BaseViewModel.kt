@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<T>(
@@ -18,7 +19,7 @@ abstract class BaseViewModel<T>(
     val state: StateFlow<T> by lazy { _state.asStateFlow() }
 
     protected fun updateState(updater: (T) -> T) {
-        updateState(updater)
+        _state.update(updater)
     }
 
     protected fun <T> tryToExecute(

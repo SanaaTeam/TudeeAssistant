@@ -120,6 +120,7 @@ private fun HomeScreenContent(
                 tailComponent = {
                     DarkModeThemeSwitchButton(
                         state.isDarkTheme,
+                        800,
                         onCheckedChange = { interactionsListener.onToggleColorTheme() }
                     )
                 }

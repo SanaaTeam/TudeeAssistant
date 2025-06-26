@@ -70,7 +70,6 @@ fun CategoryScreenContent(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .padding(it)
                 .background(color = Theme.color.surface)
         ) {
             Column {

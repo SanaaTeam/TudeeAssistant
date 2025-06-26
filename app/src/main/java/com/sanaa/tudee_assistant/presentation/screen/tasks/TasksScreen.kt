@@ -109,7 +109,7 @@ fun TasksScreenContent(
         isDarkIcon = !LocalThemeState.current,
     ) {
         Box(
-            modifier = modifier.padding(it)
+            modifier = modifier
         ) {
             Column(
                 modifier = Modifier

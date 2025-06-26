@@ -72,6 +72,7 @@ fun TudeeApp(isFirstLaunch: Boolean, isDarkTheme: Boolean) {
                 snackBarState.value = snackBarState.value.copy(isVisible = false)
             }
         }
+
     }
 }
 

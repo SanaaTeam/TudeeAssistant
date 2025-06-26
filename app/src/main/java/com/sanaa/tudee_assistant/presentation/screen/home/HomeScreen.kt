@@ -32,6 +32,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.mainActivity.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.CategoryList
@@ -78,78 +79,88 @@ private fun HomeScreenContent(
             }
         }
     }
-
-    Box(Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
+    TudeeScaffold(
+        statusBarColor = Theme.color.primary,
+    ) {
+        Box(
+            Modifier
                 .fillMaxSize()
-                .background(Theme.color.surface)
         ) {
-            AppBar(
-                tailComponent = {
-                    DarkModeThemeSwitchButton(
-                        state.isDarkTheme,
-                        800,
-                        onCheckedChange = { interactionsListener.onToggleColorTheme() }
-                    )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Theme.color.surface)
+            ) {
+                AppBar(
+                    tailComponent = {
+                        DarkModeThemeSwitchButton(
+                            state.isDarkTheme,
+                            800,
+                            onCheckedChange = { interactionsListener.onToggleColorTheme() }
+                        )
+                    }
+                )
+
+                if (isScrolled) {
+                    Line()
                 }
-            )
-
-            if (isScrolled) {
-                Line()
+                CategoryList(
+                    scrollState,
+                    state,
+                    onTaskClick = { interactionsListener.onTaskClick(it) },
+                )
             }
-            CategoryList(
-                scrollState,
-                state,
-                onTaskClick = { interactionsListener.onTaskClick(it) },
-            )
-        }
 
 
-        FloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
-            iconRes = R.drawable.note_add,
-        ) {
-            interactionsListener.onShowAddTaskSheet()
-        }
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
+                iconRes = R.drawable.note_add,
+            ) {
+                interactionsListener.onShowAddTaskSheet()
+            }
 
-        if (state.showAddTaskSheet) {
-            AddEditTaskScreen(
-                isEditMode = false,
-                onDismiss = { interactionsListener.onHideAddTaskSheet() },
-                onSuccess = { interactionsListener.onAddTaskSuccess() },
-                onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
-            )
-        }
-        if (state.showEditTaskSheet) {
-            AddEditTaskScreen(
-                isEditMode = true,
-                taskToEdit = state.taskToEdit,
-                onDismiss = { interactionsListener.onHideEditTaskSheet() },
-                onSuccess = { interactionsListener.onEditTaskSuccess() },
-                onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
-            )
-        }
-        if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
-            TaskDetailsComponent(
-                selectedTaskId = state.selectedTask.id,
-                onDismiss = { interactionsListener.onShowTaskDetails(false) },
-                onEditClick = { taskToEdit -> interactionsListener.onShowEditTaskSheet(taskToEdit) },
-                onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
-                onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
-            )
-        }
+            if (state.showAddTaskSheet) {
+                AddEditTaskScreen(
+                    isEditMode = false,
+                    onDismiss = { interactionsListener.onHideAddTaskSheet() },
+                    onSuccess = { interactionsListener.onAddTaskSuccess() },
+                    onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
+                )
+            }
+            if (state.showEditTaskSheet) {
+                AddEditTaskScreen(
+                    isEditMode = true,
+                    taskToEdit = state.taskToEdit,
+                    onDismiss = { interactionsListener.onHideEditTaskSheet() },
+                    onSuccess = { interactionsListener.onEditTaskSuccess() },
+                    onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
+                )
+            }
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
+                TaskDetailsComponent(
+                    selectedTaskId = state.selectedTask.id,
+                    onDismiss = { interactionsListener.onShowTaskDetails(false) },
+                    onEditClick = { taskToEdit ->
+                        interactionsListener.onShowEditTaskSheet(
+                            taskToEdit
+                        )
+                    },
+                    onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
+                    onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
+                )
+            }
 
-        AnimatedVisibility(
-            visible = state.snackBarState.isVisible,
-            modifier = Modifier
-                .align(Alignment.TopCenter),
-            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
-            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
-        ) {
-            SnackBar(state = state.snackBarState)
+            AnimatedVisibility(
+                visible = state.snackBarState.isVisible,
+                modifier = Modifier
+                    .align(Alignment.TopCenter),
+                enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
+                exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+            ) {
+                SnackBar(state = state.snackBarState)
+            }
         }
     }
 }

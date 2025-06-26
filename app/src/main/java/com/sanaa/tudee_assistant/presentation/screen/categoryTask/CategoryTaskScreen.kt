@@ -3,6 +3,7 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,7 +20,9 @@ import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDe
 import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyContent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.mainActivity.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
@@ -29,6 +32,7 @@ import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.Cat
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
+import com.sanaa.tudee_assistant.presentation.shared.LocalThemeState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
@@ -91,129 +95,134 @@ private fun CategoryTaskScreenContent(
             listener.onHideSnackBar()
         }
     }
-
-    CategoryTaskScreenContainer(
-        topBar = {
-            CategoryTasksTopBar(
-                title = categoryName,
-                onEditClick = { listener.onEditClicked() },
-                onBackClick = onBackClick,
-                isEditable = !state.currentCategory.isDefault
-            )
-        }, modifier = modifier
-
+    TudeeScaffold(
+        statusBarColor = Theme.color.surface,
+        isDarkIcon = !LocalThemeState.current
     ) {
-        Box {
-            TudeeScrollableTabs(
-                tabs = listOf(
-                    TabItem(
-                        label = stringResource(R.string.in_progress_task_status),
-                        count = state.filteredTasks.size,
-                        content = {
-                            if (state.filteredTasks.isEmpty()) {
-                                EmptyContent(
-                                    modifier = Modifier.align(Alignment.Center),
-                                    title = stringResource(
-                                        R.string.no_tasks_in,
-                                        categoryName,
-                                    ),
-                                    caption = null
-                                )
-                            } else {
-                                TasksListComponent(
-                                    tasks = state.filteredTasks,
-                                    category = state.currentCategory,
-                                    onTaskClicked = listener::onTaskClicked
-                                )
-                            }
-                        }),
-                    TabItem(
-                        label = stringResource(R.string.todo_task_status),
-                        count = state.filteredTasks.size,
-                        content = {
-                            if (state.filteredTasks.isEmpty()) {
-                                EmptyContent(
-                                    modifier = Modifier.align(Alignment.Center),
-                                    title = stringResource(
-                                        R.string.no_tasks_in,
-                                        categoryName,
-                                    ),
-                                    caption = null
-                                )
-                            } else {
-                                TasksListComponent(
-                                    tasks = state.filteredTasks,
-                                    category = state.currentCategory,
-                                    onTaskClicked = listener::onTaskClicked
-                                )
-                            }
-                        }),
-                    TabItem(
-                        label = stringResource(R.string.done_task_status),
-                        count = state.filteredTasks.size,
-                        content = {
-                            if (state.filteredTasks.isEmpty()) {
-                                EmptyContent(
-                                    modifier = Modifier.align(Alignment.Center),
-                                    title = stringResource(
-                                        R.string.no_tasks_in,
-                                        categoryName,
-                                    ),
-                                    caption = null
-                                )
-                            } else {
-                                TasksListComponent(
-                                    tasks = state.filteredTasks,
-                                    category = state.currentCategory,
-                                    onTaskClicked = listener::onTaskClicked
-                                )
-                            }
-                        }),
+        CategoryTaskScreenContainer(
+            topBar = {
+                CategoryTasksTopBar(
+                    title = categoryName,
+                    onEditClick = { listener.onEditClicked() },
+                    onBackClick = onBackClick,
+                    isEditable = !state.currentCategory.isDefault
+                )
+            }, modifier = modifier.padding(it)
 
-                    ),
-                selectedTabIndex = state.selectedTapIndex,
-                onTabSelected = { it -> listener.onStatusChanged(it) },
-                modifier = Modifier.fillMaxSize()
-            )
-            if (state.showEditCategoryBottomSheet) {
-                AddEditCategoryBottomSheet(
-                    onImageSelected = { listener.onImageSelect(it) },
-                    onTitleChange = { listener.onTitleChange(it) },
-                    onSaveClick = { listener.onSaveEditClicked(it) },
-                    onDismiss = { listener.onEditDismissClicked() },
-                    category = state.editCategory,
-                    isEditMode = !state.currentCategory.isDefault,
-                    onDeleteClick = { listener.onDeleteClicked() },
-                    isFormValid = isValidForm
+        ) {
+            Box {
+                TudeeScrollableTabs(
+                    tabs = listOf(
+                        TabItem(
+                            label = stringResource(R.string.in_progress_task_status),
+                            count = state.filteredTasks.size,
+                            content = {
+                                if (state.filteredTasks.isEmpty()) {
+                                    EmptyContent(
+                                        modifier = Modifier.align(Alignment.Center),
+                                        title = stringResource(
+                                            R.string.no_tasks_in,
+                                            categoryName,
+                                        ),
+                                        caption = null
+                                    )
+                                } else {
+                                    TasksListComponent(
+                                        tasks = state.filteredTasks,
+                                        category = state.currentCategory,
+                                        onTaskClicked = listener::onTaskClicked
+                                    )
+                                }
+                            }),
+                        TabItem(
+                            label = stringResource(R.string.todo_task_status),
+                            count = state.filteredTasks.size,
+                            content = {
+                                if (state.filteredTasks.isEmpty()) {
+                                    EmptyContent(
+                                        modifier = Modifier.align(Alignment.Center),
+                                        title = stringResource(
+                                            R.string.no_tasks_in,
+                                            categoryName,
+                                        ),
+                                        caption = null
+                                    )
+                                } else {
+                                    TasksListComponent(
+                                        tasks = state.filteredTasks,
+                                        category = state.currentCategory,
+                                        onTaskClicked = listener::onTaskClicked
+                                    )
+                                }
+                            }),
+                        TabItem(
+                            label = stringResource(R.string.done_task_status),
+                            count = state.filteredTasks.size,
+                            content = {
+                                if (state.filteredTasks.isEmpty()) {
+                                    EmptyContent(
+                                        modifier = Modifier.align(Alignment.Center),
+                                        title = stringResource(
+                                            R.string.no_tasks_in,
+                                            categoryName,
+                                        ),
+                                        caption = null
+                                    )
+                                } else {
+                                    TasksListComponent(
+                                        tasks = state.filteredTasks,
+                                        category = state.currentCategory,
+                                        onTaskClicked = listener::onTaskClicked
+                                    )
+                                }
+                            }),
+
+                        ),
+                    selectedTabIndex = state.selectedTapIndex,
+                    onTabSelected = { it -> listener.onStatusChanged(it) },
+                    modifier = Modifier.fillMaxSize()
                 )
-            }
-            if (state.showDeleteCategoryBottomSheet) {
-                DeleteComponent(
-                    onDismiss = listener::onDeleteDismiss,
-                    onDeleteClicked = listener::onConfirmDeleteClicked,
-                    title = stringResource(R.string.delete_category),
-                )
-            }
-            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) TaskDetailsComponent(selectedTaskId = state.selectedTask.id,
-                onEditClick = {
-                    listener.onTaskEditClicked(state.selectedTask)
-                },
-                onDismiss = listener::onTaskDetailsDismiss,
-                onMoveStatusSuccess = {
-                    listener.onMoveStatusSuccess()
-                },
-                onMoveStatusFail = {})
-            if (state.showEditTaskBottomSheet) {
-                AddEditTaskScreen(
-                    onDismiss = { listener.onTaskEditDismiss() },
-                    isEditMode = true,
-                    taskToEdit = state.selectedTask,
-                    onSuccess = {
-                        listener.onTaskDetailsDismiss()
-                        listener.onTaskEditSuccess()
+                if (state.showEditCategoryBottomSheet) {
+                    AddEditCategoryBottomSheet(
+                        onImageSelected = { listener.onImageSelect(it) },
+                        onTitleChange = { listener.onTitleChange(it) },
+                        onSaveClick = { listener.onSaveEditClicked(it) },
+                        onDismiss = { listener.onEditDismissClicked() },
+                        category = state.editCategory,
+                        isEditMode = !state.currentCategory.isDefault,
+                        onDeleteClick = { listener.onDeleteClicked() },
+                        isFormValid = isValidForm
+                    )
+                }
+                if (state.showDeleteCategoryBottomSheet) {
+                    DeleteComponent(
+                        onDismiss = listener::onDeleteDismiss,
+                        onDeleteClicked = listener::onConfirmDeleteClicked,
+                        title = stringResource(R.string.delete_category),
+                    )
+                }
+                if (state.selectedTask != null && state.showTaskDetailsBottomSheet) TaskDetailsComponent(
+                    selectedTaskId = state.selectedTask.id,
+                    onEditClick = {
+                        listener.onTaskEditClicked(state.selectedTask)
                     },
-                    onError = {},
-                )
+                    onDismiss = listener::onTaskDetailsDismiss,
+                    onMoveStatusSuccess = {
+                        listener.onMoveStatusSuccess()
+                    },
+                    onMoveStatusFail = {})
+                if (state.showEditTaskBottomSheet) {
+                    AddEditTaskScreen(
+                        onDismiss = { listener.onTaskEditDismiss() },
+                        isEditMode = true,
+                        taskToEdit = state.selectedTask,
+                        onSuccess = {
+                            listener.onTaskDetailsDismiss()
+                            listener.onTaskEditSuccess()
+                        },
+                        onError = {},
+                    )
+                }
             }
         }
     }

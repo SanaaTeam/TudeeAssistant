@@ -50,11 +50,7 @@ fun TaskDetailsComponent(
     }
     val state: State<DetailsUiState> = interactionListener.state.collectAsState()
 
-    val changeStatusTo = when (state.value.status) {
-        TaskUiStatus.TODO -> stringResource(R.string.mark_as_in_progress)
-        TaskUiStatus.IN_PROGRESS -> stringResource(R.string.mark_as_done)
-        TaskUiStatus.DONE -> null
-    }
+
 
     BaseBottomSheet(
         onDismiss = onDismiss,
@@ -120,25 +116,28 @@ fun TaskDetailsComponent(
                             priority = state.value.priority,
                         )
                     }
-                    changeStatusTo?.let {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
-                        ) {
-                            SecondaryIconButton(
-                                iconRes = painterResource(R.drawable.pencil_edit),
-                                onClick = { onEditClick(state.value.toTaskUiState()) }
-                            )
-                            SecondaryButton(
-                                label = changeStatusTo,
-                                onClick = {
-                                    interactionListener.onMoveTaskToAnotherStatus(
-                                        onMoveStatusSuccess, onMoveStatusFail
-                                    )
-                                },
-                                modifier = Modifier.weight(1f)
-                            )
+                    state.value.moveStatusToLabel.let {label->
+                        if (label.isNotEmpty()){
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
+                            ) {
+                                SecondaryIconButton(
+                                    iconRes = painterResource(R.drawable.pencil_edit),
+                                    onClick = { onEditClick(state.value.toTaskUiState()) }
+                                )
+                                SecondaryButton(
+                                    label = label,
+                                    onClick = {
+                                        interactionListener.onMoveTaskToAnotherStatus(
+                                            onMoveStatusSuccess, onMoveStatusFail
+                                        )
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                )
 
+                            }
                         }
+
                     }
                 }
             }

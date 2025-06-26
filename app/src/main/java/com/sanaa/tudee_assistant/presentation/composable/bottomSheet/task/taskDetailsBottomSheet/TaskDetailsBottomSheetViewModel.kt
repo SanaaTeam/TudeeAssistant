@@ -1,8 +1,11 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
@@ -16,13 +19,21 @@ interface TaskDetailsInteractionListener{
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
+    private val stringProvider: StringProvider
 ) : BaseViewModel<DetailsUiState>(DetailsUiState()),TaskDetailsInteractionListener{
 
      fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
             val task: Task = taskService.getTaskById(selectedTaskId)
             val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-            val detailsUiState = task.toDetailsState().copy(categoryImagePath = categoryImagePath)
+            val detailsUiState = task.toDetailsState().copy(
+                categoryImagePath = categoryImagePath,
+                moveStatusToLabel = when (task.status) {
+                    Task.TaskStatus.TODO -> stringProvider.markAsInProgress
+                    Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
+                    Task.TaskStatus.DONE -> ""
+                }
+            )
             _state.update {
                 detailsUiState
             }

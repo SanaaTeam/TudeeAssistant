@@ -1,5 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
+import androidx.compose.ui.res.stringResource
+import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
@@ -17,9 +19,11 @@ data class DetailsUiState(
     val id: Int = 0,
     val title: String = "",
     val description: String? = null,
-    val dueDate: String = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+    val dueDate: String = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
     val priority: TaskUiPriority = TaskUiPriority.LOW,
     val status: TaskUiStatus = TaskUiStatus.IN_PROGRESS,
+    val moveStatusToLabel: String = "",
     val categoryId: Int = 0,
     val categoryImagePath: String = "",
     val createdAt: String = Clock.System.now()
@@ -39,6 +43,7 @@ fun DetailsUiState.toTaskUiState(): TaskUiState {
         createdAt = this.createdAt
     )
 }
+
 fun DetailsUiState.toTask(): Task {
     return Task(
         id = this.id,
@@ -52,7 +57,7 @@ fun DetailsUiState.toTask(): Task {
     )
 }
 
-fun Task.toDetailsState(): DetailsUiState{
+fun Task.toDetailsState(): DetailsUiState {
     return DetailsUiState(
         id = this.id,
         title = this.title,
@@ -62,7 +67,8 @@ fun Task.toDetailsState(): DetailsUiState{
         description = this.description ?: "",
         status = this.status.toState(),
         createdAt = this.createdAt.toString(),
-        categoryImagePath = ""
+        categoryImagePath = "",
+        moveStatusToLabel = ""
     )
 }
 

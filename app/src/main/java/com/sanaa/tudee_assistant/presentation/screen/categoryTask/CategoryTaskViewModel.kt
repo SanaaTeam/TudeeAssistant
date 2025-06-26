@@ -2,7 +2,7 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
 import androidx.core.net.toUri
-import com.sanaa.tudee_assistant.R
+import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
@@ -14,19 +14,30 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class CategoryTaskViewModel(
     private val categoryService: CategoryService,
     private val taskService: TaskService,
+    val categoryId: Int?,
     private val imageProcessor: ImageProcessor,
     private val stringProvider: StringProvider,
 ) : BaseViewModel<CategoryTaskScreenUiState>(initialState = CategoryTaskScreenUiState()),
     CategoryTaskInteractionListener {
 
+    private val _effects = MutableSharedFlow<CategoryTasksEffects>()
+    val effects = _effects.asSharedFlow()
 
-    fun loadCategoryTasks(categoryId: Int) {
+    init {
+        if (categoryId != null)
+            loadCategoryTasks(categoryId)
+    }
+
+    private fun loadCategoryTasks(categoryId: Int) {
         tryToExecute(
             callee = {
                 _state.update { it.copy(isLoading = true) }
@@ -96,11 +107,12 @@ class CategoryTaskViewModel(
                     updateState = {
                         it.copy(
                             showDeleteCategoryBottomSheet = false,
-                            navigateBackToCategoryList = true,
                             snackBarState = SnackBarState
                                 .getInstance(stringProvider.deleted_category_successfully),
                         )
-                    })
+                    },
+                    effect = NavigateBackToCategoryList
+                )
             }
         )
     }
@@ -130,6 +142,7 @@ class CategoryTaskViewModel(
     }
 
     override fun onTitleChange(title: String) {
+        if (title.length > 24) return
         _state.update {
             it.copy(
                 editCategory = _state.value.editCategory.copy(name = title)
@@ -168,10 +181,10 @@ class CategoryTaskViewModel(
                             showEditCategoryBottomSheet = false,
                             snackBarState = SnackBarState
                                 .getInstance(stringProvider.category_update_successfully),
-                            navigateBackToCategoryList = true,
                         )
 
-                    }
+                    },
+                    effect = NavigateBackToCategoryList
                 )
                 loadCategoryTasks(category.id)
             },
@@ -213,7 +226,7 @@ class CategoryTaskViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState
-                    .getInstance(stringProvider.task_status_update_success ),
+                    .getInstance(stringProvider.task_status_update_success),
                 showTaskDetailsBottomSheet = false,
             )
         }
@@ -236,6 +249,7 @@ class CategoryTaskViewModel(
     private fun onSuccess(
         message: String?,
         updateState: (oldState: CategoryTaskScreenUiState) -> CategoryTaskScreenUiState = { it },
+        effect: CategoryTasksEffects? = null
     ) {
         _state.update {
             updateState(it).copy(
@@ -244,12 +258,23 @@ class CategoryTaskViewModel(
                 success = message
             )
         }
+
+        effect?.let {
+            viewModelScope.launch {
+                emitEffect(it)
+            }
+        }
     }
 
     private fun onError(message: String?) {
         _state.update {
             it.copy(isLoading = false, error = message, success = null)
         }
+    }
+
+    suspend fun emitEffect(effect: CategoryTasksEffects) {
+        _effects.emit(effect)
+
     }
 
     fun isValidForm(): Boolean {

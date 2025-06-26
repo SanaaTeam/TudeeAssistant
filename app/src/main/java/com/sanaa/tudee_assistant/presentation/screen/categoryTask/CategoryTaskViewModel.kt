@@ -9,6 +9,7 @@ import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
@@ -88,14 +89,16 @@ class CategoryTaskViewModel(
 
                 }
             },
-            onError = { onError(message = stringProvider.getString(R.string.error_deleting_category)) },
+            onError = { onError(message = stringProvider.deleting_category_error) },
             onSuccess = {
                 onSuccess(
-                    message = stringProvider.getString(R.string.successfully_deleted_category),
+                    message = stringProvider.deleted_category_successfully,
                     updateState = {
                         it.copy(
                             showDeleteCategoryBottomSheet = false,
-                            navigateBackToCategoryList = true
+                            navigateBackToCategoryList = true,
+                            snackBarState = SnackBarState
+                                .getInstance(stringProvider.deleted_category_successfully),
                         )
                     })
             }
@@ -161,7 +164,13 @@ class CategoryTaskViewModel(
                 onSuccess(
                     message = "Update task successfully",
                     updateState = {
-                        it.copy(showEditCategoryBottomSheet = false)
+                        it.copy(
+                            showEditCategoryBottomSheet = false,
+                            snackBarState = SnackBarState
+                                .getInstance(stringProvider.category_update_successfully),
+                            navigateBackToCategoryList = true,
+                        )
+
                     }
                 )
                 loadCategoryTasks(category.id)
@@ -184,7 +193,36 @@ class CategoryTaskViewModel(
 
     override fun onTaskEditDismiss() {
         _state.update {
-            it.copy(showEditTaskBottomSheet = false)
+            it.copy(
+                showEditTaskBottomSheet = false, selectedTask = null,
+            )
+        }
+    }
+
+    override fun onTaskEditSuccess() {
+        _state.update {
+            it.copy(
+                showEditTaskBottomSheet = false, selectedTask = null,
+                snackBarState = SnackBarState
+                    .getInstance(stringProvider.task_update_success),
+            )
+        }
+    }
+
+    override fun onMoveStatusSuccess() {
+        _state.update {
+            it.copy(
+                snackBarState = SnackBarState
+                    .getInstance(stringProvider.task_status_update_success ),
+                showTaskDetailsBottomSheet = false,
+            )
+        }
+        loadCategoryTasks(state.value.currentCategory.id)
+    }
+
+    override fun onHideSnackBar() {
+        _state.update {
+            it.copy(snackBarState = SnackBarState.hide())
         }
     }
 
@@ -220,7 +258,8 @@ class CategoryTaskViewModel(
 
         val hasNameChanged = edited.name != current.name
         val hasImageChanged = edited.imagePath != current.imagePath
-        val isNameValid = edited.name.isNotBlank()
+        val isNameValid =
+            edited.name.isNotBlank() && (edited.name.length <= 24 && edited.name.length >= 2)
 
         return isNameValid && (hasNameChanged || hasImageChanged)
     }

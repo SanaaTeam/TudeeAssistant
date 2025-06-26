@@ -68,7 +68,7 @@ class CategoryViewModel(
                 isLoading = false,
                 snackBarState = SnackBarState.getErrorInstance(
                     exception.message
-                        ?: stringProvider.getString(R.string.unknown_error)
+                        ?: stringProvider.unknown_error
                 )
             )
         }
@@ -97,7 +97,7 @@ class CategoryViewModel(
             it.copy(
                 isLoading = false,
                 isAddCategorySheetVisible = false,
-                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.category_added_successfully)),
+                snackBarState = SnackBarState.getInstance(stringProvider.category_added_successfully),
                 newCategory = CategoryUiState()
             )
         }
@@ -109,12 +109,6 @@ class CategoryViewModel(
 
     override fun onToggleAddCategorySheet(isVisible: Boolean) {
         _state.update { it.copy(isAddCategorySheetVisible = isVisible) }
-    }
-
-    override fun onSnackBarShown() {
-        _state.update {
-            it.copy(snackBarState = SnackBarState.hide())
-        }
     }
 
     override fun onCategoryTitleChange(title: String) {

@@ -59,13 +59,14 @@ fun AddEditCategoryBottomSheet(
     BaseBottomSheet(
         content = {
             Column(
-                modifier = modifier
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .background(color = Theme.color.surface)
             ) {
                 Column(
                     modifier = Modifier
-                        .verticalScroll(rememberScrollState())
+
                         .padding(horizontal = Theme.dimension.medium)
-                        .background(color = Theme.color.surface)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -106,7 +107,7 @@ fun AddEditCategoryBottomSheet(
                         modifier = Modifier.padding(top = Theme.dimension.regular)
                     )
                     UploadBox(
-                        modifier = Modifier.padding(top = Theme.dimension.small, bottom = Theme.dimension.large),
+                        modifier = Modifier.padding(top = Theme.dimension.small),
                         onImageSelected = { uri ->
                             onImageSelected(uri)
                             uri?.let {
@@ -122,10 +123,9 @@ fun AddEditCategoryBottomSheet(
                         initialImagePath = category.imagePath
                     )
                 }
-
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .padding(top = 24.dp)
                         .dropShadow(offsetY = 4.dp, blur = 20.dp, color = dropShadowColor)
                         .background(Theme.color.surfaceHigh)
                         .padding(
@@ -148,6 +148,8 @@ fun AddEditCategoryBottomSheet(
                     )
                 }
             }
+
+
         },
         onDismiss = onDismiss
     )

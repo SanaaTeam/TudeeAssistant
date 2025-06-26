@@ -1,10 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.category
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -29,12 +24,11 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
-import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
-import kotlinx.coroutines.delay
+import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -43,6 +37,7 @@ fun CategoryScreen(
     viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
 ) {
     val state by viewModel.state.collectAsState()
+
     CategoryScreenContent(
         modifier = modifier,
         state = state,
@@ -57,9 +52,12 @@ fun CategoryScreenContent(
     listener: CategoryInteractionListener,
 ) {
     val screenNavController = AppNavigation.app
+    val snackBarState = LocalSnackBarState.current
+
     LaunchedEffect(state.snackBarState) {
+        ->
         if (state.snackBarState.isVisible) {
-            delay(3000)
+            snackBarState.value = state.snackBarState
             listener.onHideSnakeBar()
         }
     }
@@ -101,18 +99,6 @@ fun CategoryScreenContent(
         ) {
             listener.onToggleAddCategorySheet(true)
         }
-
-
-        AnimatedVisibility(
-            visible = state.snackBarState.isVisible,
-            modifier = Modifier
-                .statusBarsPadding()
-                .align(Alignment.TopCenter),
-            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
-            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
-        ) {
-            SnackBar(state = state.snackBarState)
-        }
     }
 
     if (state.isAddCategorySheetVisible) {
@@ -138,7 +124,9 @@ private fun AppBar() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Theme.color.surfaceHigh)
+            .height(64.dp)
+            .background(color = Theme.color.surfaceHigh),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             stringResource(R.string.categories),
@@ -146,7 +134,7 @@ private fun AppBar() {
             color = Theme.color.title,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .padding(horizontal = 16.dp)
         )
     }
 }

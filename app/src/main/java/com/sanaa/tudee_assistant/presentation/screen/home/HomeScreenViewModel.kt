@@ -66,12 +66,11 @@ class HomeScreenViewModel(
         )
     }
 
-
     override fun onAddTaskSuccess() {
         getTasks()
         _state.update {
             it.copy(
-                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.task_add_success))
+                snackBarState = SnackBarState.getInstance(stringProvider.task_added_success)
             )
         }
     }
@@ -88,7 +87,7 @@ class HomeScreenViewModel(
         getTasks()
         _state.update {
             it.copy(
-                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.task_edited_successfully))
+                snackBarState = SnackBarState.getInstance(stringProvider.task_update_success)
             )
         }
     }
@@ -119,7 +118,7 @@ class HomeScreenViewModel(
         getTasks()
         _state.update {
             it.copy(
-                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.task_status_update_success))
+                snackBarState = SnackBarState.getInstance(stringProvider.task_status_update_success)
             )
         }
     }
@@ -127,7 +126,7 @@ class HomeScreenViewModel(
     override fun onMoveStatusFail() {
         _state.update {
             it.copy(
-                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.task_was_not_updated))
+                snackBarState = SnackBarState.getInstance(stringProvider.task_status_update_error)
             )
         }
     }
@@ -136,7 +135,7 @@ class HomeScreenViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(
-                    exception.message ?: stringProvider.getString(R.string.unknown_error)
+                    exception.message ?: stringProvider.unknown_error
                 )
             )
         }

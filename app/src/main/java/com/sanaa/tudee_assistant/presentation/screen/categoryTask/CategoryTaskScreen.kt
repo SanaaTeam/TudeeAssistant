@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
@@ -29,26 +29,37 @@ import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.Emp
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun CategoryTaskScreen(
     modifier: Modifier = Modifier,
     categoryId: Int?,
-    viewModel: CategoryTaskViewModel = koinViewModel<CategoryTaskViewModel>(),
+    viewModel: CategoryTaskViewModel = koinViewModel<CategoryTaskViewModel>(
+        parameters = {
+            parametersOf(categoryId)
+        }
+    ),
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = AppNavigation.app
-    LaunchedEffect(categoryId) {
-        categoryId?.let {
-            viewModel.loadCategoryTasks(it)
+
+    LaunchedEffect(Unit) {
+        viewModel.effects.collectLatest { effect ->
+            when (effect) {
+                is NavigateBackToCategoryList -> {
+                    navController.popBackStack(
+                        route = MainScreenRoute,
+                        inclusive = false
+                    )
+                }
+            }
         }
     }
-    LaunchedEffect(state.navigateBackToCategoryList) {
-        if (state.navigateBackToCategoryList) {
-            navController.popBackStack()
-        }
-    }
+
+
     CategoryTaskScreenContent(
         state = state,
         listener = viewModel,

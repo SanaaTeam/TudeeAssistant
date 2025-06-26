@@ -115,6 +115,7 @@ fun TaskDetailsComponent(
                         TaskStatusCard(taskUiStatus = state.value.status)
                         PriorityTag(
                             priority = state.value.priority,
+                            enabled = false
                         )
                     }
                     changeStatusTo?.let {

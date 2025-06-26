@@ -26,9 +26,11 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCou
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.mainActivity.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
+import com.sanaa.tudee_assistant.presentation.shared.LocalThemeState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -61,61 +63,66 @@ fun CategoryScreenContent(
             listener.onHideSnakeBar()
         }
     }
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = Theme.color.surfaceHigh)
+    TudeeScaffold(
+        statusBarColor = Theme.color.surfaceHigh,
+        isDarkIcon = !LocalThemeState.current
     ) {
-        Column {
-            AppBar()
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(it)
+                .background(color = Theme.color.surface)
+        ) {
+            Column {
+                AppBar()
 
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 104.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = Theme.color.surface),
-                contentPadding = PaddingValues(vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(state.allCategories) { category ->
-                    CategoryItem(
-                        category = category,
-                        topContent = { CategoryCount(category.tasksCount.toString()) },
-                        onClick = {
-                            screenNavController.navigate(CategoryTasksScreenRoute(category.id))
-                        },
-                    )
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 104.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = Theme.color.surface),
+                    contentPadding = PaddingValues(vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(state.allCategories) { category ->
+                        CategoryItem(
+                            category = category,
+                            topContent = { CategoryCount(category.tasksCount.toString()) },
+                            onClick = {
+                                screenNavController.navigate(CategoryTasksScreenRoute(category.id))
+                            },
+                        )
+                    }
                 }
+            }
+
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
+                iconRes = R.drawable.resources_add,
+            ) {
+                listener.onToggleAddCategorySheet(true)
             }
         }
 
-        FloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
-            iconRes = R.drawable.resources_add,
-        ) {
-            listener.onToggleAddCategorySheet(true)
+        if (state.isAddCategorySheetVisible) {
+            AddEditCategoryBottomSheet(
+                category = state.newCategory,
+                isEditMode = false,
+                onTitleChange = { listener.onCategoryTitleChange(it) },
+                onImageSelected = { listener.onCategoryImageSelected(it) },
+                onSaveClick = {
+                    listener.onAddCategory(it)
+                    listener.onToggleAddCategorySheet(false)
+                },
+                onDismiss = {
+                    listener.onToggleAddCategorySheet(false)
+                },
+                isFormValid = { listener.isFormValid() }
+            )
         }
-    }
-
-    if (state.isAddCategorySheetVisible) {
-        AddEditCategoryBottomSheet(
-            category = state.newCategory,
-            isEditMode = false,
-            onTitleChange = { listener.onCategoryTitleChange(it) },
-            onImageSelected = { listener.onCategoryImageSelected(it) },
-            onSaveClick = {
-                listener.onAddCategory(it)
-                listener.onToggleAddCategorySheet(false)
-            },
-            onDismiss = {
-                listener.onToggleAddCategorySheet(false)
-            },
-            isFormValid = { listener.isFormValid() }
-        )
     }
 }
 

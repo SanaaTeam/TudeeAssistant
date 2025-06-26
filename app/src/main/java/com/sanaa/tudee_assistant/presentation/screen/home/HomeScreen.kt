@@ -62,6 +62,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.mainActivity.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
@@ -299,21 +300,9 @@ private fun CategoryList(
     categories: List<CategoryUiState>,
     onClick: (TaskUiState) -> Unit,
 ) {
-    val rowCount = if (items.size == 1) 1 else 2
-    val cardHeight = 111.dp
-    val targetHeight = if (items.isNotEmpty()) {
-        (cardHeight * rowCount) + Theme.dimension.extraLarge+ Theme.dimension.small
-    } else {
-        0.dp
-    }
-
-    val animatedHeight by animateDpAsState(
-        targetValue = targetHeight,
-        label = "gridHeight"
-    )
     LazyHorizontalGrid(
-        modifier = Modifier.height(animatedHeight),
-        rows = GridCells.Fixed(rowCount),
+        modifier = Modifier.height(if (items.isNotEmpty()) 222.dp + Theme.dimension.extraLarge else 0.dp),
+        rows = GridCells.Fixed(2),
         contentPadding = PaddingValues(
             start = Theme.dimension.medium,
             end = Theme.dimension.medium,

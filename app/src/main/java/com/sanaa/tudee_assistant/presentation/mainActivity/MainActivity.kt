@@ -19,15 +19,18 @@ class MainActivity() : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val mainActivityViewModel: MainActivityViewModel = koinViewModel<MainActivityViewModel>()
+            val mainActivityViewModel: MainActivityViewModel =
+                koinViewModel<MainActivityViewModel>()
 
             var state = mainActivityViewModel.state.collectAsState()
-
             mySplashScreen.setKeepOnScreenCondition { state.value.isLoading }
 
             if (!state.value.isLoading) {
                 TudeeTheme(state.value.isDarkTheme) {
-                    TudeeApp(isFirstLaunch = state.value.isFirstLaunch)
+                    TudeeApp(
+                        isFirstLaunch = state.value.isFirstLaunch,
+                        isDarkTheme = state.value.isDarkTheme
+                    )
                 }
             }
         }

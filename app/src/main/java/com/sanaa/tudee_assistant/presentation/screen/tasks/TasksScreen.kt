@@ -46,9 +46,11 @@ import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDe
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.mainActivity.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
+import com.sanaa.tudee_assistant.presentation.shared.LocalThemeState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortMonthName
 import kotlinx.coroutines.launch
@@ -102,201 +104,207 @@ fun TasksScreenContent(
         }
     }
 
-    Box(
-        modifier = modifier.fillMaxSize()
+    TudeeScaffold(
+        statusBarColor = Theme.color.surfaceHigh,
+        isDarkIcon = !LocalThemeState.current,
     ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Theme.color.surfaceHigh),
+        Box(
+            modifier = modifier.padding(it)
         ) {
-            Text(
-                text = stringResource(R.string.tasks),
-                style = Theme.textStyle.title.large,
-                color = Theme.color.title,
-                modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp)
-            )
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .border(1.dp, Theme.color.stroke, CircleShape)
-                        .padding(6.dp)
-                        .clickable {
-                            val nextMonth = state.selectedDate.minus(1, DateTimeUnit.MONTH)
-                            interactionListener.onDateSelected(nextMonth)
-                            daysInMonth = (DateFormater.getLocalDatesInMonth(
-                                nextMonth.year, nextMonth.monthNumber
-                            ))
-                        }, contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.icon_left_arrow),
-                        contentDescription = "back",
-                        tint = Theme.color.body,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "${state.selectedDate.getShortMonthName()}, ${state.selectedDate.year}",
-                        color = Theme.color.body,
-                        style = Theme.textStyle.label.medium
-                    )
-                    Icon(
-                        painter = painterResource(R.drawable.icon_left_arrow),
-                        contentDescription = "calender",
-                        tint = Theme.color.body,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .rotate(if (LocalLayoutDirection.current == LayoutDirection.Rtl) 90f else -90f)
-                            .clickable {
-                                showDialog = true
-                            })
-                }
-
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .border(1.dp, Theme.color.stroke, CircleShape)
-                        .padding(6.dp)
-                        .clickable {
-                            val previousMonth = state.selectedDate.plus(1, DateTimeUnit.MONTH)
-                            interactionListener.onDateSelected(previousMonth)
-                            daysInMonth = (DateFormater.getLocalDatesInMonth(
-                                previousMonth.year, previousMonth.monthNumber
-                            ))
-                        }, contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.icon_left_arrow),
-                        contentDescription = "next",
-                        tint = Theme.color.body,
-                        modifier = Modifier
-                            .size(20.dp)
-                            .rotate(180f)
-                    )
-                }
-
-            }
-            val listState = rememberLazyListState()
-            val coroutineScope = rememberCoroutineScope()
-
-            LaunchedEffect(key1 = state.selectedDate) {
-                coroutineScope.launch {
-                    listState.animateScrollToItem(state.selectedDate.dayOfMonth - 1)
-                }
-            }
-            val isArabic = Locale.getDefault().language == "arabic"
-            LazyRow(
-                state = listState,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp),
-                reverseLayout = isArabic
+                    .background(Theme.color.surfaceHigh),
             ) {
-                itemsIndexed(daysInMonth) { index, date ->
-                    DayItem(
-                        dayDate = date, isSelected = date == state.selectedDate, onClick = {
-                            interactionListener.onDateSelected(date)
+                Text(
+                    text = stringResource(R.string.tasks),
+                    style = Theme.textStyle.title.large,
+                    color = Theme.color.title,
+                    modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp)
+                )
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .border(1.dp, Theme.color.stroke, CircleShape)
+                            .padding(6.dp)
+                            .clickable {
+                                val nextMonth = state.selectedDate.minus(1, DateTimeUnit.MONTH)
+                                interactionListener.onDateSelected(nextMonth)
+                                daysInMonth = (DateFormater.getLocalDatesInMonth(
+                                    nextMonth.year, nextMonth.monthNumber
+                                ))
+                            }, contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.icon_left_arrow),
+                            contentDescription = "back",
+                            tint = Theme.color.body,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "${state.selectedDate.getShortMonthName()}, ${state.selectedDate.year}",
+                            color = Theme.color.body,
+                            style = Theme.textStyle.label.medium
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.icon_left_arrow),
+                            contentDescription = "calender",
+                            tint = Theme.color.body,
+                            modifier = Modifier
+                                .size(16.dp)
+                                .rotate(if (LocalLayoutDirection.current == LayoutDirection.Rtl) 90f else -90f)
+                                .clickable {
+                                    showDialog = true
+                                })
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .border(1.dp, Theme.color.stroke, CircleShape)
+                            .padding(6.dp)
+                            .clickable {
+                                val previousMonth = state.selectedDate.plus(1, DateTimeUnit.MONTH)
+                                interactionListener.onDateSelected(previousMonth)
+                                daysInMonth = (DateFormater.getLocalDatesInMonth(
+                                    previousMonth.year, previousMonth.monthNumber
+                                ))
+                            }, contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.icon_left_arrow),
+                            contentDescription = "next",
+                            tint = Theme.color.body,
+                            modifier = Modifier
+                                .size(20.dp)
+                                .rotate(180f)
+                        )
+                    }
+
+                }
+                val listState = rememberLazyListState()
+                val coroutineScope = rememberCoroutineScope()
+
+                LaunchedEffect(key1 = state.selectedDate) {
+                    coroutineScope.launch {
+                        listState.animateScrollToItem(state.selectedDate.dayOfMonth - 1)
+                    }
+                }
+                val isArabic = Locale.getDefault().language == "arabic"
+                LazyRow(
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 24.dp),
+                    reverseLayout = isArabic
+                ) {
+                    itemsIndexed(daysInMonth) { index, date ->
+                        DayItem(
+                            dayDate = date, isSelected = date == state.selectedDate, onClick = {
+                                interactionListener.onDateSelected(date)
+                            })
+                    }
+                }
+
+                if (showDialog) {
+                    CustomDatePickerDialog(
+                        onDateSelected = { selectedDateMillis: Long? ->
+                            selectedDateMillis?.let {
+                                val date = DateFormater.formatLongToDate(selectedDateMillis)
+                                interactionListener.onDateSelected(date)
+                                daysInMonth =
+                                    (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
+                            }
+                        },
+                        onDismiss = { showDialog = false },
+                        initialSelectedDate = state.selectedDate
+                    )
+                }
+
+                TaskStatusTabs(
+                    state,
+                    interactionListener::onTaskSwipeToDelete,
+                    interactionListener::onTaskClicked,
+                )
+                if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
+                    TaskDetailsComponent(
+                        selectedTaskId = state.selectedTask.id,
+                        onDismiss = { interactionListener.onDismissTaskDetails(false) },
+                        onEditClick = { task ->
+                            interactionListener.onDismissTaskDetails(false)
+                            taskToEdit = task
+                            showEditTaskBottomSheet = true
+                        },
+                        onMoveStatusSuccess = { interactionListener.handleOnMoveToStatusSuccess() },
+                        onMoveStatusFail = { interactionListener.handleOnMoveToStatusFail() },
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
+                    DeleteComponent(
+                        onDismiss = interactionListener::onDeleteDismiss,
+                        onDeleteClicked = interactionListener::onDeleteTask,
+                        title = stringResource(R.string.delete_task_title),
+                    )
+                if (showAddTaskBottomSheet) {
+                    AddEditTaskScreen(
+                        isEditMode = false,
+                        taskToEdit = null,
+                        onDismiss = { showAddTaskBottomSheet = false },
+                        onSuccess = {
+                            showAddTaskBottomSheet = false
+                            interactionListener.onAddTaskSuccess()
+                        },
+                        onError = { errorMessage ->
+                            coroutineScope.launch {
+                                snackBarHostState.showSnackbar(
+                                    message = errorMessage, withDismissAction = true
+                                )
+                            }
                         })
                 }
-            }
 
-            if (showDialog) {
-                CustomDatePickerDialog(
-                    onDateSelected = { selectedDateMillis: Long? ->
-                        selectedDateMillis?.let {
-                            val date = DateFormater.formatLongToDate(selectedDateMillis)
-                            interactionListener.onDateSelected(date)
-                            daysInMonth =
-                                (DateFormater.getLocalDatesInMonth(date.year, date.monthNumber))
-                        }
-                    }, onDismiss = { showDialog = false }, initialSelectedDate = state.selectedDate
-                )
-            }
-
-            TaskStatusTabs(
-                state,
-                interactionListener::onTaskSwipeToDelete,
-                interactionListener::onTaskClicked
-            )
-            if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
-                TaskDetailsComponent(
-                    selectedTaskId = state.selectedTask.id,
-                    onDismiss = { interactionListener.onDismissTaskDetails(false) },
-                    onEditClick = { task ->
-                        interactionListener.onDismissTaskDetails(false)
-                        taskToEdit = task
-                        showEditTaskBottomSheet = true
-                    },
-                    onMoveStatusSuccess = { interactionListener.handleOnMoveToStatusSuccess() },
-                    onMoveStatusFail = { interactionListener.handleOnMoveToStatusFail() },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            if (state.selectedTask != null && state.showDeleteTaskBottomSheet)
-                DeleteComponent(
-                    onDismiss = interactionListener::onDeleteDismiss,
-                    onDeleteClicked = interactionListener::onDeleteTask,
-                    title = stringResource(R.string.delete_task_title),
-                )
-            if (showAddTaskBottomSheet) {
-                AddEditTaskScreen(
-                    isEditMode = false,
-                    taskToEdit = null,
-                    onDismiss = { showAddTaskBottomSheet = false },
-                    onSuccess = {
-                        showAddTaskBottomSheet = false
-                        interactionListener.onAddTaskSuccess()
-                    },
-                    onError = { errorMessage ->
+                if (showEditTaskBottomSheet && taskToEdit != null) {
+                    AddEditTaskScreen(isEditMode = true, taskToEdit = taskToEdit, onDismiss = {
+                        showEditTaskBottomSheet = false
+                        taskToEdit = null
+                    }, onSuccess = {
+                        showEditTaskBottomSheet = false
+                        taskToEdit = null
+                        interactionListener.onEditTaskSuccess()
+                    }, onError = { errorMessage ->
                         coroutineScope.launch {
                             snackBarHostState.showSnackbar(
                                 message = errorMessage, withDismissAction = true
                             )
                         }
                     })
+                }
             }
 
-            if (showEditTaskBottomSheet && taskToEdit != null) {
-                AddEditTaskScreen(isEditMode = true, taskToEdit = taskToEdit, onDismiss = {
-                    showEditTaskBottomSheet = false
-                    taskToEdit = null
-                }, onSuccess = {
-                    showEditTaskBottomSheet = false
-                    taskToEdit = null
-                    interactionListener.onEditTaskSuccess()
-                }, onError = { errorMessage ->
-                    coroutineScope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = errorMessage, withDismissAction = true
-                        )
-                    }
-                })
-            }
+            FloatingActionButton(
+                enabled = true,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 10.dp, bottom = 12.dp),
+                onClick = {
+                    showAddTaskBottomSheet = true
+                },
+                iconRes = R.drawable.note_add
+            )
         }
-
-        FloatingActionButton(
-            enabled = true,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 10.dp, bottom = 12.dp),
-            onClick = {
-                showAddTaskBottomSheet = true
-            },
-            iconRes = R.drawable.note_add
-        )
     }
 }

@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -90,7 +91,7 @@ private fun HomeScreenContent(
     interactionsListener: HomeScreenInteractionsListener,
 ) {
     val scrollState = rememberLazyListState()
-    var showEditTaskBottomSheet by remember { mutableStateOf(false) }
+    var showEditTaskBottomSheet by rememberSaveable { mutableStateOf(false) }
     var isScrolled by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.snackBarState) {

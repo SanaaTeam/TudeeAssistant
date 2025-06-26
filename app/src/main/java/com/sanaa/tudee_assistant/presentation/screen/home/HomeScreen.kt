@@ -236,24 +236,6 @@ private fun CategoryList(
         }
 
         stickyHeader {
-            if (state.tasks.any { it.status == TaskUiStatus.DONE }) {
-                Title(
-                    text = stringResource(R.string.done_task_status),
-                    tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
-                    taskUiStatus = TaskUiStatus.DONE
-                )
-            }
-        }
-
-        item {
-            CategoryList(
-                items = state.tasks.filter { it.status == TaskUiStatus.DONE },
-                categories = state.categories,
-                onClick = { onTaskClick(it) }
-            )
-        }
-
-        stickyHeader {
             if (state.tasks.any { it.status == TaskUiStatus.IN_PROGRESS }) {
                 Title(
                     text = stringResource(R.string.in_progress_task_status),
@@ -284,6 +266,23 @@ private fun CategoryList(
         item {
             CategoryList(
                 items = state.tasks.filter { it.status == TaskUiStatus.TODO },
+                categories = state.categories,
+                onClick = { onTaskClick(it) }
+            )
+        }
+        stickyHeader {
+            if (state.tasks.any { it.status == TaskUiStatus.DONE }) {
+                Title(
+                    text = stringResource(R.string.done_task_status),
+                    tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
+                    taskUiStatus = TaskUiStatus.DONE
+                )
+            }
+        }
+
+        item {
+            CategoryList(
+                items = state.tasks.filter { it.status == TaskUiStatus.DONE },
                 categories = state.categories,
                 onClick = { onTaskClick(it) }
             )

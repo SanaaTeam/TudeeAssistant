@@ -40,14 +40,14 @@ class TaskViewModelTest {
     fun setup() {
         Dispatchers.setMain(dispatcher)
 
-        every { stringProvider.unknown_error } returns "Unknown error"
-        every { stringProvider.task_delete_success } returns "Deleted"
-        every { stringProvider.task_added_success } returns "Added"
-        every { stringProvider.task_update_success } returns "Updated"
-        every { stringProvider.task_status_update_success } returns "Moved"
-
         coEvery { categoryService.getCategories() } returns flowOf(emptyList())
         coEvery { taskService.getTasksByDueDate(any()) } returns flowOf(emptyList())
+
+        every { stringProvider.unknown_error } returns UNKNOWN_ERROR
+        every { stringProvider.task_delete_success } returns TASK_DELETE_SUCCESS
+        every { stringProvider.task_added_success } returns TASK_ADDED_SUCCESS
+        every { stringProvider.task_update_success } returns TASK_UPDATE_SUCCESS
+        every { stringProvider.task_status_update_success } returns TASK_STATUS_UPDATE_SUCCESS
 
         viewModel = TaskViewModel(taskService, categoryService, fakeStatus, stringProvider)
     }
@@ -214,5 +214,13 @@ class TaskViewModelTest {
             createdAt = LocalDateTime(2025, 6, 1, 12, 0)
         )
     )
+
+    private companion object {
+        const val UNKNOWN_ERROR = "Unknown error"
+        const val TASK_DELETE_SUCCESS = "Deleted"
+        const val TASK_ADDED_SUCCESS = "Added"
+        const val TASK_UPDATE_SUCCESS = "Updated"
+        const val TASK_STATUS_UPDATE_SUCCESS = "Moved"
+    }
 
 }

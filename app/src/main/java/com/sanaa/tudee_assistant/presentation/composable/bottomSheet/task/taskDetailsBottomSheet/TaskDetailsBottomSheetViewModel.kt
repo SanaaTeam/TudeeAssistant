@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 interface TaskDetailsInteractionListener{
-    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit)
+    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: (TaskUiStatus) -> Unit, onMoveStatusFail: () -> Unit)
 }
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
@@ -19,21 +19,21 @@ class TaskDetailsBottomSheetViewModel(
     selectedTaskId: Int,
 ) : BaseViewModel<DetailsUiState>(DetailsUiState()),TaskDetailsInteractionListener{
     init {
-        getSelectedTask(selectedTaskId)
+        observeSelectedTask(selectedTaskId)
     }
 
-    private fun getSelectedTask(selectedTaskId: Int) {
+    private fun observeSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
-            val task: Task = taskService.getTaskById(selectedTaskId)
-            val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-            val detailsUiState = task.toDetailsState().copy(categoryImagePath = categoryImagePath)
-            _state.update {
-                detailsUiState
+            taskService.getTaskById(selectedTaskId).collect { task ->
+                val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
+                val detailsUiState = task.toDetailsState().copy(categoryImagePath = categoryImagePath)
+                _state.update {
+                    detailsUiState
+                }
             }
         }
     }
-
-    override fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit) {
+    override fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: (TaskUiStatus) -> Unit, onMoveStatusFail: () -> Unit) {
         viewModelScope.launch {
             var newUpdatedTask: Task
             state.value.let { state ->
@@ -46,7 +46,7 @@ class TaskDetailsBottomSheetViewModel(
                                 _state.update {
                                     it.copy(status = TaskUiStatus.IN_PROGRESS)
                                 }
-                                onMoveStatusSuccess()
+                                onMoveStatusSuccess(TaskUiStatus.IN_PROGRESS)
                             },
                             onError = {
                                 onMoveStatusFail()
@@ -63,7 +63,7 @@ class TaskDetailsBottomSheetViewModel(
                                 _state.update {
                                     it.copy(status = TaskUiStatus.DONE)
                                 }
-                                onMoveStatusSuccess()
+                                onMoveStatusSuccess(TaskUiStatus.DONE)
                             },
                             onError = {
                                 onMoveStatusFail()

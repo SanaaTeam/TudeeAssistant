@@ -1,5 +1,8 @@
 package com.sanaa.tudee_assistant.presentation.screen.main
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -32,7 +35,7 @@ import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
 fun MainScreen(
     startDestination: Any,
     onStatusBarColor: (Color) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val screenNavController = rememberNavController()
     val navBackStackEntry by screenNavController.currentBackStackEntryAsState()
@@ -53,9 +56,11 @@ fun MainScreen(
                 modifier = Modifier.weight(1f),
                 navController = screenNavController,
                 startDestination = startDestination,
+                enterTransition = { fadeIn(tween()) },
+                exitTransition = { fadeOut(tween()) },
             ) {
                 composable<HomeScreenRoute> {
-                    onStatusBarColor(Theme.color.surfaceHigh)
+                    onStatusBarColor(Theme.color.primary)
                     HomeScreen()
                 }
 

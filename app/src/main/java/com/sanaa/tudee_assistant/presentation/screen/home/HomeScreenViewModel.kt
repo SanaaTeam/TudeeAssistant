@@ -124,7 +124,7 @@ class HomeScreenViewModel(
 
     }
 
-    override fun onDismissTaskDetails(show: Boolean) {
+    override fun onShowTaskDetails(show: Boolean) {
         _state.update { it.copy(selectedTask = null) }
         _state.update { it.copy( showTaskDetailsBottomSheet = show)}
     }

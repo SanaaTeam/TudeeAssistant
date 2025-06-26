@@ -134,7 +134,7 @@ private fun HomeScreenContent(
         if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
             TaskDetailsComponent(
                 selectedTaskId = state.selectedTask.id,
-                onDismiss = { interactionsListener.onDismissTaskDetails(false) },
+                onDismiss = { interactionsListener.onShowTaskDetails(false) },
                 onEditClick = { taskToEdit -> interactionsListener.onShowEditTaskSheet(taskToEdit) },
                 onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
                 onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
@@ -173,7 +173,7 @@ fun PreviewHomeScreen() {
             override fun onEditTaskSuccess() {}
             override fun onEditTaskError(errorMessage: String) {}
             override fun onTaskClick(taskUiState: TaskUiState) {}
-            override fun onDismissTaskDetails(show: Boolean) {}
+            override fun onShowTaskDetails(show: Boolean) {}
             override fun onShowAddTaskSheet() {}
             override fun onHideAddTaskSheet() {}
             override fun onMoveStatusSuccess() {}

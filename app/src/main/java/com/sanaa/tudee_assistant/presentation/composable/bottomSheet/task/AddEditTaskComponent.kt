@@ -12,6 +12,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomS
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskContent
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskViewModel
+import kotlinx.datetime.LocalDate
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -20,6 +21,7 @@ import org.koin.androidx.compose.koinViewModel
 fun AddEditTaskScreen(
     isEditMode: Boolean,
     taskToEdit: TaskUiState? = null,
+    initialDate: LocalDate? = null,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
@@ -28,10 +30,9 @@ fun AddEditTaskScreen(
     val uiState by viewModel.state.collectAsState()
     val showDatePickerDialog by viewModel.showDatePickerDialog.collectAsState()
 
-    LaunchedEffect(isEditMode, taskToEdit) {
-        viewModel.initTaskState(isEditMode, taskToEdit)
+    LaunchedEffect(isEditMode, taskToEdit, initialDate) {
+        viewModel.initTaskState(isEditMode, taskToEdit, initialDate)
     }
-
     LaunchedEffect(uiState.isOperationSuccessful, uiState.error) { // Corrected lines
         if (uiState.isOperationSuccessful) {
             onSuccess()

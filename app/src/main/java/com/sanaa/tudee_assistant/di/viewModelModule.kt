@@ -27,7 +27,7 @@ val viewModelModule = module {
             taskService = get(),
             categoryService = get(),
             stringProvider = get(),
-            dispatcher = Dispatchers.IO // optional
+            dispatcher = Dispatchers.IO
         )
     }
 

@@ -126,7 +126,11 @@ private fun OnBoardingScreenContent(
                 OnBoardingPager(
                     pagerState = pagerState,
                     pageList = state.pageList,
+                )
+                DialogContainer(
+                    pageContent = state.pageList[pagerState.currentPage],
                     onNextPageClick = { interactionListener.onNextPageClick() },
+                    modifier = Modifier.padding(horizontal = Theme.dimension.medium)
                 )
 
                 PageIndicator(
@@ -157,18 +161,27 @@ private fun OnBoardingScreenContent(
 private fun OnBoardingPager(
     pagerState: PagerState,
     pageList: List<OnBoardingPageContentItem>,
-    onNextPageClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     HorizontalPager(
         state = pagerState,
         modifier = modifier.fillMaxWidth()
     ) { page ->
-        DialogContainer(
-            pageContent = pageList[page],
-            onNextPageClick = { onNextPageClick() },
-            modifier = Modifier.padding(horizontal = Theme.dimension.medium)
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(350.dp)
+                .offset(y = 11.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(pageList[page].imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Inside,
+                modifier = Modifier.height(260.dp)
+            )
+        }
+
     }
 }
 
@@ -184,20 +197,7 @@ private fun DialogContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(350.dp)
-                .offset(y = 11.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(pageContent.imageRes),
-                contentDescription = null,
-                contentScale = ContentScale.Inside,
-                modifier = Modifier.height(260.dp)
-            )
-        }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()

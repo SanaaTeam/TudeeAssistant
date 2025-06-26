@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +32,18 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.LocalDate
+@OptIn(ExperimentalMaterial3Api::class)
+fun createSelectableDates(minDateMillis: Long?): SelectableDates {
+    return if (minDateMillis != null) {
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= minDateMillis
+            }
+        }
+    } else {
+        DatePickerDefaults.AllDates
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,16 +55,7 @@ fun CustomDatePickerDialog(
     minDateMillis: Long? = null
 ) {
     val initialSelectedDateMillis = DateFormater.localDateToEpochMillis(initialSelectedDate)
-
-    val selectableDates = if (minDateMillis != null) {
-        object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= minDateMillis
-            }
-        }
-    } else {
-        DatePickerDefaults.AllDates
-    }
+    val selectableDates = rememberSaveable(minDateMillis) { createSelectableDates(minDateMillis) }
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialSelectedDateMillis,

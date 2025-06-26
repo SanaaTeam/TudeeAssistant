@@ -293,7 +293,7 @@ fun TasksScreenContent(
             enabled = true,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 10.dp, bottom = 12.dp),
+                .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
             onClick = {
                 showAddTaskBottomSheet = true
             },

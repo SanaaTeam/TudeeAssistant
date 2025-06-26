@@ -1,10 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +23,6 @@ import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEdi
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
-import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
@@ -36,8 +30,8 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.CategoryList
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Line
+import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
-import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -60,10 +54,11 @@ private fun HomeScreenContent(
     val scrollState = rememberLazyListState()
     var isScrolled by remember { mutableStateOf(false) }
 
+    val snackBarState = LocalSnackBarState.current
 
-    LaunchedEffect(state.snackBarState) {
+    LaunchedEffect(state.snackBarState) { ->
         if (state.snackBarState.isVisible) {
-            delay(3000)
+            snackBarState.value = state.snackBarState
             interactionsListener.onHideSnackBar()
         }
     }
@@ -143,16 +138,6 @@ private fun HomeScreenContent(
                 onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
                 onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
             )
-        }
-
-        AnimatedVisibility(
-            visible = state.snackBarState.isVisible,
-            modifier = Modifier
-                .align(Alignment.TopCenter),
-            enter = slideInHorizontally(initialOffsetX = { -it }) + fadeIn(),
-            exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
-        ) {
-            SnackBar(state = state.snackBarState)
         }
     }
 }

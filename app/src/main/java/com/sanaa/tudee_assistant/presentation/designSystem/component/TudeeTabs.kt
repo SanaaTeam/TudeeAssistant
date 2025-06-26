@@ -101,9 +101,7 @@ fun TudeeScrollableTabs(
         }
 
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 12.dp)
+            modifier = Modifier.fillMaxSize()
         ) {
             tabs.getOrNull(selectedTabIndex)?.content?.invoke()
         }

@@ -15,9 +15,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
 fun EmptyCategoryTasksComponent(categoryName: String) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(end = 20.dp, top = 172.dp),
-        contentAlignment = Alignment.TopEnd
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         EmptyScreen(
             title = stringResource(

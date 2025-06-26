@@ -53,7 +53,7 @@ import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEdi
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
-import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
+import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyContent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
 import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
@@ -232,7 +232,7 @@ private fun CategoryList(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    EmptyScreen()
+                    EmptyContent()
                 }
             }
         }

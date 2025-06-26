@@ -15,7 +15,7 @@ fun DetailsUiState.toTaskUiState(): TaskUiState {
         dueDate = this.dueDate,
         priority = this.priority,
         status = this.status,
-        categoryId = this.id,
+        categoryId = this.categoryId,
         createdAt = this.createdAt
     )
 }

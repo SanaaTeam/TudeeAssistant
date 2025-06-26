@@ -1,50 +1,26 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
@@ -52,25 +28,15 @@ import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEdi
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
-import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
-import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
-import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
 import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
-import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskCountByStatusCard
-import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskItemCard
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
-import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.navigation.util.navigatePreservingState
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.CategoryList
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Line
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
-import com.sanaa.tudee_assistant.presentation.utils.DateFormater.formatDateTime
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -92,10 +58,7 @@ private fun HomeScreenContent(
     interactionsListener: HomeScreenInteractionsListener,
 ) {
     val scrollState = rememberLazyListState()
-    var showAddTaskBottomSheet by remember { mutableStateOf(false) }
-    var showEditTaskBottomSheet by remember { mutableStateOf(false) }
     var isScrolled by remember { mutableStateOf(false) }
-    var taskToEdit by rememberSaveable { mutableStateOf<TaskUiState?>(null) }
 
 
     LaunchedEffect(state.snackBarState) {
@@ -148,55 +111,33 @@ private fun HomeScreenContent(
                 .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
             iconRes = R.drawable.note_add,
         ) {
-            showAddTaskBottomSheet = true
+            interactionsListener.onShowAddTaskSheet()
         }
 
-        if (showAddTaskBottomSheet) {
+        if (state.showAddTaskSheet) {
             AddEditTaskScreen(
                 isEditMode = false,
-                onDismiss = {
-                    showAddTaskBottomSheet = false
-                },
-                onSuccess = {
-                    showAddTaskBottomSheet = false
-                    interactionsListener.onAddTaskSuccess()
-                },
-                onError = { errorMessage ->
-                    interactionsListener.onAddTaskError(errorMessage)
-                }
+                onDismiss = { interactionsListener.onHideAddTaskSheet() },
+                onSuccess = { interactionsListener.onAddTaskSuccess() },
+                onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
             )
         }
-        if (showEditTaskBottomSheet) {
+        if (state.showEditTaskSheet) {
             AddEditTaskScreen(
                 isEditMode = true,
-                taskToEdit = taskToEdit,
-                onDismiss = {
-                    showEditTaskBottomSheet = false
-                },
-                onSuccess = {
-                    showEditTaskBottomSheet = false
-                    interactionsListener.onDismissTaskDetails()
-                    interactionsListener.onEditTaskSuccess()
-                },
-                onError = { errorMessage ->
-                    interactionsListener.onEditTaskError(errorMessage)
-                }
+                taskToEdit = state.taskToEdit,
+                onDismiss = { interactionsListener.onHideEditTaskSheet() },
+                onSuccess = { interactionsListener.onEditTaskSuccess() },
+                onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
             )
         }
         if (state.selectedTask != null) {
             TaskDetailsComponent(
                 selectedTaskId = state.selectedTask.id,
                 onDismiss = { interactionsListener.onDismissTaskDetails() },
-                onEditClick = {
-                    taskToEdit = it
-                    showEditTaskBottomSheet = true
-                },
-                onMoveStatusSuccess = {
-                    interactionsListener.onMoveStatusSuccess()
-                },
-                onMoveStatusFail = {
-                    interactionsListener.onMoveStatusFail()
-                }
+                onEditClick = { taskToEdit -> interactionsListener.onShowEditTaskSheet(taskToEdit) },
+                onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
+                onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
             )
         }
 
@@ -227,10 +168,14 @@ fun PreviewHomeScreen() {
 
             override fun onAddTaskSuccess() {}
             override fun onAddTaskError(errorMessage: String) {}
+            override fun onShowEditTaskSheet(taskToEdit: TaskUiState) {}
+            override fun onHideEditTaskSheet() {}
             override fun onEditTaskSuccess() {}
             override fun onEditTaskError(errorMessage: String) {}
             override fun onTaskClick(taskUiState: TaskUiState) {}
             override fun onDismissTaskDetails() {}
+            override fun onShowAddTaskSheet() {}
+            override fun onHideAddTaskSheet() {}
             override fun onMoveStatusSuccess() {}
             override fun onMoveStatusFail() {}
             override fun onHideSnackBar() {}

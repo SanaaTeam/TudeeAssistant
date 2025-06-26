@@ -82,6 +82,20 @@ class HomeScreenViewModel(
         }
     }
 
+    override fun onShowEditTaskSheet(taskToEdit: TaskUiState) {
+        _state.update {
+            it.copy(
+                showEditTaskSheet = true,
+                taskToEdit = taskToEdit,
+                selectedTask = null
+            )
+        }
+    }
+
+    override fun onHideEditTaskSheet() {
+        _state.update { it.copy(showEditTaskSheet = false, taskToEdit = null) }
+    }
+
     override fun onEditTaskSuccess() {
         getTasks()
         _state.update {
@@ -111,6 +125,14 @@ class HomeScreenViewModel(
 
     override fun onDismissTaskDetails() {
         _state.update { it.copy(selectedTask = null) }
+    }
+
+    override fun onShowAddTaskSheet() {
+        _state.update { it.copy(showAddTaskSheet = true) }
+    }
+
+    override fun onHideAddTaskSheet() {
+        _state.update { it.copy(showAddTaskSheet = false) }
     }
 
     override fun onMoveStatusSuccess() {

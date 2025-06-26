@@ -123,7 +123,10 @@ fun TaskDetailsComponent(
                         ) {
                             SecondaryIconButton(
                                 iconRes = painterResource(R.drawable.pencil_edit),
-                                onClick = { onEditClick(state.value.toTaskUiState()) }
+                                onClick = {
+                                    onEditClick(state.value.toTaskUiState())
+                                    onDismiss()
+                                }
                             )
                             SecondaryButton(
                                 label = changeStatusTo,

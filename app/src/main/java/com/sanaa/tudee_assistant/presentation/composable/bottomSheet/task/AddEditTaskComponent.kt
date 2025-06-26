@@ -48,9 +48,11 @@ fun AddEditTaskScreen(
         if (uiState.isOperationSuccessful) {
             onSuccess()
             viewModel.resetState()
+            onDismiss()
         }
         uiState.error?.let {
             onError(it)
+            onDismiss()
         }
     }
 

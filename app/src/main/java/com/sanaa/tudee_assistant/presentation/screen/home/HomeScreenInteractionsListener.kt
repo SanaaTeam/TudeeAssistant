@@ -7,7 +7,7 @@ interface HomeScreenInteractionsListener {
     fun onHideSnackBar()
 
     fun onTaskClick(taskUiState: TaskUiState)
-    fun onDismissTaskDetails()
+    fun onShowTaskDetails(show: Boolean)
 
     fun onShowAddTaskSheet()
     fun onHideAddTaskSheet()

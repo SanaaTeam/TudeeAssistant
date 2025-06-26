@@ -120,11 +120,13 @@ class HomeScreenViewModel(
     }
 
     override fun onTaskClick(taskUiState: TaskUiState) {
-        _state.update { it.copy(selectedTask = taskUiState) }
+        _state.update { it.copy(selectedTask = taskUiState, showTaskDetailsBottomSheet = true) }
+
     }
 
-    override fun onDismissTaskDetails() {
+    override fun onShowTaskDetails(show: Boolean) {
         _state.update { it.copy(selectedTask = null) }
+        _state.update { it.copy( showTaskDetailsBottomSheet = show)}
     }
 
     override fun onShowAddTaskSheet() {
@@ -139,9 +141,11 @@ class HomeScreenViewModel(
         getTasks()
         _state.update {
             it.copy(
-                snackBarState = SnackBarState.getInstance(stringProvider.task_status_update_success)
+                snackBarState = SnackBarState.getInstance(stringProvider.task_status_update_success),
+                showTaskDetailsBottomSheet = false,
             )
         }
+
     }
 
     override fun onMoveStatusFail() {

@@ -21,6 +21,11 @@ val viewModelModule = module {
     viewModelOf(::CategoryTaskViewModel)
     viewModelOf(::TaskViewModel)
     viewModelOf(::AddEditTaskViewModel)
+    viewModel{ AddEditTaskViewModel(
+        taskService = get(),
+        categoryService = get(),
+    )
+    }
     viewModelOf(::TaskViewModel)
     viewModel {
         TaskDetailsBottomSheetViewModel(

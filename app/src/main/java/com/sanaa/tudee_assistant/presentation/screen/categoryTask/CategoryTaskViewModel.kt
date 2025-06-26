@@ -181,7 +181,6 @@ class CategoryTaskViewModel(
                             showEditCategoryBottomSheet = false,
                             snackBarState = SnackBarState
                                 .getInstance(stringProvider.categoryUpdateSuccessfully),
-                            navigateBackToCategoryList = true,
                         )
 
                     },

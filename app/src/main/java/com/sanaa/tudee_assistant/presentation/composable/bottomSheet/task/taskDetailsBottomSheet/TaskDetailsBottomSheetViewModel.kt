@@ -13,11 +13,12 @@ import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 interface TaskDetailsInteractionListener{
-    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: (TaskUiStatus) -> Unit, onMoveStatusFail: () -> Unit)
+    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit)
 }
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
@@ -28,23 +29,30 @@ class TaskDetailsBottomSheetViewModel(
 
      fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
-            val task: Task = taskService.getTaskById(selectedTaskId)
-            val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-            val detailsUiState = task.toDetailsState().copy(
-                categoryImagePath = categoryImagePath,
-                moveStatusToLabel = when (task.status) {
-                    Task.TaskStatus.TODO -> stringProvider.markAsInProgress
-                    Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
-                    Task.TaskStatus.DONE -> ""
-                }
-            )
-            _state.update {
-                detailsUiState
+            var task: Task?
+             taskService.getTaskById(selectedTaskId).collectLatest {
+                task = it
+                 val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
+                 val detailsUiState = task.toDetailsState().copy(
+                     categoryImagePath = categoryImagePath,
+                     moveStatusToLabel = when (task.status) {
+                         Task.TaskStatus.TODO -> stringProvider.markAsInProgress
+                         Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
+                         Task.TaskStatus.DONE -> ""
+                     }
+                 )
+                 _state.update {
+                     detailsUiState
+                 }
             }
+
         }
     }
 
-    override fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit) {
+    override fun onMoveTaskToAnotherStatus(
+        onMoveStatusSuccess: () -> Unit,
+        onMoveStatusFail: () -> Unit
+    ) {
             var newUpdatedTask: Task
             state.value.let { state ->
                 when (state.status) {
@@ -56,7 +64,7 @@ class TaskDetailsBottomSheetViewModel(
                                 _state.update {
                                     it.copy(status = TaskUiStatus.IN_PROGRESS)
                                 }
-                                onMoveStatusSuccess(TaskUiStatus.IN_PROGRESS)
+                                onMoveStatusSuccess()
                             },
                             onError = {
                                 onMoveStatusFail()
@@ -73,7 +81,7 @@ class TaskDetailsBottomSheetViewModel(
                                 _state.update {
                                     it.copy(status = TaskUiStatus.DONE)
                                 }
-                                onMoveStatusSuccess(TaskUiStatus.DONE)
+                                onMoveStatusSuccess()
                             },
                             onError = {
                                 onMoveStatusFail()

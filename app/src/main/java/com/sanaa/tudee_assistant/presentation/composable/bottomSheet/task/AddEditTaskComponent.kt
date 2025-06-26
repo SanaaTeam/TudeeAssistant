@@ -28,7 +28,7 @@ fun AddEditTaskScreen(
     onError: (String) -> Unit,
     viewModel: AddEditTaskViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     val showDatePickerDialog by viewModel.showDatePickerDialog.collectAsState()
 
     LaunchedEffect(isEditMode, taskToEdit, initialDate) {

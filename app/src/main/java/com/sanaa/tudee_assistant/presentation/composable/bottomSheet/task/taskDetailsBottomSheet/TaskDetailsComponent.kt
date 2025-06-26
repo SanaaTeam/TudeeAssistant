@@ -43,11 +43,14 @@ fun TaskDetailsComponent(
     modifier: Modifier = Modifier,
     interactionListener: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(),
     onEditClick: (TaskUiState) -> Unit = {},
-    onMoveStatusSuccess: (TaskUiStatus) -> Unit = {},
+    onMoveStatusSuccess: () -> Unit = {},
     onMoveStatusFail: () -> Unit = {},
 ) {
     val state: State<DetailsUiState> = interactionListener.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(selectedTaskId) {
+        interactionListener.getSelectedTask(selectedTaskId)
+    }
 
 
     BaseBottomSheet(

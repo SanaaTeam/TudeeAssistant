@@ -32,18 +32,6 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.LocalDate
-@OptIn(ExperimentalMaterial3Api::class)
-fun createSelectableDates(minDateMillis: Long?): SelectableDates {
-    return if (minDateMillis != null) {
-        object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= minDateMillis
-            }
-        }
-    } else {
-        DatePickerDefaults.AllDates
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,20 +43,30 @@ fun CustomDatePickerDialog(
     minDateMillis: Long? = null
 ) {
     val initialSelectedDateMillis = DateFormater.localDateToEpochMillis(initialSelectedDate)
-    val selectableDates = rememberSaveable(minDateMillis) { createSelectableDates(minDateMillis) }
+    val selectableDates = if (minDateMillis != null) {
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= minDateMillis
+            }
+        }
+    } else {
+        DatePickerDefaults.AllDates
+    }
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialSelectedDateMillis,
         selectableDates = selectableDates
     )
-
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
                 onClick = {
-                    onDateSelected(datePickerState.selectedDateMillis!!)
+                    if (datePickerState.selectedDateMillis !=null){
+                        onDateSelected(datePickerState.selectedDateMillis)
+                    }
                     onDismiss()
+
                 },
                 label = stringResource(R.string.ok),
                 modifier = modifier.padding(vertical = 20.dp, horizontal = 28.dp)

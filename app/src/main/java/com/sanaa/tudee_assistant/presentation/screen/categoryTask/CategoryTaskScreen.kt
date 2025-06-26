@@ -1,8 +1,10 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,13 +21,14 @@ import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDe
 import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyContent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category.AddEditCategoryBottomSheet
-import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTaskScreenContainer
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
@@ -91,17 +94,19 @@ private fun CategoryTaskScreenContent(
             listener.onHideSnackBar()
         }
     }
-
-    CategoryTaskScreenContainer(
+    TudeeScaffold(
         topBar = {
+
             CategoryTasksTopBar(
                 title = categoryName,
                 onEditClick = { listener.onEditClicked() },
                 onBackClick = onBackClick,
-                isEditable = !state.currentCategory.isDefault
+                isEditable = !state.currentCategory.isDefault,
+                modifier = Modifier
+                    .background(Theme.color.surfaceHigh)
+                    .statusBarsPadding()
             )
-        }, modifier = modifier
-
+        }
     ) {
         Box {
             TudeeScrollableTabs(
@@ -194,7 +199,8 @@ private fun CategoryTaskScreenContent(
                     title = stringResource(R.string.delete_category),
                 )
             }
-            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) TaskDetailsComponent(selectedTaskId = state.selectedTask.id,
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) TaskDetailsComponent(
+                selectedTaskId = state.selectedTask.id,
                 onEditClick = {
                     listener.onTaskEditClicked(state.selectedTask)
                 },

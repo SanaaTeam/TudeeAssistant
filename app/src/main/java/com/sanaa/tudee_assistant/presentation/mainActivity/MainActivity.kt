@@ -17,9 +17,9 @@ class MainActivity() : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
-            val mainActivityViewModel: MainActivityViewModel = koinViewModel<MainActivityViewModel>()
+            val mainActivityViewModel: MainActivityViewModel =
+                koinViewModel<MainActivityViewModel>()
 
             var state = mainActivityViewModel.state.collectAsStateWithLifecycle()
 
@@ -27,7 +27,10 @@ class MainActivity() : ComponentActivity() {
 
             if (!state.value.isLoading) {
                 TudeeTheme(state.value.isDarkTheme) {
-                    TudeeApp(isFirstLaunch = state.value.isFirstLaunch)
+                    TudeeApp(
+                        isFirstLaunch = state.value.isFirstLaunch,
+                        isDarkTheme = state.value.isDarkTheme
+                    )
                 }
             }
         }

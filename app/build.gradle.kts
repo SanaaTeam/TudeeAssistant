@@ -102,5 +102,6 @@ dependencies {
 
     implementation(libs.androidx.core.splashscreen)
 
+    implementation (libs.accompanist.navigation.animation)
     implementation(libs.accompanist.systemuicontroller)
 }

@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,12 +13,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
@@ -32,7 +32,6 @@ import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Categor
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Line
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -74,13 +73,18 @@ private fun HomeScreenContent(
             }
         }
     }
-
-    Box(Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Theme.color.surface)
-        ) {
+    TudeeScaffold(
+        contentBackground = Theme.color.surface,
+        floatingActionButton = {
+            FloatingActionButton(
+                modifier = Modifier,
+                iconRes = R.drawable.note_add,
+            )
+            {
+                interactionsListener.onShowAddTaskSheet()
+            }
+        },
+        topBar = {
             AppBar(
                 tailComponent = {
                     DarkModeThemeSwitchButton(
@@ -88,59 +92,69 @@ private fun HomeScreenContent(
                         800,
                         onCheckedChange = { interactionsListener.onToggleColorTheme() }
                     )
+                },
+                modifier = Modifier
+                    .background(Theme.color.primary)
+                    .statusBarsPadding()
+            )
+        }
+    ) {
+        Box(Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Theme.color.surface)
+            ) {
+                if (isScrolled) {
+                    Line()
                 }
-            )
-
-            if (isScrolled) {
-                Line()
+                CategoryList(
+                    scrollState,
+                    state,
+                    onTaskClick = { interactionsListener.onTaskClick(it) },
+                )
             }
-            CategoryList(
-                scrollState,
-                state,
-                onTaskClick = { interactionsListener.onTaskClick(it) },
-            )
-        }
 
 
-        FloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
-            iconRes = R.drawable.note_add,
-        ) {
-            interactionsListener.onShowAddTaskSheet()
-        }
-
-        if (state.showAddTaskSheet) {
-            AddEditTaskScreen(
-                isEditMode = false,
-                taskToEdit = null,
-                initialDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
-                onDismiss = { interactionsListener.onHideAddTaskSheet() },
-                onSuccess = { interactionsListener.onAddTaskSuccess() },
-                onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
-            )
-        }
-        if (state.showEditTaskSheet) {
-            AddEditTaskScreen(
-                isEditMode = true,
-                taskToEdit = state.taskToEdit,
-                initialDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
-                onDismiss = { interactionsListener.onHideEditTaskSheet() },
-                onSuccess = { interactionsListener.onEditTaskSuccess() },
-                onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
-            )
 
 
-        }
-        if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
-            TaskDetailsComponent(
-                selectedTaskId = state.selectedTask.id,
-                onDismiss = { interactionsListener.onShowTaskDetails(false) },
-                onEditClick = { taskToEdit -> interactionsListener.onShowEditTaskSheet(taskToEdit) },
-                onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
-                onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
-            )
+            if (state.showAddTaskSheet) {
+                AddEditTaskScreen(
+                    isEditMode = false,
+                    taskToEdit = null,
+                    initialDate = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                    onDismiss = { interactionsListener.onHideAddTaskSheet() },
+                    onSuccess = { interactionsListener.onAddTaskSuccess() },
+                    onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
+                )
+            }
+            if (state.showEditTaskSheet) {
+                AddEditTaskScreen(
+                    isEditMode = true,
+                    taskToEdit = state.taskToEdit,
+                    initialDate = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                    onDismiss = { interactionsListener.onHideEditTaskSheet() },
+                    onSuccess = { interactionsListener.onEditTaskSuccess() },
+                    onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
+                )
+
+
+            }
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
+                TaskDetailsComponent(
+                    selectedTaskId = state.selectedTask.id,
+                    onDismiss = { interactionsListener.onShowTaskDetails(false) },
+                    onEditClick = { taskToEdit ->
+                        interactionsListener.onShowEditTaskSheet(
+                            taskToEdit
+                        )
+                    },
+                    onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
+                    onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
+                )
+            }
         }
     }
 }

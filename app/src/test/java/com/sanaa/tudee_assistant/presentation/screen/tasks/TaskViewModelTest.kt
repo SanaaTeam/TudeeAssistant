@@ -103,7 +103,7 @@ class TaskViewModelTest {
         viewModel.onDeleteTask()
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.snackBarState.message).isEqualTo("Deleted")
+        assertThat(viewModel.state.value.snackBarState.message).isEqualTo(TASK_DELETE_SUCCESS)
         assertThat(viewModel.state.value.showTaskDetailsBottomSheet).isFalse()
     }
 
@@ -135,13 +135,13 @@ class TaskViewModelTest {
         val task = fakeTasks[0]
         viewModel.onTaskClicked(task)
         coEvery { taskService.deleteTaskById(any()) } throws Exception("Boom")
-        every { stringProvider.unknown_error } returns "Unknown error"
+        every { stringProvider.unknown_error } returns UNKNOWN_ERROR
 
         viewModel.onDeleteTask()
         advanceUntilIdle()
 
         val state = viewModel.state.value
-        assertThat(state.snackBarState.message).isEqualTo("Unknown error")
+        assertThat(state.snackBarState.message).isEqualTo(UNKNOWN_ERROR)
     }
 
     @Test
@@ -154,7 +154,7 @@ class TaskViewModelTest {
     @Test
     fun `onAddTaskSuccess should show success snackbar`() {
         viewModel.onAddTaskSuccess()
-        assertThat(viewModel.state.value.snackBarState.message).isEqualTo("Added")
+        assertThat(viewModel.state.value.snackBarState.message).isEqualTo(TASK_ADDED_SUCCESS)
     }
 
     @Test
@@ -178,17 +178,17 @@ class TaskViewModelTest {
     @Test
     fun `handleOnMoveToStatusSuccess should show success snackbar`() {
         viewModel.handleOnMoveToStatusSuccess()
-        assertThat(viewModel.state.value.snackBarState.message).isEqualTo("Moved")
+        assertThat(viewModel.state.value.snackBarState.message).isEqualTo(TASK_STATUS_UPDATE_SUCCESS)
     }
 
     @Test
     fun `handleOnMoveToStatusFail should show error`() {
-        every { stringProvider.unknown_error } returns "Unknown error"
+        every { stringProvider.unknown_error } returns UNKNOWN_ERROR
 
         viewModel.handleOnMoveToStatusFail()
 
         val snackBar = viewModel.state.value.snackBarState
-        assertThat(snackBar.message).isEqualTo("Unknown error")
+        assertThat(snackBar.message).isEqualTo(UNKNOWN_ERROR)
     }
 
     private val fakeTasks = listOf(

@@ -10,7 +10,6 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
@@ -22,10 +21,10 @@ class TaskViewModel(
     private val stringProvider: StringProvider,
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()), TaskInteractionListener {
     init {
-        _state.update { it.copy(selectedStatusTab = selectedStatusTab) }
+        updateState { it.copy(selectedStatusTab = selectedStatusTab) }
         viewModelScope.launch {
             categoryService.getCategories().collect { categoryList ->
-                _state.update {
+                updateState {
                     it.copy(categories = categoryList.toStateList(0))
                 }
 
@@ -42,15 +41,15 @@ class TaskViewModel(
 
         dateJob = viewModelScope.launch {
             taskService.getTasksByDueDate(_state.value.selectedDate).collect { taskList ->
-                    _state.update { it.copy(currentDateTasks = taskList.toStateList()) }
-                }
+                updateState { it.copy(currentDateTasks = taskList.toStateList()) }
+            }
 
         }
     }
 
 
     private fun onTaskSelected(task: TaskUiState) {
-        _state.update { it.copy(selectedTask = task) }
+        updateState { it.copy(selectedTask = task) }
     }
 
     override fun onTaskClicked(task: TaskUiState) {
@@ -76,18 +75,18 @@ class TaskViewModel(
     }
 
     override fun onDateSelected(date: LocalDate) {
-        _state.update {
+        updateState {
             it.copy(selectedDate = date)
         }
         getTasksByDueDate()
     }
 
     fun onShowDeleteDialogChange(show: Boolean) {
-        _state.update { it.copy(showDeleteTaskBottomSheet = show) }
+        updateState { it.copy(showDeleteTaskBottomSheet = show) }
     }
 
     override fun onDismissTaskDetails(show: Boolean) {
-        _state.update { it.copy(showTaskDetailsBottomSheet = show) }
+        updateState { it.copy(showTaskDetailsBottomSheet = show) }
     }
 
 
@@ -100,7 +99,7 @@ class TaskViewModel(
     }
 
     override fun onDeleteDismiss() {
-        _state.update { it.copy(showDeleteTaskBottomSheet = false) }
+        updateState { it.copy(showDeleteTaskBottomSheet = false) }
     }
 
     override fun onTaskSwipeToDelete(task: TaskUiState): Boolean {
@@ -121,14 +120,14 @@ class TaskViewModel(
     }
 
     override fun onHideSnakeBar() {
-        _state.update {
+        updateState {
             it.copy(snackBarState = SnackBarState())
         }
     }
 
 
     private fun handleOnSuccess(message: String? = null) {
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState.getInstance(
                     message ?: stringProvider.unknownError
@@ -140,7 +139,7 @@ class TaskViewModel(
     }
 
     private fun handleOnError(message: String? = stringProvider.unknownError) {
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(
                     message ?: stringProvider.unknownError

@@ -17,7 +17,6 @@ import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CategoryTaskViewModel(
@@ -40,7 +39,7 @@ class CategoryTaskViewModel(
     private fun loadCategoryTasks(categoryId: Int) {
         tryToExecute(
             callee = {
-                _state.update { it.copy(isLoading = true) }
+                updateState { it.copy(isLoading = true) }
                 val category = categoryService.getCategoryById(categoryId)
                 val tasks = taskService
                     .getTasksByCategoryId(categoryId)
@@ -48,7 +47,7 @@ class CategoryTaskViewModel(
                     .map { it.toState() }
                 val currentStatus = _state.value.currentSelectedTaskStatus
 
-                _state.update {
+                updateState {
                     it.copy(
                         currentCategory = category.toState(tasksCount = tasks.size),
                         allCategoryTasks = tasks,
@@ -62,13 +61,13 @@ class CategoryTaskViewModel(
     }
 
     override fun onDeleteClicked() {
-        _state.update {
+        updateState {
             it.copy(showDeleteCategoryBottomSheet = true, showEditCategoryBottomSheet = false)
         }
     }
 
     override fun onDeleteDismiss() {
-        _state.update {
+        updateState {
             it.copy(
                 showDeleteCategoryBottomSheet = false,
                 showEditCategoryBottomSheet = true
@@ -77,7 +76,7 @@ class CategoryTaskViewModel(
     }
 
     override fun onEditClicked() {
-        _state.update {
+        updateState {
             it.copy(
                 showEditCategoryBottomSheet = true,
                 editCategory = _state.value.currentCategory
@@ -86,13 +85,13 @@ class CategoryTaskViewModel(
     }
 
     override fun onEditDismissClicked() {
-        _state.update { it.copy(showEditCategoryBottomSheet = false) }
+        updateState { it.copy(showEditCategoryBottomSheet = false) }
     }
 
     override fun onConfirmDeleteClicked() {
         tryToExecute(
             callee = {
-                _state.update { it.copy(isLoading = true) }
+                updateState { it.copy(isLoading = true) }
                 categoryService.deleteCategoryById(_state.value.currentCategory.id)
                 try {
                     taskService.deleteTaskByCategoryId(_state.value.currentCategory.id)
@@ -124,7 +123,7 @@ class CategoryTaskViewModel(
             2 -> TaskUiStatus.DONE
             else -> TaskUiStatus.TODO
         }
-        _state.update {
+        updateState {
             it.copy(
                 currentSelectedTaskStatus = status,
                 filteredTasks = _state.value.allCategoryTasks.filter { task -> task.status == status },
@@ -134,7 +133,7 @@ class CategoryTaskViewModel(
     }
 
     override fun onImageSelect(image: Uri?) {
-        _state.update {
+        updateState {
             it.copy(
                 editCategory = _state.value.editCategory.copy(imagePath = image.toString())
             )
@@ -143,7 +142,7 @@ class CategoryTaskViewModel(
 
     override fun onTitleChange(title: String) {
         if (title.length > 24) return
-        _state.update {
+        updateState {
             it.copy(
                 editCategory = _state.value.editCategory.copy(name = title)
             )
@@ -153,7 +152,7 @@ class CategoryTaskViewModel(
     override fun onSaveEditClicked(category: CategoryUiState) {
         tryToExecute(
             callee = {
-                _state.update { it.copy(isLoading = true) }
+                updateState { it.copy(isLoading = true) }
 
                 val currentImagePath = _state.value.currentCategory.imagePath
                 val newImagePath = if (category.imagePath != currentImagePath) {
@@ -193,19 +192,19 @@ class CategoryTaskViewModel(
     }
 
     override fun onTaskClicked(task: TaskUiState) {
-        _state.update {
+        updateState {
             it.copy(selectedTask = task, showTaskDetailsBottomSheet = true)
         }
     }
 
     override fun onTaskEditClicked(task: TaskUiState) {
-        _state.update {
+        updateState {
             it.copy(showEditTaskBottomSheet = true)
         }
     }
 
     override fun onTaskEditDismiss() {
-        _state.update {
+        updateState {
             it.copy(
                 showEditTaskBottomSheet = false, selectedTask = null,
             )
@@ -213,7 +212,7 @@ class CategoryTaskViewModel(
     }
 
     override fun onTaskEditSuccess() {
-        _state.update {
+        updateState {
             it.copy(
                 showEditTaskBottomSheet = false, selectedTask = null,
                 snackBarState = SnackBarState
@@ -223,10 +222,10 @@ class CategoryTaskViewModel(
     }
 
     override fun onMoveStatusSuccess() {
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState
-                    .getInstance(stringProvider.taskStatusUpdateSuccess ),
+                    .getInstance(stringProvider.taskStatusUpdateSuccess),
                 showTaskDetailsBottomSheet = false,
             )
         }
@@ -234,13 +233,13 @@ class CategoryTaskViewModel(
     }
 
     override fun onHideSnackBar() {
-        _state.update {
+        updateState {
             it.copy(snackBarState = SnackBarState.hide())
         }
     }
 
     override fun onTaskDetailsDismiss() {
-        _state.update {
+        updateState {
             it.copy(showTaskDetailsBottomSheet = false, selectedTask = null)
         }
         loadCategoryTasks(state.value.currentCategory.id)
@@ -251,7 +250,7 @@ class CategoryTaskViewModel(
         updateState: (oldState: CategoryTaskScreenUiState) -> CategoryTaskScreenUiState = { it },
         effect: CategoryTasksEffects? = null
     ) {
-        _state.update {
+        updateState {
             updateState(it).copy(
                 isLoading = false,
                 error = null,
@@ -267,7 +266,7 @@ class CategoryTaskViewModel(
     }
 
     private fun onError(message: String?) {
-        _state.update {
+        updateState {
             it.copy(isLoading = false, error = message, success = null)
         }
     }

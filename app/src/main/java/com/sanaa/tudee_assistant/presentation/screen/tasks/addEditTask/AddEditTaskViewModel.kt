@@ -27,7 +27,8 @@ class AddEditTaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : BaseViewModel<AddTaskUiState>(AddTaskUiState(), defaultDispatcher = dispatcher), AddEditTaskListener {
+) : BaseViewModel<AddTaskUiState>(AddTaskUiState(), defaultDispatcher = dispatcher),
+    AddEditTaskListener {
 
     private var originalTaskUiState: TaskUiState? = null
     private var isEditMode: Boolean = false
@@ -39,11 +40,11 @@ class AddEditTaskViewModel(
     private var _isInitialized: Boolean = false
 
     init {
-        viewModelScope.launch(defaultDispatcher){
+        viewModelScope.launch(defaultDispatcher) {
             categoryService.getCategories()
                 .catch { e -> handleError(e) }
                 .collect { categoryList ->
-                    _state.update {
+                    updateState {
                         it.copy(
                             categories = categoryList.toStateList(0)
                         )
@@ -68,7 +69,7 @@ class AddEditTaskViewModel(
             },
             onSuccess = { (categoriesUiState, selectedCategoryUiState) ->
 
-                _state.update { currentState ->
+                updateState { currentState ->
                     currentState.copy(
                         taskUiState = task,
                         categories = categoriesUiState,
@@ -95,7 +96,7 @@ class AddEditTaskViewModel(
                 categoryService.getCategories().firstOrNull() ?: emptyList()
             },
             onSuccess = { categories ->
-                _state.update { state ->
+                updateState { state ->
                     state.copy(
                         categories = categories.toStateList(0),
                         taskUiState = TaskUiState(
@@ -116,35 +117,35 @@ class AddEditTaskViewModel(
     }
 
     override fun onTitleChange(title: String) {
-        _state.update {
+        updateState {
             it.copy(taskUiState = it.taskUiState.copy(title = title))
         }
         validateInputs()
     }
 
     override fun onDescriptionChange(description: String) {
-        _state.update {
+        updateState {
             it.copy(taskUiState = it.taskUiState.copy(description = description))
         }
         validateInputs()
     }
 
     override fun onDateSelected(date: LocalDate) {
-        _state.update {
+        updateState {
             it.copy(taskUiState = it.taskUiState.copy(dueDate = date.toString()))
         }
         validateInputs()
     }
 
     override fun onPrioritySelected(priority: TaskUiPriority) {
-        _state.update {
+        updateState {
             it.copy(taskUiState = it.taskUiState.copy(priority = priority))
         }
         validateInputs()
     }
 
     override fun onCategorySelected(category: CategoryUiState) {
-        _state.update {
+        updateState {
             it.copy(
                 selectedCategory = category,
                 taskUiState = it.taskUiState.copy(categoryId = category.id)
@@ -171,7 +172,7 @@ class AddEditTaskViewModel(
     }
 
     fun initTaskState(isEditMode: Boolean, taskToEdit: TaskUiState?, initialDate: LocalDate?) {
-        if (!isEditMode || !_isInitialized || this.isEditMode != isEditMode || this.originalTaskUiState != taskToEdit || this.selectedDate != initialDate){
+        if (!isEditMode || !_isInitialized || this.isEditMode != isEditMode || this.originalTaskUiState != taskToEdit || this.selectedDate != initialDate) {
             this.isEditMode = isEditMode
             this.originalTaskUiState = taskToEdit
             this.selectedDate = initialDate
@@ -188,7 +189,7 @@ class AddEditTaskViewModel(
 
 
     private fun addTask() {
-        _state.update { it.copy(isLoading = true, error = null) }
+        updateState { it.copy(isLoading = true, error = null) }
         tryToExecute(
             callee = {
                 val newTask = state.value.taskUiState.copy(
@@ -197,7 +198,7 @@ class AddEditTaskViewModel(
                 taskService.addTask(newTask)
             },
             onSuccess = {
-                _state.update { it.copy(isOperationSuccessful = true, isLoading = false) }
+                updateState { it.copy(isOperationSuccessful = true, isLoading = false) }
             },
             onError = { exception ->
                 handleError(exception)
@@ -208,14 +209,14 @@ class AddEditTaskViewModel(
     }
 
     private fun updateTask() {
-        _state.update { it.copy(isLoading = true, error = null) }
+        updateState { it.copy(isLoading = true, error = null) }
         tryToExecute(
             callee = {
                 val task = state.value.taskUiState.toTask()
                 taskService.updateTask(task)
             },
             onSuccess = {
-                _state.update { it.copy(isOperationSuccessful = true, isLoading = false) }
+                updateState { it.copy(isOperationSuccessful = true, isLoading = false) }
             },
             onError = { exception ->
                 handleError(exception)
@@ -229,14 +230,14 @@ class AddEditTaskViewModel(
         isEditMode = false
         originalTaskUiState = null
         _showDatePickerDialog.update { false }
-        _state.update {
+        updateState {
             AddTaskUiState(categories = it.categories)
         }
         _isInitialized = false
     }
 
     private fun handleError(e: Throwable) {
-        _state.update {
+        updateState {
             it.copy(isLoading = false, error = e.message ?: "Failed to process task")
         }
     }
@@ -255,7 +256,7 @@ class AddEditTaskViewModel(
             currentState.taskUiState.title.isNotBlank() && currentState.selectedCategory != null
         }
 
-        _state.update {
+        updateState {
             it.copy(isButtonEnabled = isButtonEnabled)
         }
     }

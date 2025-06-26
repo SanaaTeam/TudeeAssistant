@@ -5,7 +5,6 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OnBoardingViewModel(
@@ -16,7 +15,7 @@ class OnBoardingViewModel(
     init {
         viewModelScope.launch {
             preferencesManager.isDarkTheme.collect { isDarkTheme ->
-                _state.update {
+                updateState {
                     it.copy(
                         isDarkTheme = isDarkTheme,
                         pageList = getOnBoardingPageContent(),
@@ -31,12 +30,12 @@ class OnBoardingViewModel(
         if (state.value.currentPageIndex == state.value.pageList.lastIndex) {
             onSkipClick()
         } else {
-            _state.update { it.copy(currentPageIndex = it.currentPageIndex + 1) }
+            updateState { it.copy(currentPageIndex = it.currentPageIndex + 1) }
         }
     }
 
     override fun onSkipClick() {
-        _state.update { it.copy(isSkipable = true) }
+        updateState { it.copy(isSkipable = true) }
 
         viewModelScope.launch {
             preferencesManager.setOnboardingCompleted()
@@ -44,7 +43,7 @@ class OnBoardingViewModel(
     }
 
     override fun setCurrentPage(pageIndex: Int) {
-        _state.update { it.copy(currentPageIndex = pageIndex) }
+        updateState { it.copy(currentPageIndex = pageIndex) }
     }
 
     private fun getOnBoardingPageContent(): List<OnBoardingPageContentItem> {

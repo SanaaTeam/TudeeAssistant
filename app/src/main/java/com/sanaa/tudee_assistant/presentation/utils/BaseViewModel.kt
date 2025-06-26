@@ -12,10 +12,14 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<T>(
     initialState: T,
-     val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
+    val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
     protected val _state: MutableStateFlow<T> by lazy { MutableStateFlow(initialState) }
     val state: StateFlow<T> by lazy { _state.asStateFlow() }
+
+    protected fun updateState(updater: (T) -> T) {
+        updateState(updater)
+    }
 
     protected fun <T> tryToExecute(
         callee: suspend () -> T,

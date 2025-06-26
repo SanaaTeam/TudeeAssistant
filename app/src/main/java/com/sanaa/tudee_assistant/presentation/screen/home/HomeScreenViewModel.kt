@@ -9,6 +9,7 @@ import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
+import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -87,7 +88,7 @@ class HomeScreenViewModel(
 
     override fun onNavigateToTaskScreen(status: TaskUiStatus) {
         viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.changeTaskStatus(status)
+            preferencesManager.changeTaskStatus(status.toTaskStatus())
         }
     }
 

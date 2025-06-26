@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import kotlinx.coroutines.flow.Flow
@@ -42,7 +43,7 @@ class PreferencesManagerImpl(private val context: Context) : PreferencesManager 
             }
         }
 
-    override suspend fun changeTaskStatus(status: TaskUiStatus) {
+    override suspend fun changeTaskStatus(status: Task.TaskStatus) {
         context.dataStore.edit { prefs ->
             prefs[LAST_SELECTED_TASK_SCREEN] = status.toString()
         }

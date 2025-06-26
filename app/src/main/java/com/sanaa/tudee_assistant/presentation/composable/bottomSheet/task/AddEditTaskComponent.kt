@@ -7,9 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
@@ -28,23 +25,14 @@ fun AddEditTaskScreen(
     onError: (String) -> Unit,
     viewModel: AddEditTaskViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
     val showDatePickerDialog by viewModel.showDatePickerDialog.collectAsState()
-    var isInitialized by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(isEditMode, taskToEdit, isInitialized) {
-        if (!isInitialized) {
-            if (!isEditMode) {
-                viewModel.resetState()
-                viewModel.loadCategoriesForNewTask()
-            } else if (taskToEdit != null) {
-                viewModel.loadTask(taskToEdit)
-            }
-            isInitialized = true
-        }
+    LaunchedEffect(isEditMode, taskToEdit) {
+        viewModel.initTaskState(isEditMode, taskToEdit)
     }
 
-    LaunchedEffect(uiState.isOperationSuccessful, uiState.error) {
+    LaunchedEffect(uiState.isOperationSuccessful, uiState.error) { // Corrected lines
         if (uiState.isOperationSuccessful) {
             onSuccess()
             viewModel.resetState()

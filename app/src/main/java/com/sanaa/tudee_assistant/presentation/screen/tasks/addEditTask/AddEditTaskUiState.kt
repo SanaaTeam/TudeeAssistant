@@ -4,16 +4,14 @@ import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+
 
 data class AddTaskUiState(
     val taskUiState: TaskUiState = TaskUiState(
         id = 0,
         title = "",
         description = "",
-        dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+        dueDate = "",
         categoryId = -1,
         priority = TaskUiPriority.LOW,
         status = TaskUiStatus.TODO,

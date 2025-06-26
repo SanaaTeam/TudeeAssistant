@@ -59,7 +59,10 @@ fun TasksListComponent(
                             enabled = false
                         )
                     }
-                }
+                },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(Theme.dimension.medium))
+                    .animateItem(fadeInSpec = null, fadeOutSpec = null)
             )
         }
     }

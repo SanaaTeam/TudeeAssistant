@@ -37,6 +37,7 @@ import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
@@ -206,8 +207,7 @@ fun AddEditTaskContent(
                 .toLocalDateTime(TimeZone.currentSystemDefault())
                 .date
                 .atStartOfDayIn(TimeZone.currentSystemDefault())
-                .toEpochMilliseconds()
-
+                .toEpochMilliseconds(),
         )
     }
 }

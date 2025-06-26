@@ -10,7 +10,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<T>(initialState: T) : ViewModel() {
+abstract class BaseViewModel<T>(
+    initialState: T,
+     val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : ViewModel() {
     protected val _state: MutableStateFlow<T> by lazy { MutableStateFlow(initialState) }
     val state: StateFlow<T> by lazy { _state.asStateFlow() }
 
@@ -18,7 +21,7 @@ abstract class BaseViewModel<T>(initialState: T) : ViewModel() {
         callee: suspend () -> T,
         onSuccess: (T) -> Unit = {},
         onError: (exception: Exception) -> Unit,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+        dispatcher: CoroutineDispatcher = defaultDispatcher,
     ) {
         viewModelScope.launch(dispatcher) {
             try {

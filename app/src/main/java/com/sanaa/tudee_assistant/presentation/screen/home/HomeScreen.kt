@@ -32,6 +32,7 @@ import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Categor
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Line
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -116,6 +117,8 @@ private fun HomeScreenContent(
         if (state.showAddTaskSheet) {
             AddEditTaskScreen(
                 isEditMode = false,
+                taskToEdit = null,
+                initialDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
                 onDismiss = { interactionsListener.onHideAddTaskSheet() },
                 onSuccess = { interactionsListener.onAddTaskSuccess() },
                 onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
@@ -125,10 +128,13 @@ private fun HomeScreenContent(
             AddEditTaskScreen(
                 isEditMode = true,
                 taskToEdit = state.taskToEdit,
+                initialDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
                 onDismiss = { interactionsListener.onHideEditTaskSheet() },
                 onSuccess = { interactionsListener.onEditTaskSuccess() },
                 onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
             )
+
+
         }
         if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
             TaskDetailsComponent(

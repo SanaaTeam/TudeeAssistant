@@ -140,8 +140,14 @@ fun CategoryList(
     onClick: (TaskUiState) -> Unit,
 ) {
     LazyHorizontalGrid(
-        modifier = Modifier.height(if (items.isNotEmpty()) 222.dp + Theme.dimension.extraLarge else 0.dp),
-        rows = GridCells.Fixed(2),
+        modifier = Modifier.height(
+            if (items.isEmpty()) 0.dp
+            else if (items.size == 1) 111.dp + Theme.dimension.medium
+            else 222.dp + Theme.dimension.extraLarge
+        ),
+        rows = GridCells.Fixed(
+            if (items.size == 1) 1 else 2
+        ),
         contentPadding = PaddingValues(
             start = Theme.dimension.medium,
             end = Theme.dimension.medium,
@@ -164,9 +170,7 @@ fun CategoryList(
                         enabled = false
                     )
                 }
-
             )
-
         }
     }
 }

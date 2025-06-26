@@ -55,7 +55,7 @@ fun MainScreen(
                 startDestination = startDestination,
             ) {
                 composable<HomeScreenRoute> {
-                    onStatusBarColor(Theme.color.surfaceHigh)
+                    onStatusBarColor(Theme.color.primary)
                     HomeScreen()
                 }
 

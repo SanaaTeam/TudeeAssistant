@@ -257,6 +257,7 @@ fun TasksScreenContent(
                 AddEditTaskScreen(
                     isEditMode = false,
                     taskToEdit = null,
+                    initialDate = state.selectedDate,
                     onDismiss = { showAddTaskBottomSheet = false },
                     onSuccess = {
                         showAddTaskBottomSheet = false

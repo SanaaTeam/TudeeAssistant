@@ -5,37 +5,41 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 
 class StringProviderImpl(
-    private val context: Context
+    private val context: Context,
 ): StringProvider {
-    override val unknown_error: String
+    override val unknownError: String
         get() = context.getString(R.string.unknown_error)
-    override val task_added_success: String
+    override val taskAddedSuccess: String
         get() = context.getString(R.string.task_added_success)
-    override val task_update_success: String
+    override val taskUpdateSuccess: String
         get() = context.getString(R.string.task_update_success)
-    override val task_delete_success: String
+    override val taskDeleteSuccess: String
         get() = context.getString(R.string.task_delete_success)
-    override val task_status_update_success: String
+    override val taskStatusUpdateSuccess: String
         get() = context.getString(R.string.task_status_update_success)
-    override val task_added_error: String
+    override val taskAddedError: String
         get() = context.getString(R.string.task_added_error)
-    override val task_update_error: String
+    override val taskUpdateError: String
         get() = context.getString(R.string.task_update_error)
-    override val task_delete_error: String
+    override val taskDeleteError: String
         get() = context.getString(R.string.task_delete_error)
-    override val task_status_update_error: String
+    override val taskStatusUpdateError: String
         get() = context.getString(R.string.task_status_update_error)
-    override val category_added_successfully: String
+    override val categoryAddedSuccessfully: String
         get() = context.getString(R.string.category_added_successfully)
-    override val category_update_successfully: String
+    override val categoryUpdateSuccessfully: String
         get() = context.getString(R.string.category_update_successfully)
-    override val deleted_category_successfully: String
+    override val deletedCategorySuccessfully: String
         get() = context.getString(R.string.deleted_category_successfully)
-    override val category_added_error: String
+    override val categoryAddedError: String
         get() = context.getString(R.string.category_added_error)
-    override val update_category_error: String
+    override val updateCategoryError: String
         get() = context.getString(R.string.update_category_error)
-    override val deleting_category_error: String
+    override val deletingCategoryError: String
         get() = context.getString(R.string.deleting_category_error)
+    override val markAsInProgress: String
+        get() = context.getString(R.string.mark_as_in_progress)
+    override val markAsDone: String
+        get() = context.getString(R.string.mark_as_done)
 
 }

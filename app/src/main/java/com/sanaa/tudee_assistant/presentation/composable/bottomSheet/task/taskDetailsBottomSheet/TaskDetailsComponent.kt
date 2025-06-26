@@ -10,6 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -38,13 +39,15 @@ fun TaskDetailsComponent(
     selectedTaskId: Int,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    interactionListener: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(
-        key = "new $selectedTaskId",
-        parameters = { parametersOf(selectedTaskId) }),
+    interactionListener: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(),
     onEditClick: (TaskUiState) -> Unit = {},
     onMoveStatusSuccess: () -> Unit = {},
     onMoveStatusFail: () -> Unit = {},
 ) {
+
+    LaunchedEffect(selectedTaskId) {
+        interactionListener.getSelectedTask(selectedTaskId)
+    }
     val state: State<DetailsUiState> = interactionListener.state.collectAsState()
 
     val changeStatusTo = when (state.value.status) {

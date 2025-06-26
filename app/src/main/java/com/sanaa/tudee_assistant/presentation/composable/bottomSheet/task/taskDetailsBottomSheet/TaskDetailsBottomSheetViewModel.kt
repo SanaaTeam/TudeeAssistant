@@ -16,13 +16,13 @@ interface TaskDetailsInteractionListener{
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-    selectedTaskId: Int,
+//    selectedTaskId: Int,
 ) : BaseViewModel<DetailsUiState>(DetailsUiState()),TaskDetailsInteractionListener{
-    init {
-        getSelectedTask(selectedTaskId)
-    }
+//    init {
+//        getSelectedTask(selectedTaskId)
+//    }
 
-    private fun getSelectedTask(selectedTaskId: Int) {
+     fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
             val task: Task = taskService.getTaskById(selectedTaskId)
             val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath

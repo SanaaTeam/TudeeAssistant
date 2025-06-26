@@ -1,11 +1,17 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.model.mapper.toDetailsState
+import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -16,17 +22,22 @@ interface TaskDetailsInteractionListener{
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-    selectedTaskId: Int,
-) : BaseViewModel<DetailsUiState>(DetailsUiState()),TaskDetailsInteractionListener{
-    init {
-        getSelectedTask(selectedTaskId)
-    }
+    private val stringProvider: StringProvider,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = dispatcher),TaskDetailsInteractionListener{
 
-    private fun getSelectedTask(selectedTaskId: Int) {
+     fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
             val task: Task = taskService.getTaskById(selectedTaskId)
             val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-            val detailsUiState = task.toDetailsState().copy(categoryImagePath = categoryImagePath)
+            val detailsUiState = task.toDetailsState().copy(
+                categoryImagePath = categoryImagePath,
+                moveStatusToLabel = when (task.status) {
+                    Task.TaskStatus.TODO -> stringProvider.markAsInProgress
+                    Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
+                    Task.TaskStatus.DONE -> ""
+                }
+            )
             _state.update {
                 detailsUiState
             }
@@ -34,7 +45,6 @@ class TaskDetailsBottomSheetViewModel(
     }
 
     override fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit) {
-        viewModelScope.launch {
             var newUpdatedTask: Task
             state.value.let { state ->
                 when (state.status) {
@@ -51,7 +61,7 @@ class TaskDetailsBottomSheetViewModel(
                             onError = {
                                 onMoveStatusFail()
                             },
-                            dispatcher = Dispatchers.IO
+                            dispatcher = dispatcher
                         )
                     }
 
@@ -68,12 +78,12 @@ class TaskDetailsBottomSheetViewModel(
                             onError = {
                                 onMoveStatusFail()
                             },
-                            dispatcher = Dispatchers.IO
+                            dispatcher = dispatcher
                         )
                     }
                     else -> {}
                 }
             }
-        }
+
     }
 }

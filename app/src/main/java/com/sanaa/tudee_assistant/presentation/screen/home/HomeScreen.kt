@@ -301,7 +301,7 @@ private fun CategoryList(
     val rowCount = if (items.size == 1) 1 else 2
     val cardHeight = 111.dp
     val targetHeight = if (items.isNotEmpty()) {
-        (cardHeight * rowCount) + Theme.dimension.extraLarge
+        (cardHeight * rowCount) + Theme.dimension.extraLarge+ Theme.dimension.small
     } else {
         0.dp
     }

@@ -11,6 +11,7 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toDetailsState
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,8 +22,9 @@ interface TaskDetailsInteractionListener{
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-    private val stringProvider: StringProvider
-) : BaseViewModel<DetailsUiState>(DetailsUiState()),TaskDetailsInteractionListener{
+    private val stringProvider: StringProvider,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = dispatcher),TaskDetailsInteractionListener{
 
      fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
@@ -43,7 +45,6 @@ class TaskDetailsBottomSheetViewModel(
     }
 
     override fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit) {
-        viewModelScope.launch {
             var newUpdatedTask: Task
             state.value.let { state ->
                 when (state.status) {
@@ -60,7 +61,7 @@ class TaskDetailsBottomSheetViewModel(
                             onError = {
                                 onMoveStatusFail()
                             },
-                            dispatcher = Dispatchers.IO
+                            dispatcher = dispatcher
                         )
                     }
 
@@ -77,12 +78,12 @@ class TaskDetailsBottomSheetViewModel(
                             onError = {
                                 onMoveStatusFail()
                             },
-                            dispatcher = Dispatchers.IO
+                            dispatcher = dispatcher
                         )
                     }
                     else -> {}
                 }
             }
-        }
+
     }
 }

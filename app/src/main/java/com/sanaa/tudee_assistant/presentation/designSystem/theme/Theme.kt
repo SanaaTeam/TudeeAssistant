@@ -6,8 +6,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.color.LocalTudeeColor
 import com.sanaa.tudee_assistant.presentation.designSystem.color.TudeeColors
 import com.sanaa.tudee_assistant.presentation.designSystem.dimension.LocalTudeeDimension
 import com.sanaa.tudee_assistant.presentation.designSystem.dimension.TudeeDimension
-import com.sanaa.tudee_assistant.presentation.designSystem.text_style.LocalTudeeTextStyle
-import com.sanaa.tudee_assistant.presentation.designSystem.text_style.TudeeTextStyle
+import com.sanaa.tudee_assistant.presentation.designSystem.textStyle.LocalTudeeTextStyle
+import com.sanaa.tudee_assistant.presentation.designSystem.textStyle.TudeeTextStyle
 
 object Theme {
     val color: TudeeColors

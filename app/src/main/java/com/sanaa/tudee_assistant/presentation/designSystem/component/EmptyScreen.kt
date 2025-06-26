@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,10 +45,10 @@ fun EmptyScreen(
     caption: String? = stringResource(R.string.tap_to_add_task),
 ) {
 
-    var visibleCircular1 by remember { mutableStateOf(false) }
-    var visibleCircular2 by remember { mutableStateOf(false) }
-    var visibleCircular3 by remember { mutableStateOf(false) }
-    var visibleMessageBox by remember { mutableStateOf(false) }
+    var visibleCircular1 by rememberSaveable { mutableStateOf(false) }
+    var visibleCircular2 by rememberSaveable { mutableStateOf(false) }
+    var visibleCircular3 by rememberSaveable { mutableStateOf(false) }
+    var visibleMessageBox by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         visibleCircular1 = true
@@ -71,13 +72,10 @@ fun EmptyScreen(
             )
 
             AnimatedVisibility(
-                visible = visibleMessageBox,
-                enter = fadeIn(animationSpec = tween(300))
+                visible = visibleMessageBox, enter = fadeIn(animationSpec = tween(300))
             ) {
                 MessageBox(
-                    modifier = Modifier.align(Alignment.TopEnd),
-                    title = title,
-                    caption = caption
+                    modifier = Modifier.align(Alignment.TopEnd), title = title, caption = caption
                 )
             }
         }
@@ -85,7 +83,7 @@ fun EmptyScreen(
 }
 
 @Composable
-fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Boolean>) {
+private fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Boolean>) {
     Box(modifier = modifier, contentAlignment = Alignment.BottomEnd) {
 
         Box(
@@ -175,10 +173,8 @@ fun CircularContainer(modifier: Modifier = Modifier, visibleCirculars: List<Bool
 }
 
 @Composable
-fun MessageBox(
-    title: String,
-    caption: String?,
-    modifier: Modifier = Modifier
+private fun MessageBox(
+    title: String, caption: String?, modifier: Modifier = Modifier
 ) {
 
     Box(
@@ -211,20 +207,17 @@ fun MessageBox(
                 style = Theme.textStyle.title.small,
                 color = Theme.color.body,
                 modifier = Modifier.padding(
-                    start = Theme.dimension.regular,
-                    top = Theme.dimension.small
+                    start = Theme.dimension.regular, top = Theme.dimension.small
                 )
             )
-            if (caption != null)
-                Text(
-                    text = caption,
-                    style = Theme.textStyle.body.small,
-                    color = Theme.color.hint,
-                    modifier = Modifier.padding(
-                        start = Theme.dimension.regular,
-                        top = Theme.dimension.extraSmall
-                    )
+            if (caption != null) Text(
+                text = caption,
+                style = Theme.textStyle.body.small,
+                color = Theme.color.hint,
+                modifier = Modifier.padding(
+                    start = Theme.dimension.regular, top = Theme.dimension.extraSmall
                 )
+            )
         }
     }
 }

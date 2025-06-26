@@ -5,8 +5,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import com.sanaa.tudee_assistant.presentation.designSystem.color.LocalTudeeColors
 import com.sanaa.tudee_assistant.presentation.designSystem.color.darkSchemaColors
 import com.sanaa.tudee_assistant.presentation.designSystem.color.lightSchemaColors
-import com.sanaa.tudee_assistant.presentation.designSystem.text_style.LocalTudeeTextStyle
-import com.sanaa.tudee_assistant.presentation.designSystem.text_style.defaultTextStyle
+import com.sanaa.tudee_assistant.presentation.designSystem.textStyle.LocalTudeeTextStyle
+import com.sanaa.tudee_assistant.presentation.designSystem.textStyle.defaultTextStyle
 
 @Composable
 fun TudeeTheme(

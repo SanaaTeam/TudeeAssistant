@@ -134,9 +134,6 @@ fun TaskDetailsComponent(
                                     interactionListener.onMoveTaskToAnotherStatus(
                                         onMoveStatusSuccess = { newStatus ->
                                             onMoveStatusSuccess(newStatus)
-//                                            if (newStatus == TaskUiStatus.DONE) {
-//                                                onDismiss()
-//                                            }
                                         },
                                         onMoveStatusFail = onMoveStatusFail
                                     )

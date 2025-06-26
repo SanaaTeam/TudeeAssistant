@@ -129,7 +129,13 @@ fun TaskDetailsComponent(
                                 label = changeStatusTo,
                                 onClick = {
                                     interactionListener.onMoveTaskToAnotherStatus(
-                                        onMoveStatusSuccess, onMoveStatusFail
+                                        onMoveStatusSuccess = { newStatus ->
+                                            onMoveStatusSuccess(newStatus)
+                                            if (newStatus == TaskUiStatus.DONE) {
+                                                onDismiss()
+                                            }
+                                        },
+                                        onMoveStatusFail = onMoveStatusFail
                                     )
                                 },
                                 modifier = Modifier.weight(1f)

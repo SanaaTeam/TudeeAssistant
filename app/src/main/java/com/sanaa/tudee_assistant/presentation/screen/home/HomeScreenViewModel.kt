@@ -66,17 +66,45 @@ class HomeScreenViewModel(
         )
     }
 
-    override fun snackBarSuccess(message: String) {
+
+    override fun onAddTaskSuccess() {
         getTasks()
-        _state.update { it.copy(snackBarState = SnackBarState.getInstance(message)) }
+        _state.update {
+            it.copy(
+                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.task_add_success))
+            )
+        }
     }
 
-    override fun snackBarError(errorMessage: String) {
-        _state.update { it.copy(snackBarState = SnackBarState.getErrorInstance(errorMessage)) }
+    override fun onAddTaskError(errorMessage: String) {
+        _state.update {
+            it.copy(
+                snackBarState = SnackBarState.getErrorInstance(errorMessage)
+            )
+        }
+    }
+
+    override fun onEditTaskSuccess() {
+        getTasks()
+        _state.update {
+            it.copy(
+                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.task_edited_successfully))
+            )
+        }
+    }
+
+    override fun onEditTaskError(errorMessage: String) {
+        _state.update {
+            it.copy(
+                snackBarState = SnackBarState.getErrorInstance(errorMessage)
+            )
+        }
     }
 
     override fun onHideSnackBar() {
-        _state.update { it.copy(snackBarState = SnackBarState.hide()) }
+        _state.update {
+            it.copy(snackBarState = SnackBarState.hide())
+        }
     }
 
     override fun onTaskClick(taskUiState: TaskUiState) {
@@ -85,6 +113,23 @@ class HomeScreenViewModel(
 
     override fun onDismissTaskDetails() {
         _state.update { it.copy(selectedTask = null) }
+    }
+
+    override fun onMoveStatusSuccess() {
+        getTasks()
+        _state.update {
+            it.copy(
+                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.task_status_update_success))
+            )
+        }
+    }
+
+    override fun onMoveStatusFail() {
+        _state.update {
+            it.copy(
+                snackBarState = SnackBarState.getInstance(stringProvider.getString(R.string.task_was_not_updated))
+            )
+        }
     }
 
     private fun showErrorMessage(exception: Exception) {

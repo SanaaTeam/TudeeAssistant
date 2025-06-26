@@ -42,6 +42,8 @@ fun TudeeTextField(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     icon: Painter? = null,
+    singleLine: Boolean = true,
+    maxLines: Int = 1,
 
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -65,7 +67,8 @@ fun TudeeTextField(
                 shape = RoundedCornerShape(Theme.dimension.medium)
             ),
         textStyle = Theme.textStyle.body.medium.copy(color = Theme.color.body),
-        singleLine = true,
+        singleLine = singleLine,
+        maxLines = maxLines,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         decorationBox = { innerTextField ->
@@ -95,8 +98,7 @@ fun TudeeTextField(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .align(if (icon == null) Alignment.Top else Alignment.CenterVertically)
-                    ,
+                        .align(if (icon == null) Alignment.Top else Alignment.CenterVertically),
                     contentAlignment = if (icon == null) Alignment.TopStart else Alignment.CenterStart
                 ) {
                     if (value.isEmpty()) {

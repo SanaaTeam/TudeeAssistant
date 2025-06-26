@@ -27,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MainCoroutineRule::class)
 class TaskDetailsBottomSheetViewModelTest {
     private lateinit var taskService: TaskService
@@ -36,7 +37,6 @@ class TaskDetailsBottomSheetViewModelTest {
     val testDispatcher = StandardTestDispatcher()
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
@@ -48,29 +48,15 @@ class TaskDetailsBottomSheetViewModelTest {
     }
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @AfterEach
     fun tearDown() {
         Dispatchers.resetMain()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `getSelectedTask updates state correctly`() = runTest {
         // given
-        val task = Task(
-            id = 1,
-            title = "Test Task",
-            description = "Description",
-            status = TaskStatus.TODO,
-            categoryId = 100,
-            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
-            priority = Task.TaskPriority.LOW,
-            createdAt = Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-        )
-
-        coEvery { taskService.getTaskById(1) } returns task
+        coEvery { taskService.getTaskById(1) } returns todoTask
         coEvery { categoryService.getCategoryById(100).imagePath } returns "images/path.png"
         every { stringProvider.markAsInProgress } returns "Mark as In Progress"
 
@@ -80,32 +66,19 @@ class TaskDetailsBottomSheetViewModelTest {
 
         // then
         val state = viewModel.state.value
-        assertThat(state.id).isEqualTo(task.id)
-        assertThat(state.title).isEqualTo(task.title)
-        assertThat(state.description).isEqualTo(task.description)
-        assertThat(state.status.name).isEqualTo(task.status.name)
+        assertThat(state.id).isEqualTo(todoTask.id)
+        assertThat(state.title).isEqualTo(todoTask.title)
+        assertThat(state.description).isEqualTo(todoTask.description)
+        assertThat(state.status.name).isEqualTo(todoTask.status.name)
         assertThat(state.categoryImagePath).isEqualTo("images/path.png")
         assertThat(state.moveStatusToLabel).isEqualTo("Mark as In Progress")
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `onMoveTaskToAnotherStatus chang the status in todo to in progress `() = runTest {
+    fun `onMoveTaskToAnotherStatus change the status in todo to in progress`() = runTest {
         // given
-        val task = Task(
-            id = 1,
-            title = "Test Task",
-            description = "Description",
-            status = TaskStatus.TODO,
-            categoryId = 100,
-            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
-            priority = Task.TaskPriority.LOW,
-            createdAt = Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-        )
-
-        coEvery { taskService.getTaskById(1) } returns task
-        coEvery { categoryService.getCategoryById(100) } returns Category(
+        coEvery { taskService.getTaskById(task.id) } returns task.copy(status = TaskStatus.TODO)
+        coEvery { categoryService.getCategoryById(categoryId) } returns Category(
             name = "test",
             imagePath = "images/path.png",
             isDefault = true,
@@ -115,12 +88,7 @@ class TaskDetailsBottomSheetViewModelTest {
         viewModel.getSelectedTask(1)
         advanceUntilIdle()
 
-        var successCalled = false
-        var failCalled = false
-        viewModel.onMoveTaskToAnotherStatus(
-            onMoveStatusSuccess = { successCalled = true },
-            onMoveStatusFail = { failCalled = true }
-        )
+        viewModel.onMoveTaskToAnotherStatus(onMoveStatusFail = {}, onMoveStatusSuccess = {})
         advanceUntilIdle()
 
         // Assert
@@ -128,24 +96,12 @@ class TaskDetailsBottomSheetViewModelTest {
     }
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `onMoveTaskToAnotherStatus chang the status in  in progress to done `() = runTest {
+    fun `onMoveTaskToAnotherStatus change the status in  in progress to done `() = runTest {
         // given
-        val task = Task(
-            id = 1,
-            title = "Test Task",
-            description = "Description",
-            status = TaskStatus.IN_PROGRESS,
-            categoryId = 100,
-            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
-            priority = Task.TaskPriority.LOW,
-            createdAt = Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-        )
 
-        coEvery { taskService.getTaskById(1) } returns task
-        coEvery { categoryService.getCategoryById(100) } returns Category(
+        coEvery { taskService.getTaskById(todoTask.id) } returns todoTask.copy(status = TaskStatus.IN_PROGRESS)
+        coEvery { categoryService.getCategoryById(categoryId = categoryId) } returns Category(
             name = "test",
             imagePath = "images/path.png",
             isDefault = true,
@@ -155,56 +111,62 @@ class TaskDetailsBottomSheetViewModelTest {
         viewModel.getSelectedTask(1)
         advanceUntilIdle()
 
-        var successCalled = false
-        var failCalled = false
-        viewModel.onMoveTaskToAnotherStatus(
-            onMoveStatusSuccess = { successCalled = true },
-            onMoveStatusFail = { failCalled = true }
-        )
+        viewModel.onMoveTaskToAnotherStatus(onMoveStatusFail = {}, onMoveStatusSuccess = {})
         advanceUntilIdle()
 
         // Assert
         assertThat(viewModel.state.value.status.name).isEqualTo(TaskUiStatus.DONE.name)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `onMoveTaskToAnotherStatus chang the status done  `() = runTest {
+    fun `onMoveTaskToAnotherStatus change the status done  `() = runTest {
         // given
+        coEvery { taskService.getTaskById(task.id) } returns task
+        coEvery { categoryService.getCategoryById(categoryId = categoryId) } returns Category(
+            name = "test",
+            imagePath = "images/path.png",
+            isDefault = true,
+            id = 100
+        )
+        every { stringProvider.markAsDone } returns "Move to done"
+        viewModel.getSelectedTask(1)
+        advanceUntilIdle()
+
+        //when
+
+        viewModel.onMoveTaskToAnotherStatus(onMoveStatusFail = {}, onMoveStatusSuccess = {})
+        advanceUntilIdle()
+
+        // Assert
+        assertThat(viewModel.state.value.status.name).isEqualTo(TaskUiStatus.DONE.name)
+    }
+
+
+    companion object{
+        val categoryId = 100
         val task = Task(
             id = 1,
             title = "Test Task",
             description = "Description",
             status = TaskStatus.DONE,
-            categoryId = 100,
+            categoryId = categoryId,
             dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
             priority = Task.TaskPriority.LOW,
             createdAt = Clock.System.now()
                 .toLocalDateTime(TimeZone.currentSystemDefault())
         )
 
-        coEvery { taskService.getTaskById(1) } returns task
-        coEvery { categoryService.getCategoryById(100) } returns Category(
-            name = "test",
-            imagePath = "images/path.png",
-            isDefault = true,
-            id = 100
+        val todoTask = Task(
+            id = 1,
+            title = "Test Task",
+            description = "Description",
+            status = TaskStatus.TODO,
+            categoryId = categoryId,
+            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+            priority = Task.TaskPriority.LOW,
+            createdAt = Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
         )
-        every { stringProvider.markAsDone } returns "Move to done"
-        viewModel.getSelectedTask(1)
-        advanceUntilIdle()
 
-        var successCalled = false
-        var failCalled = false
-        viewModel.onMoveTaskToAnotherStatus(
-            onMoveStatusSuccess = { successCalled = true },
-            onMoveStatusFail = { failCalled = true }
-        )
-        advanceUntilIdle()
-
-        // Assert
-        assertThat(viewModel.state.value.status.name).isEqualTo(TaskUiStatus.DONE.name)
     }
-
-
 }

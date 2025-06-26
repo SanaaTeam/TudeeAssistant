@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
+import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyContent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
@@ -57,7 +57,7 @@ fun TaskStatusTabs(
                             .padding(end = 20.dp, top = 120.dp),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        EmptyScreen()
+                        EmptyContent()
                     }
                 }
             },
@@ -80,7 +80,7 @@ fun TaskStatusTabs(
                             .padding(end = 20.dp, top = 120.dp),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        EmptyScreen()
+                        EmptyContent()
                     }
                 }
             },
@@ -102,7 +102,7 @@ fun TaskStatusTabs(
                             .padding(end = 20.dp, top = 120.dp),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        EmptyScreen()
+                        EmptyContent()
                     }
                 }
             }

@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -36,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -51,7 +53,7 @@ import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEdi
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
-import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyScreen
+import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyContent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
 import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
 import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
@@ -89,7 +91,7 @@ private fun HomeScreenContent(
     interactionsListener: HomeScreenInteractionsListener,
 ) {
     val scrollState = rememberLazyListState()
-    var showEditTaskBottomSheet by remember { mutableStateOf(false) }
+    var showEditTaskBottomSheet by rememberSaveable { mutableStateOf(false) }
     var isScrolled by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.snackBarState) {
@@ -120,6 +122,7 @@ private fun HomeScreenContent(
                 tailComponent = {
                     DarkModeThemeSwitchButton(
                         state.isDarkTheme,
+                        800,
                         onCheckedChange = { interactionsListener.onToggleColorTheme() }
                     )
                 }
@@ -230,27 +233,9 @@ private fun CategoryList(
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    EmptyScreen()
+                    EmptyContent()
                 }
             }
-        }
-
-        stickyHeader {
-            if (state.tasks.any { it.status == TaskUiStatus.DONE }) {
-                Title(
-                    text = stringResource(R.string.done_task_status),
-                    tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
-                    taskUiStatus = TaskUiStatus.DONE
-                )
-            }
-        }
-
-        item {
-            CategoryList(
-                items = state.tasks.filter { it.status == TaskUiStatus.DONE },
-                categories = state.categories,
-                onClick = { onTaskClick(it) }
-            )
         }
 
         stickyHeader {
@@ -288,6 +273,23 @@ private fun CategoryList(
                 onClick = { onTaskClick(it) }
             )
         }
+        stickyHeader {
+            if (state.tasks.any { it.status == TaskUiStatus.DONE }) {
+                Title(
+                    text = stringResource(R.string.done_task_status),
+                    tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
+                    taskUiStatus = TaskUiStatus.DONE
+                )
+            }
+        }
+
+        item {
+            CategoryList(
+                items = state.tasks.filter { it.status == TaskUiStatus.DONE },
+                categories = state.categories,
+                onClick = { onTaskClick(it) }
+            )
+        }
     }
 }
 
@@ -297,9 +299,21 @@ private fun CategoryList(
     categories: List<CategoryUiState>,
     onClick: (TaskUiState) -> Unit,
 ) {
+    val rowCount = if (items.size == 1) 1 else 2
+    val cardHeight = 111.dp
+    val targetHeight = if (items.isNotEmpty()) {
+        (cardHeight * rowCount) + Theme.dimension.extraLarge+ Theme.dimension.small
+    } else {
+        0.dp
+    }
+
+    val animatedHeight by animateDpAsState(
+        targetValue = targetHeight,
+        label = "gridHeight"
+    )
     LazyHorizontalGrid(
-        modifier = Modifier.height(if (items.isNotEmpty()) 222.dp + Theme.dimension.extraLarge else 0.dp),
-        rows = GridCells.Fixed(2),
+        modifier = Modifier.height(animatedHeight),
+        rows = GridCells.Fixed(rowCount),
         contentPadding = PaddingValues(
             start = Theme.dimension.medium,
             end = Theme.dimension.medium,

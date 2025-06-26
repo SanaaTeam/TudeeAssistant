@@ -24,7 +24,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,15 +38,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
-import com.sanaa.tudee_assistant.presentation.utils.DataProvider
+import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -55,23 +54,29 @@ fun OnBoardingScreen(
     modifier: Modifier = Modifier,
     viewModel: OnBoardingViewModel = koinViewModel<OnBoardingViewModel>(),
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val navController = AppNavigation.app
 
     OnBoardingScreenContent(
         state = state,
         interactionListener = viewModel,
-        navController = navController,
         modifier = modifier,
     )
+
+    LaunchedEffect(state.isSkipable) {
+        if (state.isSkipable) {
+            navController.navigate(MainScreenRoute) {
+                popUpTo(OnBoardingScreenRoute) { inclusive = true }
+            }
+        }
+    }
 }
 
 @Composable
 private fun OnBoardingScreenContent(
     state: OnBoardingScreenUiState,
     interactionListener: OnBoardingScreenInteractionListener,
-    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
 
@@ -106,9 +111,11 @@ private fun OnBoardingScreenContent(
                 .fillMaxSize()
                 .align(Alignment.TopCenter),
         )
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
             Column(
                 modifier = modifier
                     .fillMaxWidth()
@@ -118,7 +125,7 @@ private fun OnBoardingScreenContent(
                 OnBoardingPager(
                     pagerState = pagerState,
                     pageList = state.pageList,
-                    onNextPageClick = { interactionListener.onNextPageClick(navController) },
+                    onNextPageClick = { interactionListener.onNextPageClick() },
                 )
 
                 PageIndicator(
@@ -138,7 +145,7 @@ private fun OnBoardingScreenContent(
                     color = Theme.color.primary,
                     textAlign = TextAlign.Start,
                     modifier = Modifier
-                        .clickable { interactionListener.onSkipClick(navController) }
+                        .clickable { interactionListener.onSkipClick() }
                 )
             }
         }
@@ -265,23 +272,42 @@ private fun PageIndicator(
 @Composable
 private fun BoardingScreenPreview() {
 
+    val pages = listOf(
+        OnBoardingPageContentItem(
+            title = R.string.onboarding_title_0,
+            description = R.string.onboarding_desc_0,
+            imageRes = R.drawable.robot_onboarding_page0
+        ),
+        OnBoardingPageContentItem(
+            title = R.string.onboarding_title_1,
+            description = R.string.onboarding_desc_1,
+            imageRes = R.drawable.robot_onboarding_page1
+        ),
+        OnBoardingPageContentItem(
+            title = R.string.onboarding_title_2,
+            description = R.string.onboarding_desc_2,
+            imageRes = R.drawable.robot_onboarding_page2
+        ),
+    )
+
+
     val isDarkTheme = false
 
     var state by remember {
         mutableStateOf(
             OnBoardingScreenUiState(
                 isDarkTheme = isDarkTheme,
-                pageList = DataProvider.getOnBoardingPageContent(),
+                pageList = pages,
                 currentPageIndex = 0
             )
         )
     }
     val previewActions = object : OnBoardingScreenInteractionListener {
-        override fun onNextPageClick(navHostController: NavHostController) {
+        override fun onNextPageClick() {
             state = state.copy(currentPageIndex = state.currentPageIndex + 1)
         }
 
-        override fun onSkipClick(navHostController: NavHostController) {}
+        override fun onSkipClick() {}
 
         override fun setCurrentPage(pageIndex: Int) {
             state = state.copy(currentPageIndex = pageIndex)
@@ -297,7 +323,6 @@ private fun BoardingScreenPreview() {
             OnBoardingScreenContent(
                 state = state,
                 interactionListener = previewActions,
-                navController = rememberNavController(),
             )
         }
     }

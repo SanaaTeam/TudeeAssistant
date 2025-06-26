@@ -6,4 +6,5 @@ data class OnBoardingScreenUiState(
     val isDarkTheme: Boolean = false,
     val pageList: List<OnBoardingPageContentItem> =emptyList(),
     val currentPageIndex: Int = 0,
+    val isSkipable: Boolean = false,
 )

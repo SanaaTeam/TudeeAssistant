@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -15,6 +16,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
+import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyContent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
@@ -25,7 +27,6 @@ import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category.AddEditCategoryBottomSheet
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTaskScreenContainer
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
-import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.EmptyCategoryTasksComponent
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
@@ -61,16 +62,11 @@ fun CategoryTaskScreen(
 
 
     CategoryTaskScreenContent(
-        state = state,
-        listener = viewModel,
-        isValidForm = viewModel::isValidForm,
-        onBackClick = {
+        state = state, listener = viewModel, isValidForm = viewModel::isValidForm, onBackClick = {
             navController.popBackStack(
-                route = MainScreenRoute,
-                inclusive = false
+                route = MainScreenRoute, inclusive = false
             )
-        },
-        modifier = modifier.fillMaxSize()
+        }, modifier = modifier.fillMaxSize()
     )
 }
 
@@ -86,8 +82,7 @@ private fun CategoryTaskScreenContent(
     val snackBarState = LocalSnackBarState.current
 
     val categoryName = DataProvider.getStringResourceByName(
-        state.currentCategory.name,
-        LocalContext.current
+        state.currentCategory.name, LocalContext.current
     )
 
     LaunchedEffect(state.snackBarState) {
@@ -105,8 +100,7 @@ private fun CategoryTaskScreenContent(
                 onBackClick = onBackClick,
                 isEditable = !state.currentCategory.isDefault
             )
-        },
-        modifier = modifier
+        }, modifier = modifier
 
     ) {
         Box {
@@ -117,7 +111,14 @@ private fun CategoryTaskScreenContent(
                         count = state.filteredTasks.size,
                         content = {
                             if (state.filteredTasks.isEmpty()) {
-                                EmptyCategoryTasksComponent(categoryName)
+                                EmptyContent(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    title = stringResource(
+                                        R.string.no_tasks_in,
+                                        categoryName,
+                                    ),
+                                    caption = null
+                                )
                             } else {
                                 TasksListComponent(
                                     tasks = state.filteredTasks,
@@ -131,7 +132,14 @@ private fun CategoryTaskScreenContent(
                         count = state.filteredTasks.size,
                         content = {
                             if (state.filteredTasks.isEmpty()) {
-                                EmptyCategoryTasksComponent(categoryName)
+                                EmptyContent(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    title = stringResource(
+                                        R.string.no_tasks_in,
+                                        categoryName,
+                                    ),
+                                    caption = null
+                                )
                             } else {
                                 TasksListComponent(
                                     tasks = state.filteredTasks,
@@ -145,7 +153,14 @@ private fun CategoryTaskScreenContent(
                         count = state.filteredTasks.size,
                         content = {
                             if (state.filteredTasks.isEmpty()) {
-                                EmptyCategoryTasksComponent(categoryName)
+                                EmptyContent(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    title = stringResource(
+                                        R.string.no_tasks_in,
+                                        categoryName,
+                                    ),
+                                    caption = null
+                                )
                             } else {
                                 TasksListComponent(
                                     tasks = state.filteredTasks,
@@ -179,18 +194,15 @@ private fun CategoryTaskScreenContent(
                     title = stringResource(R.string.delete_category),
                 )
             }
-            if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
-                TaskDetailsComponent(
-                    selectedTaskId = state.selectedTask.id,
-                    onEditClick = {
-                        listener.onTaskEditClicked(state.selectedTask)
-                    },
-                    onDismiss = listener::onTaskDetailsDismiss,
-                    onMoveStatusSuccess = {
-                        listener.onMoveStatusSuccess()
-                    },
-                    onMoveStatusFail = {}
-                )
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) TaskDetailsComponent(selectedTaskId = state.selectedTask.id,
+                onEditClick = {
+                    listener.onTaskEditClicked(state.selectedTask)
+                },
+                onDismiss = listener::onTaskDetailsDismiss,
+                onMoveStatusSuccess = {
+                    listener.onMoveStatusSuccess()
+                },
+                onMoveStatusFail = {})
             if (state.showEditTaskBottomSheet) {
                 AddEditTaskScreen(
                     onDismiss = { listener.onTaskEditDismiss() },

@@ -1,7 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks
 
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
@@ -42,8 +41,7 @@ class TaskViewModel(
         dateJob?.takeIf { it.isActive }?.cancel()
 
         dateJob = viewModelScope.launch {
-            taskService.getTasksByDueDate(_state.value.selectedDate)
-                .collect { taskList ->
+            taskService.getTasksByDueDate(_state.value.selectedDate).collect { taskList ->
                     _state.update { it.copy(currentDateTasks = taskList.toStateList()) }
                 }
 
@@ -134,9 +132,7 @@ class TaskViewModel(
             it.copy(
                 snackBarState = SnackBarState.getInstance(
                     message ?: stringProvider.unknown_error
-                ),
-                showTaskDetailsBottomSheet = false,
-                showDeleteTaskBottomSheet = false
+                ), showTaskDetailsBottomSheet = false, showDeleteTaskBottomSheet = false
             )
         }
     }
@@ -146,9 +142,7 @@ class TaskViewModel(
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(
                     message ?: stringProvider.unknown_error
-                ),
-                showTaskDetailsBottomSheet = false,
-                showDeleteTaskBottomSheet = false
+                ), showTaskDetailsBottomSheet = false, showDeleteTaskBottomSheet = false
             )
         }
     }

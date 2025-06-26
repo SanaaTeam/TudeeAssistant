@@ -8,6 +8,7 @@ import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -18,9 +19,7 @@ class HomeScreenViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val stringProvider: StringProvider,
-) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()),
-    HomeScreenInteractionsListener {
-
+) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()), HomeScreenInteractionsListener {
     init {
         loadScreen()
         getTasks()
@@ -42,7 +41,7 @@ class HomeScreenViewModel(
             callee = {
                 val today = Clock.System.now()
                     .toLocalDateTime(TimeZone.currentSystemDefault()).date
-                taskService.getTasksByDueDate(today).collect { tasks ->
+                taskService.getTasksByDueDate(today).collectLatest { tasks ->
                     _state.update { state -> state.copy(tasks = tasks.toStateList()) }
 
                     categoryService.getCategories().collect { categories ->
@@ -126,7 +125,7 @@ class HomeScreenViewModel(
 
     override fun onShowTaskDetails(show: Boolean) {
         _state.update { it.copy(selectedTask = null) }
-        _state.update { it.copy( showTaskDetailsBottomSheet = show)}
+        _state.update { it.copy(showTaskDetailsBottomSheet = show) }
     }
 
     override fun onShowAddTaskSheet() {

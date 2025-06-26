@@ -20,5 +20,6 @@ data class HomeScreenUiState(
     val snackBarState: SnackBarState = SnackBarState.hide(),
     val showAddTaskSheet: Boolean = false,
     val showEditTaskSheet: Boolean = false,
+    val showTaskDetailsBottomSheet: Boolean = false,
     val taskToEdit: TaskUiState? = null
 )

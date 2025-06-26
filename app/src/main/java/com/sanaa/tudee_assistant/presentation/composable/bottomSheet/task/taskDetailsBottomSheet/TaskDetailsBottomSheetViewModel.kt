@@ -31,19 +31,22 @@ class TaskDetailsBottomSheetViewModel(
         viewModelScope.launch {
             var task: Task?
              taskService.getTaskById(selectedTaskId).collectLatest {
-                task = it
-                 val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-                 val detailsUiState = task.toDetailsState().copy(
-                     categoryImagePath = categoryImagePath,
-                     moveStatusToLabel = when (task.status) {
-                         Task.TaskStatus.TODO -> stringProvider.markAsInProgress
-                         Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
-                         Task.TaskStatus.DONE -> ""
+                 it?.let {
+                     val categoryImagePath = categoryService.getCategoryById(it.categoryId).imagePath
+                     val detailsUiState = it.toDetailsState().copy(
+                         categoryImagePath = categoryImagePath,
+                         moveStatusToLabel = when (it.status) {
+                             Task.TaskStatus.TODO -> stringProvider.markAsInProgress
+                             Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
+                             Task.TaskStatus.DONE -> ""
+                         }
+                     )
+                     _state.update {
+                         detailsUiState
                      }
-                 )
-                 _state.update {
-                     detailsUiState
                  }
+
+
             }
 
         }

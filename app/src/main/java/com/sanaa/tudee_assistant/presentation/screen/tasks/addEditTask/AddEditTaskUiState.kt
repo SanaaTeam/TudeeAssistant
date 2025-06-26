@@ -13,7 +13,7 @@ data class AddTaskUiState(
         id = 0,
         title = "",
         description = "",
-        dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+        dueDate = "",
         categoryId = -1,
         priority = TaskUiPriority.LOW,
         status = TaskUiStatus.TODO,

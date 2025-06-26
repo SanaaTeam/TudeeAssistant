@@ -16,11 +16,7 @@ interface TaskDetailsInteractionListener{
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-//    selectedTaskId: Int,
 ) : BaseViewModel<DetailsUiState>(DetailsUiState()),TaskDetailsInteractionListener{
-//    init {
-//        getSelectedTask(selectedTaskId)
-//    }
 
      fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {

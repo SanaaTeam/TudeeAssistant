@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskContent
@@ -28,7 +29,7 @@ fun AddEditTaskScreen(
     onError: (String) -> Unit,
     viewModel: AddEditTaskViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val showDatePickerDialog by viewModel.showDatePickerDialog.collectAsState()
     var isInitialized by rememberSaveable { mutableStateOf(false) }
 
@@ -48,9 +49,11 @@ fun AddEditTaskScreen(
         if (uiState.isOperationSuccessful) {
             onSuccess()
             viewModel.resetState()
+            onDismiss()
         }
         uiState.error?.let {
             onError(it)
+            onDismiss()
         }
     }
 

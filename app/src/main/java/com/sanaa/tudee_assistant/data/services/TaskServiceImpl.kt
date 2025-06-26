@@ -53,11 +53,11 @@ class TaskServiceImpl(
         }
     }
 
-    override suspend fun getTaskById(taskId: Int): Task {
+    override suspend fun getTaskById(taskId: Int): Flow<Task> {
         return taskDao
-            .getTaskById(taskId)
-            ?.toDomain()
-            ?: throw NotFoundException("Task not found")
+            .getTaskById(taskId).map {
+                it.toDomain()
+            }
     }
 
 

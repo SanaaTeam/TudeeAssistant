@@ -1,5 +1,8 @@
 package com.sanaa.tudee_assistant.presentation.screen.main
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,7 +49,9 @@ fun MainScreen(
                 NavHost(
                     navController = navController,
                     startDestination = startDestination,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    enterTransition = { fadeIn(tween()) },
+                    exitTransition = { fadeOut(tween()) },
                 ) {
                     composable<HomeScreenRoute> {
                         HomeScreen()

@@ -94,6 +94,8 @@ fun AddEditTaskContent(
                         .height(168.dp)
                         .padding(bottom = Theme.dimension.medium),
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                    maxLines = 10,
+                    singleLine = false
 
                     )
 

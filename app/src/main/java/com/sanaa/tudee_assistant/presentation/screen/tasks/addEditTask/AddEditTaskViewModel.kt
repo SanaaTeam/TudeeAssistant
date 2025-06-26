@@ -32,6 +32,7 @@ class AddEditTaskViewModel(
 
     private val _showDatePickerDialog = MutableStateFlow(false)
     val showDatePickerDialog: StateFlow<Boolean> = _showDatePickerDialog.asStateFlow()
+    private var selectedDate: LocalDate? = null
 
     private var _isInitialized: Boolean = false
 
@@ -53,44 +54,63 @@ class AddEditTaskViewModel(
         isEditMode = true
         originalTaskUiState = task.copy()
 
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val categories = categoryService.getCategories().firstOrNull() ?: emptyList()
+        tryToExecute(
+            callee = {
+                val allCategories = categoryService.getCategories().firstOrNull() ?: emptyList()
+                val selectedCategoryDomain = allCategories.find { it.id == task.categoryId }
 
-                val categoryStates = categories.map { category ->
-                    val count = taskService.getTaskCountByCategoryId(category.id).firstOrNull() ?: 0
-                    category.toState(count)
-                }
+                val categoriesUiState = allCategories.toStateList(0)
+                val selectedCategoryUiState = selectedCategoryDomain?.toState(0)
 
-                val selectedCategory = categoryStates.find { it.id == task.categoryId }
+                Pair(categoriesUiState, selectedCategoryUiState)
+            },
+            onSuccess = { (categoriesUiState, selectedCategoryUiState) ->
 
-                _state.update {
-                    it.copy(
+                _state.update { currentState ->
+                    currentState.copy(
                         taskUiState = task,
-                        selectedCategory = selectedCategory,
-                        categories = categoryStates
+                        categories = categoriesUiState,
+                        selectedCategory = selectedCategoryUiState,
+                        error = null,
+                        isLoading = false
                     )
                 }
-
-
                 validateInputs()
-            } catch (e: Throwable) {
-                handleError(e)
-            }
-        }
+            },
+            onError = { exception ->
+                handleError(exception)
+            },
+            dispatcher = Dispatchers.IO
+        )
     }
+
     fun loadCategoriesForNewTask() {
         isEditMode = false
         originalTaskUiState = null
-        viewModelScope.launch(Dispatchers.IO) {
-            categoryService.getCategories()
-                .catch { e -> handleError(e) }
-                .collect { categories ->
-                    _state.update { state ->
-                        state.copy(categories = categories.toStateList(0))
-                    }
+
+        tryToExecute(
+            callee = {
+                categoryService.getCategories().firstOrNull() ?: emptyList()
+            },
+            onSuccess = { categories ->
+                _state.update { state ->
+                    state.copy(
+                        categories = categories.toStateList(0),
+                        taskUiState = TaskUiState(
+                            id = 0,
+                            title = "",
+                            description = "",
+                            dueDate = selectedDate?.toString() ?: "",
+                            categoryId = -1,
+                            priority = TaskUiPriority.LOW,
+                            status = TaskUiStatus.TODO
+                        )
+                    )
                 }
-        }
+            },
+            onError = { e -> handleError(e) },
+            dispatcher = Dispatchers.IO
+        )
     }
 
     override fun onTitleChange(title: String) {
@@ -148,10 +168,11 @@ class AddEditTaskViewModel(
         _showDatePickerDialog.update { false }
     }
 
-    fun initTaskState(isEditMode: Boolean, taskToEdit: TaskUiState?) {
-        if (!_isInitialized || this.isEditMode != isEditMode || this.originalTaskUiState != taskToEdit) {
+    fun initTaskState(isEditMode: Boolean, taskToEdit: TaskUiState?, initialDate: LocalDate?) {
+        if (!isEditMode || !_isInitialized || this.isEditMode != isEditMode || this.originalTaskUiState != taskToEdit || this.selectedDate != initialDate){
             this.isEditMode = isEditMode
             this.originalTaskUiState = taskToEdit
+            this.selectedDate = initialDate
 
             if (!isEditMode) {
                 resetState()
@@ -162,6 +183,7 @@ class AddEditTaskViewModel(
             _isInitialized = true
         }
     }
+
 
     private fun addTask() {
         _state.update { it.copy(isLoading = true, error = null) }

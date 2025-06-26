@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
-import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider

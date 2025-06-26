@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
-import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -71,7 +70,7 @@ class HomeScreenViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState.getInstance(
-                    stringProvider.task_added_success
+                    stringProvider.taskAddedSuccess
 
                 )
             )
@@ -98,7 +97,7 @@ class HomeScreenViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(
-                    exception.message ?: stringProvider.unknown_error
+                    exception.message ?: stringProvider.unknownError
                 )
             )
         }

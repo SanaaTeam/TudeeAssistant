@@ -125,16 +125,17 @@ fun TasksScreenContent(
             ) {
                 Box(
                     modifier = Modifier
+
                         .clip(CircleShape)
-                        .border(1.dp, Theme.color.stroke, CircleShape)
-                        .padding(6.dp)
                         .clickable {
                             val nextMonth = state.selectedDate.minus(1, DateTimeUnit.MONTH)
                             interactionListener.onDateSelected(nextMonth)
                             daysInMonth = (DateFormater.getLocalDatesInMonth(
                                 nextMonth.year, nextMonth.monthNumber
                             ))
-                        }, contentAlignment = Alignment.Center
+                        }
+                        .border(1.dp, Theme.color.stroke, CircleShape)
+                        .padding(6.dp), contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.icon_left_arrow),
@@ -168,15 +169,15 @@ fun TasksScreenContent(
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .border(1.dp, Theme.color.stroke, CircleShape)
-                        .padding(6.dp)
                         .clickable {
                             val previousMonth = state.selectedDate.plus(1, DateTimeUnit.MONTH)
                             interactionListener.onDateSelected(previousMonth)
                             daysInMonth = (DateFormater.getLocalDatesInMonth(
                                 previousMonth.year, previousMonth.monthNumber
                             ))
-                        }, contentAlignment = Alignment.Center
+                        }
+                        .border(1.dp, Theme.color.stroke, CircleShape)
+                        .padding(6.dp), contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.icon_left_arrow),

@@ -14,6 +14,7 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -86,7 +87,8 @@ fun TaskDetailsComponent(
                         modifier = Modifier,
                         style = Theme.textStyle.title.medium,
                         color = Theme.color.title,
-
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                         )
 
                     state.value.description?.let {
@@ -95,6 +97,8 @@ fun TaskDetailsComponent(
                             modifier = Modifier,
                             style = Theme.textStyle.body.small,
                             color = Theme.color.body,
+                            maxLines = 5,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }

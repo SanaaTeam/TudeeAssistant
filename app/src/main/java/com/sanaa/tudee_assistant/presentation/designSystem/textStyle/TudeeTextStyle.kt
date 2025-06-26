@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.designSystem.text_style
+package com.sanaa.tudee_assistant.presentation.designSystem.textStyle
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle

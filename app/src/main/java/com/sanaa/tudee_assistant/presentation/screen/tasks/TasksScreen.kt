@@ -21,7 +21,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
@@ -65,7 +65,7 @@ fun TasksScreen(
     modifier: Modifier = Modifier,
     viewModel: TaskViewModel = koinViewModel<TaskViewModel>(parameters = { parametersOf(screenRoute.taskStatus) }),
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     TasksScreenContent(
         state = state,
@@ -125,16 +125,17 @@ fun TasksScreenContent(
             ) {
                 Box(
                     modifier = Modifier
+
                         .clip(CircleShape)
-                        .border(1.dp, Theme.color.stroke, CircleShape)
-                        .padding(6.dp)
                         .clickable {
                             val nextMonth = state.selectedDate.minus(1, DateTimeUnit.MONTH)
                             interactionListener.onDateSelected(nextMonth)
                             daysInMonth = (DateFormater.getLocalDatesInMonth(
                                 nextMonth.year, nextMonth.monthNumber
                             ))
-                        }, contentAlignment = Alignment.Center
+                        }
+                        .border(1.dp, Theme.color.stroke, CircleShape)
+                        .padding(6.dp), contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.icon_left_arrow),
@@ -168,15 +169,15 @@ fun TasksScreenContent(
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .border(1.dp, Theme.color.stroke, CircleShape)
-                        .padding(6.dp)
                         .clickable {
                             val previousMonth = state.selectedDate.plus(1, DateTimeUnit.MONTH)
                             interactionListener.onDateSelected(previousMonth)
                             daysInMonth = (DateFormater.getLocalDatesInMonth(
                                 previousMonth.year, previousMonth.monthNumber
                             ))
-                        }, contentAlignment = Alignment.Center
+                        }
+                        .border(1.dp, Theme.color.stroke, CircleShape)
+                        .padding(6.dp), contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.icon_left_arrow),
@@ -293,7 +294,7 @@ fun TasksScreenContent(
             enabled = true,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 10.dp, bottom = 12.dp),
+                .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
             onClick = {
                 showAddTaskBottomSheet = true
             },

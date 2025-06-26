@@ -12,12 +12,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
@@ -42,14 +43,10 @@ fun TaskDetailsComponent(
     modifier: Modifier = Modifier,
     interactionListener: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(),
     onEditClick: (TaskUiState) -> Unit = {},
-    onMoveStatusSuccess: () -> Unit = {},
+    onMoveStatusSuccess: (TaskUiStatus) -> Unit = {},
     onMoveStatusFail: () -> Unit = {},
 ) {
-
-    LaunchedEffect(selectedTaskId) {
-        interactionListener.getSelectedTask(selectedTaskId)
-    }
-    val state: State<DetailsUiState> = interactionListener.state.collectAsState()
+    val state: State<DetailsUiState> = interactionListener.state.collectAsStateWithLifecycle()
 
 
 
@@ -86,7 +83,8 @@ fun TaskDetailsComponent(
                         modifier = Modifier,
                         style = Theme.textStyle.title.medium,
                         color = Theme.color.title,
-
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                         )
 
                     state.value.description?.let {
@@ -95,6 +93,8 @@ fun TaskDetailsComponent(
                             modifier = Modifier,
                             style = Theme.textStyle.body.small,
                             color = Theme.color.body,
+                            maxLines = 5,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
@@ -115,6 +115,7 @@ fun TaskDetailsComponent(
                         TaskStatusCard(taskUiStatus = state.value.status)
                         PriorityTag(
                             priority = state.value.priority,
+                            enabled = false
                         )
                     }
                     state.value.moveStatusToLabel.let {label->

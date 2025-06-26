@@ -85,6 +85,7 @@ private fun AppBarLightPreview() {
             tailComponent = {
                 DarkModeThemeSwitchButton(
                     isDarkMode,
+                    800,
                     onCheckedChange = { isDarkMode = !isDarkMode })
             }
         )
@@ -103,6 +104,7 @@ private fun AppBarDarkPreview() {
             tailComponent = {
                 DarkModeThemeSwitchButton(
                     isDarkMode,
+                    800,
                     onCheckedChange = { isDarkMode = !isDarkMode })
             }
         )

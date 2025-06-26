@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskContent
@@ -27,7 +28,7 @@ fun AddEditTaskScreen(
     onError: (String) -> Unit,
     viewModel: AddEditTaskViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.state.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val showDatePickerDialog by viewModel.showDatePickerDialog.collectAsState()
 
     LaunchedEffect(isEditMode, taskToEdit, initialDate) {
@@ -37,9 +38,11 @@ fun AddEditTaskScreen(
         if (uiState.isOperationSuccessful) {
             onSuccess()
             viewModel.resetState()
+            onDismiss()
         }
         uiState.error?.let {
             onError(it)
+            onDismiss()
         }
     }
 

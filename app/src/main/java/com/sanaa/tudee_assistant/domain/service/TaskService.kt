@@ -11,7 +11,7 @@ interface TaskService {
     suspend fun deleteTaskById(taskId: Int)
     suspend fun deleteTaskByCategoryId(categoryId: Int)
     suspend fun deleteAllTasks()
-    suspend fun getTaskById(taskId: Int): Task
+    suspend fun getTaskById(taskId: Int): Flow<Task>
     fun getAllTasks(): Flow<List<Task>>
     fun getTasksByCategoryId(categoryId: Int): Flow<List<Task>>
     fun getTasksByStatus(status: Task.TaskStatus): Flow<List<Task>>

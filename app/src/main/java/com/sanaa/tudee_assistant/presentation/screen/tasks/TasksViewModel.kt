@@ -41,8 +41,7 @@ class TaskViewModel(
         dateJob?.takeIf { it.isActive }?.cancel()
 
         dateJob = viewModelScope.launch {
-            taskService.getTasksByDueDate(_state.value.selectedDate)
-                .collect { taskList ->
+            taskService.getTasksByDueDate(_state.value.selectedDate).collect { taskList ->
                     _state.update { it.copy(currentDateTasks = taskList.toStateList()) }
                 }
 

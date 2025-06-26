@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 interface TaskDetailsInteractionListener{
-    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit)
+    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: (TaskUiStatus) -> Unit, onMoveStatusFail: () -> Unit)
 }
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
@@ -56,7 +56,7 @@ class TaskDetailsBottomSheetViewModel(
                                 _state.update {
                                     it.copy(status = TaskUiStatus.IN_PROGRESS)
                                 }
-                                onMoveStatusSuccess()
+                                onMoveStatusSuccess(TaskUiStatus.IN_PROGRESS)
                             },
                             onError = {
                                 onMoveStatusFail()
@@ -73,7 +73,7 @@ class TaskDetailsBottomSheetViewModel(
                                 _state.update {
                                     it.copy(status = TaskUiStatus.DONE)
                                 }
-                                onMoveStatusSuccess()
+                                onMoveStatusSuccess(TaskUiStatus.DONE)
                             },
                             onError = {
                                 onMoveStatusFail()

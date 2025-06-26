@@ -154,20 +154,21 @@ class TasksServiceImplTest {
             assertThat(result.isFailure).isTrue()
         }
 
-//    @Test
-//    fun `getTaskById should invoke getTaskById in taskDao with correct taskId`() = runTest {
-//        // Given
-//        coEvery { taskDao.getTaskById(any()) } returns fakeTasks[0]
-//        // When
-//        tasksService.getTaskById(fakeTasks[0].taskId)
-//        // Then
-//        coVerify(exactly = 1) { taskDao.getTaskById(fakeTasks[0].taskId) }
-//    }
+    @Test
+    fun `getTaskById should invoke getTaskById in taskDao with correct taskId`() = runTest {
+        val taskFlow = flowOf(fakeTasks[0])
+        // Given
+        coEvery { taskDao.getTaskById(any()) } returns taskFlow
+        // When
+        tasksService.getTaskById(fakeTasks[0].taskId)
+        // Then
+        coVerify(exactly = 1) { taskDao.getTaskById(fakeTasks[0].taskId) }
+    }
 
 //    @Test
 //    fun `getTaskById should throw TaskNotFoundException when getTaskById returns null`() = runTest {
 //        // Given
-//        coEvery { taskDao.getTaskById(any()) } returns null
+//        coEvery { taskDao.getTaskById(any()) } returns flowOf()
 //        // When
 //        val result = runCatching { tasksService.getTaskById(fakeTasks[0].taskId) }
 //        // Then

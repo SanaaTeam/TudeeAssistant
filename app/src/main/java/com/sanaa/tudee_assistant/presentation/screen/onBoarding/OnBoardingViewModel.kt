@@ -1,10 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.onBoarding
 
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
-import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
-import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import kotlinx.coroutines.flow.update
@@ -29,19 +26,18 @@ class OnBoardingViewModel(
         }
     }
 
-    override fun onNextPageClick(navHostController: NavHostController) {
+    override fun onNextPageClick() {
         if (state.value.currentPageIndex == state.value.pageList.lastIndex) {
-            onSkipClick(navHostController)
+            onSkipClick()
         } else {
             _state.update { it.copy(currentPageIndex = it.currentPageIndex + 1) }
         }
     }
 
-    override fun onSkipClick(navHostController: NavHostController) {
+    override fun onSkipClick() {
+            _state.update { it.copy(isSkipable = true) }
+
         viewModelScope.launch {
-            navHostController.navigate(MainScreenRoute) {
-                popUpTo(OnBoardingScreenRoute) { inclusive = true }
-            }
             preferencesManager.setOnboardingCompleted()
         }
     }

@@ -8,6 +8,8 @@ import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenViewModel
 import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingViewModel
 import com.sanaa.tudee_assistant.presentation.screen.tasks.TaskViewModel
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskViewModel
+import kotlinx.coroutines.Dispatchers
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -19,6 +21,19 @@ val viewModelModule = module {
     viewModelOf(::CategoryTaskViewModel)
     viewModelOf(::TaskViewModel)
     viewModelOf(::AddEditTaskViewModel)
+    viewModel{ AddEditTaskViewModel(
+        taskService = get(),
+        categoryService = get(),
+    )
+    }
     viewModelOf(::TaskViewModel)
-    viewModelOf(::TaskDetailsBottomSheetViewModel)
+    viewModel {
+        TaskDetailsBottomSheetViewModel(
+            taskService = get(),
+            categoryService = get(),
+            stringProvider = get(),
+            dispatcher = Dispatchers.IO
+        )
+    }
+
 }

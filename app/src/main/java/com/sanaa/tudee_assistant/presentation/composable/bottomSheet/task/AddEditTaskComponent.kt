@@ -7,15 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskContent
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskViewModel
+import kotlinx.datetime.LocalDate
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -24,28 +22,19 @@ import org.koin.androidx.compose.koinViewModel
 fun AddEditTaskScreen(
     isEditMode: Boolean,
     taskToEdit: TaskUiState? = null,
+    initialDate: LocalDate? = null,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
     onError: (String) -> Unit,
     viewModel: AddEditTaskViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     val showDatePickerDialog by viewModel.showDatePickerDialog.collectAsState()
-    var isInitialized by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(isEditMode, taskToEdit, isInitialized) {
-        if (!isInitialized) {
-            if (!isEditMode) {
-                viewModel.resetState()
-                viewModel.loadCategoriesForNewTask()
-            } else if (taskToEdit != null) {
-                viewModel.loadTask(taskToEdit)
-            }
-            isInitialized = true
-        }
+    LaunchedEffect(isEditMode, taskToEdit, initialDate) {
+        viewModel.initTaskState(isEditMode, taskToEdit, initialDate)
     }
-
-    LaunchedEffect(uiState.isOperationSuccessful, uiState.error) {
+    LaunchedEffect(uiState.isOperationSuccessful, uiState.error) { // Corrected lines
         if (uiState.isOperationSuccessful) {
             onSuccess()
             viewModel.resetState()

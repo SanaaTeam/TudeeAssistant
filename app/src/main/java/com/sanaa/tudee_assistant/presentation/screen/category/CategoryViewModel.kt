@@ -3,7 +3,6 @@ package com.sanaa.tudee_assistant.presentation.screen.category
 import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -68,7 +67,7 @@ class CategoryViewModel(
                 isLoading = false,
                 snackBarState = SnackBarState.getErrorInstance(
                     exception.message
-                        ?: stringProvider.unknown_error
+                        ?: stringProvider.unknownError
                 )
             )
         }
@@ -97,7 +96,7 @@ class CategoryViewModel(
             it.copy(
                 isLoading = false,
                 isAddCategorySheetVisible = false,
-                snackBarState = SnackBarState.getInstance(stringProvider.category_added_successfully),
+                snackBarState = SnackBarState.getInstance(stringProvider.categoryAddedSuccessfully),
                 newCategory = CategoryUiState()
             )
         }

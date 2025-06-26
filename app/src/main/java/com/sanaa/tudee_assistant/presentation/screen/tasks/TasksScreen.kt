@@ -42,13 +42,13 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
 import com.sanaa.tudee_assistant.presentation.composable.TextAppBar
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
@@ -142,15 +142,15 @@ fun TasksScreenContent(
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
-                            .border(1.dp, Theme.color.stroke, CircleShape)
-                            .padding(6.dp)
                             .clickable {
                                 val nextMonth = state.selectedDate.minus(1, DateTimeUnit.MONTH)
                                 interactionListener.onDateSelected(nextMonth)
                                 daysInMonth = (DateFormater.getLocalDatesInMonth(
                                     nextMonth.year, nextMonth.monthNumber
                                 ))
-                            }, contentAlignment = Alignment.Center
+                            }
+                            .border(1.dp, Theme.color.stroke, CircleShape)
+                            .padding(6.dp), contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.icon_left_arrow),
@@ -176,23 +176,26 @@ fun TasksScreenContent(
                             modifier = Modifier
                                 .size(16.dp)
                                 .rotate(if (LocalLayoutDirection.current == LayoutDirection.Rtl) 90f else -90f)
-                                .clickable {
-                                    showDialog = true
-                                })
+                                .clickable(
+                                    interactionSource = null,
+                                    indication = null,
+                                    onClick = { showDialog = true },
+                                )
+                        )
                     }
 
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
-                            .border(1.dp, Theme.color.stroke, CircleShape)
-                            .padding(6.dp)
                             .clickable {
                                 val previousMonth = state.selectedDate.plus(1, DateTimeUnit.MONTH)
                                 interactionListener.onDateSelected(previousMonth)
                                 daysInMonth = (DateFormater.getLocalDatesInMonth(
                                     previousMonth.year, previousMonth.monthNumber
                                 ))
-                            }, contentAlignment = Alignment.Center
+                            }
+                            .border(1.dp, Theme.color.stroke, CircleShape)
+                            .padding(6.dp), contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.icon_left_arrow),
@@ -274,6 +277,7 @@ fun TasksScreenContent(
                     AddEditTaskScreen(
                         isEditMode = false,
                         taskToEdit = null,
+                        initialDate = state.selectedDate,
                         onDismiss = { showAddTaskBottomSheet = false },
                         onSuccess = {
                             showAddTaskBottomSheet = false

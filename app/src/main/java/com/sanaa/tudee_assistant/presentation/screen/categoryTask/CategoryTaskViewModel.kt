@@ -100,15 +100,15 @@ class CategoryTaskViewModel(
 
                 }
             },
-            onError = { onError(message = stringProvider.deleting_category_error) },
+            onError = { onError(message = stringProvider.deletingCategoryError) },
             onSuccess = {
                 onSuccess(
-                    message = stringProvider.deleted_category_successfully,
+                    message = stringProvider.deletedCategorySuccessfully,
                     updateState = {
                         it.copy(
                             showDeleteCategoryBottomSheet = false,
                             snackBarState = SnackBarState
-                                .getInstance(stringProvider.deleted_category_successfully),
+                                .getInstance(stringProvider.deletedCategorySuccessfully),
                         )
                     },
                     effect = NavigateBackToCategoryList
@@ -180,7 +180,7 @@ class CategoryTaskViewModel(
                         it.copy(
                             showEditCategoryBottomSheet = false,
                             snackBarState = SnackBarState
-                                .getInstance(stringProvider.category_update_successfully),
+                                .getInstance(stringProvider.categoryUpdateSuccessfully),
                         )
 
                     },
@@ -217,7 +217,7 @@ class CategoryTaskViewModel(
             it.copy(
                 showEditTaskBottomSheet = false, selectedTask = null,
                 snackBarState = SnackBarState
-                    .getInstance(stringProvider.task_update_success),
+                    .getInstance(stringProvider.taskUpdateSuccess),
             )
         }
     }
@@ -226,7 +226,7 @@ class CategoryTaskViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState
-                    .getInstance(stringProvider.task_status_update_success),
+                    .getInstance(stringProvider.taskStatusUpdateSuccess ),
                 showTaskDetailsBottomSheet = false,
             )
         }

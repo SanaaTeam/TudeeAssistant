@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
@@ -25,7 +26,6 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThe
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.CategoryList
@@ -121,6 +121,9 @@ private fun HomeScreenContent(
             if (state.showAddTaskSheet) {
                 AddEditTaskScreen(
                     isEditMode = false,
+                    taskToEdit = null,
+                    initialDate = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
                     onDismiss = { interactionsListener.onHideAddTaskSheet() },
                     onSuccess = { interactionsListener.onAddTaskSuccess() },
                     onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
@@ -130,10 +133,14 @@ private fun HomeScreenContent(
                 AddEditTaskScreen(
                     isEditMode = true,
                     taskToEdit = state.taskToEdit,
+                    initialDate = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
                     onDismiss = { interactionsListener.onHideEditTaskSheet() },
                     onSuccess = { interactionsListener.onEditTaskSuccess() },
                     onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
                 )
+
+
             }
             if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
                 TaskDetailsComponent(

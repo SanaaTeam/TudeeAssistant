@@ -1,7 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks
 
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
@@ -42,8 +41,7 @@ class TaskViewModel(
         dateJob?.takeIf { it.isActive }?.cancel()
 
         dateJob = viewModelScope.launch {
-            taskService.getTasksByDueDate(_state.value.selectedDate)
-                .collect { taskList ->
+            taskService.getTasksByDueDate(_state.value.selectedDate).collect { taskList ->
                     _state.update { it.copy(currentDateTasks = taskList.toStateList()) }
                 }
 
@@ -67,10 +65,10 @@ class TaskViewModel(
                     if (it?.id == null) return@launch
                     taskService.deleteTaskById(it.id)
                 }.onSuccess {
-                    handleOnSuccess(message = stringProvider.task_delete_success)
+                    handleOnSuccess(message = stringProvider.taskDeleteSuccess)
                     getTasksByDueDate()
                 }.onFailure {
-                    handleOnError(message = stringProvider.unknown_error)
+                    handleOnError(message = stringProvider.unknownError)
 
                 }
             }
@@ -94,11 +92,11 @@ class TaskViewModel(
 
 
     override fun onAddTaskSuccess() {
-        handleOnSuccess(message = stringProvider.task_added_success)
+        handleOnSuccess(message = stringProvider.taskAddedSuccess)
     }
 
     override fun onEditTaskSuccess() {
-        handleOnSuccess(message = stringProvider.task_update_success)
+        handleOnSuccess(message = stringProvider.taskUpdateSuccess)
     }
 
     override fun onDeleteDismiss() {
@@ -115,7 +113,7 @@ class TaskViewModel(
 
 
     override fun handleOnMoveToStatusSuccess() {
-        handleOnSuccess(message = stringProvider.task_status_update_success)
+        handleOnSuccess(message = stringProvider.taskStatusUpdateSuccess)
     }
 
     override fun handleOnMoveToStatusFail() {
@@ -133,7 +131,7 @@ class TaskViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState.getInstance(
-                    message ?: stringProvider.unknown_error
+                    message ?: stringProvider.unknownError
                 ),
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false
@@ -141,11 +139,11 @@ class TaskViewModel(
         }
     }
 
-    private fun handleOnError(message: String? = stringProvider.unknown_error) {
+    private fun handleOnError(message: String? = stringProvider.unknownError) {
         _state.update {
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(
-                    message ?: stringProvider.unknown_error
+                    message ?: stringProvider.unknownError
                 ),
                 showTaskDetailsBottomSheet = false,
                 showDeleteTaskBottomSheet = false

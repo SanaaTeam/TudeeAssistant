@@ -1,40 +1,58 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
+import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.model.mapper.toDetailsState
+import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 interface TaskDetailsInteractionListener{
-    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: (TaskUiStatus) -> Unit, onMoveStatusFail: () -> Unit)
+    fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit)
 }
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-    selectedTaskId: Int,
-) : BaseViewModel<DetailsUiState>(DetailsUiState()),TaskDetailsInteractionListener{
-    init {
-        observeSelectedTask(selectedTaskId)
-    }
+    private val stringProvider: StringProvider,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = dispatcher),TaskDetailsInteractionListener{
 
-    private fun observeSelectedTask(selectedTaskId: Int) {
+     fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
-            taskService.getTaskById(selectedTaskId).collect { task ->
-                val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-                val detailsUiState = task.toDetailsState().copy(categoryImagePath = categoryImagePath)
-                _state.update {
-                    detailsUiState
-                }
+            var task: Task?
+             taskService.getTaskById(selectedTaskId).collectLatest {
+                task = it
+                 val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
+                 val detailsUiState = task.toDetailsState().copy(
+                     categoryImagePath = categoryImagePath,
+                     moveStatusToLabel = when (task.status) {
+                         Task.TaskStatus.TODO -> stringProvider.markAsInProgress
+                         Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
+                         Task.TaskStatus.DONE -> ""
+                     }
+                 )
+                 _state.update {
+                     detailsUiState
+                 }
             }
+
         }
     }
-    override fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: (TaskUiStatus) -> Unit, onMoveStatusFail: () -> Unit) {
-        viewModelScope.launch {
+
+    override fun onMoveTaskToAnotherStatus(
+        onMoveStatusSuccess: () -> Unit,
+        onMoveStatusFail: () -> Unit
+    ) {
             var newUpdatedTask: Task
             state.value.let { state ->
                 when (state.status) {
@@ -46,12 +64,12 @@ class TaskDetailsBottomSheetViewModel(
                                 _state.update {
                                     it.copy(status = TaskUiStatus.IN_PROGRESS)
                                 }
-                                onMoveStatusSuccess(TaskUiStatus.IN_PROGRESS)
+                                onMoveStatusSuccess()
                             },
                             onError = {
                                 onMoveStatusFail()
                             },
-                            dispatcher = Dispatchers.IO
+                            dispatcher = dispatcher
                         )
                     }
 
@@ -63,17 +81,17 @@ class TaskDetailsBottomSheetViewModel(
                                 _state.update {
                                     it.copy(status = TaskUiStatus.DONE)
                                 }
-                                onMoveStatusSuccess(TaskUiStatus.DONE)
+                                onMoveStatusSuccess()
                             },
                             onError = {
                                 onMoveStatusFail()
                             },
-                            dispatcher = Dispatchers.IO
+                            dispatcher = dispatcher
                         )
                     }
                     else -> {}
                 }
             }
-        }
+
     }
 }

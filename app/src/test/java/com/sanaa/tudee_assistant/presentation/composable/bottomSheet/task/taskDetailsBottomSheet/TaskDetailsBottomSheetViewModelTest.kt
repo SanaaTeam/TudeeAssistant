@@ -90,7 +90,47 @@ class TaskDetailsBottomSheetViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `onMoveTaskToAnotherStatus chang the status`() = runTest {
+    fun `onMoveTaskToAnotherStatus chang the status in todo to in progress `() = runTest {
+        // given
+        val task = Task(
+            id = 1,
+            title = "Test Task",
+            description = "Description",
+            status = TaskStatus.TODO,
+            categoryId = 100,
+            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+            priority = Task.TaskPriority.LOW,
+            createdAt = Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+        )
+
+        coEvery { taskService.getTaskById(1) } returns task
+        coEvery { categoryService.getCategoryById(100) } returns Category(
+            name = "test",
+            imagePath = "images/path.png",
+            isDefault = true,
+            id = 100
+        )
+        every { stringProvider.markAsInProgress } returns "Move to in progress"
+        viewModel.getSelectedTask(1)
+        advanceUntilIdle()
+
+        var successCalled = false
+        var failCalled = false
+        viewModel.onMoveTaskToAnotherStatus(
+            onMoveStatusSuccess = { successCalled = true },
+            onMoveStatusFail = { failCalled = true }
+        )
+        advanceUntilIdle()
+
+        // Assert
+       assertThat(viewModel.state.value.status.name).isEqualTo(TaskUiStatus.IN_PROGRESS.name)
+    }
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `onMoveTaskToAnotherStatus chang the status in  in progress to done `() = runTest {
         // given
         val task = Task(
             id = 1,
@@ -124,7 +164,47 @@ class TaskDetailsBottomSheetViewModelTest {
         advanceUntilIdle()
 
         // Assert
-       assertThat(viewModel.state.value.status.name).isEqualTo(TaskUiStatus.DONE.name)
+        assertThat(viewModel.state.value.status.name).isEqualTo(TaskUiStatus.DONE.name)
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `onMoveTaskToAnotherStatus chang the status done  `() = runTest {
+        // given
+        val task = Task(
+            id = 1,
+            title = "Test Task",
+            description = "Description",
+            status = TaskStatus.DONE,
+            categoryId = 100,
+            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+            priority = Task.TaskPriority.LOW,
+            createdAt = Clock.System.now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+        )
+
+        coEvery { taskService.getTaskById(1) } returns task
+        coEvery { categoryService.getCategoryById(100) } returns Category(
+            name = "test",
+            imagePath = "images/path.png",
+            isDefault = true,
+            id = 100
+        )
+        every { stringProvider.markAsDone } returns "Move to done"
+        viewModel.getSelectedTask(1)
+        advanceUntilIdle()
+
+        var successCalled = false
+        var failCalled = false
+        viewModel.onMoveTaskToAnotherStatus(
+            onMoveStatusSuccess = { successCalled = true },
+            onMoveStatusFail = { failCalled = true }
+        )
+        advanceUntilIdle()
+
+        // Assert
+        assertThat(viewModel.state.value.status.name).isEqualTo(TaskUiStatus.DONE.name)
+    }
+
 
 }

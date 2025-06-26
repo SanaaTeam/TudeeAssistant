@@ -343,7 +343,31 @@ class AddEditTaskViewModelTest {
 
 
 
+    @Test
+    fun `addTask should set isOperationSuccessful true and call service when all fields valid`() = runTest {
+        // Given
+        val category = Category(id = 1, name = "Work", imagePath = "", isDefault = true)
+        coEvery { categoryService.getCategories() } returns flowOf(listOf(category))
+        coEvery { taskService.addTask(any()) } returns Unit
+        viewModel.initTaskState(isEditMode = false, taskToEdit = null, initialDate = null)
+        advanceUntilIdle()
+        viewModel.onTitleChange("Test Add Task")
+        viewModel.onDescriptionChange("Description")
+        viewModel.onDateSelected(LocalDate(2025, 6, 15))
+        viewModel.onPrioritySelected(TaskUiPriority.HIGH)
+        viewModel.onCategorySelected(category.toState(0))
+        advanceUntilIdle()
 
+        // When
+        viewModel.onPrimaryButtonClick()
+        advanceUntilIdle()
+
+        // Then
+        assertThat(viewModel.state.value.isOperationSuccessful).isTrue()
+        assertThat(viewModel.state.value.isLoading).isFalse()
+        assertThat(viewModel.state.value.error).isNull()
+        coVerify(exactly = 1) { taskService.addTask(any()) }
+    }
 
     @Test
     fun `updateTask should set isOperationSuccessful true and call service when fields changed`() = runTest {

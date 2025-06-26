@@ -139,12 +139,14 @@ fun CategoryList(
     categories: List<CategoryUiState>,
     onClick: (TaskUiState) -> Unit,
 ) {
+    if (items.isEmpty()) return
+    val rowCount = if (items.size == 1) 1 else 2
+    val cardHeight = 111.dp
+    val targetHeight =
+        (cardHeight * rowCount) + Theme.dimension.extraLarge + Theme.dimension.small
+
     LazyHorizontalGrid(
-        modifier = Modifier.height(
-            if (items.isEmpty()) 0.dp
-            else if (items.size == 1) 111.dp + Theme.dimension.medium
-            else 222.dp + Theme.dimension.extraLarge
-        ),
+        modifier = Modifier.height(targetHeight),
         rows = GridCells.Fixed(
             if (items.size == 1) 1 else 2
         ),

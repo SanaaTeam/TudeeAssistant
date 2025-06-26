@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,7 +38,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 
 @Composable
-fun EmptyScreen(
+fun EmptyContent(
     modifier: Modifier = Modifier,
     title: String = stringResource(R.string.no_task_today),
     caption: String? = stringResource(R.string.tap_to_add_task),
@@ -232,7 +231,7 @@ private fun PreviewEmptyScreen() {
                 .background(Theme.color.surface),
             contentAlignment = Alignment.Center
         ) {
-            EmptyScreen()
+            EmptyContent()
         }
     }
 }

@@ -12,6 +12,7 @@ import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +26,8 @@ import kotlinx.datetime.LocalDate
 class AddEditTaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-) : BaseViewModel<AddTaskUiState>(AddTaskUiState()), AddEditTaskListener {
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BaseViewModel<AddTaskUiState>(AddTaskUiState(), defaultDispatcher = dispatcher), AddEditTaskListener {
 
     private var originalTaskUiState: TaskUiState? = null
     private var isEditMode: Boolean = false
@@ -37,7 +39,7 @@ class AddEditTaskViewModel(
     private var _isInitialized: Boolean = false
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher){
             categoryService.getCategories()
                 .catch { e -> handleError(e) }
                 .collect { categoryList ->
@@ -80,7 +82,7 @@ class AddEditTaskViewModel(
             onError = { exception ->
                 handleError(exception)
             },
-            dispatcher = Dispatchers.IO
+            dispatcher = defaultDispatcher
         )
     }
 
@@ -199,7 +201,9 @@ class AddEditTaskViewModel(
             },
             onError = { exception ->
                 handleError(exception)
-            }
+            },
+            dispatcher = defaultDispatcher
+
         )
     }
 
@@ -215,7 +219,9 @@ class AddEditTaskViewModel(
             },
             onError = { exception ->
                 handleError(exception)
-            }
+            },
+            dispatcher = defaultDispatcher
+
         )
     }
 

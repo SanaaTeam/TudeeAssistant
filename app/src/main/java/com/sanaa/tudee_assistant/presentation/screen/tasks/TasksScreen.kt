@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -40,17 +41,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.composable.TaskStatusTabs
+import com.sanaa.tudee_assistant.presentation.composable.TextAppBar
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DayItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.mainActivity.TudeeScaffold
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
-import com.sanaa.tudee_assistant.presentation.shared.LocalThemeState
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortMonthName
 import kotlinx.coroutines.launch
@@ -103,24 +104,34 @@ fun TasksScreenContent(
             interactionListener.onHideSnakeBar()
         }
     }
-
     TudeeScaffold(
-        statusBarColor = Theme.color.surfaceHigh,
-        isDarkIcon = !LocalThemeState.current,
+        floatingActionButton = {
+            FloatingActionButton(
+                enabled = true,
+                modifier = Modifier,
+                onClick = {
+                    showAddTaskBottomSheet = true
+                },
+                iconRes = R.drawable.note_add
+            )
+        },
+        topBar = {
+            TextAppBar(
+                modifier = Modifier
+                    .background(color = Theme.color.surfaceHigh)
+                    .statusBarsPadding(),
+                title = stringResource(R.string.tasks)
+            )
+        }
     ) {
         Box(
-            modifier = modifier
+            modifier = modifier.fillMaxSize()
         ) {
             Column(
-                modifier = Modifier
-                    .background(Theme.color.surfaceHigh),
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(Theme.color.surfaceHigh)
             ) {
-                Text(
-                    text = stringResource(R.string.tasks),
-                    style = Theme.textStyle.title.large,
-                    color = Theme.color.title,
-                    modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp)
-                )
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -238,7 +249,7 @@ fun TasksScreenContent(
                 TaskStatusTabs(
                     state,
                     interactionListener::onTaskSwipeToDelete,
-                    interactionListener::onTaskClicked,
+                    interactionListener::onTaskClicked
                 )
                 if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
                     TaskDetailsComponent(
@@ -294,17 +305,6 @@ fun TasksScreenContent(
                     })
                 }
             }
-
-            FloatingActionButton(
-                enabled = true,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 10.dp, bottom = 12.dp),
-                onClick = {
-                    showAddTaskBottomSheet = true
-                },
-                iconRes = R.drawable.note_add
-            )
         }
     }
 }

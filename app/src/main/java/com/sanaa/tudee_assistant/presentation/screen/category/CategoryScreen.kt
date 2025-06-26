@@ -6,31 +6,27 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.TextAppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.mainActivity.TudeeScaffold
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
-import com.sanaa.tudee_assistant.presentation.shared.LocalThemeState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -64,8 +60,22 @@ fun CategoryScreenContent(
         }
     }
     TudeeScaffold(
-        statusBarColor = Theme.color.surfaceHigh,
-        isDarkIcon = !LocalThemeState.current
+        floatingActionButton = {
+            FloatingActionButton(
+                modifier = Modifier,
+                iconRes = R.drawable.resources_add,
+            ) {
+                listener.onToggleAddCategorySheet(true)
+            }
+        },
+        topBar = {
+            TextAppBar(
+                modifier = Modifier
+                    .background(color = Theme.color.surfaceHigh)
+                    .statusBarsPadding(),
+                title = stringResource(R.string.categories)
+            )
+        }
     ) {
         Box(
             modifier = modifier
@@ -73,8 +83,6 @@ fun CategoryScreenContent(
                 .background(color = Theme.color.surface)
         ) {
             Column {
-                AppBar()
-
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 104.dp),
                     modifier = Modifier
@@ -96,14 +104,7 @@ fun CategoryScreenContent(
                 }
             }
 
-            FloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(vertical = 10.dp, horizontal = Theme.dimension.regular),
-                iconRes = R.drawable.resources_add,
-            ) {
-                listener.onToggleAddCategorySheet(true)
-            }
+
         }
 
         if (state.isAddCategorySheetVisible) {
@@ -122,25 +123,5 @@ fun CategoryScreenContent(
                 isFormValid = { listener.isFormValid() }
             )
         }
-    }
-}
-
-@Composable
-private fun AppBar() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(64.dp)
-            .background(color = Theme.color.surfaceHigh),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            stringResource(R.string.categories),
-            style = Theme.textStyle.title.large,
-            color = Theme.color.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        )
     }
 }

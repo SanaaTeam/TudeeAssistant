@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.app
 
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -7,7 +8,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
@@ -17,7 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -41,8 +43,23 @@ import kotlinx.coroutines.delay
 @Composable
 fun TudeeApp(isFirstLaunch: Boolean, isDarkTheme: Boolean) {
     val snackBarState = remember { mutableStateOf(SnackBarState()) }
-    Box(modifier = Modifier.fillMaxSize()) {
-        val appNavController = rememberNavController()
+
+    val view = LocalView.current
+    val activity = view.context as? ComponentActivity
+
+    LaunchedEffect(isDarkTheme) {
+        val darkIcons = !isDarkTheme
+
+        activity?.window?.also { window ->
+            WindowInsetsControllerCompat(window, view).apply {
+                isAppearanceLightStatusBars = darkIcons
+                isAppearanceLightNavigationBars = darkIcons
+            }
+        }
+    }
+
+    val appNavController = rememberNavController()
+    Box {
         CompositionLocalProvider(
             LocalAppNavController provides appNavController,
             LocalSnackBarState provides snackBarState,

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -25,7 +24,7 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBarItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.mainActivity.TudeeScaffold
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.navigation.CategoriesScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
@@ -35,7 +34,6 @@ import com.sanaa.tudee_assistant.presentation.navigation.util.navigatePreserving
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryScreen
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
 import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
-import com.sanaa.tudee_assistant.presentation.shared.LocalThemeState
 
 @Composable
 fun MainScreen(
@@ -47,13 +45,10 @@ fun MainScreen(
 
     CompositionLocalProvider(LocalMainNavController provides navController) {
         TudeeScaffold (
-            statusBarColor = Theme.color.surfaceHigh,
-            isDarkIcon = !LocalThemeState.current
         ){
             Column(
                 Modifier
                     .fillMaxSize()
-                    .padding(it)
                     .background(Theme.color.surface)
             ) {
                 Box(Modifier.weight(1f)) {

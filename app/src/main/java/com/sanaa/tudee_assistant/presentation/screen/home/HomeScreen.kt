@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -296,9 +297,21 @@ private fun CategoryList(
     categories: List<CategoryUiState>,
     onClick: (TaskUiState) -> Unit,
 ) {
+    val rowCount = if (items.size == 1) 1 else 2
+    val cardHeight = 111.dp
+    val targetHeight = if (items.isNotEmpty()) {
+        (cardHeight * rowCount) + Theme.dimension.extraLarge
+    } else {
+        0.dp
+    }
+
+    val animatedHeight by animateDpAsState(
+        targetValue = targetHeight,
+        label = "gridHeight"
+    )
     LazyHorizontalGrid(
-        modifier = Modifier.height(if (items.isNotEmpty()) 222.dp + Theme.dimension.extraLarge else 0.dp),
-        rows = GridCells.Fixed(2),
+        modifier = Modifier.height(animatedHeight),
+        rows = GridCells.Fixed(rowCount),
         contentPadding = PaddingValues(
             start = Theme.dimension.medium,
             end = Theme.dimension.medium,

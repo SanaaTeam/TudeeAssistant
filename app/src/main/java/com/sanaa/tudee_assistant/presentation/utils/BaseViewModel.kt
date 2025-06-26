@@ -16,7 +16,7 @@ abstract class BaseViewModel<T>(initialState: T) : ViewModel() {
 
     protected fun <T> tryToExecute(
         callee: suspend () -> T,
-        onSuccess: (T) -> Unit,
+        onSuccess: (T) -> Unit = {},
         onError: (exception: Exception) -> Unit,
         dispatcher: CoroutineDispatcher = Dispatchers.IO,
     ) {
@@ -30,17 +30,4 @@ abstract class BaseViewModel<T>(initialState: T) : ViewModel() {
         }
     }
 
-    protected fun <T> tryToExecute(
-        callee: suspend () -> T,
-        onError: (exception: Exception) -> Unit,
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
-    ) {
-        viewModelScope.launch(dispatcher) {
-            try {
-                callee()
-            } catch (exception: Exception) {
-                onError(exception)
-            }
-        }
-    }
 }

@@ -102,6 +102,9 @@ private fun HomeScreenContent(
                 scrollState,
                 state,
                 onTaskClick = { interactionsListener.onTaskClick(it) },
+                onNavigateToTaskScreen = { status ->
+                    interactionsListener.onNavigateToTaskScreen(status)
+                }
             )
         }
 
@@ -169,6 +172,7 @@ fun PreviewHomeScreen() {
 
             override fun onAddTaskSuccess() {}
             override fun onAddTaskError(errorMessage: String) {}
+            override fun onNavigateToTaskScreen(status: TaskUiStatus) {}
             override fun onShowEditTaskSheet(taskToEdit: TaskUiState) {}
             override fun onHideEditTaskSheet() {}
             override fun onEditTaskSuccess() {}

@@ -10,6 +10,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,21 +27,24 @@ import com.sanaa.tudee_assistant.presentation.navigation.CategoriesScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.LocalMainNavController
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.navigation.util.navigatePreservingState
+import com.sanaa.tudee_assistant.presentation.navigation.util.navigateWithRestoreState
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryScreen
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
 import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen(
     startDestination: Any,
     onStatusBarColor: (Color) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: MainViewModel = koinViewModel(),
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     val screenNavController = rememberNavController()
     val navBackStackEntry by screenNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
 
     val systemUiController = rememberSystemUiController()
     val color = Theme.color.surfaceHigh
@@ -82,21 +86,21 @@ fun MainScreen(
                 iconRes = R.drawable.home,
                 selectedIconRes = R.drawable.home_fill,
             ) {
-                screenNavController.navigatePreservingState(HomeScreenRoute)
+                screenNavController.navigateWithRestoreState(HomeScreenRoute)
             }
             TudeeBottomNavBarItem(
                 selected = currentDestination?.hasRoute(TasksScreenRoute::class) == true,
                 iconRes = R.drawable.profile,
                 selectedIconRes = R.drawable.profile_fill,
             ) {
-                screenNavController.navigatePreservingState(TasksScreenRoute())
+                screenNavController.navigateWithRestoreState(TasksScreenRoute(state.lastSelectedTaskStatus))
             }
             TudeeBottomNavBarItem(
                 selected = currentDestination?.hasRoute(CategoriesScreenRoute::class) == true,
                 iconRes = R.drawable.menu,
                 selectedIconRes = R.drawable.menu_fill,
             ) {
-                screenNavController.navigatePreservingState(CategoriesScreenRoute(TaskUiStatus.TODO))
+                screenNavController.navigateWithRestoreState(CategoriesScreenRoute(TaskUiStatus.TODO))
             }
         }
     }

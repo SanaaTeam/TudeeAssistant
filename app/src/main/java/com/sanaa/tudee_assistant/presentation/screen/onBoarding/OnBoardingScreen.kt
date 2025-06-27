@@ -120,30 +120,27 @@ private fun OnBoardingScreenContent(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .navigationBarsPadding()
+                    .align(Alignment.BottomCenter).navigationBarsPadding()
             ) {
-                if (state.pageList.isNotEmpty()) {
 
-                    OnBoardingPager(
-                        pagerState = pagerState,
-                        pageList = state.pageList,
-                    )
-                    DialogContainer(
-                        pageContent = state.pageList[pagerState.currentPage],
-                        onNextPageClick = { interactionListener.onNextPageClick() },
-                        modifier = Modifier.padding(horizontal = Theme.dimension.medium)
-                    )
+                OnBoardingPager(
+                    pagerState = pagerState,
+                    pageList = state.pageList,
+                )
+                DialogContainer(
+                    pageContent = state.pageList[pagerState.currentPage],
+                    onNextPageClick = { interactionListener.onNextPageClick() },
+                    modifier = Modifier.padding(horizontal = Theme.dimension.medium)
+                )
 
-                    PageIndicator(
-                        currentPage = pagerState.currentPage,
-                        pageCount = pagerState.pageCount,
-                        onIndicatorClick = { index -> interactionListener.setCurrentPage(index) },
-                        modifier = Modifier
-                            .padding(horizontal = Theme.dimension.medium)
-                            .padding(bottom = 24.dp)
-                    )
-                }
+                PageIndicator(
+                    currentPage = pagerState.currentPage,
+                    pageCount = pagerState.pageCount,
+                    onIndicatorClick = { index -> interactionListener.setCurrentPage(index) },
+                    modifier = Modifier
+                        .padding(horizontal = Theme.dimension.medium)
+                        .padding(bottom = 24.dp)
+                )
             }
         }
         if (pagerState.currentPage != state.pageList.lastIndex) {

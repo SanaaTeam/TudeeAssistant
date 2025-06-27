@@ -1,17 +1,8 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
-import androidx.compose.ui.res.stringResource
-import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
-import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.model.mapper.toState
-import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskPriority
-import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 

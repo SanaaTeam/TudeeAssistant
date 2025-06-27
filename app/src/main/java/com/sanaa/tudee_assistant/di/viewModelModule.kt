@@ -5,6 +5,7 @@ import com.sanaa.tudee_assistant.presentation.mainActivity.MainActivityViewModel
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryViewModel
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskViewModel
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenViewModel
+import com.sanaa.tudee_assistant.presentation.screen.main.MainViewModel
 import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingViewModel
 import com.sanaa.tudee_assistant.presentation.screen.tasks.TaskViewModel
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskViewModel
@@ -17,6 +18,7 @@ val viewModelModule = module {
     viewModelOf(::MainActivityViewModel)
     viewModelOf(::OnBoardingViewModel)
     viewModelOf(::HomeScreenViewModel)
+    viewModelOf(::MainViewModel)
     viewModelOf(::CategoryViewModel)
     viewModelOf(::CategoryTaskViewModel)
     viewModelOf(::TaskViewModel)

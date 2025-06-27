@@ -1,15 +1,20 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
+import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
+import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -81,6 +86,12 @@ class HomeScreenViewModel(
         }
     }
 
+    override fun onNavigateToTaskScreen(status: TaskUiStatus) {
+        viewModelScope.launch(Dispatchers.IO) {
+            preferencesManager.changeTaskStatus(status.toTaskStatus())
+        }
+    }
+
     override fun onShowEditTaskSheet(taskToEdit: TaskUiState) {
         _state.update {
             it.copy(
@@ -120,7 +131,6 @@ class HomeScreenViewModel(
 
     override fun onTaskClick(taskUiState: TaskUiState) {
         _state.update { it.copy(selectedTask = taskUiState, showTaskDetailsBottomSheet = true) }
-
     }
 
     override fun onShowTaskDetails(show: Boolean) {
@@ -144,7 +154,6 @@ class HomeScreenViewModel(
                 showTaskDetailsBottomSheet = false,
             )
         }
-
     }
 
     override fun onMoveStatusFail() {

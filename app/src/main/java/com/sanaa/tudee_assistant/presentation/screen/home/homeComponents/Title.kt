@@ -19,13 +19,14 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.navigation.util.navigatePreservingState
+import com.sanaa.tudee_assistant.presentation.navigation.util.navigateWithRestoreState
 
 @Composable
 fun Title(
     text: String,
     tasksCount: Int,
     taskUiStatus: TaskUiStatus,
+    onNavigateToTaskScreen: (TaskUiStatus) -> Unit,
 ) {
     val navController = AppNavigation.mainScreen
 
@@ -47,7 +48,10 @@ fun Title(
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(100.dp))
-                .clickable { navController.navigatePreservingState(TasksScreenRoute(taskUiStatus)) }
+                .clickable {
+                    navController.navigateWithRestoreState(TasksScreenRoute(taskUiStatus))
+                    onNavigateToTaskScreen(taskUiStatus)
+                }
                 .background(Theme.color.surfaceHigh)
                 .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
             verticalAlignment = Alignment.CenterVertically

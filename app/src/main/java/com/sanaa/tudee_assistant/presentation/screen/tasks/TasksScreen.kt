@@ -252,7 +252,8 @@ fun TasksScreenContent(
                 TaskStatusTabs(
                     state,
                     interactionListener::onTaskSwipeToDelete,
-                    interactionListener::onTaskClicked
+                    interactionListener::onTaskClicked,
+                    interactionListener::onTapClick
                 )
                 if (state.selectedTask != null && state.showTaskDetailsBottomSheet)
                     TaskDetailsComponent(

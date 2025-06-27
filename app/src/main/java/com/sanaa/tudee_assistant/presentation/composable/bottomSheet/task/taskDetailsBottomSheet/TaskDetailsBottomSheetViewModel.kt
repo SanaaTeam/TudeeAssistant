@@ -1,8 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -24,8 +22,9 @@ class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val stringProvider: StringProvider,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = dispatcher),TaskDetailsInteractionListener{
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = Dispatchers.IO),
+    TaskDetailsInteractionListener {
 
      fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {

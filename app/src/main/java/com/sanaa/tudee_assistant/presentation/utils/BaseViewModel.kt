@@ -19,7 +19,7 @@ abstract class BaseViewModel<T>(
 
     protected fun <T> tryToExecute(
         callee: suspend () -> T,
-        onSuccess: (T) -> Unit,
+        onSuccess: (T) -> Unit = {},
         onError: (exception: Exception) -> Unit,
         dispatcher: CoroutineDispatcher = defaultDispatcher,
     ) {
@@ -33,17 +33,4 @@ abstract class BaseViewModel<T>(
         }
     }
 
-    protected fun <T> tryToExecute(
-        callee: suspend () -> T,
-        onError: (exception: Exception) -> Unit,
-        dispatcher: CoroutineDispatcher = defaultDispatcher,
-    ) {
-        viewModelScope.launch(dispatcher) {
-            try {
-                callee()
-            } catch (exception: Exception) {
-                onError(exception)
-            }
-        }
-    }
 }

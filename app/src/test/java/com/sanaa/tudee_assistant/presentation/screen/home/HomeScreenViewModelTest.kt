@@ -57,6 +57,14 @@ class HomeScreenViewModelTest {
             stringProvider = stringProvider
         )
     }
+    val dummyTask = TaskUiState(
+        id = 1,
+        categoryId = 1,
+        title = "Test Task",
+        description = "Description",
+        status = TaskUiStatus.TODO,
+        createdAt = LocalDateTime(2025, 6, 1, 12, 0).toString()
+    )
 
     @AfterEach
     fun tearDown() {
@@ -107,20 +115,54 @@ class HomeScreenViewModelTest {
 
     @Test
     fun `onTaskClick should set selected task and show task details`() = runTest {
-        val dummyTask = TaskUiState(
-            id = 1,
-            categoryId = 1,
-            title = "Test Task",
-            description = "Description",
-            status = TaskUiStatus.TODO,
-            createdAt = LocalDateTime(2025, 6, 1, 12, 0).toString()
-        )
         viewModel.onTaskClick(dummyTask)
 
         val state = viewModel.state.value
         assertThat(state.selectedTask).isEqualTo(dummyTask)
         assertThat(state.showTaskDetailsBottomSheet).isTrue()
     }
+
+    @Test
+    fun `onAddTaskError should show error snackbar`() = runTest {
+        val errorMessage = "Failed to add task"
+        viewModel.onAddTaskError(errorMessage)
+
+        val state = viewModel.state.value
+        assertThat(state.snackBarState.message).isEqualTo(errorMessage)
+        assertThat(state.snackBarState.isVisible).isTrue()
+    }
+    @Test
+    fun `onEditTaskSuccess should reload tasks and show success snackbar`() = runTest {
+        viewModel.onEditTaskSuccess()
+
+        val state = viewModel.state.value
+        assertThat(state.snackBarState.message).isEqualTo("Edited task successfully.")
+        assertThat(state.snackBarState.isVisible).isTrue()
+    }
+    @Test
+    fun `onHideSnackBar should hide snackbar`() = runTest {
+        viewModel.onHideSnackBar()
+
+        val state = viewModel.state.value
+        assertThat(state.snackBarState.isVisible).isFalse()
+    }
+    @Test
+    fun `onHideEditTaskSheet should reset edit sheet state`() = runTest {
+        viewModel.onHideEditTaskSheet()
+
+        val state = viewModel.state.value
+        assertThat(state.showEditTaskSheet).isFalse()
+        assertThat(state.taskToEdit).isNull()
+    }
+    @Test
+    fun `onShowEditTaskSheet should show edit sheet with selected task`() = runTest {
+        viewModel.onShowEditTaskSheet(dummyTask)
+
+        val state = viewModel.state.value
+        assertThat(state.showEditTaskSheet).isTrue()
+        assertThat(state.taskToEdit).isEqualTo(dummyTask)
+    }
+
 
 
     private companion object {

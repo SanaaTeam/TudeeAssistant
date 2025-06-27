@@ -29,6 +29,7 @@ class MainActivityViewModel(
             preferencesManager.isDarkTheme.combine(preferencesManager.isFirstLaunch) { isDarkTheme, isFirstLaunch ->
                 Pair(isDarkTheme, isFirstLaunch)
             }.collect { (isDarkTheme, isFirstLaunch) ->
+
                 _state.update {
                     it.copy(
                         isDarkTheme = isDarkTheme,
@@ -37,6 +38,12 @@ class MainActivityViewModel(
                     )
                 }
             }
+        }
+    }
+
+    fun onSetDarkTheme(isDarkTheme: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            preferencesManager.setDarkTheme(isDarkTheme)
         }
     }
 }

@@ -15,15 +15,13 @@ class OnBoardingViewModel(
 
     init {
         viewModelScope.launch {
-            preferencesManager.isDarkTheme.collect { isDarkTheme ->
-                _state.update {
-                    it.copy(
-                        isDarkTheme = isDarkTheme,
-                        pageList = getOnBoardingPageContent(),
-                        currentPageIndex = 0
-                    )
-                }
+            _state.update {
+                it.copy(
+                    pageList = getOnBoardingPageContent(),
+                    currentPageIndex = 0
+                )
             }
+
         }
     }
 

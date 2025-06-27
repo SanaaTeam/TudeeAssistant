@@ -3,6 +3,7 @@ package com.sanaa.tudee_assistant.presentation.screen.tasks
 import com.google.common.truth.Truth.assertThat
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
@@ -33,6 +34,7 @@ class TaskViewModelTest {
     private val taskService: TaskService = mockk(relaxed = true)
     private val categoryService: CategoryService = mockk(relaxed = true)
     private val stringProvider: StringProvider = mockk(relaxed = true)
+    private val preferencesManager: PreferencesManager = mockk(relaxed = true)
     private val dispatcher = UnconfinedTestDispatcher()
     private val fakeStatus = TaskUiStatus.TODO
 
@@ -49,7 +51,9 @@ class TaskViewModelTest {
         every { stringProvider.taskUpdateSuccess } returns TASK_UPDATE_SUCCESS
         every { stringProvider.taskStatusUpdateSuccess } returns TASK_STATUS_UPDATE_SUCCESS
 
-        viewModel = TaskViewModel(taskService, categoryService, fakeStatus, stringProvider)
+        viewModel = TaskViewModel(
+            taskService, categoryService, fakeStatus, stringProvider, preferencesManager
+        )
     }
 
     @AfterEach

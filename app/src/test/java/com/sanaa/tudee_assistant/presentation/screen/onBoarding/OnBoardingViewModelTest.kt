@@ -32,24 +32,6 @@ class OnBoardingViewModelTest {
     }
 
     @Test
-    fun `init should update state with dark theme true when preferencesManager isDarkTheme is true`() = runTest {
-        isDarkThemeFlow.value = true
-
-        testDispatcher.scheduler.advanceUntilIdle()
-
-        assertThat(viewModel.state.value.isDarkTheme).isTrue()
-    }
-
-    @Test
-    fun `init should update state with dark theme false when preferencesManager isDarkTheme is false`() = runTest {
-        isDarkThemeFlow.value = false
-
-        testDispatcher.scheduler.advanceUntilIdle()
-
-        assertThat(viewModel.state.value.isDarkTheme).isFalse()
-    }
-
-    @Test
     fun `init should update the pageList`() = runTest {
 
         assertThat(viewModel.state.value.pageList).isNotEmpty()

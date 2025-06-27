@@ -11,7 +11,6 @@ import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 
 interface TaskDetailsInteractionListener {
     fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit)
@@ -40,7 +39,7 @@ class TaskDetailsBottomSheetViewModel(
                                 Task.TaskStatus.DONE -> ""
                             }
                         )
-                        _state.update {
+                        updateState {
                             detailsUiState
                         }
                     }
@@ -63,7 +62,7 @@ class TaskDetailsBottomSheetViewModel(
                     tryToExecute(
                         callee = { taskService.updateTask(newUpdatedTask) },
                         onSuccess = {
-                            _state.update {
+                            updateState {
                                 it.copy(status = TaskUiStatus.IN_PROGRESS)
                             }
                             onMoveStatusSuccess()
@@ -80,7 +79,7 @@ class TaskDetailsBottomSheetViewModel(
                     tryToExecute(
                         callee = { taskService.updateTask(newUpdatedTask) },
                         onSuccess = {
-                            _state.update {
+                            updateState {
                                 it.copy(status = TaskUiStatus.DONE)
                             }
                             onMoveStatusSuccess()

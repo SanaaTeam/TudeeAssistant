@@ -6,7 +6,6 @@ import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
 
 class MainActivityViewModel(
     private val preferencesManager: PreferencesManager,
@@ -26,14 +25,14 @@ class MainActivityViewModel(
     }
 
     private fun loadScreen() {
-        _state.update { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true) }
         tryToExecute(
             callee = {
                 preferencesManager.isDarkTheme.combine(preferencesManager.isFirstLaunch) { isDarkTheme, isFirstLaunch ->
                     Pair(isDarkTheme, isFirstLaunch)
                 }.collect { (isDarkTheme, isFirstLaunch) ->
 
-                    _state.update {
+                    updateState {
                         it.copy(
                             isDarkTheme = isDarkTheme,
                             isFirstLaunch = isFirstLaunch,

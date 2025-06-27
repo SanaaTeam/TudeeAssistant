@@ -4,7 +4,6 @@ import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.update
 
 
 class MainViewModel(
@@ -19,7 +18,7 @@ class MainViewModel(
         tryToExecute(
             callee = {
                 preferencesManager.lastSelectedTaskStatus.collect { lastSelectedTaskStatus ->
-                    _state.update { it.copy(lastSelectedTaskStatus = lastSelectedTaskStatus) }
+                    updateState { it.copy(lastSelectedTaskStatus = lastSelectedTaskStatus) }
                 }
             }
         )

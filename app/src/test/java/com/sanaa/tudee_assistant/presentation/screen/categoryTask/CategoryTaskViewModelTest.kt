@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class CategoryTaskViewModelTest {
 
-    private lateinit var viewModel: CategoryTaskViewModel
     private val categoryService: CategoryService = mockk(relaxed = true)
     private val taskService: TaskService = mockk(relaxed = true)
     private val imageProcessor: ImageProcessor = mockk(relaxed = true)
@@ -39,27 +38,6 @@ class CategoryTaskViewModelTest {
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(dispatcher)
-
-        // Mock initial data
-        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
-        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
-
-        // Mock string resources
-        every { stringProvider.deletedCategorySuccessfully } returns DELETE_SUCCESS
-        every { stringProvider.categoryUpdateSuccessfully } returns UPDATE_SUCCESS
-        every { stringProvider.taskUpdateSuccess } returns TASK_UPDATE_SUCCESS
-        every { stringProvider.taskStatusUpdateSuccess } returns STATUS_UPDATE_SUCCESS
-        every { stringProvider.deletingCategoryError } returns DELETE_ERROR
-
-
-        viewModel = CategoryTaskViewModel(
-            categoryService = categoryService,
-            taskService = taskService,
-            categoryId = categoryId,
-            imageProcessor = imageProcessor,
-            stringProvider = stringProvider,
-            dispatcher = dispatcher
-        )
     }
 
     @AfterEach
@@ -69,8 +47,12 @@ class CategoryTaskViewModelTest {
 
     @Test
     fun `initial state should load category and tasks`() = runTest {
-        val state = viewModel.state.value
+        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
+        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
 
+        val viewModel = createViewModel()
+
+        val state = viewModel.state.value
         assertThat(state.currentCategory.id).isEqualTo(categoryId)
         assertThat(state.todoTasks).hasSize(1)
         assertThat(state.inProgressTasks).hasSize(1)
@@ -79,7 +61,9 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onDeleteClicked should show delete bottom sheet`() {
+    fun `onDeleteClicked should show delete bottom sheet`() = runTest {
+        val viewModel = createViewModel()
+
         viewModel.onDeleteClicked()
 
         val state = viewModel.state.value
@@ -88,7 +72,9 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onDeleteDismiss should hide delete bottom sheet`() {
+    fun `onDeleteDismiss should hide delete bottom sheet`() = runTest {
+        val viewModel = createViewModel()
+
         viewModel.onDeleteClicked()
         viewModel.onDeleteDismiss()
 
@@ -98,7 +84,12 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onEditClicked should show edit bottom sheet with current category`() {
+    fun `onEditClicked should show edit bottom sheet with current category`() = runTest {
+        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
+        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
+
+        val viewModel = createViewModel()
+
         viewModel.onEditClicked()
 
         val state = viewModel.state.value
@@ -107,7 +98,9 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onEditDismissClicked should hide edit bottom sheet`() {
+    fun `onEditDismissClicked should hide edit bottom sheet`() = runTest {
+        val viewModel = createViewModel()
+
         viewModel.onEditClicked()
         viewModel.onEditDismissClicked()
 
@@ -119,6 +112,9 @@ class CategoryTaskViewModelTest {
     fun `onConfirmDeleteClicked should delete category and navigate back`() = runTest {
         coEvery { categoryService.deleteCategoryById(categoryId) } returns Unit
         coEvery { taskService.deleteTaskByCategoryId(categoryId) } returns Unit
+        every { stringProvider.deletedCategorySuccessfully } returns DELETE_SUCCESS
+
+        val viewModel = createViewModel()
 
         viewModel.onConfirmDeleteClicked()
 
@@ -128,7 +124,24 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onStatusChanged should update selected status`() {
+    fun `onConfirmDeleteClicked should show error if deletion fails`() = runTest {
+        coEvery { categoryService.deleteCategoryById(categoryId) } throws Exception("Error")
+        coEvery { taskService.deleteTaskByCategoryId(categoryId) } returns Unit
+        every { stringProvider.deletingCategoryError } returns DELETE_ERROR
+
+        val viewModel = createViewModel()
+
+        viewModel.onConfirmDeleteClicked()
+
+        val state = viewModel.state.value
+        assertThat(state.snackBarState.message).isEqualTo(DELETE_ERROR)
+        assertThat(state.showDeleteCategoryBottomSheet).isFalse()
+    }
+
+    @Test
+    fun `onStatusChanged should update selected status`() = runTest {
+        val viewModel = createViewModel()
+
         viewModel.onStatusChanged(0)
         assertThat(viewModel.state.value.currentSelectedTaskStatus).isEqualTo(TaskUiStatus.IN_PROGRESS)
 
@@ -139,38 +152,46 @@ class CategoryTaskViewModelTest {
         assertThat(viewModel.state.value.currentSelectedTaskStatus).isEqualTo(TaskUiStatus.DONE)
     }
 
-
     @Test
-    fun `onTitleChange should update edit category name`() {
-        val newName = "New Category Name"
-        viewModel.onTitleChange(newName)
+    fun `onTitleChange should update edit category name`() = runTest {
+        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
+        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
+
+        val viewModel = createViewModel()
+
+        viewModel.onEditClicked()
+        viewModel.onTitleChange("New Name")
 
         val state = viewModel.state.value
-        assertThat(state.editCategory.name).isEqualTo(newName)
+        assertThat(state.editCategory.name).isEqualTo("New Name")
     }
 
     @Test
-    fun `onTaskClicked should show task details bottom sheet`() {
-        val task = fakeUiTasks[0]
-        viewModel.onTaskClicked(task)
+    fun `onTaskClicked should show task details bottom sheet`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.onTaskClicked(fakeUiTasks[0])
 
         val state = viewModel.state.value
-        assertThat(state.selectedTask).isEqualTo(task)
+        assertThat(state.selectedTask).isEqualTo(fakeUiTasks[0])
         assertThat(state.showTaskDetailsBottomSheet).isTrue()
     }
 
     @Test
-    fun `onTaskEditClicked should show edit task bottom sheet`() {
-        val task = fakeUiTasks[0]
-        viewModel.onTaskClicked(task)
-        viewModel.onTaskEditClicked(task)
+    fun `onTaskEditClicked should show edit task bottom sheet`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.onTaskClicked(fakeUiTasks[0])
+        viewModel.onTaskEditClicked(fakeUiTasks[0])
 
         val state = viewModel.state.value
         assertThat(state.showEditTaskBottomSheet).isTrue()
     }
 
     @Test
-    fun `onTaskEditDismiss should hide edit task bottom sheet`() {
+    fun `onTaskEditDismiss should hide edit task bottom sheet`() = runTest {
+        val viewModel = createViewModel()
+
         viewModel.onTaskEditClicked(fakeUiTasks[0])
         viewModel.onTaskEditDismiss()
 
@@ -180,7 +201,11 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onTaskEditSuccess should show success message`() {
+    fun `onTaskEditSuccess should show success message`() = runTest {
+        every { stringProvider.taskUpdateSuccess } returns TASK_UPDATE_SUCCESS
+
+        val viewModel = createViewModel()
+
         viewModel.onTaskEditSuccess()
 
         val state = viewModel.state.value
@@ -189,7 +214,11 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onMoveStatusSuccess should show success message`() {
+    fun `onMoveStatusSuccess should show success message`() = runTest {
+        every { stringProvider.taskStatusUpdateSuccess } returns STATUS_UPDATE_SUCCESS
+
+        val viewModel = createViewModel()
+
         viewModel.onMoveStatusSuccess()
 
         val state = viewModel.state.value
@@ -198,7 +227,9 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onHideSnackBar should reset snackbar state`() {
+    fun `onHideSnackBar should reset snackbar state`() = runTest {
+        val viewModel = createViewModel()
+
         viewModel.onTaskEditSuccess()
         viewModel.onHideSnackBar()
 
@@ -207,7 +238,9 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onTaskDetailsDismiss should hide details bottom sheet`() {
+    fun `onTaskDetailsDismiss should hide details bottom sheet`() = runTest {
+        val viewModel = createViewModel()
+
         viewModel.onTaskClicked(fakeUiTasks[0])
         viewModel.onTaskDetailsDismiss()
 
@@ -217,22 +250,58 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `isValidForm should return true when name is valid and changes exist`() {
+    fun `isValidForm should return true when name is valid and changes exist`() = runTest {
+        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
+        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
+
+        val viewModel = createViewModel()
+
         viewModel.onEditClicked()
         viewModel.onTitleChange("New Name")
 
-        assertThat(viewModel.isValidForm()).isTrue()
+        val result = viewModel.isValidForm()
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun `isValidForm should return false when name is invalid`() {
+    fun `isValidForm should return false when name is invalid`() = runTest {
+        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
+        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
+
+        val viewModel = createViewModel()
+
         viewModel.onEditClicked()
         viewModel.onTitleChange("A")
 
-        assertThat(viewModel.isValidForm()).isFalse()
+        val result = viewModel.isValidForm()
+        assertThat(result).isFalse()
     }
 
-    // Test data
+    @Test
+    fun `isValidForm should return false when name has not changed`() = runTest {
+        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
+        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
+
+        val viewModel = createViewModel()
+
+        viewModel.onEditClicked()
+        viewModel.onTitleChange("Test Category")
+
+        val result = viewModel.isValidForm()
+        assertThat(result).isFalse()
+    }
+
+    private fun createViewModel(): CategoryTaskViewModel {
+        return CategoryTaskViewModel(
+            categoryService = categoryService,
+            taskService = taskService,
+            categoryId = categoryId,
+            imageProcessor = imageProcessor,
+            stringProvider = stringProvider,
+            dispatcher = dispatcher
+        )
+    }
+
     private val fakeCategory = Category(
         id = categoryId,
         name = "Test Category",
@@ -241,36 +310,9 @@ class CategoryTaskViewModelTest {
     )
 
     private val fakeTasks = listOf(
-        Task(
-            id = 1,
-            title = "Todo Task",
-            description = "Description",
-            status = Task.TaskStatus.TODO,
-            dueDate = LocalDate(2025, 6, 26),
-            priority = Task.TaskPriority.LOW,
-            categoryId = categoryId,
-            createdAt = LocalDateTime(2025, 6, 1, 12, 0)
-        ),
-        Task(
-            id = 2,
-            title = "In Progress Task",
-            description = "Description",
-            status = Task.TaskStatus.IN_PROGRESS,
-            dueDate = LocalDate(2025, 6, 26),
-            priority = Task.TaskPriority.MEDIUM,
-            categoryId = categoryId,
-            createdAt = LocalDateTime(2025, 6, 1, 12, 0)
-        ),
-        Task(
-            id = 3,
-            title = "Done Task",
-            description = "Description",
-            status = Task.TaskStatus.DONE,
-            dueDate = LocalDate(2025, 6, 26),
-            priority = Task.TaskPriority.HIGH,
-            categoryId = categoryId,
-            createdAt = LocalDateTime(2025, 6, 1, 12, 0)
-        )
+        Task(1, "Todo Task", "Description", Task.TaskStatus.TODO, LocalDate(2025, 6, 26), Task.TaskPriority.LOW, categoryId, LocalDateTime(2025, 6, 1, 12, 0)),
+        Task(2, "In Progress Task", "Description", Task.TaskStatus.IN_PROGRESS, LocalDate(2025, 6, 26), Task.TaskPriority.MEDIUM, categoryId, LocalDateTime(2025, 6, 1, 12, 0)),
+        Task(3, "Done Task", "Description", Task.TaskStatus.DONE, LocalDate(2025, 6, 26), Task.TaskPriority.HIGH, categoryId, LocalDateTime(2025, 6, 1, 12, 0))
     )
 
     private val fakeUiTasks = listOf(

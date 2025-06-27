@@ -90,8 +90,8 @@ fun TudeeTextField(
                     VerticalDivider(
                         modifier = Modifier
                             .height(30.dp)
-                            .width(1.dp)
-                            .background(color = Theme.color.stroke)
+                            .width(1.dp),
+                        color = Theme.color.stroke
                     )
                 }
 

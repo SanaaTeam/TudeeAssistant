@@ -172,19 +172,20 @@ class AddEditTaskViewModel(
     }
 
     fun initTaskState(isEditMode: Boolean, taskToEdit: TaskUiState?, initialDate: LocalDate?) {
-        if (!isEditMode || !_isInitialized || this.isEditMode != isEditMode || this.originalTaskUiState != taskToEdit || this.selectedDate != initialDate) {
-            this.isEditMode = isEditMode
-            this.originalTaskUiState = taskToEdit
-            this.selectedDate = initialDate
+        if (_isInitialized) return
 
-            if (!isEditMode) {
-                resetState()
-                loadCategoriesForNewTask()
-            } else if (taskToEdit != null) {
-                loadTask(taskToEdit)
-            }
-            _isInitialized = true
+        this.isEditMode = isEditMode
+        this.originalTaskUiState = taskToEdit
+        this.selectedDate = initialDate
+
+        if (!isEditMode) {
+            resetState()
+            loadCategoriesForNewTask()
+        } else if (taskToEdit != null) {
+            loadTask(taskToEdit)
         }
+
+        _isInitialized = true
     }
 
 

@@ -29,6 +29,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.SnackBar
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
+import com.sanaa.tudee_assistant.presentation.navigation.AppRoute
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.LocalAppNavController
@@ -97,7 +98,7 @@ fun TudeeApp(isFirstLaunch: Boolean, isDarkTheme: Boolean) {
 
 @Composable
 private fun AppNavigation(
-    startDestination: Any,
+    startDestination: AppRoute,
     modifier: Modifier = Modifier,
 ) {
     NavHost(

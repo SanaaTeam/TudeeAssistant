@@ -31,6 +31,7 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.navigation.CategoriesScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.LocalMainNavController
+import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoutes
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.util.navigateWithRestoreState
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryScreen
@@ -40,7 +41,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen(
-    startDestination: Any,
+    startDestination: MainScreenRoutes,
     viewModel: MainViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

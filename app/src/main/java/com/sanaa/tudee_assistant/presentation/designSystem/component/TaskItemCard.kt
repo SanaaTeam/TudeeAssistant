@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,7 +61,7 @@ fun TaskItemCard(
             Box(modifier = Modifier.size(56.dp), contentAlignment = Alignment.Center) {
                 CategoryThumbnail(
                     imagePath = categoryImagePath,
-                    modifier = Modifier.size(Theme.dimension.extraLarge)
+                    modifier = Modifier.size(32.dp).clip(CircleShape)
                 )
             }
 

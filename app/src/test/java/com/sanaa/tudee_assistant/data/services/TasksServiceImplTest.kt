@@ -32,42 +32,6 @@ class TasksServiceImplTest {
 
 
     @Test
-    fun `getAllTasks should return list of task when database is not empty`() = runTest {
-        // Given
-        every { taskDao.getAllTasks() } returns flowOf(fakeTasks)
-
-        // When
-        val result = tasksService.getAllTasks().toList()
-
-        // Then
-        assertThat(result).isNotEmpty()
-    }
-
-    @Test
-    fun `getAllTasks should return empty list when database is empty`() = runTest {
-        // Given
-        every { taskDao.getAllTasks() } returns flowOf()
-
-        // When
-        val result = tasksService.getAllTasks().toList()
-
-        // Then
-        assertThat(result).isEmpty()
-    }
-
-    @Test
-    fun `getAllTasks should throw DatabaseFailureException when database fails`() = runTest {
-        // Given
-        every { taskDao.getAllTasks() } throws Exception("Database error")
-
-        // When
-        val result = runCatching { tasksService.getAllTasks().toList() }
-
-        // Then
-        assertThat(result.isFailure).isTrue()
-    }
-
-    @Test
     fun `addTask should invoke insertTask in taskDao with correct task`() = runTest {
         // Given
         coEvery { taskDao.insertTask(any()) } returns 1
@@ -133,28 +97,6 @@ class TasksServiceImplTest {
         }
 
     @Test
-    fun `deleteAllTasks should invoke deleteAllTasks in taskDao`() = runTest {
-        // Given
-        coEvery { taskDao.deleteAllTasks() } returns 1
-        // When
-        tasksService.deleteAllTasks()
-        // Then
-        coVerify(exactly = 1) { taskDao.deleteAllTasks() }
-
-    }
-
-    @Test
-    fun `deleteAllTasks should throw FailedToDeleteTaskException when deleteAllTasks fails`() =
-        runTest {
-            // Given
-            coEvery { taskDao.deleteAllTasks() } returns 0
-            // When
-            val result = runCatching { tasksService.deleteAllTasks() }
-            // Then
-            assertThat(result.isFailure).isTrue()
-        }
-
-    @Test
     fun `getTaskById should invoke getTaskById in taskDao with correct taskId`() = runTest {
         val taskFlow = flowOf(fakeTasks[0])
         // Given
@@ -165,16 +107,6 @@ class TasksServiceImplTest {
         coVerify(exactly = 1) { taskDao.getTaskById(fakeTasks[0].taskId) }
     }
 
-//    @Test
-//    fun `getTaskById should throw TaskNotFoundException when getTaskById returns null`() = runTest {
-//        // Given
-//        coEvery { taskDao.getTaskById(any()) } returns flowOf()
-//        // When
-//        val result = runCatching { tasksService.getTaskById(fakeTasks[0].taskId) }
-//        // Then
-//        assertThat(result.isFailure).isTrue()
-//    }
-
     @Test
     fun `getTasksByCategoryId should invoke getTasksByCategoryId in taskDao with correct categoryId`() =
         runTest {
@@ -184,17 +116,6 @@ class TasksServiceImplTest {
             tasksService.getTasksByCategoryId(fakeTasks[0].categoryId).toList()
             // Then
             coVerify(exactly = 1) { taskDao.getTasksByCategoryId(fakeTasks[0].categoryId) }
-        }
-
-    @Test
-    fun `getTasksByStatus should invoke getTasksByStatus in taskDao with correct status`() =
-        runTest {
-            // Given
-            every { taskDao.getTasksByStatus(any()) } returns flowOf(fakeTasks)
-            // When
-            tasksService.getTasksByStatus(Task.TaskStatus.valueOf(fakeTasks[0].status)).toList()
-            // Then
-            coVerify(exactly = 1) { taskDao.getTasksByStatus(Task.TaskStatus.valueOf(fakeTasks[0].status)) }
         }
 
     @Test
@@ -221,20 +142,6 @@ class TasksServiceImplTest {
             }
             // Then
             assertThat(result.isFailure).isTrue()
-        }
-
-    @Test
-    fun `getTaskCountByCategoryId should invoke getTaskCountByCategoryId in taskDao`() =
-        runTest {
-            // Given
-            val id = 1
-            every { taskDao.getTaskCountByCategoryId(any()) } returns flowOf(10)
-            // When
-            tasksService.getTaskCountByCategoryId(id)
-            // Then
-            coVerify(exactly = 1) {
-                taskDao.getTaskCountByCategoryId(any())
-            }
         }
 
     private val fakeTasks = listOf(

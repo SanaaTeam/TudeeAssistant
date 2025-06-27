@@ -56,7 +56,7 @@ private fun HomeScreenContent(
 
     val snackBarState = LocalSnackBarState.current
 
-    LaunchedEffect(state.snackBarState) { ->
+    LaunchedEffect(state.snackBarState) {
         if (state.snackBarState.isVisible) {
             snackBarState.value = state.snackBarState
             interactionsListener.onHideSnackBar()

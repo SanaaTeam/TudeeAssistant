@@ -80,7 +80,6 @@ class TaskViewModelTest {
     fun `onTaskSwipeToDelete should set selectedTask and show delete dialog`() = runTest {
         val result = viewModel.onTaskSwipeToDelete(fakeTasks[0])
 
-        assertThat(result).isFalse()
         assertThat(viewModel.state.value.selectedTask).isEqualTo(fakeTasks[0])
         assertThat(viewModel.state.value.showDeleteTaskBottomSheet).isTrue()
     }

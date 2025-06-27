@@ -12,8 +12,8 @@ import com.sanaa.tudee_assistant.presentation.app.TudeeApp
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import org.koin.android.ext.android.get
 
-class MainActivity() : ComponentActivity() {
-    val mainActivityViewModel: MainActivityViewModel = get<MainActivityViewModel>()
+class MainActivity : ComponentActivity() {
+    private val mainActivityViewModel: MainActivityViewModel = get<MainActivityViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
 
         val mySplashScreen = installSplashScreen()
@@ -22,7 +22,7 @@ class MainActivity() : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 
-            var state = mainActivityViewModel.state.collectAsStateWithLifecycle()
+            val state = mainActivityViewModel.state.collectAsStateWithLifecycle()
             val isSystemInDarkTheme = isSystemInDarkTheme()
 
             LaunchedEffect(state.value.isFirstLaunch) {

@@ -87,8 +87,8 @@ class TaskViewModel(
         getTasksByDueDate()
     }
 
-    fun onShowDeleteDialogChange(show: Boolean) {
-        _state.update { it.copy(showDeleteTaskBottomSheet = show) }
+    private fun onShowDeleteDialogChange() {
+        _state.update { it.copy(showDeleteTaskBottomSheet = true) }
     }
 
     override fun onDismissTaskDetails(show: Boolean) {
@@ -107,12 +107,11 @@ class TaskViewModel(
         _state.update { it.copy(showDeleteTaskBottomSheet = false) }
     }
 
-    override fun onTaskSwipeToDelete(task: TaskUiState): Boolean {
+    override fun onTaskSwipeToDelete(task: TaskUiState) {
         viewModelScope.launch {
             onTaskSelected(task)
-            onShowDeleteDialogChange(true)
+            onShowDeleteDialogChange()
         }
-        return false
     }
 
     override fun handleOnMoveToStatusSuccess() {

@@ -6,29 +6,28 @@ coilCompose = "2.6.0"
 
 datastorePreferences = "1.1.7"
 
-junitJupiterVersion = "5.10.2"
+junitJupiterVersion = "5.12.2"
 kotestAssertionsCore = "5.7.2"
 kotestRunnerJunit5 = "5.7.2"
 
-kotlin = "2.0.21"
+kotlin = "2.1.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-kotlinxCoroutinesTestVersion = "1.7.3"
+kotlinxCoroutinesTestVersion = "1.8.1"
 kotlinxDatetime = "0.6.2"
 lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
-composeBom = "2024.09.00"
+composeBom = "2025.06.01"
 composeNavigation = "2.9.0"
-mockkMockkVersion = "1.14.0"
+mockkMockkVersion = "1.14.2"
 serialization = "1.8.1"
 
-room = "2.7.1"
+room = "2.7.2"
 koin-bom = "4.0.0"
 ksp = "2.0.21-1.0.27"
-truth = "1.4.2"
-junitJunitJupiter = "5.8.1"
+truth = "1.4.4"
 
 coreSplashscreen = "1.0.1"
 
@@ -80,7 +79,6 @@ koin-core-viewmodel = { module = "io.insert-koin:koin-core-viewmodel" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
 koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJunitJupiter" }
 
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 

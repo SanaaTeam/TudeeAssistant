@@ -7,7 +7,6 @@ import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateException
-import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
 import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.TaskService
@@ -18,11 +17,6 @@ import kotlinx.datetime.LocalDate
 class TaskServiceImpl(
     private val taskDao: TaskDao,
 ) : TaskService {
-    override fun getAllTasks(): Flow<List<Task>> {
-        return taskDao.getAllTasks()
-            .map { it.toDomainList()}
-    }
-
     override suspend fun addTask(addTaskRequest: AddTaskRequest) {
         if (taskDao.insertTask(addTaskRequest.toLocalDto()) == -1L) {
             throw FailedToAddException("Failed to add task")
@@ -47,12 +41,6 @@ class TaskServiceImpl(
         }
     }
 
-    override suspend fun deleteAllTasks() {
-        if (taskDao.deleteAllTasks() <= 0) {
-            throw FailedToDeleteException("Failed to delete all tasks")
-        }
-    }
-
     override suspend fun getTaskById(taskId: Int): Flow<Task?> {
         return taskDao
             .getTaskById(taskId).map {
@@ -66,19 +54,9 @@ class TaskServiceImpl(
             .map { it.toDomainList() }
     }
 
-
-    override fun getTasksByStatus(status: Task.TaskStatus): Flow<List<Task>> {
-        return taskDao.getTasksByStatus(status)
-            .map { it.toDomainList() }
-    }
-
     override fun getTasksByDueDate(dueDate: LocalDate): Flow<List<Task>> {
         return taskDao.getTasksByDate(dueDate.toString())
             .map { it.toDomainList() }
-    }
-
-    override fun getTaskCountByCategoryId(categoryId: Int): Flow<Int> {
-        return taskDao.getTaskCountByCategoryId(categoryId)
     }
 
     override fun getTaskCountsGroupedByCategoryId(): Flow<Map<Int, Int>> {

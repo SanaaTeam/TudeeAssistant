@@ -7,7 +7,7 @@ import kotlinx.datetime.LocalDate
 interface TaskInteractionListener {
     fun onDateSelected(date: LocalDate)
     fun onTaskClicked(task: TaskUiState)
-    fun onTaskSwipeToDelete(task: TaskUiState): Boolean
+    fun onTaskSwipeToDelete(task: TaskUiState)
     fun onDismissTaskDetails(show: Boolean)
     fun onDeleteTask()
     fun onTapClick(status: TaskUiStatus)

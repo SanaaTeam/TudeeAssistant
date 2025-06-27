@@ -42,9 +42,9 @@ import com.sanaa.tudee_assistant.presentation.utils.drawDashedBorder
 fun UploadBox(
     modifier: Modifier = Modifier,
     strokeColor: Color = Theme.color.stroke,
-    onImageSelected: (Uri?) -> Unit,
+    onImageSelected: (Uri?) -> Unit = {},
     cornerRadius: Dp = Theme.dimension.medium,
-    initialImagePath: String? = null
+    initialImagePath: String? = null,
 ) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(
@@ -60,7 +60,6 @@ fun UploadBox(
         modifier = modifier,
         strokeColor = strokeColor,
         launcher = launcher,
-        onImageSelected = onImageSelected,
         cornerRadius = cornerRadius,
         defaultImagePath = initialImagePath
     )
@@ -71,10 +70,9 @@ fun UploadBoxContent(
     imageUri: Uri?,
     modifier: Modifier = Modifier,
     launcher: ManagedActivityResultLauncher<String, Uri?>,
-    onImageSelected: (Uri?) -> Unit,
     defaultImagePath: String? = null,
     strokeColor: Color = Theme.color.stroke,
-    cornerRadius: Dp = Theme.dimension.medium
+    cornerRadius: Dp = Theme.dimension.medium,
 ) {
 
     Box(
@@ -99,7 +97,7 @@ fun SelectedImageView(
     strokeColor: Color = Theme.color.stroke,
     cornerRadius: Dp = Theme.dimension.medium,
     imageUri: Uri,
-    launcher: ManagedActivityResultLauncher<String, Uri?>
+    launcher: ManagedActivityResultLauncher<String, Uri?>,
 ) {
     Box(
         modifier = Modifier
@@ -170,7 +168,7 @@ fun UploadBoxLightPreview() {
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            UploadBox(onImageSelected = { })
+            UploadBox()
         }
     }
 }
@@ -186,7 +184,7 @@ fun UploadBoxDarkPreview() {
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            UploadBox(onImageSelected = { })
+            UploadBox()
         }
     }
 }

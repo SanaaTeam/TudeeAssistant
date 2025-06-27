@@ -26,7 +26,7 @@ import kotlinx.datetime.LocalDate
 class AddEditTaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseViewModel<AddTaskUiState>(AddTaskUiState(), defaultDispatcher = dispatcher),
     AddEditTaskListener {
 
@@ -53,7 +53,7 @@ class AddEditTaskViewModel(
         }
     }
 
-    fun loadTask(task: TaskUiState) {
+    private fun loadTask(task: TaskUiState) {
         isEditMode = true
         originalTaskUiState = task.copy()
 
@@ -87,7 +87,7 @@ class AddEditTaskViewModel(
         )
     }
 
-    fun loadCategoriesForNewTask() {
+    private fun loadCategoriesForNewTask() {
         isEditMode = false
         originalTaskUiState = null
 

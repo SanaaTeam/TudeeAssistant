@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.composable.TextAppBar
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
@@ -53,7 +53,6 @@ fun CategoryScreenContent(
     val snackBarState = LocalSnackBarState.current
 
     LaunchedEffect(state.snackBarState) {
-        ->
         if (state.snackBarState.isVisible) {
             snackBarState.value = state.snackBarState
             listener.onHideSnakeBar()

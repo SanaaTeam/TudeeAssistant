@@ -4,15 +4,6 @@ import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 
-fun CategoryUiState.toCategory(): Category {
-    return Category(
-        id = id,
-        name = name,
-        imagePath = imagePath,
-        isDefault = isDefault
-    )
-}
-
 fun CategoryUiState.toNewCategory(): AddCategoryRequest {
     return AddCategoryRequest(
         name = name,

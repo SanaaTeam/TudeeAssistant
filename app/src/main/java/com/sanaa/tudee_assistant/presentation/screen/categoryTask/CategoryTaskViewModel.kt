@@ -94,10 +94,7 @@ class CategoryTaskViewModel(
             callee = {
                 _state.update { it.copy(isLoading = true) }
                 categoryService.deleteCategoryById(_state.value.currentCategory.id)
-                try {
-                    taskService.deleteTaskByCategoryId(_state.value.currentCategory.id)
-                } catch (e: Exception) {
-                }
+                taskService.deleteTaskByCategoryId(_state.value.currentCategory.id)
             },
             onError = { onError(message = stringProvider.deletingCategoryError) },
             onSuccess = {
@@ -247,7 +244,7 @@ class CategoryTaskViewModel(
     private fun onSuccess(
         message: String?,
         updateState: (oldState: CategoryTaskScreenUiState) -> CategoryTaskScreenUiState = { it },
-        effect: CategoryTasksEffects? = null
+        effect: CategoryTasksEffects? = null,
     ) {
         _state.update {
             updateState(it).copy(
@@ -270,7 +267,7 @@ class CategoryTaskViewModel(
         }
     }
 
-    suspend fun emitEffect(effect: CategoryTasksEffects) {
+    private suspend fun emitEffect(effect: CategoryTasksEffects) {
         _effects.emit(effect)
 
     }
@@ -282,7 +279,7 @@ class CategoryTaskViewModel(
         val hasNameChanged = edited.name != current.name
         val hasImageChanged = edited.imagePath != current.imagePath
         val isNameValid =
-            edited.name.isNotBlank() && (edited.name.length <= 24 && edited.name.length >= 2)
+            edited.name.isNotBlank() && (edited.name.length in 2..24)
 
         return isNameValid && (hasNameChanged || hasImageChanged)
     }

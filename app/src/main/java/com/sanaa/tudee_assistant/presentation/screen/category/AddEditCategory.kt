@@ -59,7 +59,7 @@ fun AddEditCategoryBottomSheet(
     BaseBottomSheet(
         content = {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .verticalScroll(rememberScrollState())
                     .background(color = Theme.color.surface)
             ) {

@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 class CategoryServiceImpl(
-    private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao,
 ) : CategoryService {
     override suspend fun getCategoryById(categoryId: Int): Category {
         return categoryDao.getCategoryById(categoryId)?.toDomain()
@@ -55,12 +55,6 @@ class CategoryServiceImpl(
         }
         if (categoryDao.deleteCategoryById(categoryId) <= 0) {
             throw FailedToDeleteException("Failed to delete category")
-        }
-    }
-
-    override suspend fun deleteAllCategories() {
-        if (categoryDao.deleteAllCategory() <= 0) {
-            throw FailedToDeleteException("Failed to delete all categories")
         }
     }
 }

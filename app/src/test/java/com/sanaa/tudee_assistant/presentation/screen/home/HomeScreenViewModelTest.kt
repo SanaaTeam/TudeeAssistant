@@ -60,6 +60,17 @@ class HomeScreenViewModelTest {
         Dispatchers.resetMain()
     }
 
+    @Test
+    fun `onAddTaskSuccess should update state and reload tasks`() = runTest {
+        viewModel.onAddTaskSuccess()
+
+        val state = viewModel.state.value
+
+        assertThat(state.snackBarState.message).isEqualTo("Added")
+        assertThat(state.snackBarState.isVisible).isTrue()
+    }
+
+
     private companion object {
         const val UNKNOWN_ERROR = "Unknown error"
         const val TASK_DELETE_SUCCESS = "Deleted"

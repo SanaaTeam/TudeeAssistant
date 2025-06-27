@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
@@ -82,7 +82,7 @@ fun TaskListColumn(
                         task = task,
                         categoryImagePath = categories
                             .firstOrNull { it.id == task.categoryId }
-                            ?.imagePath ?: "",
+                            ?.imagePath.orEmpty(),
                         onClick = { onTaskClick(task) },
                         taskDateAndPriority = {
                             PriorityTag(
@@ -101,7 +101,7 @@ fun TaskListColumn(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun TaskListColumnPreview() {
     var itemsState by remember { mutableStateOf(DataProvider.getTasksSample()) }

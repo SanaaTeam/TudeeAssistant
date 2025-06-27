@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -12,9 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
 import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
@@ -23,7 +25,6 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
@@ -178,7 +179,7 @@ private fun CategoryTaskScreenContent(
 
                     ),
                 selectedTabIndex = state.selectedTapIndex,
-                onTabSelected = { it -> listener.onStatusChanged(it) },
+                onTabSelected = { listener.onStatusChanged(it) },
                 modifier = Modifier.fillMaxSize()
             )
             if (state.showEditCategoryBottomSheet) {
@@ -227,10 +228,10 @@ private fun CategoryTaskScreenContent(
 }
 
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun CategoryTaskScreenPreview() {
-    TudeeTheme {
+    TudeeTheme(isSystemInDarkTheme()) {
         CategoryTaskScreenContent(
             state = CategoryTaskScreenUiState(
                 currentCategory = CategoryUiState(

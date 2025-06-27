@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.utils
+package com.sanaa.tudee_assistant.presentation.base
 
 
 import androidx.lifecycle.ViewModel
@@ -13,9 +13,9 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<T>(
     initialState: T,
-    val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
+    val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
-    protected val _state: MutableStateFlow<T> by lazy { MutableStateFlow(initialState) }
+    private val _state: MutableStateFlow<T> by lazy { MutableStateFlow(initialState) }
     val state: StateFlow<T> by lazy { _state.asStateFlow() }
 
     protected fun updateState(updater: (T) -> T) {
@@ -25,7 +25,7 @@ abstract class BaseViewModel<T>(
     protected fun <T> tryToExecute(
         callee: suspend () -> T,
         onSuccess: (T) -> Unit = {},
-        onError: (exception: Exception) -> Unit,
+        onError: (exception: Exception) -> Unit = {},
         dispatcher: CoroutineDispatcher = defaultDispatcher,
     ) {
         viewModelScope.launch(dispatcher) {

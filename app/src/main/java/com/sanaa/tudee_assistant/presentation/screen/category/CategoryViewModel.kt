@@ -2,26 +2,28 @@ package com.sanaa.tudee_assistant.presentation.screen.category
 
 import android.net.Uri
 import androidx.core.net.toUri
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.mapper.toNewCategory
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 
 class CategoryViewModel(
     private val categoryService: CategoryService,
     private val taskService: TaskService,
     private val imageProcessor: ImageProcessor,
     private val stringProvider: StringProvider,
-) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState()), CategoryInteractionListener {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState(), dispatcher),
+    CategoryInteractionListener {
 
     init {
         loadCategoriesWithTasksCount()
@@ -48,16 +50,18 @@ class CategoryViewModel(
     }
 
     private fun onLoadCategoriesWithTasksCountSuccess(flow: Flow<List<CategoryUiState>>) {
-        viewModelScope.launch {
-            flow.collect { mappedList ->
-                updateState {
-                    it.copy(
-                        allCategories = mappedList,
-                        isLoading = false
-                    )
+        tryToExecute(
+            callee = {
+                flow.collect { mappedList ->
+                    updateState {
+                        it.copy(
+                            allCategories = mappedList,
+                            isLoading = false
+                        )
+                    }
                 }
             }
-        }
+        )
     }
 
     private fun onLoadCategoriesWithTasksCountError(exception: Exception) {
@@ -127,9 +131,9 @@ class CategoryViewModel(
 
     override fun isFormValid(): Boolean {
         return (
-                (_state.value.newCategory.name.isNotBlank()
-                        && (_state.value.newCategory.name.length in 2..24))
-                        && (_state.value.newCategory.imagePath.isNotBlank()))
+                (state.value.newCategory.name.isNotBlank()
+                        && (state.value.newCategory.name.length in 2..24))
+                        && (state.value.newCategory.imagePath.isNotBlank()))
 
     }
 

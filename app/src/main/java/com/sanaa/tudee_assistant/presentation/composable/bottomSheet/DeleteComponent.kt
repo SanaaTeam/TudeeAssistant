@@ -22,7 +22,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Nega
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.SecondaryButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
-import com.sanaa.tudee_assistant.presentation.utils.dropShadow
+import com.sanaa.tudee_assistant.presentation.modifire.dropShadow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

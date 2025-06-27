@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.designSystem.component.button
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.utils.ButtonContent
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -69,45 +70,10 @@ fun SecondaryButton(
     }
 }
 
-
-@Preview
-@Composable
-private fun SecondaryButtonPreview(modifier: Modifier = Modifier) {
-    Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
-        SecondaryButton(
-            label = "Submit",
-            enabled = true,
-            isLoading = true,
-            onClick = { }
-        )
-
-        SecondaryButton(
-            label = "Submit",
-            enabled = true,
-            isLoading = false,
-            onClick = { }
-        )
-
-        SecondaryButton(
-            label = "Submit",
-            enabled = false,
-            isLoading = false,
-            onClick = { }
-        )
-
-        SecondaryButton(
-            label = "Submit",
-            enabled = false,
-            isLoading = true,
-            onClick = { }
-        )
-    }
-}
-
-@Preview
+@PreviewLightDark
 @Composable
 private fun SecondaryButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme(true) {
+    TudeeTheme(isSystemInDarkTheme()) {
         Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             SecondaryButton(
                 label = "Submit",

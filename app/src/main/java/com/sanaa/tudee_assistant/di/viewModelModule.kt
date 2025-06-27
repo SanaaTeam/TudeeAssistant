@@ -11,31 +11,22 @@ import com.sanaa.tudee_assistant.presentation.screen.tasks.TaskViewModel
 import com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask.AddEditTaskViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.dsl.viewModel
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModelOf(::MainActivityViewModel)
-    viewModelOf(::OnBoardingViewModel)
-    viewModelOf(::HomeScreenViewModel)
-    viewModelOf(::MainViewModel)
-    viewModelOf(::CategoryViewModel)
-    viewModelOf(::CategoryTaskViewModel)
-    viewModelOf(::TaskViewModel)
-    viewModelOf(::AddEditTaskViewModel)
-    viewModel{ AddEditTaskViewModel(
-        taskService = get(),
-        categoryService = get(),
-    )
-    }
-    viewModelOf(::TaskViewModel)
+    viewModel { MainActivityViewModel(get(), dispatcher = Dispatchers.IO) }
+    viewModel { OnBoardingViewModel(get(), dispatcher = Dispatchers.IO) }
+    viewModel { HomeScreenViewModel(get(), get(), get(), get(), dispatcher = Dispatchers.IO) }
+    viewModel { MainViewModel(get(), dispatcher = Dispatchers.IO) }
+    viewModel { CategoryViewModel(get(), get(), get(), get(), dispatcher = Dispatchers.IO) }
     viewModel {
-        TaskDetailsBottomSheetViewModel(
-            taskService = get(),
-            categoryService = get(),
-            stringProvider = get(),
-            dispatcher = Dispatchers.IO
+        CategoryTaskViewModel(
+            get(), get(), get(), get(), get(), dispatcher = Dispatchers.IO
         )
     }
+    viewModel { TaskViewModel(get(), get(), get(), get(), get(), dispatcher = Dispatchers.IO) }
+    viewModel { AddEditTaskViewModel(get(), get(), dispatcher = Dispatchers.IO) }
+    viewModel { TaskViewModel(get(), get(), get(), get(), get(), dispatcher = Dispatchers.IO) }
+    viewModel { TaskDetailsBottomSheetViewModel(get(), get(), get(), dispatcher = Dispatchers.IO) }
 
 }

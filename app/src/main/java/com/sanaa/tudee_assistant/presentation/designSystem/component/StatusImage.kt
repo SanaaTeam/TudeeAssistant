@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.designSystem.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -8,7 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -31,10 +32,10 @@ fun StatusImage(imageSize: Dp, status: TudeeUiStatus) {
     )
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun Preview() {
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         Column(
             modifier = Modifier.padding(Theme.dimension.medium),
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)

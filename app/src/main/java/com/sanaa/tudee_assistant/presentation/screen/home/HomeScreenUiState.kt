@@ -21,5 +21,5 @@ data class HomeScreenUiState(
     val showAddTaskSheet: Boolean = false,
     val showEditTaskSheet: Boolean = false,
     val showTaskDetailsBottomSheet: Boolean = false,
-    val taskToEdit: TaskUiState? = null
+    val taskToEdit: TaskUiState? = null,
 )

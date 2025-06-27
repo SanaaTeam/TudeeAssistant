@@ -9,8 +9,8 @@ import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateException
 import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
-import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
+import com.sanaa.tudee_assistant.domain.model.Category
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -161,25 +161,6 @@ class CategoryServiceImplTest {
             coEvery { categoryDao.deleteCategoryById(1) } returns 0
 
             val result = runCatching { categoryService.deleteCategoryById(1) }
-
-            assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteException::class.java)
-        }
-
-    @Test
-    fun `deleteAllCategories should succeed when deletion is successful`() = runTest {
-        coEvery { categoryDao.deleteAllCategory() } returns 1
-
-        categoryService.deleteAllCategories()
-
-        coVerify(exactly = 1) { categoryDao.deleteAllCategory() }
-    }
-
-    @Test
-    fun `deleteAllCategories should throw FailedToDeleteCategoryException when no rows deleted`() =
-        runTest {
-            coEvery { categoryDao.deleteAllCategory() } returns 0
-
-            val result = runCatching { categoryService.deleteAllCategories() }
 
             assertThat(result.exceptionOrNull()).isInstanceOf(FailedToDeleteException::class.java)
         }

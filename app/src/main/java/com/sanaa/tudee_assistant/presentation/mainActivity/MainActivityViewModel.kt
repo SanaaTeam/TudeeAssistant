@@ -1,41 +1,54 @@
 package com.sanaa.tudee_assistant.presentation.mainActivity
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 
 class MainActivityViewModel(
     private val preferencesManager: PreferencesManager,
-) : BaseViewModel<MainActivityUiState>(MainActivityUiState()) {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<MainActivityUiState>(MainActivityUiState(), dispatcher) {
     init {
         initialValues()
         loadScreen()
     }
 
     private fun initialValues() {
-        viewModelScope.launch {
-            preferencesManager.changeTaskStatus(Task.TaskStatus.IN_PROGRESS)
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.changeTaskStatus(Task.TaskStatus.IN_PROGRESS)
+            }
+        )
     }
 
     private fun loadScreen() {
         updateState { it.copy(isLoading = true) }
-        viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.isDarkTheme.combine(preferencesManager.isFirstLaunch) { isDarkTheme, isFirstLaunch ->
-                Pair(isDarkTheme, isFirstLaunch)
-            }.collect { (isDarkTheme, isFirstLaunch) ->
-                updateState {
-                    it.copy(
-                        isDarkTheme = isDarkTheme,
-                        isFirstLaunch = isFirstLaunch,
-                        isLoading = false
-                    )
+        tryToExecute(
+            callee = {
+                preferencesManager.isDarkTheme.combine(preferencesManager.isFirstLaunch) { isDarkTheme, isFirstLaunch ->
+                    Pair(isDarkTheme, isFirstLaunch)
+                }.collect { (isDarkTheme, isFirstLaunch) ->
+
+                    updateState {
+                        it.copy(
+                            isDarkTheme = isDarkTheme,
+                            isFirstLaunch = isFirstLaunch,
+                            isLoading = false
+                        )
+                    }
                 }
             }
-        }
+        )
+    }
+
+    fun onSetDarkTheme(isDarkTheme: Boolean) {
+        tryToExecute(
+            callee = {
+                preferencesManager.setDarkTheme(isDarkTheme)
+            }
+        )
     }
 }

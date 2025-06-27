@@ -16,7 +16,7 @@ object DataProvider {
             id = 1,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+            dueDate = DateUtil.today.date.toString(),
             priority = TaskUiPriority.MEDIUM,
             status = TaskUiStatus.IN_PROGRESS,
             categoryId = 1
@@ -34,7 +34,7 @@ object DataProvider {
             id = 3,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+            dueDate = DateUtil.today.date.toString(),
             priority = TaskUiPriority.MEDIUM,
             status = TaskUiStatus.DONE,
             categoryId = 3
@@ -43,7 +43,7 @@ object DataProvider {
             id = 4,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+            dueDate = DateUtil.today.date.toString(),
             priority = TaskUiPriority.HIGH,
             status = TaskUiStatus.TODO,
             categoryId = 4
@@ -62,7 +62,7 @@ object DataProvider {
             id = 6,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+            dueDate = DateUtil.today.date.toString(),
             priority = TaskUiPriority.LOW,
             status = TaskUiStatus.TODO,
             categoryId = 6

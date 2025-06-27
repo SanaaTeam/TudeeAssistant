@@ -47,8 +47,8 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.moonColor
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.sunColor
-import com.sanaa.tudee_assistant.presentation.utils.dropShadow
-import com.sanaa.tudee_assistant.presentation.utils.innerShadow
+import com.sanaa.tudee_assistant.presentation.modifire.dropShadow
+import com.sanaa.tudee_assistant.presentation.modifire.innerShadow
 
 @Composable
 fun DarkModeThemeSwitchButton(

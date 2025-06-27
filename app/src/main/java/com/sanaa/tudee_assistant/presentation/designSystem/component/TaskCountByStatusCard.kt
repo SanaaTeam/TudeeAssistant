@@ -3,6 +3,7 @@ package com.sanaa.tudee_assistant.presentation.designSystem.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -149,10 +150,10 @@ private fun CardTopEndDecoration(modifier: Modifier = Modifier) {
 }
 
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun Preview() {
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         Row(
             Modifier
                 .fillMaxSize()

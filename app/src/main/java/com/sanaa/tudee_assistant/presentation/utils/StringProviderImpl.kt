@@ -17,12 +17,6 @@ class StringProviderImpl(
         get() = context.getString(R.string.task_delete_success)
     override val taskStatusUpdateSuccess: String
         get() = context.getString(R.string.task_status_update_success)
-    override val taskAddedError: String
-        get() = context.getString(R.string.task_added_error)
-    override val taskUpdateError: String
-        get() = context.getString(R.string.task_update_error)
-    override val taskDeleteError: String
-        get() = context.getString(R.string.task_delete_error)
     override val taskStatusUpdateError: String
         get() = context.getString(R.string.task_status_update_error)
     override val categoryAddedSuccessfully: String
@@ -31,15 +25,10 @@ class StringProviderImpl(
         get() = context.getString(R.string.category_update_successfully)
     override val deletedCategorySuccessfully: String
         get() = context.getString(R.string.deleted_category_successfully)
-    override val categoryAddedError: String
-        get() = context.getString(R.string.category_added_error)
-    override val updateCategoryError: String
-        get() = context.getString(R.string.update_category_error)
     override val deletingCategoryError: String
         get() = context.getString(R.string.deleting_category_error)
     override val markAsInProgress: String
         get() = context.getString(R.string.mark_as_in_progress)
     override val markAsDone: String
         get() = context.getString(R.string.mark_as_done)
-
 }

@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -25,10 +26,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 
 @Composable
 fun TudeeBottomNavBar(
@@ -75,34 +77,36 @@ fun TudeeBottomNavBarItem(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun PreviewTudeeNavBar() {
-    var selectedScreen by remember { mutableIntStateOf(0) }
-    Box(modifier = Modifier.fillMaxSize()) {
-        TudeeBottomNavBar(modifier = Modifier.align(Alignment.BottomCenter)) {
-            TudeeBottomNavBarItem(
-                selected = selectedScreen == 0,
-                iconRes = R.drawable.home,
-                selectedIconRes = R.drawable.home_fill
-            ) {
-                selectedScreen = 0
-            }
+    TudeeTheme(isDark = isSystemInDarkTheme()) {
+        var selectedScreen by remember { mutableIntStateOf(0) }
+        Box(modifier = Modifier.fillMaxSize()) {
+            TudeeBottomNavBar(modifier = Modifier.align(Alignment.BottomCenter)) {
+                TudeeBottomNavBarItem(
+                    selected = selectedScreen == 0,
+                    iconRes = R.drawable.home,
+                    selectedIconRes = R.drawable.home_fill
+                ) {
+                    selectedScreen = 0
+                }
 
-            TudeeBottomNavBarItem(
-                selected = selectedScreen == 1,
-                iconRes = R.drawable.profile,
-                selectedIconRes = R.drawable.profile_fill
-            ) {
-                selectedScreen = 1
-            }
+                TudeeBottomNavBarItem(
+                    selected = selectedScreen == 1,
+                    iconRes = R.drawable.profile,
+                    selectedIconRes = R.drawable.profile_fill
+                ) {
+                    selectedScreen = 1
+                }
 
-            TudeeBottomNavBarItem(
-                selected = selectedScreen == 2,
-                iconRes = R.drawable.menu,
-                selectedIconRes = R.drawable.menu_fill
-            ) {
-                selectedScreen = 2
+                TudeeBottomNavBarItem(
+                    selected = selectedScreen == 2,
+                    iconRes = R.drawable.menu,
+                    selectedIconRes = R.drawable.menu_fill
+                ) {
+                    selectedScreen = 2
+                }
             }
         }
     }

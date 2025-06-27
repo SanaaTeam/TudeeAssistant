@@ -40,7 +40,7 @@ fun Task.toDetailsState(): DetailsUiState {
         dueDate = this.dueDate.toString(),
         categoryId = this.categoryId,
         priority = this.priority.toState(),
-        description = this.description ?: "",
+        description = this.description.orEmpty(),
         status = this.status.toState(),
         createdAt = this.createdAt.toString(),
         categoryImagePath = "",

@@ -1,29 +1,29 @@
 package com.sanaa.tudee_assistant.presentation.screen.onBoarding
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 class OnBoardingViewModel(
-    private val preferencesManager: PreferencesManager
-) : BaseViewModel<OnBoardingScreenUiState>(OnBoardingScreenUiState()),
+    private val preferencesManager: PreferencesManager,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<OnBoardingScreenUiState>(OnBoardingScreenUiState(), dispatcher),
     OnBoardingScreenInteractionListener {
 
     init {
-        viewModelScope.launch {
-            preferencesManager.isDarkTheme.collect { isDarkTheme ->
+        tryToExecute(
+            callee = {
                 updateState {
                     it.copy(
-                        isDarkTheme = isDarkTheme,
                         pageList = getOnBoardingPageContent(),
                         currentPageIndex = 0
                     )
                 }
             }
-        }
+        )
     }
 
     override fun onNextPageClick() {
@@ -37,9 +37,11 @@ class OnBoardingViewModel(
     override fun onSkipClick() {
         updateState { it.copy(isSkipable = true) }
 
-        viewModelScope.launch {
-            preferencesManager.setOnboardingCompleted()
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.setOnboardingCompleted()
+            }
+        )
     }
 
     override fun setCurrentPage(pageIndex: Int) {

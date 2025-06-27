@@ -5,12 +5,13 @@ import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -23,16 +24,19 @@ class TaskViewModel(
     private val selectedStatusTab: TaskUiStatus,
     private val stringProvider: StringProvider,
     private val preferencesManager: PreferencesManager,
-) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()), TaskInteractionListener {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState(), dispatcher), TaskInteractionListener {
     init {
         updateState { it.copy(selectedStatusTab = selectedStatusTab) }
-        viewModelScope.launch {
-            categoryService.getCategories().collect { categoryList ->
-                updateState {
-                    it.copy(categories = categoryList.toStateList(0))
+        tryToExecute(
+            callee = {
+                categoryService.getCategories().collect { categoryList ->
+                    updateState {
+                        it.copy(categories = categoryList.toStateList(0))
+                    }
                 }
             }
-        }
+        )
         getTasksByDueDate()
     }
 
@@ -41,7 +45,7 @@ class TaskViewModel(
         dateJob?.takeIf { it.isActive }?.cancel()
 
         dateJob = viewModelScope.launch {
-            taskService.getTasksByDueDate(_state.value.selectedDate).collect { taskList ->
+            taskService.getTasksByDueDate(state.value.selectedDate).collect { taskList ->
                 updateState { it.copy(currentDateTasks = taskList.toStateList()) }
             }
         }
@@ -57,26 +61,30 @@ class TaskViewModel(
     }
 
     override fun onDeleteTask() {
-        _state.value.selectedTask.let {
-            viewModelScope.launch {
-                runCatching {
-                    if (it?.id == null) return@launch
-                    taskService.deleteTaskById(it.id)
-                }.onSuccess {
-                    handleOnSuccess(message = stringProvider.taskDeleteSuccess)
-                    getTasksByDueDate()
-                }.onFailure {
-                    handleOnError(message = stringProvider.unknownError)
+        state.value.selectedTask.let {
+            tryToExecute(
+                callee = {
+                    runCatching {
+                        if (it?.id == null) return@tryToExecute
+                        taskService.deleteTaskById(it.id)
+                    }.onSuccess {
+                        handleOnSuccess(message = stringProvider.taskDeleteSuccess)
+                        getTasksByDueDate()
+                    }.onFailure {
+                        handleOnError(message = stringProvider.unknownError)
 
+                    }
                 }
-            }
+            )
         }
     }
 
     override fun onTapClick(status: TaskUiStatus) {
-        viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.changeTaskStatus(status.toTaskStatus())
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.changeTaskStatus(status.toTaskStatus())
+            }
+        )
     }
 
     override fun onDateSelected(date: LocalDate) {
@@ -86,8 +94,8 @@ class TaskViewModel(
         getTasksByDueDate()
     }
 
-    fun onShowDeleteDialogChange(show: Boolean) {
-        updateState { it.copy(showDeleteTaskBottomSheet = show) }
+    private fun onShowDeleteDialogChange() {
+        updateState { it.copy(showDeleteTaskBottomSheet = true) }
     }
 
     override fun onDismissTaskDetails(show: Boolean) {
@@ -107,10 +115,12 @@ class TaskViewModel(
     }
 
     override fun onTaskSwipeToDelete(task: TaskUiState): Boolean {
-        viewModelScope.launch {
-            onTaskSelected(task)
-            onShowDeleteDialogChange(true)
-        }
+        tryToExecute(
+            callee = {
+                onTaskSelected(task)
+                onShowDeleteDialogChange()
+            }
+        )
         return false
     }
 

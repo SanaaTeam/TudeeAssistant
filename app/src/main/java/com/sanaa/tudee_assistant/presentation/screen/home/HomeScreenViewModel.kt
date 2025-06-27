@@ -1,20 +1,18 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -24,7 +22,9 @@ class HomeScreenViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val stringProvider: StringProvider,
-) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()), HomeScreenInteractionsListener {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState(), dispatcher),
+    HomeScreenInteractionsListener {
     init {
         loadScreen()
         getTasks()
@@ -87,9 +87,11 @@ class HomeScreenViewModel(
     }
 
     override fun onNavigateToTaskScreen(status: TaskUiStatus) {
-        viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.changeTaskStatus(status.toTaskStatus())
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.changeTaskStatus(status.toTaskStatus())
+            }
+        )
     }
 
     override fun onShowEditTaskSheet(taskToEdit: TaskUiState) {

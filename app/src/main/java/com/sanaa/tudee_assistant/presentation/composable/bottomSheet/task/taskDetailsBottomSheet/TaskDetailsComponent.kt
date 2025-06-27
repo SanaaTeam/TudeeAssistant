@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
@@ -30,10 +30,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Seco
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
-import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskUiState
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,7 +86,7 @@ fun TaskDetailsComponent(
                         color = Theme.color.title,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
-                        )
+                    )
 
                     state.value.description?.let {
                         Text(
@@ -121,8 +119,8 @@ fun TaskDetailsComponent(
                             enabled = false
                         )
                     }
-                    state.value.moveStatusToLabel.let {label->
-                        if (label.isNotEmpty()){
+                    state.value.moveStatusToLabel.let { label ->
+                        if (label.isNotEmpty()) {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
                             ) {
@@ -150,7 +148,7 @@ fun TaskDetailsComponent(
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@PreviewLightDark
 @Composable
 private fun PreviewUpdateTaskStatus() {
     TudeeTheme {

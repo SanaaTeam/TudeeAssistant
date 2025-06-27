@@ -26,6 +26,6 @@ fun AddCategoryRequest.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
     isDefault = false
 )
 
-fun List<CategoryLocalDto>.toDomainList(): List<Category> {
+fun List<CategoryLocalDto>.toDomain(): List<Category> {
     return this.map { category -> category.toDomain() }
 }

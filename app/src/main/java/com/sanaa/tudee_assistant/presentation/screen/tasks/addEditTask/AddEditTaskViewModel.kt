@@ -1,8 +1,8 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
@@ -11,7 +11,6 @@ import com.sanaa.tudee_assistant.presentation.model.mapper.toNewTask
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +19,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
 class AddEditTaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseViewModel<AddTaskUiState>(AddTaskUiState(), defaultDispatcher = dispatcher),
     AddEditTaskListener {
 
@@ -40,20 +38,22 @@ class AddEditTaskViewModel(
     private var _isInitialized: Boolean = false
 
     init {
-        viewModelScope.launch(defaultDispatcher) {
-            categoryService.getCategories()
-                .catch { e -> handleError(e) }
-                .collect { categoryList ->
-                    updateState {
-                        it.copy(
-                            categories = categoryList.toStateList(0)
-                        )
+        tryToExecute(
+            callee = {
+                categoryService.getCategories()
+                    .catch { e -> handleError(e) }
+                    .collect { categoryList ->
+                        updateState {
+                            it.copy(
+                                categories = categoryList.toStateList(0)
+                            )
+                        }
                     }
-                }
-        }
+            }
+        )
     }
 
-    fun loadTask(task: TaskUiState) {
+    private fun loadTask(task: TaskUiState) {
         isEditMode = true
         originalTaskUiState = task.copy()
 
@@ -87,7 +87,7 @@ class AddEditTaskViewModel(
         )
     }
 
-    fun loadCategoriesForNewTask() {
+    private fun loadCategoriesForNewTask() {
         isEditMode = false
         originalTaskUiState = null
 
@@ -103,7 +103,7 @@ class AddEditTaskViewModel(
                             id = 0,
                             title = "",
                             description = "",
-                            dueDate = selectedDate?.toString() ?: "",
+                            dueDate = selectedDate?.toString().orEmpty(),
                             categoryId = -1,
                             priority = TaskUiPriority.LOW,
                             status = TaskUiStatus.TODO
@@ -244,7 +244,7 @@ class AddEditTaskViewModel(
     }
 
     private fun validateInputs() {
-        val currentState = _state.value
+        val currentState = state.value
         val isButtonEnabled = if (isEditMode) {
             originalTaskUiState?.let { original ->
                 currentState.taskUiState.title != original.title ||

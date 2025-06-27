@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
@@ -35,8 +36,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.modifire.dropShadow
 import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
-import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +60,7 @@ fun AddEditCategoryBottomSheet(
     BaseBottomSheet(
         content = {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .verticalScroll(rememberScrollState())
                     .background(color = Theme.color.surface)
             ) {
@@ -155,10 +156,10 @@ fun AddEditCategoryBottomSheet(
     )
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun AddEditCategoryBottomSheetPreview() {
-    TudeeTheme {
+    TudeeTheme(isDark = isSystemInDarkTheme()) {
         AddEditCategoryBottomSheet(
             onImageSelected = {},
             onSaveClick = {},

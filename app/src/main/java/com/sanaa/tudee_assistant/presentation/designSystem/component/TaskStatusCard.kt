@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.designSystem.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -13,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -64,10 +65,10 @@ fun TaskStatusCard(
 
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun PreviewTaskStatusCard() {
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         TaskStatusCard(taskUiStatus = TaskUiStatus.DONE)
     }
 }

@@ -1,7 +1,6 @@
 package com.sanaa.tudee_assistant.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -18,9 +17,6 @@ interface TaskDao {
 
     @Update
     suspend fun updateTask(task: TaskLocalDto): Int
-
-    @Delete
-    suspend fun deleteTask(task: TaskLocalDto): Int
 
     @Query("DELETE FROM tasks WHERE task_id = :taskId")
     suspend fun deleteTaskById(taskId: Int): Int

@@ -1,18 +1,16 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toDetailsState
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 interface TaskDetailsInteractionListener {
     fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit)
@@ -27,25 +25,29 @@ class TaskDetailsBottomSheetViewModel(
     TaskDetailsInteractionListener {
 
     fun getSelectedTask(selectedTaskId: Int) {
-        viewModelScope.launch {
-            taskService.getTaskById(selectedTaskId).collectLatest { task ->
-                task?.let {
-                    val categoryImagePath =
-                        categoryService.getCategoryById(task.categoryId).imagePath
-                    val detailsUiState = task.toDetailsState().copy(
-                        categoryImagePath = categoryImagePath,
-                        moveStatusToLabel = when (task.status) {
-                            Task.TaskStatus.TODO -> stringProvider.markAsInProgress
-                            Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
-                            Task.TaskStatus.DONE -> ""
+        tryToExecute(
+            callee = {
+                taskService.getTaskById(selectedTaskId).collectLatest { task ->
+                    task?.let {
+                        val categoryImagePath =
+                            categoryService.getCategoryById(it.categoryId).imagePath
+                        val detailsUiState = it.toDetailsState().copy(
+                            categoryImagePath = categoryImagePath,
+                            moveStatusToLabel = when (it.status) {
+                                Task.TaskStatus.TODO -> stringProvider.markAsInProgress
+                                Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
+                                Task.TaskStatus.DONE -> ""
+                            }
+                        )
+                        updateState {
+                            detailsUiState
                         }
-                    )
-                    updateState {
-                        detailsUiState
                     }
+
+
                 }
             }
-        }
+        )
     }
 
     override fun onMoveTaskToAnotherStatus(
@@ -92,5 +94,6 @@ class TaskDetailsBottomSheetViewModel(
                 else -> {}
             }
         }
+
     }
 }

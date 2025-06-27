@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +43,6 @@ fun CustomDatePickerDialog(
     minDateMillis: Long? = null
 ) {
     val initialSelectedDateMillis = DateFormater.localDateToEpochMillis(initialSelectedDate)
-
     val selectableDates = if (minDateMillis != null) {
         object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
@@ -57,14 +57,16 @@ fun CustomDatePickerDialog(
         initialSelectedDateMillis = initialSelectedDateMillis,
         selectableDates = selectableDates
     )
-
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
                 onClick = {
-                    onDateSelected(datePickerState.selectedDateMillis!!)
+                    if (datePickerState.selectedDateMillis !=null){
+                        onDateSelected(datePickerState.selectedDateMillis)
+                    }
                     onDismiss()
+
                 },
                 label = stringResource(R.string.ok),
                 modifier = modifier.padding(vertical = 20.dp, horizontal = 28.dp)

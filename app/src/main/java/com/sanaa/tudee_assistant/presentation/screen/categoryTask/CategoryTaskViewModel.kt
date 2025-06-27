@@ -46,13 +46,13 @@ class CategoryTaskViewModel(
                     .getTasksByCategoryId(categoryId)
                     .first()
                     .map { it.toState() }
-                val currentStatus = _state.value.currentSelectedTaskStatus
 
                 _state.update {
                     it.copy(
                         currentCategory = category.toState(tasksCount = tasks.size),
-                        allCategoryTasks = tasks,
-                        filteredTasks = tasks.filter { task -> task.status == currentStatus }
+                        todoTasks = tasks.filter { task -> task.status == TaskUiStatus.TODO },
+                        inProgressTasks = tasks.filter { task -> task.status == TaskUiStatus.IN_PROGRESS },
+                        doneTasks = tasks.filter { task -> task.status == TaskUiStatus.DONE }
                     )
                 }
             },
@@ -97,18 +97,17 @@ class CategoryTaskViewModel(
                 try {
                     taskService.deleteTaskByCategoryId(_state.value.currentCategory.id)
                 } catch (e: Exception) {
-
                 }
             },
-            onError = { onError(message = stringProvider.deleting_category_error) },
+            onError = { onError(message = stringProvider.deletingCategoryError) },
             onSuccess = {
                 onSuccess(
-                    message = stringProvider.deleted_category_successfully,
+                    message = stringProvider.deletedCategorySuccessfully,
                     updateState = {
                         it.copy(
                             showDeleteCategoryBottomSheet = false,
                             snackBarState = SnackBarState
-                                .getInstance(stringProvider.deleted_category_successfully),
+                                .getInstance(stringProvider.deletedCategorySuccessfully),
                         )
                     },
                     effect = NavigateBackToCategoryList
@@ -127,7 +126,6 @@ class CategoryTaskViewModel(
         _state.update {
             it.copy(
                 currentSelectedTaskStatus = status,
-                filteredTasks = _state.value.allCategoryTasks.filter { task -> task.status == status },
                 selectedTapIndex = index
             )
         }
@@ -180,7 +178,7 @@ class CategoryTaskViewModel(
                         it.copy(
                             showEditCategoryBottomSheet = false,
                             snackBarState = SnackBarState
-                                .getInstance(stringProvider.category_update_successfully),
+                                .getInstance(stringProvider.categoryUpdateSuccessfully),
                         )
 
                     },
@@ -217,7 +215,7 @@ class CategoryTaskViewModel(
             it.copy(
                 showEditTaskBottomSheet = false, selectedTask = null,
                 snackBarState = SnackBarState
-                    .getInstance(stringProvider.task_update_success),
+                    .getInstance(stringProvider.taskUpdateSuccess),
             )
         }
     }
@@ -226,7 +224,7 @@ class CategoryTaskViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState
-                    .getInstance(stringProvider.task_status_update_success),
+                    .getInstance(stringProvider.taskStatusUpdateSuccess),
                 showTaskDetailsBottomSheet = false,
             )
         }

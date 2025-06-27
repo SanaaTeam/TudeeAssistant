@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,8 +50,10 @@ fun UploadBox(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        imageUri = uri
-        onImageSelected(uri)
+        if (uri != null) {
+            imageUri = uri
+            onImageSelected(uri)
+        }
     }
     UploadBoxContent(
         imageUri = imageUri,
@@ -120,11 +122,7 @@ fun SelectedImageView(
                 .clickable { launcher.launch("image/*") },
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(R.drawable.edit_icon),
-                contentDescription = "Edit Icon",
-                modifier = Modifier.size(Theme.dimension.extraLarge),
-            )
+            EditCategoryComponent()
         }
     }
 }
@@ -143,17 +141,14 @@ fun UploadPlaceholder(defaultImagePath: String? = null) {
                     modifier = Modifier.fillMaxSize(),
                     imagePath = defaultImagePath
                 )
-                Image(
-                    painter = painterResource(R.drawable.edit_icon),
-                    contentDescription = "Edit Icon",
-                    modifier = Modifier.size(Theme.dimension.extraLarge),
-                )
+                EditCategoryComponent()
             }
-        }else {
-            Image(
+        } else {
+            Icon(
                 painter = painterResource(R.drawable.uplaoad_image),
                 contentDescription = "Upload Icon",
                 modifier = Modifier.size(Theme.dimension.large),
+                tint = Theme.color.hint
             )
             Text(
                 text = stringResource(R.string.upload),
@@ -193,5 +188,26 @@ fun UploadBoxDarkPreview() {
         ) {
             UploadBox(onImageSelected = { })
         }
+    }
+}
+
+@Preview
+@Composable
+private fun EditCategoryComponent() {
+    Box(
+        modifier = Modifier
+            .size(32.dp)
+            .background(
+                color = Theme.color.surfaceHigh,
+                shape = RoundedCornerShape(12.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.edit_category),
+            contentDescription = "Edit Icon",
+            modifier = Modifier.size(20.dp),
+            tint = Theme.color.secondary
+        )
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -121,22 +122,29 @@ private fun OnBoardingScreenContent(
                 modifier = modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
             ) {
+                if (state.pageList.isNotEmpty()) {
 
-                OnBoardingPager(
-                    pagerState = pagerState,
-                    pageList = state.pageList,
-                    onNextPageClick = { interactionListener.onNextPageClick() },
-                )
+                    OnBoardingPager(
+                        pagerState = pagerState,
+                        pageList = state.pageList,
+                    )
+                    DialogContainer(
+                        pageContent = state.pageList[pagerState.currentPage],
+                        onNextPageClick = { interactionListener.onNextPageClick() },
+                        modifier = Modifier.padding(horizontal = Theme.dimension.medium)
+                    )
 
-                PageIndicator(
-                    currentPage = pagerState.currentPage,
-                    pageCount = pagerState.pageCount,
-                    onIndicatorClick = { index -> interactionListener.setCurrentPage(index) },
-                    modifier = Modifier
-                        .padding(horizontal = Theme.dimension.medium)
-                        .padding(bottom = 24.dp)
-                )
+                    PageIndicator(
+                        currentPage = pagerState.currentPage,
+                        pageCount = pagerState.pageCount,
+                        onIndicatorClick = { index -> interactionListener.setCurrentPage(index) },
+                        modifier = Modifier
+                            .padding(horizontal = Theme.dimension.medium)
+                            .padding(bottom = 24.dp)
+                    )
+                }
             }
         }
         if (pagerState.currentPage != state.pageList.lastIndex) {
@@ -157,18 +165,27 @@ private fun OnBoardingScreenContent(
 private fun OnBoardingPager(
     pagerState: PagerState,
     pageList: List<OnBoardingPageContentItem>,
-    onNextPageClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     HorizontalPager(
         state = pagerState,
         modifier = modifier.fillMaxWidth()
     ) { page ->
-        DialogContainer(
-            pageContent = pageList[page],
-            onNextPageClick = { onNextPageClick() },
-            modifier = Modifier.padding(horizontal = Theme.dimension.medium)
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(350.dp)
+                .offset(y = 11.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(pageList[page].imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Inside,
+                modifier = Modifier.height(260.dp)
+            )
+        }
+
     }
 }
 
@@ -184,20 +201,7 @@ private fun DialogContainer(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(350.dp)
-                .offset(y = 11.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(pageContent.imageRes),
-                contentDescription = null,
-                contentScale = ContentScale.Inside,
-                modifier = Modifier.height(260.dp)
-            )
-        }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()

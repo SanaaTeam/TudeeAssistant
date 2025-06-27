@@ -10,10 +10,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,6 +31,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskUiState
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -38,20 +41,17 @@ fun TaskDetailsComponent(
     selectedTaskId: Int,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    interactionListener: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(
-        key = "new $selectedTaskId",
-        parameters = { parametersOf(selectedTaskId) }),
+    interactionListener: TaskDetailsBottomSheetViewModel = koinViewModel<TaskDetailsBottomSheetViewModel>(),
     onEditClick: (TaskUiState) -> Unit = {},
-    onMoveStatusSuccess: (TaskUiStatus) -> Unit = {},
+    onMoveStatusSuccess: () -> Unit = {},
     onMoveStatusFail: () -> Unit = {},
 ) {
     val state: State<DetailsUiState> = interactionListener.state.collectAsStateWithLifecycle()
 
-    val changeStatusTo = when (state.value.status) {
-        TaskUiStatus.TODO -> stringResource(R.string.mark_as_in_progress)
-        TaskUiStatus.IN_PROGRESS -> stringResource(R.string.mark_as_done)
-        TaskUiStatus.DONE -> null
+    LaunchedEffect(selectedTaskId) {
+        interactionListener.getSelectedTask(selectedTaskId)
     }
+
 
     BaseBottomSheet(
         onDismiss = onDismiss,
@@ -86,7 +86,8 @@ fun TaskDetailsComponent(
                         modifier = Modifier,
                         style = Theme.textStyle.title.medium,
                         color = Theme.color.title,
-
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                         )
 
                     state.value.description?.let {
@@ -95,6 +96,8 @@ fun TaskDetailsComponent(
                             modifier = Modifier,
                             style = Theme.textStyle.body.small,
                             color = Theme.color.body,
+                            maxLines = 5,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
@@ -115,33 +118,31 @@ fun TaskDetailsComponent(
                         TaskStatusCard(taskUiStatus = state.value.status)
                         PriorityTag(
                             priority = state.value.priority,
+                            enabled = false
                         )
                     }
-                    changeStatusTo?.let {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
-                        ) {
-                            SecondaryIconButton(
-                                iconRes = painterResource(R.drawable.pencil_edit),
-                                onClick = {
-                                    onEditClick(state.value.toTaskUiState())
-                                    onDismiss()
-                                }
-                            )
-                            SecondaryButton(
-                                label = changeStatusTo,
-                                onClick = {
-                                    interactionListener.onMoveTaskToAnotherStatus(
-                                        onMoveStatusSuccess = { newStatus ->
-                                            onMoveStatusSuccess(newStatus)
-                                        },
-                                        onMoveStatusFail = onMoveStatusFail
-                                    )
-                                },
-                                modifier = Modifier.weight(1f)
-                            )
+                    state.value.moveStatusToLabel.let {label->
+                        if (label.isNotEmpty()){
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
+                            ) {
+                                SecondaryIconButton(
+                                    iconRes = painterResource(R.drawable.pencil_edit),
+                                    onClick = { onEditClick(state.value.toTaskUiState()) }
+                                )
+                                SecondaryButton(
+                                    label = label,
+                                    onClick = {
+                                        interactionListener.onMoveTaskToAnotherStatus(
+                                            onMoveStatusSuccess, onMoveStatusFail
+                                        )
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                )
 
+                            }
                         }
+
                     }
                 }
             }

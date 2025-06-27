@@ -53,10 +53,10 @@ class TaskServiceImpl(
         }
     }
 
-    override suspend fun getTaskById(taskId: Int): Flow<Task> {
+    override suspend fun getTaskById(taskId: Int): Flow<Task?> {
         return taskDao
             .getTaskById(taskId).map {
-                it.toDomain()
+                it?.toDomain()
             }
     }
 

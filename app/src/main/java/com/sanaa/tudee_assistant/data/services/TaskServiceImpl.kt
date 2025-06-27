@@ -2,7 +2,6 @@ package com.sanaa.tudee_assistant.data.services
 
 import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
-import com.sanaa.tudee_assistant.data.local.mapper.toDomainList
 import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
@@ -51,12 +50,12 @@ class TaskServiceImpl(
 
     override fun getTasksByCategoryId(categoryId: Int): Flow<List<Task>> {
         return taskDao.getTasksByCategoryId(categoryId)
-            .map { it.toDomainList() }
+            .map { it.toDomain() }
     }
 
     override fun getTasksByDueDate(dueDate: LocalDate): Flow<List<Task>> {
         return taskDao.getTasksByDate(dueDate.toString())
-            .map { it.toDomainList() }
+            .map { it.toDomain() }
     }
 
     override fun getTaskCountsGroupedByCategoryId(): Flow<Map<Int, Int>> {

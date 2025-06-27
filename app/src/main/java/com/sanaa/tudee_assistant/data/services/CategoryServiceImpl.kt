@@ -2,7 +2,6 @@ package com.sanaa.tudee_assistant.data.services
 
 import com.sanaa.tudee_assistant.data.local.dao.CategoryDao
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
-import com.sanaa.tudee_assistant.data.local.mapper.toDomainList
 import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
 import com.sanaa.tudee_assistant.domain.exceptions.DatabaseFailureException
 import com.sanaa.tudee_assistant.domain.exceptions.DefaultCategoryException
@@ -27,7 +26,7 @@ class CategoryServiceImpl(
 
     override fun getCategories(): Flow<List<Category>> =
         categoryDao.getAllCategories()
-            .map { it.toDomainList() }
+            .map { it.toDomain() }
             .catch {
                 throw DatabaseFailureException(
                     message = "Failed to load categories from database duo to database error details :${it.message} ",

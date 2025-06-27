@@ -1,8 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -17,33 +15,36 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-interface TaskDetailsInteractionListener{
+interface TaskDetailsInteractionListener {
     fun onMoveTaskToAnotherStatus(onMoveStatusSuccess: () -> Unit, onMoveStatusFail: () -> Unit)
 }
+
 class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val stringProvider: StringProvider,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = dispatcher),TaskDetailsInteractionListener{
+) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = dispatcher),
+    TaskDetailsInteractionListener {
 
-     fun getSelectedTask(selectedTaskId: Int) {
+    fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
-            var task: Task?
-             taskService.getTaskById(selectedTaskId).collectLatest {
-                task = it
-                 val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-                 val detailsUiState = task.toDetailsState().copy(
-                     categoryImagePath = categoryImagePath,
-                     moveStatusToLabel = when (task.status) {
-                         Task.TaskStatus.TODO -> stringProvider.markAsInProgress
-                         Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
-                         Task.TaskStatus.DONE -> ""
-                     }
-                 )
-                 _state.update {
-                     detailsUiState
-                 }
+            taskService.getTaskById(selectedTaskId).collectLatest { task ->
+                if (task == null) {
+                    return@collectLatest
+                }
+                val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
+                val detailsUiState = task.toDetailsState().copy(
+                    categoryImagePath = categoryImagePath,
+                    moveStatusToLabel = when (task.status) {
+                        Task.TaskStatus.TODO -> stringProvider.markAsInProgress
+                        Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
+                        Task.TaskStatus.DONE -> ""
+                    }
+                )
+                _state.update {
+                    detailsUiState
+                }
             }
 
         }
@@ -53,45 +54,46 @@ class TaskDetailsBottomSheetViewModel(
         onMoveStatusSuccess: () -> Unit,
         onMoveStatusFail: () -> Unit
     ) {
-            var newUpdatedTask: Task
-            state.value.let { state ->
-                when (state.status) {
-                    TaskUiStatus.TODO -> {
-                        newUpdatedTask = state.copy(status = TaskUiStatus.IN_PROGRESS).toTask()
-                        tryToExecute(
-                            callee = { taskService.updateTask(newUpdatedTask) },
-                            onSuccess = {
-                                _state.update {
-                                    it.copy(status = TaskUiStatus.IN_PROGRESS)
-                                }
-                                onMoveStatusSuccess()
-                            },
-                            onError = {
-                                onMoveStatusFail()
-                            },
-                            dispatcher = dispatcher
-                        )
-                    }
-
-                    TaskUiStatus.IN_PROGRESS -> {
-                        newUpdatedTask = state.copy(status = TaskUiStatus.DONE).toTask()
-                        tryToExecute(
-                            callee = { taskService.updateTask(newUpdatedTask) },
-                            onSuccess = {
-                                _state.update {
-                                    it.copy(status = TaskUiStatus.DONE)
-                                }
-                                onMoveStatusSuccess()
-                            },
-                            onError = {
-                                onMoveStatusFail()
-                            },
-                            dispatcher = dispatcher
-                        )
-                    }
-                    else -> {}
+        var newUpdatedTask: Task
+        state.value.let { state ->
+            when (state.status) {
+                TaskUiStatus.TODO -> {
+                    newUpdatedTask = state.copy(status = TaskUiStatus.IN_PROGRESS).toTask()
+                    tryToExecute(
+                        callee = { taskService.updateTask(newUpdatedTask) },
+                        onSuccess = {
+                            _state.update {
+                                it.copy(status = TaskUiStatus.IN_PROGRESS)
+                            }
+                            onMoveStatusSuccess()
+                        },
+                        onError = {
+                            onMoveStatusFail()
+                        },
+                        dispatcher = dispatcher
+                    )
                 }
+
+                TaskUiStatus.IN_PROGRESS -> {
+                    newUpdatedTask = state.copy(status = TaskUiStatus.DONE).toTask()
+                    tryToExecute(
+                        callee = { taskService.updateTask(newUpdatedTask) },
+                        onSuccess = {
+                            _state.update {
+                                it.copy(status = TaskUiStatus.DONE)
+                            }
+                            onMoveStatusSuccess()
+                        },
+                        onError = {
+                            onMoveStatusFail()
+                        },
+                        dispatcher = dispatcher
+                    )
+                }
+
+                else -> {}
             }
+        }
 
     }
 }

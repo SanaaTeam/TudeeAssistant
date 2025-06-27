@@ -7,7 +7,6 @@ import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateException
-import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
 import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.TaskService
@@ -20,7 +19,7 @@ class TaskServiceImpl(
 ) : TaskService {
     override fun getAllTasks(): Flow<List<Task>> {
         return taskDao.getAllTasks()
-            .map { it.toDomainList()}
+            .map { it.toDomainList() }
     }
 
     override suspend fun addTask(addTaskRequest: AddTaskRequest) {
@@ -41,6 +40,7 @@ class TaskServiceImpl(
             throw FailedToDeleteException("Failed to delete task")
         }
     }
+
     override suspend fun deleteTaskByCategoryId(categoryId: Int) {
         if (taskDao.deleteTaskByCategoryId(categoryId) <= 0) {
             throw FailedToDeleteException("Failed to delete task")
@@ -53,10 +53,10 @@ class TaskServiceImpl(
         }
     }
 
-    override suspend fun getTaskById(taskId: Int): Flow<Task> {
+    override suspend fun getTaskById(taskId: Int): Flow<Task?> {
         return taskDao
             .getTaskById(taskId).map {
-                it.toDomain()
+                it?.toDomain()
             }
     }
 

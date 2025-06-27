@@ -82,7 +82,7 @@ fun TaskListColumn(
                         task = task,
                         categoryImagePath = categories
                             .firstOrNull { it.id == task.categoryId }
-                            ?.imagePath ?: "",
+                            ?.imagePath.orEmpty(),
                         onClick = { onTaskClick(task) },
                         taskDateAndPriority = {
                             PriorityTag(

@@ -18,7 +18,7 @@ fun Task.toState(): TaskUiState {
         dueDate = dueDate.toString(),
         categoryId = categoryId,
         priority = priority.toState(),
-        description = description ?: "",
+        description = description.orEmpty(),
         status = status.toState(),
         createdAt = createdAt.toString(),
     )

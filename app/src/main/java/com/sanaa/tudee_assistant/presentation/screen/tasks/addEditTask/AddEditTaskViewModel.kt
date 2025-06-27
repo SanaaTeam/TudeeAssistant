@@ -103,7 +103,7 @@ class AddEditTaskViewModel(
                             id = 0,
                             title = "",
                             description = "",
-                            dueDate = selectedDate?.toString() ?: "",
+                            dueDate = selectedDate?.toString().orEmpty(),
                             categoryId = -1,
                             priority = TaskUiPriority.LOW,
                             status = TaskUiStatus.TODO

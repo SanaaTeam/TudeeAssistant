@@ -50,7 +50,7 @@ fun AddEditTaskContent(
     showDatePickerDialog: Boolean,
     listener: AddEditTaskListener,
     modifier: Modifier = Modifier,
-    onCancelClick: () -> Unit
+    onCancelClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -88,7 +88,7 @@ fun AddEditTaskContent(
 
                 TudeeTextField(
                     placeholder = stringResource(R.string.description),
-                    value = uiState.taskUiState.description ?: "",
+                    value = uiState.taskUiState.description.orEmpty(),
                     onValueChange = listener::onDescriptionChange,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -98,7 +98,7 @@ fun AddEditTaskContent(
                     maxLines = 10,
                     singleLine = false
 
-                    )
+                )
 
                 TudeeTextField(
                     modifier = Modifier

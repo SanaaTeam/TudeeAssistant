@@ -142,4 +142,13 @@ class CategoryViewModel(
             it.copy(snackBarState = SnackBarState.hide())
         }
     }
+
+    // Only used in unit tests
+    fun onCategoryImageSelectedFromPath(path: String) {
+        updateState {
+            it.copy(
+                newCategory = it.newCategory.copy(imagePath = path)
+            )
+        }
+    }
 }

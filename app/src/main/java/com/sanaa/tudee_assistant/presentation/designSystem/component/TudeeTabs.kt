@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
@@ -189,7 +190,7 @@ private fun CustomTab(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun TudeeScrollableTabsPreview() {
     val tabs = listOf(
@@ -237,7 +238,7 @@ private fun TudeeScrollableTabsPreview() {
 
     var selectedTab by remember { mutableIntStateOf(0) }
 
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

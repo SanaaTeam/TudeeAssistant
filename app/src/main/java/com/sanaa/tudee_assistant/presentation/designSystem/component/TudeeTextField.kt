@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -27,7 +28,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -116,10 +117,10 @@ fun TudeeTextField(
     )
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun PreviewTudeeTextField() {
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         TudeeTextField(
             placeholder = "Name",
             icon = painterResource(R.drawable.user_icon),

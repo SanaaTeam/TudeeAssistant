@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -158,10 +159,10 @@ fun UploadPlaceholder(defaultImagePath: String? = null) {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 fun UploadBoxLightPreview() {
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -170,42 +171,5 @@ fun UploadBoxLightPreview() {
         ) {
             UploadBox()
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun UploadBoxDarkPreview() {
-    TudeeTheme(true) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            UploadBox()
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun EditCategoryComponent() {
-    Box(
-        modifier = Modifier
-            .size(32.dp)
-            .background(
-                color = Theme.color.surfaceHigh,
-                shape = RoundedCornerShape(12.dp)
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.edit_category),
-            contentDescription = "Edit Icon",
-            modifier = Modifier.size(20.dp),
-            tint = Theme.color.secondary
-        )
     }
 }

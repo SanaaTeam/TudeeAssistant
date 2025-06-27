@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.designSystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -16,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -73,32 +74,16 @@ fun SnackBar(
     }
 }
 
-@Preview(name = "Dark Theme")
+@PreviewLightDark
 @Composable
 private fun SnackBarDarkPreview() {
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         Box(
             modifier = Modifier
                 .background(color = Theme.color.surface)
                 .padding(Theme.dimension.extraSmall)
         ) {
             SnackBar(state = SnackBarState.getInstance(stringResource(R.string.snack_bar_success)))
-        }
-    }
-}
-
-@Preview(name = "Light Theme")
-@Composable
-private fun SnackBarLightPreview() {
-    TudeeTheme(false) {
-        Box(
-            modifier = Modifier
-                .background(color = Theme.color.surface)
-                .padding(Theme.dimension.extraSmall)
-        ) {
-            SnackBar(
-                state = SnackBarState.getInstance(stringResource(R.string.snack_bar_success)),
-            )
         }
     }
 }

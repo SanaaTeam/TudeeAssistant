@@ -1,12 +1,13 @@
 package com.sanaa.tudee_assistant.presentation.designSystem.component.button
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 
@@ -40,47 +41,10 @@ fun NegativeButton(
     }
 }
 
-@Preview
-@Composable
-private fun NegativeButtonLightPreview(modifier: Modifier = Modifier) {
-    TudeeTheme(false) {
-        Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
-            NegativeButton(
-                label = "Submit",
-                enabled = true,
-                isLoading = true,
-                onClick = {}
-            )
-
-            NegativeButton(
-                label = "Submit",
-                enabled = true,
-                isLoading = false,
-                onClick = {}
-            )
-
-            NegativeButton(
-                label = "Submit",
-                enabled = false,
-                isLoading = true,
-                onClick = {}
-            )
-
-            NegativeButton(
-                label = "Submit",
-                enabled = false,
-                isLoading = false,
-                onClick = {}
-            )
-
-        }
-    }
-}
-
-@Preview
+@PreviewLightDark
 @Composable
 private fun NegativeButtonDarkPreview(modifier: Modifier = Modifier) {
-    TudeeTheme(true) {
+    TudeeTheme(isSystemInDarkTheme()) {
         Column(verticalArrangement = Arrangement.spacedBy(Theme.dimension.small)) {
             NegativeButton(
                 label = "Submit",

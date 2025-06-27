@@ -15,6 +15,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,22 +32,24 @@ import com.sanaa.tudee_assistant.presentation.navigation.CategoriesScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.LocalMainNavController
 import com.sanaa.tudee_assistant.presentation.navigation.TasksScreenRoute
-import com.sanaa.tudee_assistant.presentation.navigation.util.navigatePreservingState
+import com.sanaa.tudee_assistant.presentation.navigation.util.navigateWithRestoreState
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryScreen
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
 import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen(
     startDestination: Any,
+    viewModel: MainViewModel = koinViewModel(),
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
 
     CompositionLocalProvider(LocalMainNavController provides navController) {
-        TudeeScaffold (
-        ){
+        TudeeScaffold {
             Column(
                 Modifier
                     .fillMaxSize()
@@ -76,7 +79,6 @@ fun MainScreen(
                     }
                 }
 
-
                 TudeeBottomNavBar(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,7 +89,7 @@ fun MainScreen(
                         iconRes = R.drawable.home,
                         selectedIconRes = R.drawable.home_fill
                     ) {
-                        navController.navigatePreservingState(HomeScreenRoute)
+                        navController.navigateWithRestoreState(HomeScreenRoute)
                     }
 
                     TudeeBottomNavBarItem(
@@ -95,7 +97,7 @@ fun MainScreen(
                         iconRes = R.drawable.profile,
                         selectedIconRes = R.drawable.profile_fill
                     ) {
-                        navController.navigatePreservingState(TasksScreenRoute())
+                        navController.navigateWithRestoreState(TasksScreenRoute(state.lastSelectedTaskStatus))
                     }
 
                     TudeeBottomNavBarItem(
@@ -103,7 +105,7 @@ fun MainScreen(
                         iconRes = R.drawable.menu,
                         selectedIconRes = R.drawable.menu_fill
                     ) {
-                        navController.navigatePreservingState(CategoriesScreenRoute(TaskUiStatus.TODO))
+                        navController.navigateWithRestoreState(CategoriesScreenRoute(TaskUiStatus.TODO))
                     }
                 }
             }

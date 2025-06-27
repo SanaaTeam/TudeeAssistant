@@ -2,13 +2,16 @@ package com.sanaa.tudee_assistant.presentation.screen.tasks
 
 import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
+import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
+import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -19,6 +22,7 @@ class TaskViewModel(
     private val categoryService: CategoryService,
     private val selectedStatusTab: TaskUiStatus,
     private val stringProvider: StringProvider,
+    private val preferencesManager: PreferencesManager,
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()), TaskInteractionListener {
     init {
         updateState { it.copy(selectedStatusTab = selectedStatusTab) }
@@ -27,8 +31,6 @@ class TaskViewModel(
                 updateState {
                     it.copy(categories = categoryList.toStateList(0))
                 }
-
-
             }
         }
         getTasksByDueDate()
@@ -36,17 +38,14 @@ class TaskViewModel(
 
     private var dateJob: Job? = null
     private fun getTasksByDueDate() {
-
         dateJob?.takeIf { it.isActive }?.cancel()
 
         dateJob = viewModelScope.launch {
             taskService.getTasksByDueDate(_state.value.selectedDate).collect { taskList ->
                 updateState { it.copy(currentDateTasks = taskList.toStateList()) }
             }
-
         }
     }
-
 
     private fun onTaskSelected(task: TaskUiState) {
         updateState { it.copy(selectedTask = task) }
@@ -74,6 +73,12 @@ class TaskViewModel(
         }
     }
 
+    override fun onTapClick(status: TaskUiStatus) {
+        viewModelScope.launch(Dispatchers.IO) {
+            preferencesManager.changeTaskStatus(status.toTaskStatus())
+        }
+    }
+
     override fun onDateSelected(date: LocalDate) {
         updateState {
             it.copy(selectedDate = date)
@@ -88,7 +93,6 @@ class TaskViewModel(
     override fun onDismissTaskDetails(show: Boolean) {
         updateState { it.copy(showTaskDetailsBottomSheet = show) }
     }
-
 
     override fun onAddTaskSuccess() {
         handleOnSuccess(message = stringProvider.taskAddedSuccess)
@@ -110,7 +114,6 @@ class TaskViewModel(
         return false
     }
 
-
     override fun handleOnMoveToStatusSuccess() {
         handleOnSuccess(message = stringProvider.taskStatusUpdateSuccess)
     }
@@ -124,7 +127,6 @@ class TaskViewModel(
             it.copy(snackBarState = SnackBarState())
         }
     }
-
 
     private fun handleOnSuccess(message: String? = null) {
         updateState {

@@ -21,7 +21,7 @@ class MainActivity() : ComponentActivity() {
             val mainActivityViewModel: MainActivityViewModel =
                 koinViewModel<MainActivityViewModel>()
 
-            var state = mainActivityViewModel.state.collectAsStateWithLifecycle()
+            val state = mainActivityViewModel.state.collectAsStateWithLifecycle()
 
             mySplashScreen.setKeepOnScreenCondition { state.value.isLoading }
 

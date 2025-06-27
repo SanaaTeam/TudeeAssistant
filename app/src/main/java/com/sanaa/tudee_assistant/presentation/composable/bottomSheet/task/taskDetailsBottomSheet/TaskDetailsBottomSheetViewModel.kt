@@ -23,7 +23,7 @@ class TaskDetailsBottomSheetViewModel(
     private val categoryService: CategoryService,
     private val stringProvider: StringProvider,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = dispatcher),
+) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = Dispatchers.IO),
     TaskDetailsInteractionListener {
 
     fun getSelectedTask(selectedTaskId: Int) {

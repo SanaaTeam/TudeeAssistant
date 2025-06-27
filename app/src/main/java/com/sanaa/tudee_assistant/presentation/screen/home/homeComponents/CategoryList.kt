@@ -39,6 +39,7 @@ fun CategoryList(
     scrollState: LazyListState,
     state: HomeScreenUiState,
     onTaskClick: (TaskUiState) -> Unit,
+    onNavigateToTaskScreen: (TaskUiStatus) -> Unit,
 ) {
     LazyColumn(
         state = scrollState,
@@ -82,7 +83,8 @@ fun CategoryList(
                 Title(
                     text = stringResource(R.string.done_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
-                    taskUiStatus = TaskUiStatus.DONE
+                    taskUiStatus = TaskUiStatus.DONE,
+                    onNavigateToTaskScreen = onNavigateToTaskScreen
                 )
             }
         }
@@ -100,7 +102,8 @@ fun CategoryList(
                 Title(
                     text = stringResource(R.string.in_progress_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
-                    taskUiStatus = TaskUiStatus.IN_PROGRESS
+                    taskUiStatus = TaskUiStatus.IN_PROGRESS,
+                    onNavigateToTaskScreen = onNavigateToTaskScreen
                 )
             }
         }
@@ -118,7 +121,8 @@ fun CategoryList(
                 Title(
                     text = stringResource(R.string.todo_task_status),
                     tasksCount = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
-                    taskUiStatus = TaskUiStatus.TODO
+                    taskUiStatus = TaskUiStatus.TODO,
+                    onNavigateToTaskScreen = onNavigateToTaskScreen
                 )
             }
         }

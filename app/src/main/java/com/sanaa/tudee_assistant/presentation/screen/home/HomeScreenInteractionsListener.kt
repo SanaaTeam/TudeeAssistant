@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 
 interface HomeScreenInteractionsListener {
     fun onToggleColorTheme()
@@ -13,6 +14,7 @@ interface HomeScreenInteractionsListener {
     fun onHideAddTaskSheet()
     fun onAddTaskSuccess()
     fun onAddTaskError(errorMessage: String)
+    fun onNavigateToTaskScreen(status: TaskUiStatus)
 
     fun onShowEditTaskSheet(taskToEdit: TaskUiState)
     fun onHideEditTaskSheet()

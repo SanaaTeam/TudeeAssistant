@@ -92,7 +92,10 @@ fun TudeeScrollableTabs(
                 CustomTab(
                     tabItem = tabItem,
                     isSelected = selectedTabIndex == index,
-                    onClick = { onTabSelected(index) }
+                    onClick = {
+                        onTabSelected(index)
+                        tabItem.onClick()
+                    }
                 )
             }
         }
@@ -109,7 +112,7 @@ fun TudeeScrollableTabs(
 private fun CustomTabIndicator(
     tabPosition: TabPosition,
     textWidth: Dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
 
     Box(
@@ -144,8 +147,7 @@ private fun CustomTab(
     Tab(
         selected = isSelected,
         onClick = onClick,
-
-        ) {
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(space = Theme.dimension.extraSmall),
@@ -254,5 +256,6 @@ private fun TudeeScrollableTabsPreview() {
 data class TabItem(
     val label: String,
     val count: Int,
-    val content: @Composable () -> Unit
+    val onClick: () -> Unit = {},
+    val content: @Composable () -> Unit,
 )

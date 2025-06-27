@@ -22,35 +22,35 @@ class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val stringProvider: StringProvider,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = dispatcher),
     TaskDetailsInteractionListener {
 
     fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
-            var task: Task?
-            taskService.getTaskById(selectedTaskId).collectLatest {
-                task = it
-                val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-                val detailsUiState = task.toDetailsState().copy(
-                    categoryImagePath = categoryImagePath,
-                    moveStatusToLabel = when (task.status) {
-                        Task.TaskStatus.TODO -> stringProvider.markAsInProgress
-                        Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
-                        Task.TaskStatus.DONE -> ""
+            taskService.getTaskById(selectedTaskId).collectLatest { task ->
+                task?.let {
+                    val categoryImagePath =
+                        categoryService.getCategoryById(task.categoryId).imagePath
+                    val detailsUiState = task.toDetailsState().copy(
+                        categoryImagePath = categoryImagePath,
+                        moveStatusToLabel = when (task.status) {
+                            Task.TaskStatus.TODO -> stringProvider.markAsInProgress
+                            Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
+                            Task.TaskStatus.DONE -> ""
+                        }
+                    )
+                    updateState {
+                        detailsUiState
                     }
-                )
-                updateState {
-                    detailsUiState
                 }
             }
-
         }
     }
 
     override fun onMoveTaskToAnotherStatus(
         onMoveStatusSuccess: () -> Unit,
-        onMoveStatusFail: () -> Unit
+        onMoveStatusFail: () -> Unit,
     ) {
         var newUpdatedTask: Task
         state.value.let { state ->
@@ -92,6 +92,5 @@ class TaskDetailsBottomSheetViewModel(
                 else -> {}
             }
         }
-
     }
 }

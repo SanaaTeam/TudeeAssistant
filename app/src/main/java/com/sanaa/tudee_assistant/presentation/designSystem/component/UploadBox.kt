@@ -50,8 +50,10 @@ fun UploadBox(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        imageUri = uri
-        onImageSelected(uri)
+        if (uri != null) {
+            imageUri = uri
+            onImageSelected(uri)
+        }
     }
     UploadBoxContent(
         imageUri = imageUri,

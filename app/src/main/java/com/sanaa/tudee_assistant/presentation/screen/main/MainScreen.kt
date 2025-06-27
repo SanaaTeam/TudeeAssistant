@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -21,10 +22,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBarItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.navigation.CategoriesScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
@@ -50,6 +51,7 @@ fun MainScreen(
                 Modifier
                     .fillMaxSize()
                     .background(Theme.color.surface)
+                    .navigationBarsPadding()
             ) {
                 Box(Modifier.weight(1f)) {
                     NavHost(

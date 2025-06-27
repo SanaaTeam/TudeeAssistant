@@ -45,13 +45,13 @@ class CategoryTaskViewModel(
                     .getTasksByCategoryId(categoryId)
                     .first()
                     .map { it.toState() }
-                val currentStatus = _state.value.currentSelectedTaskStatus
 
                 updateState {
                     it.copy(
                         currentCategory = category.toState(tasksCount = tasks.size),
-                        allCategoryTasks = tasks,
-                        filteredTasks = tasks.filter { task -> task.status == currentStatus }
+                        todoTasks = tasks.filter { task -> task.status == TaskUiStatus.TODO },
+                        inProgressTasks = tasks.filter { task -> task.status == TaskUiStatus.IN_PROGRESS },
+                        doneTasks = tasks.filter { task -> task.status == TaskUiStatus.DONE }
                     )
                 }
             },
@@ -96,7 +96,6 @@ class CategoryTaskViewModel(
                 try {
                     taskService.deleteTaskByCategoryId(_state.value.currentCategory.id)
                 } catch (e: Exception) {
-
                 }
             },
             onError = { onError(message = stringProvider.deletingCategoryError) },
@@ -126,7 +125,6 @@ class CategoryTaskViewModel(
         updateState {
             it.copy(
                 currentSelectedTaskStatus = status,
-                filteredTasks = _state.value.allCategoryTasks.filter { task -> task.status == status },
                 selectedTapIndex = index
             )
         }

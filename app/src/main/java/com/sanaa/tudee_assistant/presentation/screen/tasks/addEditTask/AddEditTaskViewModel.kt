@@ -27,7 +27,8 @@ class AddEditTaskViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : BaseViewModel<AddTaskUiState>(AddTaskUiState(), defaultDispatcher = dispatcher), AddEditTaskListener {
+) : BaseViewModel<AddTaskUiState>(AddTaskUiState(), defaultDispatcher = dispatcher),
+    AddEditTaskListener {
 
     private var originalTaskUiState: TaskUiState? = null
     private var isEditMode: Boolean = false
@@ -39,7 +40,7 @@ class AddEditTaskViewModel(
     private var _isInitialized: Boolean = false
 
     init {
-        viewModelScope.launch(defaultDispatcher){
+        viewModelScope.launch(defaultDispatcher) {
             categoryService.getCategories()
                 .catch { e -> handleError(e) }
                 .collect { categoryList ->
@@ -171,19 +172,20 @@ class AddEditTaskViewModel(
     }
 
     fun initTaskState(isEditMode: Boolean, taskToEdit: TaskUiState?, initialDate: LocalDate?) {
-        if (!isEditMode || !_isInitialized || this.isEditMode != isEditMode || this.originalTaskUiState != taskToEdit || this.selectedDate != initialDate){
-            this.isEditMode = isEditMode
-            this.originalTaskUiState = taskToEdit
-            this.selectedDate = initialDate
+        if (_isInitialized) return
 
-            if (!isEditMode) {
-                resetState()
-                loadCategoriesForNewTask()
-            } else if (taskToEdit != null) {
-                loadTask(taskToEdit)
-            }
-            _isInitialized = true
+        this.isEditMode = isEditMode
+        this.originalTaskUiState = taskToEdit
+        this.selectedDate = initialDate
+
+        if (!isEditMode) {
+            resetState()
+            loadCategoriesForNewTask()
+        } else if (taskToEdit != null) {
+            loadTask(taskToEdit)
         }
+
+        _isInitialized = true
     }
 
 

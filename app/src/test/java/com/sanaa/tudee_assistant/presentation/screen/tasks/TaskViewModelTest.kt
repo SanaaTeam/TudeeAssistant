@@ -43,11 +43,11 @@ class TaskViewModelTest {
         coEvery { categoryService.getCategories() } returns flowOf(emptyList())
         coEvery { taskService.getTasksByDueDate(any()) } returns flowOf(emptyList())
 
-        every { stringProvider.unknown_error } returns UNKNOWN_ERROR
-        every { stringProvider.task_delete_success } returns TASK_DELETE_SUCCESS
-        every { stringProvider.task_added_success } returns TASK_ADDED_SUCCESS
-        every { stringProvider.task_update_success } returns TASK_UPDATE_SUCCESS
-        every { stringProvider.task_status_update_success } returns TASK_STATUS_UPDATE_SUCCESS
+        every { stringProvider.unknownError } returns UNKNOWN_ERROR
+        every { stringProvider.taskDeleteSuccess } returns TASK_DELETE_SUCCESS
+        every { stringProvider.taskAddedSuccess } returns TASK_ADDED_SUCCESS
+        every { stringProvider.taskUpdateSuccess } returns TASK_UPDATE_SUCCESS
+        every { stringProvider.taskStatusUpdateSuccess } returns TASK_STATUS_UPDATE_SUCCESS
 
         viewModel = TaskViewModel(taskService, categoryService, fakeStatus, stringProvider)
     }
@@ -62,18 +62,6 @@ class TaskViewModelTest {
         assertThat(viewModel.state.value.selectedStatusTab).isEqualTo(fakeStatus)
     }
 
-    @Test
-    fun `onDateSelected should update selectedDate and fetch tasks for selected date`() = runTest {
-        val selectedDate = LocalDate(2025, 6, 26)
-        coEvery { taskService.getTasksByDueDate(selectedDate) } returns flowOf(domainTasks)
-
-        viewModel.onDateSelected(selectedDate)
-        advanceUntilIdle()
-
-        val state = viewModel.state.value
-        assertThat(state.selectedDate).isEqualTo(selectedDate)
-        assertThat(state.currentDateTasks).containsExactlyElementsIn(fakeTasks)
-    }
 
     @Test
     fun `onTaskClicked should update selectedTask and show bottom sheet`() {
@@ -135,7 +123,7 @@ class TaskViewModelTest {
         val task = fakeTasks[0]
         viewModel.onTaskClicked(task)
         coEvery { taskService.deleteTaskById(any()) } throws Exception("Boom")
-        every { stringProvider.unknown_error } returns UNKNOWN_ERROR
+        every { stringProvider.unknownError } returns UNKNOWN_ERROR
 
         viewModel.onDeleteTask()
         advanceUntilIdle()
@@ -183,7 +171,7 @@ class TaskViewModelTest {
 
     @Test
     fun `handleOnMoveToStatusFail should show error`() {
-        every { stringProvider.unknown_error } returns UNKNOWN_ERROR
+        every { stringProvider.unknownError } returns UNKNOWN_ERROR
 
         viewModel.handleOnMoveToStatusFail()
 

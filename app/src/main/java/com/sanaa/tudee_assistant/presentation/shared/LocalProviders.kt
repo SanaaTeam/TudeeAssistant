@@ -7,3 +7,6 @@ import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 val LocalSnackBarState = compositionLocalOf {
     mutableStateOf(SnackBarState())
 }
+val LocalThemeState = compositionLocalOf {
+   false
+}

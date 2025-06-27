@@ -14,6 +14,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -56,7 +57,8 @@ class TaskDetailsBottomSheetViewModelTest {
     @Test
     fun `getSelectedTask updates state correctly`() = runTest {
         // given
-        coEvery { taskService.getTaskById(1) } returns todoTask
+        val taskFlow = flowOf(todoTask)
+        coEvery { taskService.getTaskById(1) } returns taskFlow
         coEvery { categoryService.getCategoryById(100).imagePath } returns "images/path.png"
         every { stringProvider.markAsInProgress } returns "Mark as In Progress"
 
@@ -77,7 +79,8 @@ class TaskDetailsBottomSheetViewModelTest {
     @Test
     fun `onMoveTaskToAnotherStatus change the status in todo to in progress`() = runTest {
         // given
-        coEvery { taskService.getTaskById(task.id) } returns task.copy(status = TaskStatus.TODO)
+        val taskFlow = flowOf(task.copy(status = TaskStatus.TODO))
+        coEvery { taskService.getTaskById(task.id) } returns taskFlow
         coEvery { categoryService.getCategoryById(categoryId) } returns Category(
             name = "test",
             imagePath = "images/path.png",
@@ -99,8 +102,8 @@ class TaskDetailsBottomSheetViewModelTest {
     @Test
     fun `onMoveTaskToAnotherStatus change the status in  in progress to done `() = runTest {
         // given
-
-        coEvery { taskService.getTaskById(todoTask.id) } returns todoTask.copy(status = TaskStatus.IN_PROGRESS)
+        val taskFlow = flowOf(todoTask.copy(status = TaskStatus.IN_PROGRESS))
+        coEvery { taskService.getTaskById(todoTask.id) } returns taskFlow
         coEvery { categoryService.getCategoryById(categoryId = categoryId) } returns Category(
             name = "test",
             imagePath = "images/path.png",
@@ -121,7 +124,8 @@ class TaskDetailsBottomSheetViewModelTest {
     @Test
     fun `onMoveTaskToAnotherStatus change the status done  `() = runTest {
         // given
-        coEvery { taskService.getTaskById(task.id) } returns task
+        val taskFlow = flowOf(task)
+        coEvery { taskService.getTaskById(task.id) } returns taskFlow
         coEvery { categoryService.getCategoryById(categoryId = categoryId) } returns Category(
             name = "test",
             imagePath = "images/path.png",

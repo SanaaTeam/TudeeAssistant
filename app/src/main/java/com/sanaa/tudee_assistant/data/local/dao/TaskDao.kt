@@ -32,7 +32,7 @@ interface TaskDao {
     suspend fun deleteAllTasks(): Int
 
     @Query("SELECT * FROM tasks WHERE task_id = :taskId")
-    fun getTaskById(taskId: Int): Flow<TaskLocalDto>
+    fun getTaskById(taskId: Int): Flow<TaskLocalDto?>
 
     @Query("SELECT * FROM tasks WHERE due_date = :date")
     fun getTasksByDate(date: String): Flow<List<TaskLocalDto>>

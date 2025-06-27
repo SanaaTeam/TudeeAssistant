@@ -33,11 +33,17 @@ class MainActivity() : ComponentActivity() {
 
             mySplashScreen.setKeepOnScreenCondition { state.value.isLoading }
 
+            val isDark = if (state.value.isFirstLaunch) {
+                isSystemInDarkTheme
+            } else {
+                state.value.isDarkTheme
+            }
 
             if (!state.value.isLoading) {
-                TudeeTheme(state.value.isDarkTheme) {
+                TudeeTheme(isDark) {
                     TudeeApp(
                         isFirstLaunch = state.value.isFirstLaunch,
+                        isDarkTheme = isDark
                     )
                 }
             }

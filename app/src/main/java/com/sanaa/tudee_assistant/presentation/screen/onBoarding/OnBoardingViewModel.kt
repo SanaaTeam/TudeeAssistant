@@ -2,8 +2,8 @@ package com.sanaa.tudee_assistant.presentation.screen.onBoarding
 
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
 
 class OnBoardingViewModel(

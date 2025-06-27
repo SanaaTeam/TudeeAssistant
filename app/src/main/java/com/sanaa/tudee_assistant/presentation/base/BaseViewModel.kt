@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.utils
+package com.sanaa.tudee_assistant.presentation.base
 
 
 import androidx.lifecycle.ViewModel

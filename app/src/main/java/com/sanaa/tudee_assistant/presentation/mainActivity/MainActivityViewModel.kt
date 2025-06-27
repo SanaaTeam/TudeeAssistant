@@ -2,7 +2,7 @@ package com.sanaa.tudee_assistant.presentation.mainActivity
 
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 

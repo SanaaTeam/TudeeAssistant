@@ -112,13 +112,14 @@ class TaskViewModel(
         _state.update { it.copy(showDeleteTaskBottomSheet = false) }
     }
 
-    override fun onTaskSwipeToDelete(task: TaskUiState) {
+    override fun onTaskSwipeToDelete(task: TaskUiState): Boolean {
         tryToExecute(
             callee = {
                 onTaskSelected(task)
                 onShowDeleteDialogChange()
             }
         )
+        return false
     }
 
     override fun handleOnMoveToStatusSuccess() {

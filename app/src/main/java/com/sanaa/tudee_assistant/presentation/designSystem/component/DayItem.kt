@@ -21,10 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortDayName
-import kotlinx.datetime.Clock
+import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun DayItem(
@@ -85,11 +83,11 @@ private fun Preview() {
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             DayItem(
-                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                dayDate = DateUtil.today.date,
                 isSelected = true
             ) {}
             DayItem(
-                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                dayDate = DateUtil.today.date,
                 isSelected = false
             ) {}
         }

@@ -173,3 +173,24 @@ fun UploadBoxLightPreview() {
         }
     }
 }
+
+
+@Composable
+private fun EditCategoryComponent() {
+    Box(
+        modifier = Modifier
+            .size(32.dp)
+            .background(
+                color = Theme.color.surfaceHigh,
+                shape = RoundedCornerShape(12.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.edit_category),
+            contentDescription = "Edit Icon",
+            modifier = Modifier.size(20.dp),
+            tint = Theme.color.secondary
+        )
+    }
+}

@@ -2,7 +2,6 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
 import androidx.core.net.toUri
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class CategoryTaskViewModel(
     private val categoryService: CategoryService,
@@ -255,9 +253,11 @@ class CategoryTaskViewModel(
         }
 
         effect?.let {
-            viewModelScope.launch {
-                emitEffect(it)
-            }
+            tryToExecute(
+                callee = {
+                    emitEffect(it)
+                }
+            )
         }
     }
 

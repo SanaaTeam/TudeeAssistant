@@ -1,28 +1,27 @@
 package com.sanaa.tudee_assistant.presentation.screen.onBoarding
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class OnBoardingViewModel(
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
 ) : BaseViewModel<OnBoardingScreenUiState>(OnBoardingScreenUiState()),
     OnBoardingScreenInteractionListener {
 
     init {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    pageList = getOnBoardingPageContent(),
-                    currentPageIndex = 0
-                )
+        tryToExecute(
+            callee = {
+                _state.update {
+                    it.copy(
+                        pageList = getOnBoardingPageContent(),
+                        currentPageIndex = 0
+                    )
+                }
             }
-
-        }
+        )
     }
 
     override fun onNextPageClick() {
@@ -36,9 +35,11 @@ class OnBoardingViewModel(
     override fun onSkipClick() {
         _state.update { it.copy(isSkipable = true) }
 
-        viewModelScope.launch {
-            preferencesManager.setOnboardingCompleted()
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.setOnboardingCompleted()
+            }
+        )
     }
 
     override fun setCurrentPage(pageIndex: Int) {

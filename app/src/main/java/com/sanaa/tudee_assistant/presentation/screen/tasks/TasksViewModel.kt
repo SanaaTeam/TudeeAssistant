@@ -11,7 +11,6 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,13 +26,15 @@ class TaskViewModel(
 ) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()), TaskInteractionListener {
     init {
         _state.update { it.copy(selectedStatusTab = selectedStatusTab) }
-        viewModelScope.launch {
-            categoryService.getCategories().collect { categoryList ->
-                _state.update {
-                    it.copy(categories = categoryList.toStateList(0))
+        tryToExecute(
+            callee = {
+                categoryService.getCategories().collect { categoryList ->
+                    _state.update {
+                        it.copy(categories = categoryList.toStateList(0))
+                    }
                 }
             }
-        }
+        )
         getTasksByDueDate()
     }
 
@@ -43,8 +44,8 @@ class TaskViewModel(
 
         dateJob = viewModelScope.launch {
             taskService.getTasksByDueDate(_state.value.selectedDate).collect { taskList ->
-                    _state.update { it.copy(currentDateTasks = taskList.toStateList()) }
-                }
+                _state.update { it.copy(currentDateTasks = taskList.toStateList()) }
+            }
         }
     }
 
@@ -59,25 +60,29 @@ class TaskViewModel(
 
     override fun onDeleteTask() {
         _state.value.selectedTask.let {
-            viewModelScope.launch {
-                runCatching {
-                    if (it?.id == null) return@launch
-                    taskService.deleteTaskById(it.id)
-                }.onSuccess {
-                    handleOnSuccess(message = stringProvider.taskDeleteSuccess)
-                    getTasksByDueDate()
-                }.onFailure {
-                    handleOnError(message = stringProvider.unknownError)
+            tryToExecute(
+                callee = {
+                    runCatching {
+                        if (it?.id == null) return@tryToExecute
+                        taskService.deleteTaskById(it.id)
+                    }.onSuccess {
+                        handleOnSuccess(message = stringProvider.taskDeleteSuccess)
+                        getTasksByDueDate()
+                    }.onFailure {
+                        handleOnError(message = stringProvider.unknownError)
 
+                    }
                 }
-            }
+            )
         }
     }
 
     override fun onTapClick(status: TaskUiStatus) {
-        viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.changeTaskStatus(status.toTaskStatus())
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.changeTaskStatus(status.toTaskStatus())
+            }
+        )
     }
 
     override fun onDateSelected(date: LocalDate) {
@@ -108,10 +113,12 @@ class TaskViewModel(
     }
 
     override fun onTaskSwipeToDelete(task: TaskUiState) {
-        viewModelScope.launch {
-            onTaskSelected(task)
-            onShowDeleteDialogChange()
-        }
+        tryToExecute(
+            callee = {
+                onTaskSelected(task)
+                onShowDeleteDialogChange()
+            }
+        )
     }
 
     override fun handleOnMoveToStatusSuccess() {

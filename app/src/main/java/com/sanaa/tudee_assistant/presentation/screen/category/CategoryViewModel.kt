@@ -2,7 +2,6 @@ package com.sanaa.tudee_assistant.presentation.screen.category
 
 import android.net.Uri
 import androidx.core.net.toUri
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -15,7 +14,6 @@ import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class CategoryViewModel(
     private val categoryService: CategoryService,
@@ -49,16 +47,18 @@ class CategoryViewModel(
     }
 
     private fun onLoadCategoriesWithTasksCountSuccess(flow: Flow<List<CategoryUiState>>) {
-        viewModelScope.launch {
-            flow.collect { mappedList ->
-                _state.update {
-                    it.copy(
-                        allCategories = mappedList,
-                        isLoading = false
-                    )
+        tryToExecute(
+            callee = {
+                flow.collect { mappedList ->
+                    _state.update {
+                        it.copy(
+                            allCategories = mappedList,
+                            isLoading = false
+                        )
+                    }
                 }
             }
-        }
+        )
     }
 
     private fun onLoadCategoriesWithTasksCountError(exception: Exception) {

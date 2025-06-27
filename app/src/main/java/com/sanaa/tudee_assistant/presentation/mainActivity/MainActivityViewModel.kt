@@ -1,13 +1,10 @@
 package com.sanaa.tudee_assistant.presentation.mainActivity
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class MainActivityViewModel(
     private val preferencesManager: PreferencesManager,
@@ -18,32 +15,38 @@ class MainActivityViewModel(
     }
 
     private fun initialValues() {
-        viewModelScope.launch {
-            preferencesManager.changeTaskStatus(Task.TaskStatus.IN_PROGRESS)
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.changeTaskStatus(Task.TaskStatus.IN_PROGRESS)
+            }
+        )
     }
 
     private fun loadScreen() {
         _state.update { it.copy(isLoading = true) }
-        viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.isDarkTheme.combine(preferencesManager.isFirstLaunch) { isDarkTheme, isFirstLaunch ->
-                Pair(isDarkTheme, isFirstLaunch)
-            }.collect { (isDarkTheme, isFirstLaunch) ->
+        tryToExecute(
+            callee = {
+                preferencesManager.isDarkTheme.combine(preferencesManager.isFirstLaunch) { isDarkTheme, isFirstLaunch ->
+                    Pair(isDarkTheme, isFirstLaunch)
+                }.collect { (isDarkTheme, isFirstLaunch) ->
 
-                _state.update {
-                    it.copy(
-                        isDarkTheme = isDarkTheme,
-                        isFirstLaunch = isFirstLaunch,
-                        isLoading = false
-                    )
+                    _state.update {
+                        it.copy(
+                            isDarkTheme = isDarkTheme,
+                            isFirstLaunch = isFirstLaunch,
+                            isLoading = false
+                        )
+                    }
                 }
             }
-        }
+        )
     }
 
     fun onSetDarkTheme(isDarkTheme: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.setDarkTheme(isDarkTheme)
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.setDarkTheme(isDarkTheme)
+            }
+        )
     }
 }

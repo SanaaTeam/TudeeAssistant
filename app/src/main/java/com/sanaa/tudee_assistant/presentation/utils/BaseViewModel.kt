@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<T>(
     initialState: T,
-     val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
+    val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
     protected val _state: MutableStateFlow<T> by lazy { MutableStateFlow(initialState) }
     val state: StateFlow<T> by lazy { _state.asStateFlow() }
@@ -20,7 +20,7 @@ abstract class BaseViewModel<T>(
     protected fun <T> tryToExecute(
         callee: suspend () -> T,
         onSuccess: (T) -> Unit = {},
-        onError: (exception: Exception) -> Unit,
+        onError: (exception: Exception) -> Unit = {},
         dispatcher: CoroutineDispatcher = defaultDispatcher,
     ) {
         viewModelScope.launch(dispatcher) {

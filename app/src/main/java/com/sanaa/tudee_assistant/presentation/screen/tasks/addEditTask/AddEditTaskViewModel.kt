@@ -1,6 +1,5 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks.addEditTask
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
 class AddEditTaskViewModel(
@@ -40,17 +38,19 @@ class AddEditTaskViewModel(
     private var _isInitialized: Boolean = false
 
     init {
-        viewModelScope.launch(defaultDispatcher) {
-            categoryService.getCategories()
-                .catch { e -> handleError(e) }
-                .collect { categoryList ->
-                    _state.update {
-                        it.copy(
-                            categories = categoryList.toStateList(0)
-                        )
+        tryToExecute(
+            callee = {
+                categoryService.getCategories()
+                    .catch { e -> handleError(e) }
+                    .collect { categoryList ->
+                        _state.update {
+                            it.copy(
+                                categories = categoryList.toStateList(0)
+                            )
+                        }
                     }
-                }
-        }
+            }
+        )
     }
 
     private fun loadTask(task: TaskUiState) {

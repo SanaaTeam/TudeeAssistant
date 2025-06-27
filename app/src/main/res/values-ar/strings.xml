@@ -32,6 +32,7 @@
     <string name="delete_task_title">حذف المهمة</string>
     <string name="delete_subtitle">هل أنت متأكد من المتابعة؟</string>
     <string name="delete">حذف</string>
+    <string name="no_task_here">لا توجد مهام هنا!</string>
     <string name="no_task_today">لا توجد مهام اليوم!</string>
     <string name="tap_to_add_task">اضغط زر + لإضافة أول مهمة لك.</string>
 

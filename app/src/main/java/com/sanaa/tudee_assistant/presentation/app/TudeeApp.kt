@@ -18,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsControllerCompat
@@ -36,6 +35,7 @@ import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.LocalAppNavController
 import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
+import com.sanaa.tudee_assistant.presentation.navigation.util.WidowHelper
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingScreen
@@ -59,8 +59,6 @@ fun TudeeApp(isFirstLaunch: Boolean, isDarkTheme: Boolean) {
                 isAppearanceLightStatusBars = darkIcons
                 isAppearanceLightNavigationBars = darkIcons
             }
-
-            window.navigationBarColor = navigateColor.toArgb()
         }
     }
 
@@ -111,19 +109,20 @@ private fun AppNavigation(
         startDestination = startDestination
     ) {
         composable<OnBoardingScreenRoute> {
+            WidowHelper.SystemNavigateBarEffect(Theme.color.overlay)
             OnBoardingScreen(modifier = modifier.statusBarsPadding())
         }
 
         composable<MainScreenRoute> {
+            WidowHelper.SystemNavigateBarEffect(Theme.color.surfaceHigh)
             MainScreen(
                 startDestination = HomeScreenRoute,
             )
         }
 
         composable<CategoryTasksScreenRoute> {
-            CategoryTaskScreen(
-                categoryId = it.toRoute<CategoryTasksScreenRoute>().id,
-            )
+            WidowHelper.SystemNavigateBarEffect(Theme.color.surface)
+            CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id)
         }
     }
 }

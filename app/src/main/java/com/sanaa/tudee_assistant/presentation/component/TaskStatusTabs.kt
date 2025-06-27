@@ -59,7 +59,7 @@ fun TaskStatusTabs(
                             .padding(end = 20.dp, top = 120.dp),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        EmptyContent()
+                        EmptyContent(title = stringResource(R.string.no_task_here))
                     }
                 }
             },
@@ -83,7 +83,9 @@ fun TaskStatusTabs(
                             .padding(end = 20.dp, top = 120.dp),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        EmptyContent()
+                        EmptyContent(
+                            title = stringResource(R.string.no_task_here)
+                        )
                     }
                 }
             },
@@ -106,7 +108,7 @@ fun TaskStatusTabs(
                             .padding(end = 20.dp, top = 120.dp),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        EmptyContent()
+                        EmptyContent(title = stringResource(R.string.no_task_here))
                     }
                 }
             }

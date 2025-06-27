@@ -1,9 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.model
 
 import com.sanaa.tudee_assistant.presentation.utils.DateUtil
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 data class TaskUiState(
     val id: Int = 0,
@@ -13,6 +10,5 @@ data class TaskUiState(
     val priority: TaskUiPriority = TaskUiPriority.LOW,
     val status: TaskUiStatus = TaskUiStatus.IN_PROGRESS,
     val categoryId: Int = 0,
-    val createdAt: String = Clock.System.now()
-        .toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
+    val createdAt: String = DateUtil.today.toString(),
 )

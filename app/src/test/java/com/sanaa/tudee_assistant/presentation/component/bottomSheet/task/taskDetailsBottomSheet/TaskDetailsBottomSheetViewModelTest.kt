@@ -9,6 +9,7 @@ import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -20,9 +21,6 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -45,7 +43,12 @@ class TaskDetailsBottomSheetViewModelTest {
         taskService = mockk(relaxed = true)
         categoryService = mockk()
         stringProvider = mockk()
-        viewModel = TaskDetailsBottomSheetViewModel(taskService, categoryService, stringProvider,testDispatcher)
+        viewModel = TaskDetailsBottomSheetViewModel(
+            taskService,
+            categoryService,
+            stringProvider,
+            testDispatcher
+        )
     }
 
 
@@ -95,7 +98,7 @@ class TaskDetailsBottomSheetViewModelTest {
         advanceUntilIdle()
 
         // Assert
-       assertThat(viewModel.state.value.status.name).isEqualTo(TaskUiStatus.IN_PROGRESS.name)
+        assertThat(viewModel.state.value.status.name).isEqualTo(TaskUiStatus.IN_PROGRESS.name)
     }
 
 
@@ -146,7 +149,7 @@ class TaskDetailsBottomSheetViewModelTest {
     }
 
 
-    companion object{
+    companion object {
         val categoryId = 100
         val task = Task(
             id = 1,
@@ -154,10 +157,9 @@ class TaskDetailsBottomSheetViewModelTest {
             description = "Description",
             status = TaskStatus.DONE,
             categoryId = categoryId,
-            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+            dueDate = DateUtil.today.date,
             priority = Task.TaskPriority.LOW,
-            createdAt = Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault())
+            createdAt = DateUtil.today
         )
 
         val todoTask = Task(
@@ -166,10 +168,9 @@ class TaskDetailsBottomSheetViewModelTest {
             description = "Description",
             status = TaskStatus.TODO,
             categoryId = categoryId,
-            dueDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+            dueDate = DateUtil.today.date,
             priority = Task.TaskPriority.LOW,
-            createdAt = Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault())
+            createdAt = DateUtil.today
         )
 
     }

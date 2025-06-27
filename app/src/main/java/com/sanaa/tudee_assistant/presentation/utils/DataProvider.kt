@@ -5,9 +5,6 @@ import android.content.Context
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 object DataProvider {
 
@@ -52,8 +49,7 @@ object DataProvider {
             id = 5,
             title = "Organize Study Desk",
             description = "Review cell structure and functions for tomorrow...",
-            dueDate = Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+            dueDate = DateUtil.today.date.toString(),
             priority = TaskUiPriority.LOW,
             status = TaskUiStatus.IN_PROGRESS,
             categoryId = 5,

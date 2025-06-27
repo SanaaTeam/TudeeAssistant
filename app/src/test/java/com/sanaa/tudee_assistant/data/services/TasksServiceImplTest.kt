@@ -7,6 +7,7 @@ import com.sanaa.tudee_assistant.data.local.mapper.toDomain
 import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -14,10 +15,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -153,8 +151,7 @@ class TasksServiceImplTest {
             dueDate = LocalDate(2023, 1, 1).toString(),
             priority = Task.TaskPriority.HIGH.name,
             categoryId = 1,
-            createdAt = Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault()).toString(),
+            createdAt = DateUtil.today.toString(),
         )
     )
 

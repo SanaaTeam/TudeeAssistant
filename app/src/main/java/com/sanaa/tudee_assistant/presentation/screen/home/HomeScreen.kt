@@ -33,9 +33,6 @@ import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Line
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateUtil
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -126,8 +123,7 @@ private fun HomeScreenContent(
                 AddEditTaskScreen(
                     isEditMode = false,
                     taskToEdit = null,
-                    initialDate = Clock.System.now()
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                    initialDate = DateUtil.today.date,
                     onDismiss = { interactionsListener.onHideAddTaskSheet() },
                     onSuccess = { interactionsListener.onAddTaskSuccess() },
                     onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
@@ -137,8 +133,7 @@ private fun HomeScreenContent(
                 AddEditTaskScreen(
                     isEditMode = true,
                     taskToEdit = state.taskToEdit,
-                    initialDate = Clock.System.now()
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                    initialDate = DateUtil.today.date,
                     onDismiss = { interactionsListener.onHideEditTaskSheet() },
                     onSuccess = { interactionsListener.onEditTaskSuccess() },
                     onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }

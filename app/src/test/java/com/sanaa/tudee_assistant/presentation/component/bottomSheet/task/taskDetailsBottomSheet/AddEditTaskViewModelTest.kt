@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
+package com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.taskDetailsBottomSheet
 
 import com.google.common.truth.Truth.assertThat
 import com.sanaa.tudee_assistant.MainCoroutineRule

@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task
+package com.sanaa.tudee_assistant.presentation.component.bottomSheet.task
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight

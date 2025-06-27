@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.composable
+package com.sanaa.tudee_assistant.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

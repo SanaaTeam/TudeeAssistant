@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
+package com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.taskDetailsBottomSheet
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
+import com.sanaa.tudee_assistant.presentation.component.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.designSystem.component.BaseBottomSheet
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryImageContainer
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag

@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
+import com.sanaa.tudee_assistant.presentation.component.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.modifire.drawDashedBorder

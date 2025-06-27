@@ -1,7 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.model.mapper
 
 import com.sanaa.tudee_assistant.domain.model.Task
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.DetailsUiState
+import com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.taskDetailsBottomSheet.DetailsUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime

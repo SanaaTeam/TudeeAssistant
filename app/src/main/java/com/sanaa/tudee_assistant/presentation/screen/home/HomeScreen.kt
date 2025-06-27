@@ -18,9 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
+import com.sanaa.tudee_assistant.presentation.component.TudeeScaffold
+import com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton

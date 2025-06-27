@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -31,13 +30,7 @@ fun DayItem(
     isSelected: Boolean = false,
     onClick: () -> Unit = {},
 ) {
-    val backgroundBrush = Brush.verticalGradient(
-        listOf(
-            Theme.color.primary,
-            Theme.color.primaryGradientStart,
-            Theme.color.primaryGradientEnd,
-        )
-    )
+    val backgroundBrush = Theme.color.primaryGradient
 
     Box(
         modifier = modifier

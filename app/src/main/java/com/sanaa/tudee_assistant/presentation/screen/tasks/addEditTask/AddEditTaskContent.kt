@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
+import com.sanaa.tudee_assistant.presentation.component.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CheckMarkContainer
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag

@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsControllerCompat
@@ -48,6 +49,7 @@ fun TudeeApp(isFirstLaunch: Boolean, isDarkTheme: Boolean) {
 
     val view = LocalView.current
     val activity = view.context as? ComponentActivity
+    val navigateColor = Theme.color.surfaceHigh
 
     LaunchedEffect(isDarkTheme) {
         val darkIcons = !isDarkTheme
@@ -57,6 +59,8 @@ fun TudeeApp(isFirstLaunch: Boolean, isDarkTheme: Boolean) {
                 isAppearanceLightStatusBars = darkIcons
                 isAppearanceLightNavigationBars = darkIcons
             }
+
+            window.navigationBarColor = navigateColor.toArgb()
         }
     }
 

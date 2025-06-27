@@ -66,18 +66,49 @@ class HomeScreenViewModelTest {
 
         val state = viewModel.state.value
 
-        assertThat(state.snackBarState.message).isEqualTo("Added")
+        assertThat(state.snackBarState.message).isEqualTo("Task added successfully!")
         assertThat(state.snackBarState.isVisible).isTrue()
     }
 
+    @Test
+    fun `onEditTaskError should show error snackbar`() = runTest {
+        val errorMessage = "Something went wrong"
+        viewModel.onEditTaskError(errorMessage)
+
+        val state = viewModel.state.value
+
+        assertThat(state.snackBarState.message).isEqualTo(errorMessage)
+        assertThat(state.snackBarState.isVisible).isTrue()
+    }
+
+    @Test
+    fun `onToggleColorTheme should change theme setting`() = runTest {
+        coEvery { preferencesManager.setDarkTheme(any()) } just Runs
+        viewModel.onToggleColorTheme()
+
+        coVerify { preferencesManager.setDarkTheme(false) }
+    }
+    @Test
+    fun `onShowTaskDetails should update showTaskDetailsBottomSheet to true`() = runTest {
+        viewModel.onShowTaskDetails(true)
+        val state = viewModel.state.value
+
+        assertThat(state.showTaskDetailsBottomSheet).isTrue()
+    }
+
+    @Test
+    fun `onShowAddTaskSheet should set showAddTaskSheet to true`() = runTest {
+        viewModel.onShowAddTaskSheet()
+        assertThat(viewModel.state.value.showAddTaskSheet).isTrue()
+    }
 
     private companion object {
         const val UNKNOWN_ERROR = "Unknown error"
-        const val TASK_DELETE_SUCCESS = "Deleted"
-        const val TASK_ADDED_SUCCESS = "Added"
-        const val TASK_UPDATE_SUCCESS = "Updated"
-        const val TASK_STATUS_UPDATE_SUCCESS = "Moved"
-        const val TASK_STATUS_UPDATE_ERROR = "Fail"
+        const val TASK_DELETE_SUCCESS = "Deleted task successfully."
+        const val TASK_ADDED_SUCCESS = "Task added successfully!"
+        const val TASK_UPDATE_SUCCESS = "Edited task successfully."
+        const val TASK_STATUS_UPDATE_SUCCESS = "task status updated successfully."
+        const val TASK_STATUS_UPDATE_ERROR = "Fail Updating Task status."
     }
 
 }

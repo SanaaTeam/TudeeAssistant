@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -49,7 +50,7 @@ fun MainScreen(
             Column(
                 Modifier
                     .fillMaxSize()
-                    .background(Theme.color.surface)
+                    .background(Theme.color.surface).navigationBarsPadding()
             ) {
                 Box(Modifier.weight(1f)) {
                     NavHost(

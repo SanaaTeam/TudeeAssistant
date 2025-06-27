@@ -1,7 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.designSystem.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -25,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,6 +69,7 @@ fun TudeeTextField(
         textStyle = Theme.textStyle.body.medium.copy(color = Theme.color.body),
         singleLine = singleLine,
         maxLines = maxLines,
+        cursorBrush = SolidColor(Theme.color.primary),
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         decorationBox = { innerTextField ->

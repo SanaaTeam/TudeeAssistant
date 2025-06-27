@@ -5,6 +5,8 @@ import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.model.TaskUiState
+import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.tasks.TaskViewModelTest
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -18,6 +20,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.datetime.LocalDateTime
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -101,6 +104,24 @@ class HomeScreenViewModelTest {
         viewModel.onShowAddTaskSheet()
         assertThat(viewModel.state.value.showAddTaskSheet).isTrue()
     }
+
+    @Test
+    fun `onTaskClick should set selected task and show task details`() = runTest {
+        val dummyTask = TaskUiState(
+            id = 1,
+            categoryId = 1,
+            title = "Test Task",
+            description = "Description",
+            status = TaskUiStatus.TODO,
+            createdAt = LocalDateTime(2025, 6, 1, 12, 0).toString()
+        )
+        viewModel.onTaskClick(dummyTask)
+
+        val state = viewModel.state.value
+        assertThat(state.selectedTask).isEqualTo(dummyTask)
+        assertThat(state.showTaskDetailsBottomSheet).isTrue()
+    }
+
 
     private companion object {
         const val UNKNOWN_ERROR = "Unknown error"

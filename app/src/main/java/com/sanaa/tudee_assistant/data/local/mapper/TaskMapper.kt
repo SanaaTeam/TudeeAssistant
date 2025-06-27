@@ -3,11 +3,9 @@ package com.sanaa.tudee_assistant.data.local.mapper
 import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
 import com.sanaa.tudee_assistant.domain.model.Task
-import kotlinx.datetime.Clock
+import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 fun TaskLocalDto.toDomain(): Task = Task(
     id = taskId,
@@ -39,9 +37,9 @@ fun AddTaskRequest.toLocalDto(): TaskLocalDto = TaskLocalDto(
     dueDate = dueDate.toString(),
     priority = priority.name,
     categoryId = categoryId,
-    createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
+    createdAt = DateUtil.today.toString()
 )
 
-fun List<TaskLocalDto>.toDomainList(): List<Task> {
+fun List<TaskLocalDto>.toDomain(): List<Task> {
     return this.map { task -> task.toDomain() }
 }

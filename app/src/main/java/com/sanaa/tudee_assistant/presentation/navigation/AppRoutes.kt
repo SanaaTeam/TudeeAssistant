@@ -2,11 +2,13 @@ package com.sanaa.tudee_assistant.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
-@Serializable
-object OnBoardingScreenRoute
+open class AppRoute
 
 @Serializable
-object MainScreenRoute
+object OnBoardingScreenRoute : AppRoute()
 
 @Serializable
-data class CategoryTasksScreenRoute(val id: Int?)
+object MainScreenRoute : AppRoute()
+
+@Serializable
+data class CategoryTasksScreenRoute(val id: Int?) : AppRoute()

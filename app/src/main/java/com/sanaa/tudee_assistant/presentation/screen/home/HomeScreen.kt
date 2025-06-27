@@ -32,6 +32,7 @@ import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Categor
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Line
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
+import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -56,7 +57,7 @@ private fun HomeScreenContent(
 
     val snackBarState = LocalSnackBarState.current
 
-    LaunchedEffect(state.snackBarState) { ->
+    LaunchedEffect(state.snackBarState) {
         if (state.snackBarState.isVisible) {
             snackBarState.value = state.snackBarState
             interactionsListener.onHideSnackBar()
@@ -165,7 +166,7 @@ private fun HomeScreenContent(
 @Preview
 @Composable
 fun PreviewHomeScreen() {
-    val dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    val dayDate = DateUtil.today
     var isDark by remember { mutableStateOf(false) }
     TudeeTheme(isDark = isDark) {
         val list = DataProvider.getTasksSample()

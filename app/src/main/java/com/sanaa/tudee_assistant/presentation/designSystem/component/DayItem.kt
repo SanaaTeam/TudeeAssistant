@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.designSystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,15 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater.getShortDayName
-import kotlinx.datetime.Clock
+import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun DayItem(
@@ -72,10 +71,10 @@ fun DayItem(
 
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun Preview() {
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -84,11 +83,11 @@ private fun Preview() {
             verticalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
             DayItem(
-                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                dayDate = DateUtil.today.date,
                 isSelected = true
             ) {}
             DayItem(
-                dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                dayDate = DateUtil.today.date,
                 isSelected = false
             ) {}
         }

@@ -5,7 +5,6 @@
     <application
         android:name=".TudeeAssistantApplication"
         android:allowBackup="true"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_tudee"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_tudee_round"

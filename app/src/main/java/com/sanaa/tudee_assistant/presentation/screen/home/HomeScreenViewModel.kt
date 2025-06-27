@@ -1,20 +1,18 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -24,7 +22,9 @@ class HomeScreenViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val stringProvider: StringProvider,
-) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()), HomeScreenInteractionsListener {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState(), dispatcher),
+    HomeScreenInteractionsListener {
     init {
         loadScreen()
         getTasks()
@@ -34,7 +34,7 @@ class HomeScreenViewModel(
         tryToExecute(
             callee = {
                 preferencesManager.isDarkTheme.collect { isDarkTheme ->
-                    _state.update { it.copy(isDarkTheme = isDarkTheme) }
+                    updateState { it.copy(isDarkTheme = isDarkTheme) }
                 }
             },
             onError = ::showErrorMessage
@@ -47,10 +47,10 @@ class HomeScreenViewModel(
                 val today = Clock.System.now()
                     .toLocalDateTime(TimeZone.currentSystemDefault()).date
                 taskService.getTasksByDueDate(today).collectLatest { tasks ->
-                    _state.update { state -> state.copy(tasks = tasks.toStateList()) }
+                    updateState { state -> state.copy(tasks = tasks.toStateList()) }
 
                     categoryService.getCategories().collect { categories ->
-                        _state.update { state ->
+                        updateState { state ->
                             state.copy(categories = categories.toStateList(tasks.size))
                         }
                     }
@@ -71,7 +71,7 @@ class HomeScreenViewModel(
 
     override fun onAddTaskSuccess() {
         getTasks()
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState.getInstance(stringProvider.taskAddedSuccess)
             )
@@ -79,7 +79,7 @@ class HomeScreenViewModel(
     }
 
     override fun onAddTaskError(errorMessage: String) {
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(errorMessage)
             )
@@ -87,13 +87,15 @@ class HomeScreenViewModel(
     }
 
     override fun onNavigateToTaskScreen(status: TaskUiStatus) {
-        viewModelScope.launch(Dispatchers.IO) {
-            preferencesManager.changeTaskStatus(status.toTaskStatus())
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.changeTaskStatus(status.toTaskStatus())
+            }
+        )
     }
 
     override fun onShowEditTaskSheet(taskToEdit: TaskUiState) {
-        _state.update {
+        updateState {
             it.copy(
                 showEditTaskSheet = true,
                 taskToEdit = taskToEdit,
@@ -103,12 +105,12 @@ class HomeScreenViewModel(
     }
 
     override fun onHideEditTaskSheet() {
-        _state.update { it.copy(showEditTaskSheet = false, taskToEdit = null) }
+        updateState { it.copy(showEditTaskSheet = false, taskToEdit = null) }
     }
 
     override fun onEditTaskSuccess() {
         getTasks()
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState.getInstance(stringProvider.taskUpdateSuccess)
             )
@@ -116,7 +118,7 @@ class HomeScreenViewModel(
     }
 
     override fun onEditTaskError(errorMessage: String) {
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(errorMessage)
             )
@@ -124,31 +126,31 @@ class HomeScreenViewModel(
     }
 
     override fun onHideSnackBar() {
-        _state.update {
+        updateState {
             it.copy(snackBarState = SnackBarState.hide())
         }
     }
 
     override fun onTaskClick(taskUiState: TaskUiState) {
-        _state.update { it.copy(selectedTask = taskUiState, showTaskDetailsBottomSheet = true) }
+        updateState { it.copy(selectedTask = taskUiState, showTaskDetailsBottomSheet = true) }
     }
 
     override fun onShowTaskDetails(show: Boolean) {
-        _state.update { it.copy(selectedTask = null) }
-        _state.update { it.copy(showTaskDetailsBottomSheet = show) }
+        updateState { it.copy(selectedTask = null) }
+        updateState { it.copy(showTaskDetailsBottomSheet = show) }
     }
 
     override fun onShowAddTaskSheet() {
-        _state.update { it.copy(showAddTaskSheet = true) }
+        updateState { it.copy(showAddTaskSheet = true) }
     }
 
     override fun onHideAddTaskSheet() {
-        _state.update { it.copy(showAddTaskSheet = false) }
+        updateState { it.copy(showAddTaskSheet = false) }
     }
 
     override fun onMoveStatusSuccess() {
         getTasks()
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState.getInstance(stringProvider.taskStatusUpdateSuccess),
                 showTaskDetailsBottomSheet = false,
@@ -157,7 +159,7 @@ class HomeScreenViewModel(
     }
 
     override fun onMoveStatusFail() {
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState.getInstance(stringProvider.taskStatusUpdateError)
             )
@@ -165,7 +167,7 @@ class HomeScreenViewModel(
     }
 
     private fun showErrorMessage(exception: Exception) {
-        _state.update {
+        updateState {
             it.copy(
                 snackBarState = SnackBarState.getErrorInstance(
                     exception.message ?: stringProvider.unknownError

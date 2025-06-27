@@ -1,48 +1,51 @@
 package com.sanaa.tudee_assistant.presentation.screen.onBoarding
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 class OnBoardingViewModel(
-    private val preferencesManager: PreferencesManager
-) : BaseViewModel<OnBoardingScreenUiState>(OnBoardingScreenUiState()),
+    private val preferencesManager: PreferencesManager,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<OnBoardingScreenUiState>(OnBoardingScreenUiState(), dispatcher),
     OnBoardingScreenInteractionListener {
 
     init {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    pageList = getOnBoardingPageContent(),
-                    currentPageIndex = 0
-                )
+        tryToExecute(
+            callee = {
+                updateState {
+                    it.copy(
+                        pageList = getOnBoardingPageContent(),
+                        currentPageIndex = 0
+                    )
+                }
             }
-
-        }
+        )
     }
 
     override fun onNextPageClick() {
         if (state.value.currentPageIndex == state.value.pageList.lastIndex) {
             onSkipClick()
         } else {
-            _state.update { it.copy(currentPageIndex = it.currentPageIndex + 1) }
+            updateState { it.copy(currentPageIndex = it.currentPageIndex + 1) }
         }
     }
 
     override fun onSkipClick() {
-        _state.update { it.copy(isSkipable = true) }
+        updateState { it.copy(isSkipable = true) }
 
-        viewModelScope.launch {
-            preferencesManager.setOnboardingCompleted()
-        }
+        tryToExecute(
+            callee = {
+                preferencesManager.setOnboardingCompleted()
+            }
+        )
     }
 
     override fun setCurrentPage(pageIndex: Int) {
-        _state.update { it.copy(currentPageIndex = pageIndex) }
+        updateState { it.copy(currentPageIndex = pageIndex) }
     }
 
     private fun getOnBoardingPageContent(): List<OnBoardingPageContentItem> {

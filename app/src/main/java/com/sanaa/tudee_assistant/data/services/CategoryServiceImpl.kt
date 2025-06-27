@@ -2,7 +2,6 @@ package com.sanaa.tudee_assistant.data.services
 
 import com.sanaa.tudee_assistant.data.local.dao.CategoryDao
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
-import com.sanaa.tudee_assistant.data.local.mapper.toDomainList
 import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
 import com.sanaa.tudee_assistant.domain.exceptions.DatabaseFailureException
 import com.sanaa.tudee_assistant.domain.exceptions.DefaultCategoryException
@@ -18,7 +17,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 class CategoryServiceImpl(
-    private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao,
 ) : CategoryService {
     override suspend fun getCategoryById(categoryId: Int): Category {
         return categoryDao.getCategoryById(categoryId)?.toDomain()
@@ -27,7 +26,7 @@ class CategoryServiceImpl(
 
     override fun getCategories(): Flow<List<Category>> =
         categoryDao.getAllCategories()
-            .map { it.toDomainList() }
+            .map { it.toDomain() }
             .catch {
                 throw DatabaseFailureException(
                     message = "Failed to load categories from database duo to database error details :${it.message} ",
@@ -55,12 +54,6 @@ class CategoryServiceImpl(
         }
         if (categoryDao.deleteCategoryById(categoryId) <= 0) {
             throw FailedToDeleteException("Failed to delete category")
-        }
-    }
-
-    override suspend fun deleteAllCategories() {
-        if (categoryDao.deleteAllCategory() <= 0) {
-            throw FailedToDeleteException("Failed to delete all categories")
         }
     }
 }

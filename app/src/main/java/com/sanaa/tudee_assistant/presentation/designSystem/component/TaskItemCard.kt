@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.designSystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -95,10 +96,10 @@ fun TaskItemCard(
 }
 
 
-@Preview(widthDp = 360, showBackground = false)
+@PreviewLightDark
 @Composable
 private fun Preview() {
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

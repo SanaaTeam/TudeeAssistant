@@ -2,34 +2,35 @@ package com.sanaa.tudee_assistant.presentation.screen.category
 
 import android.net.Uri
 import androidx.core.net.toUri
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.mapper.toNewCategory
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class CategoryViewModel(
     private val categoryService: CategoryService,
     private val taskService: TaskService,
     private val imageProcessor: ImageProcessor,
     private val stringProvider: StringProvider,
-) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState()), CategoryInteractionListener {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState(), dispatcher),
+    CategoryInteractionListener {
 
     init {
         loadCategoriesWithTasksCount()
     }
 
     private fun loadCategoriesWithTasksCount() {
-        _state.update { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true) }
 
         tryToExecute(
             callee = ::loadCategoriesWithTasksCountOperation,
@@ -49,20 +50,22 @@ class CategoryViewModel(
     }
 
     private fun onLoadCategoriesWithTasksCountSuccess(flow: Flow<List<CategoryUiState>>) {
-        viewModelScope.launch {
-            flow.collect { mappedList ->
-                _state.update {
-                    it.copy(
-                        allCategories = mappedList,
-                        isLoading = false
-                    )
+        tryToExecute(
+            callee = {
+                flow.collect { mappedList ->
+                    updateState {
+                        it.copy(
+                            allCategories = mappedList,
+                            isLoading = false
+                        )
+                    }
                 }
             }
-        }
+        )
     }
 
     private fun onLoadCategoriesWithTasksCountError(exception: Exception) {
-        _state.update {
+        updateState {
             it.copy(
                 isLoading = false,
                 snackBarState = SnackBarState.getErrorInstance(
@@ -74,7 +77,7 @@ class CategoryViewModel(
     }
 
     override fun onAddCategory(newCategory: CategoryUiState) {
-        _state.update { it.copy(isLoading = true) }
+        updateState { it.copy(isLoading = true) }
 
         tryToExecute(
             { addCategory(newCategory) },
@@ -92,7 +95,7 @@ class CategoryViewModel(
     }
 
     private fun onAddCategorySuccess(unit: Unit) {
-        _state.update {
+        updateState {
             it.copy(
                 isLoading = false,
                 isAddCategorySheetVisible = false,
@@ -103,15 +106,15 @@ class CategoryViewModel(
     }
 
     private fun onAddCategoryError(exception: Exception) {
-        _state.update { it.copy(isLoading = false) }
+        updateState { it.copy(isLoading = false) }
     }
 
     override fun onToggleAddCategorySheet(isVisible: Boolean) {
-        _state.update { it.copy(isAddCategorySheetVisible = isVisible) }
+        updateState { it.copy(isAddCategorySheetVisible = isVisible) }
     }
 
     override fun onCategoryTitleChange(title: String) {
-        _state.update {
+        updateState {
             it.copy(
                 newCategory = it.newCategory.copy(name = title)
             )
@@ -119,7 +122,7 @@ class CategoryViewModel(
     }
 
     override fun onCategoryImageSelected(uri: Uri?) {
-        _state.update {
+        updateState {
             it.copy(
                 newCategory = it.newCategory.copy(imagePath = uri?.toString().orEmpty())
             )
@@ -128,14 +131,14 @@ class CategoryViewModel(
 
     override fun isFormValid(): Boolean {
         return (
-                (_state.value.newCategory.name.isNotBlank()
-                        && (_state.value.newCategory.name.length in 2..24))
-                        && (_state.value.newCategory.imagePath.isNotBlank()))
+                (state.value.newCategory.name.isNotBlank()
+                        && (state.value.newCategory.name.length in 2..24))
+                        && (state.value.newCategory.imagePath.isNotBlank()))
 
     }
 
     override fun onHideSnakeBar() {
-        _state.update {
+        updateState {
             it.copy(snackBarState = SnackBarState.hide())
         }
     }

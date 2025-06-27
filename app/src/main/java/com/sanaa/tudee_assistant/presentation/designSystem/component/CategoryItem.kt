@@ -2,11 +2,11 @@ package com.sanaa.tudee_assistant.presentation.designSystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -83,30 +83,10 @@ fun CategoryItem(
     }
 }
 
-@Preview(name = "Dark Theme")
-@Composable
-private fun CategoryDarkPreview() {
-    TudeeTheme(true) {
-        CategoryItem(
-            category = CategoryUiState(
-                id = 0,
-                name = "Education",
-                imagePath = "file:///android_asset/categories/education.png",
-                isDefault = true,
-                tasksCount = 10
-            ),
-            onClick = {},
-            topContent = { CheckMarkContainer(modifier = Modifier.padding(2.dp)) },
-            modifier = Modifier.background(color = Theme.color.surface)
-
-        )
-    }
-}
-
-@Preview(name = "Light Theme", locale = "ar")
+@PreviewLightDark
 @Composable
 private fun CategoryLightPreview() {
-    TudeeTheme(false) {
+    TudeeTheme(isSystemInDarkTheme()) {
         CategoryItem(
             category = CategoryUiState(
                 id = 0,

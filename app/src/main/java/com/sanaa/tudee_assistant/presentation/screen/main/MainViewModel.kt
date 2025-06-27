@@ -1,24 +1,26 @@
 package com.sanaa.tudee_assistant.presentation.screen.main
 
-import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
-import com.sanaa.tudee_assistant.presentation.utils.BaseViewModel
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 
 class MainViewModel(
     private val preferencesManager: PreferencesManager,
-) : BaseViewModel<MainUiState>(MainUiState()) {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<MainUiState>(MainUiState(), dispatcher) {
     init {
         loadScreen()
     }
 
     private fun loadScreen() {
-        viewModelScope.launch {
-            preferencesManager.lastSelectedTaskStatus.collect { lastSelectedTaskStatus ->
-                _state.update { it.copy(lastSelectedTaskStatus = lastSelectedTaskStatus) }
+        tryToExecute(
+            callee = {
+                preferencesManager.lastSelectedTaskStatus.collect { lastSelectedTaskStatus ->
+                    updateState { it.copy(lastSelectedTaskStatus = lastSelectedTaskStatus) }
+                }
             }
-        }
+        )
     }
 }

@@ -36,8 +36,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.modifire.dropShadow
 import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
-import com.sanaa.tudee_assistant.presentation.utils.dropShadow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

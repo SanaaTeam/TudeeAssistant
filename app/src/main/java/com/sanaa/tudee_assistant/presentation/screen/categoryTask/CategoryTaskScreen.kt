@@ -95,6 +95,7 @@ private fun CategoryTaskScreenContent(
         }
     }
     TudeeScaffold(
+        modifier = modifier,
         topBar = {
 
             CategoryTasksTopBar(
@@ -113,9 +114,9 @@ private fun CategoryTaskScreenContent(
                 tabs = listOf(
                     TabItem(
                         label = stringResource(R.string.in_progress_task_status),
-                        count = state.filteredTasks.size,
+                        count = state.inProgressTasks.size,
                         content = {
-                            if (state.filteredTasks.isEmpty()) {
+                            if (state.inProgressTasks.isEmpty()) {
                                 EmptyContent(
                                     modifier = Modifier.align(Alignment.Center),
                                     title = stringResource(
@@ -126,7 +127,7 @@ private fun CategoryTaskScreenContent(
                                 )
                             } else {
                                 TasksListComponent(
-                                    tasks = state.filteredTasks,
+                                    tasks = state.inProgressTasks,
                                     category = state.currentCategory,
                                     onTaskClicked = listener::onTaskClicked
                                 )
@@ -134,9 +135,9 @@ private fun CategoryTaskScreenContent(
                         }),
                     TabItem(
                         label = stringResource(R.string.todo_task_status),
-                        count = state.filteredTasks.size,
+                        count = state.todoTasks.size,
                         content = {
-                            if (state.filteredTasks.isEmpty()) {
+                            if (state.todoTasks.isEmpty()) {
                                 EmptyContent(
                                     modifier = Modifier.align(Alignment.Center),
                                     title = stringResource(
@@ -147,7 +148,7 @@ private fun CategoryTaskScreenContent(
                                 )
                             } else {
                                 TasksListComponent(
-                                    tasks = state.filteredTasks,
+                                    tasks = state.todoTasks,
                                     category = state.currentCategory,
                                     onTaskClicked = listener::onTaskClicked
                                 )
@@ -155,9 +156,9 @@ private fun CategoryTaskScreenContent(
                         }),
                     TabItem(
                         label = stringResource(R.string.done_task_status),
-                        count = state.filteredTasks.size,
+                        count = state.doneTasks.size,
                         content = {
-                            if (state.filteredTasks.isEmpty()) {
+                            if (state.doneTasks.isEmpty()) {
                                 EmptyContent(
                                     modifier = Modifier.align(Alignment.Center),
                                     title = stringResource(
@@ -168,7 +169,7 @@ private fun CategoryTaskScreenContent(
                                 )
                             } else {
                                 TasksListComponent(
-                                    tasks = state.filteredTasks,
+                                    tasks = state.doneTasks,
                                     category = state.currentCategory,
                                     onTaskClicked = listener::onTaskClicked
                                 )
@@ -234,7 +235,7 @@ private fun CategoryTaskScreenPreview() {
             state = CategoryTaskScreenUiState(
                 currentCategory = CategoryUiState(
                     id = 1, name = "Work", imagePath = "", isDefault = true, tasksCount = 5
-                ), allCategoryTasks = listOf(), isLoading = false
+                ), isLoading = false
             ),
             listener = object : CategoryTaskInteractionListener {
                 override fun onDeleteClicked() {}

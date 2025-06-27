@@ -3,13 +3,18 @@ package com.sanaa.tudee_assistant.presentation.screen.main
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
@@ -17,8 +22,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.sanaa.tudee_assistant.R
+import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBarItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -36,71 +41,73 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun MainScreen(
     startDestination: Any,
-    onStatusBarColor: (Color) -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: MainViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val navController = rememberNavController()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = backStackEntry?.destination
 
-    val screenNavController = rememberNavController()
-    val navBackStackEntry by screenNavController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    val systemUiController = rememberSystemUiController()
-    val color = Theme.color.surfaceHigh
-    SideEffect {
-        systemUiController.setNavigationBarColor(
-            color = color, darkIcons = true
-        )
-    }
-
-    Column(modifier = modifier) {
-        CompositionLocalProvider(LocalMainNavController provides screenNavController) {
-            NavHost(
-                modifier = Modifier.weight(1f),
-                navController = screenNavController,
-                startDestination = startDestination,
-                enterTransition = { fadeIn(tween()) },
-                exitTransition = { fadeOut(tween()) },
+    CompositionLocalProvider(LocalMainNavController provides navController) {
+        TudeeScaffold {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .background(Theme.color.surface)
+                    .navigationBarsPadding()
             ) {
-                composable<HomeScreenRoute> {
-                    onStatusBarColor(Theme.color.primary)
-                    HomeScreen()
+                Box(Modifier.weight(1f)) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = startDestination,
+                        modifier = Modifier.fillMaxSize(),
+                        enterTransition = { fadeIn(tween()) },
+                        exitTransition = { fadeOut(tween()) },
+                    ) {
+                        composable<HomeScreenRoute> {
+                            HomeScreen()
+                        }
+
+                        composable<TasksScreenRoute> {
+                            val route = it.toRoute<TasksScreenRoute>()
+                            TasksScreen(screenRoute = route)
+                        }
+
+                        composable<CategoriesScreenRoute> {
+                            CategoryScreen()
+                        }
+                    }
                 }
 
-                composable<TasksScreenRoute> {
-                    onStatusBarColor(Theme.color.surfaceHigh)
-                    TasksScreen(screenRoute = it.toRoute<TasksScreenRoute>())
-                }
+                TudeeBottomNavBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(74.dp)
+                ) {
+                    TudeeBottomNavBarItem(
+                        selected = currentDestination?.hasRoute(HomeScreenRoute::class) == true,
+                        iconRes = R.drawable.home,
+                        selectedIconRes = R.drawable.home_fill
+                    ) {
+                        navController.navigateWithRestoreState(HomeScreenRoute)
+                    }
 
-                composable<CategoriesScreenRoute> {
-                    onStatusBarColor(Theme.color.surfaceHigh)
-                    CategoryScreen()
-                }
-            }
-        }
+                    TudeeBottomNavBarItem(
+                        selected = currentDestination?.hasRoute(TasksScreenRoute::class) == true,
+                        iconRes = R.drawable.profile,
+                        selectedIconRes = R.drawable.profile_fill
+                    ) {
+                        navController.navigateWithRestoreState(TasksScreenRoute(state.lastSelectedTaskStatus))
+                    }
 
-        TudeeBottomNavBar {
-            TudeeBottomNavBarItem(
-                selected = currentDestination?.hasRoute(HomeScreenRoute::class) == true,
-                iconRes = R.drawable.home,
-                selectedIconRes = R.drawable.home_fill,
-            ) {
-                screenNavController.navigateWithRestoreState(HomeScreenRoute)
-            }
-            TudeeBottomNavBarItem(
-                selected = currentDestination?.hasRoute(TasksScreenRoute::class) == true,
-                iconRes = R.drawable.profile,
-                selectedIconRes = R.drawable.profile_fill,
-            ) {
-                screenNavController.navigateWithRestoreState(TasksScreenRoute(state.lastSelectedTaskStatus))
-            }
-            TudeeBottomNavBarItem(
-                selected = currentDestination?.hasRoute(CategoriesScreenRoute::class) == true,
-                iconRes = R.drawable.menu,
-                selectedIconRes = R.drawable.menu_fill,
-            ) {
-                screenNavController.navigateWithRestoreState(CategoriesScreenRoute(TaskUiStatus.TODO))
+                    TudeeBottomNavBarItem(
+                        selected = currentDestination?.hasRoute(CategoriesScreenRoute::class) == true,
+                        iconRes = R.drawable.menu,
+                        selectedIconRes = R.drawable.menu_fill
+                    ) {
+                        navController.navigateWithRestoreState(CategoriesScreenRoute(TaskUiStatus.TODO))
+                    }
+                }
             }
         }
     }

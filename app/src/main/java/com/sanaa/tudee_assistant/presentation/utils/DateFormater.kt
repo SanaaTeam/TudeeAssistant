@@ -54,7 +54,7 @@ object DateFormater {
     }
 
     fun localDateToEpochMillis(date: LocalDate?): Long? {
-        return date?.atStartOfDayIn(TimeZone.currentSystemDefault())?.toEpochMilliseconds()
+        return date?.atStartOfDayIn(TimeZone.UTC)?.toEpochMilliseconds()
     }
 
     fun getLocalDatesInMonth(year: Int, month: Int): List<LocalDate> {

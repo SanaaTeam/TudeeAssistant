@@ -208,6 +208,7 @@ fun AddEditTaskContent(
                 .date
                 .atStartOfDayIn(TimeZone.currentSystemDefault())
                 .toEpochMilliseconds(),
+            initialSelectedDate = LocalDate.parse(uiState.taskUiState.dueDate)
         )
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,8 +40,10 @@ fun TudeeBottomNavBar(
             .shadow(Theme.dimension.regular)
             .background(Theme.color.surfaceHigh)
             .fillMaxWidth()
-            .padding(vertical = Theme.dimension.medium, horizontal = Theme.dimension.extraLarge),
-        Arrangement.SpaceBetween
+            .height(74.dp)
+            .padding(horizontal = Theme.dimension.extraLarge),
+        Arrangement.SpaceBetween,
+        Alignment.CenterVertically
     ) { content() }
 }
 

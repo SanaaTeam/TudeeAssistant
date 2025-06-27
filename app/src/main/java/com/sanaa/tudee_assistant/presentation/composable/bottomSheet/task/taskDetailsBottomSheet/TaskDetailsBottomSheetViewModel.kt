@@ -1,8 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
-import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -24,26 +22,30 @@ class TaskDetailsBottomSheetViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val stringProvider: StringProvider,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = dispatcher),TaskDetailsInteractionListener{
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<DetailsUiState>(DetailsUiState(), defaultDispatcher = Dispatchers.IO),
+    TaskDetailsInteractionListener {
 
      fun getSelectedTask(selectedTaskId: Int) {
         viewModelScope.launch {
             var task: Task?
              taskService.getTaskById(selectedTaskId).collectLatest {
-                task = it
-                 val categoryImagePath = categoryService.getCategoryById(task.categoryId).imagePath
-                 val detailsUiState = task.toDetailsState().copy(
-                     categoryImagePath = categoryImagePath,
-                     moveStatusToLabel = when (task.status) {
-                         Task.TaskStatus.TODO -> stringProvider.markAsInProgress
-                         Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
-                         Task.TaskStatus.DONE -> ""
+                 it?.let {
+                     val categoryImagePath = categoryService.getCategoryById(it.categoryId).imagePath
+                     val detailsUiState = it.toDetailsState().copy(
+                         categoryImagePath = categoryImagePath,
+                         moveStatusToLabel = when (it.status) {
+                             Task.TaskStatus.TODO -> stringProvider.markAsInProgress
+                             Task.TaskStatus.IN_PROGRESS -> stringProvider.markAsDone
+                             Task.TaskStatus.DONE -> ""
+                         }
+                     )
+                     _state.update {
+                         detailsUiState
                      }
-                 )
-                 _state.update {
-                     detailsUiState
                  }
+
+
             }
 
         }

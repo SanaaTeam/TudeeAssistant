@@ -46,13 +46,13 @@ class CategoryTaskViewModel(
                     .getTasksByCategoryId(categoryId)
                     .first()
                     .map { it.toState() }
-                val currentStatus = _state.value.currentSelectedTaskStatus
 
                 _state.update {
                     it.copy(
                         currentCategory = category.toState(tasksCount = tasks.size),
-                        allCategoryTasks = tasks,
-                        filteredTasks = tasks.filter { task -> task.status == currentStatus }
+                        todoTasks = tasks.filter { task -> task.status == TaskUiStatus.TODO },
+                        inProgressTasks = tasks.filter { task -> task.status == TaskUiStatus.IN_PROGRESS },
+                        doneTasks = tasks.filter { task -> task.status == TaskUiStatus.DONE }
                     )
                 }
             },
@@ -94,11 +94,7 @@ class CategoryTaskViewModel(
             callee = {
                 _state.update { it.copy(isLoading = true) }
                 categoryService.deleteCategoryById(_state.value.currentCategory.id)
-                try {
-                    taskService.deleteTaskByCategoryId(_state.value.currentCategory.id)
-                } catch (e: Exception) {
-
-                }
+                taskService.deleteTaskByCategoryId(_state.value.currentCategory.id)
             },
             onError = { onError(message = stringProvider.deletingCategoryError) },
             onSuccess = {
@@ -127,7 +123,6 @@ class CategoryTaskViewModel(
         _state.update {
             it.copy(
                 currentSelectedTaskStatus = status,
-                filteredTasks = _state.value.allCategoryTasks.filter { task -> task.status == status },
                 selectedTapIndex = index
             )
         }
@@ -226,7 +221,7 @@ class CategoryTaskViewModel(
         _state.update {
             it.copy(
                 snackBarState = SnackBarState
-                    .getInstance(stringProvider.taskStatusUpdateSuccess ),
+                    .getInstance(stringProvider.taskStatusUpdateSuccess),
                 showTaskDetailsBottomSheet = false,
             )
         }

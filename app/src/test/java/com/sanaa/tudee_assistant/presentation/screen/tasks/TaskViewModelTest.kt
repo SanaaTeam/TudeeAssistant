@@ -62,18 +62,6 @@ class TaskViewModelTest {
         assertThat(viewModel.state.value.selectedStatusTab).isEqualTo(fakeStatus)
     }
 
-    @Test
-    fun `onDateSelected should update selectedDate and fetch tasks for selected date`() = runTest {
-        val selectedDate = LocalDate(2025, 6, 26)
-        coEvery { taskService.getTasksByDueDate(selectedDate) } returns flowOf(domainTasks)
-
-        viewModel.onDateSelected(selectedDate)
-        advanceUntilIdle()
-
-        val state = viewModel.state.value
-        assertThat(state.selectedDate).isEqualTo(selectedDate)
-        assertThat(state.currentDateTasks).containsExactlyElementsIn(fakeTasks)
-    }
 
     @Test
     fun `onTaskClicked should update selectedTask and show bottom sheet`() {

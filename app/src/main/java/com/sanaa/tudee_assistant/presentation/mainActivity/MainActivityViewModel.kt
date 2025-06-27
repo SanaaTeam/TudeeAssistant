@@ -3,12 +3,15 @@ package com.sanaa.tudee_assistant.presentation.mainActivity
 import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 
 class MainActivityViewModel(
     private val preferencesManager: PreferencesManager,
-) : BaseViewModel<MainActivityUiState>(MainActivityUiState()) {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<MainActivityUiState>(MainActivityUiState(), dispatcher) {
     init {
         initialValues()
         loadScreen()

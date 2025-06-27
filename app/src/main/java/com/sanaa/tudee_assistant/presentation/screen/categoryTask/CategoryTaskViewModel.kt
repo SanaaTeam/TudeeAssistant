@@ -13,6 +13,8 @@ import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
@@ -24,7 +26,8 @@ class CategoryTaskViewModel(
     val categoryId: Int?,
     private val imageProcessor: ImageProcessor,
     private val stringProvider: StringProvider,
-) : BaseViewModel<CategoryTaskScreenUiState>(initialState = CategoryTaskScreenUiState()),
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<CategoryTaskScreenUiState>(CategoryTaskScreenUiState(), dispatcher),
     CategoryTaskInteractionListener {
 
     private val _effects = MutableSharedFlow<CategoryTasksEffects>()

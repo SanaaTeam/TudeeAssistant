@@ -10,6 +10,8 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.Clock
@@ -21,7 +23,9 @@ class HomeScreenViewModel(
     private val taskService: TaskService,
     private val categoryService: CategoryService,
     private val stringProvider: StringProvider,
-) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState()), HomeScreenInteractionsListener {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<HomeScreenUiState>(HomeScreenUiState(), dispatcher),
+    HomeScreenInteractionsListener {
     init {
         loadScreen()
         getTasks()

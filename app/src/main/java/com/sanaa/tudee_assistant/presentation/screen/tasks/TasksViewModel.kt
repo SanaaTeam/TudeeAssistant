@@ -11,6 +11,8 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
 import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,7 +25,8 @@ class TaskViewModel(
     private val selectedStatusTab: TaskUiStatus,
     private val stringProvider: StringProvider,
     private val preferencesManager: PreferencesManager,
-) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState()), TaskInteractionListener {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<TasksScreenUiState>(TasksScreenUiState(), dispatcher), TaskInteractionListener {
     init {
         _state.update { it.copy(selectedStatusTab = selectedStatusTab) }
         tryToExecute(

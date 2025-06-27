@@ -4,11 +4,14 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.OnBoardingPageContentItem
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 
 class OnBoardingViewModel(
     private val preferencesManager: PreferencesManager,
-) : BaseViewModel<OnBoardingScreenUiState>(OnBoardingScreenUiState()),
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<OnBoardingScreenUiState>(OnBoardingScreenUiState(), dispatcher),
     OnBoardingScreenInteractionListener {
 
     init {

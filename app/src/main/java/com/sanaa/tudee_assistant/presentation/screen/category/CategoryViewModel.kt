@@ -11,6 +11,8 @@ import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.mapper.toNewCategory
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
@@ -20,7 +22,9 @@ class CategoryViewModel(
     private val taskService: TaskService,
     private val imageProcessor: ImageProcessor,
     private val stringProvider: StringProvider,
-) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState()), CategoryInteractionListener {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : BaseViewModel<CategoryScreenUiState>(CategoryScreenUiState(), dispatcher),
+    CategoryInteractionListener {
 
     init {
         loadCategoriesWithTasksCount()

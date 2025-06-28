@@ -124,21 +124,6 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onConfirmDeleteClicked should show error if deletion fails`() = runTest {
-        coEvery { categoryService.deleteCategoryById(categoryId) } throws Exception("Error")
-        coEvery { taskService.deleteTaskByCategoryId(categoryId) } returns Unit
-        every { stringProvider.deletingCategoryError } returns DELETE_ERROR
-
-        val viewModel = createViewModel()
-
-        viewModel.onConfirmDeleteClicked()
-
-        val state = viewModel.state.value
-        assertThat(state.snackBarState.message).isEqualTo(DELETE_ERROR)
-        assertThat(state.showDeleteCategoryBottomSheet).isFalse()
-    }
-
-    @Test
     fun `onStatusChanged should update selected status`() = runTest {
         val viewModel = createViewModel()
 

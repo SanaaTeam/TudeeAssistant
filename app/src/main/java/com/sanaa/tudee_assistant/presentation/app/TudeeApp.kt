@@ -35,7 +35,6 @@ import com.sanaa.tudee_assistant.presentation.navigation.HomeScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.LocalAppNavController
 import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.navigation.OnBoardingScreenRoute
-import com.sanaa.tudee_assistant.presentation.navigation.util.WidowHelper
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTaskScreen
 import com.sanaa.tudee_assistant.presentation.screen.main.MainScreen
 import com.sanaa.tudee_assistant.presentation.screen.onBoarding.OnBoardingScreen
@@ -109,19 +108,14 @@ private fun AppNavigation(
         startDestination = startDestination
     ) {
         composable<OnBoardingScreenRoute> {
-            WidowHelper.SystemNavigateBarEffect(Theme.color.overlay)
             OnBoardingScreen(modifier = modifier.statusBarsPadding())
         }
 
         composable<MainScreenRoute> {
-            WidowHelper.SystemNavigateBarEffect(Theme.color.surfaceHigh)
-            MainScreen(
-                startDestination = HomeScreenRoute,
-            )
+            MainScreen(startDestination = HomeScreenRoute)
         }
 
         composable<CategoryTasksScreenRoute> {
-            WidowHelper.SystemNavigateBarEffect(Theme.color.surface)
             CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id)
         }
     }

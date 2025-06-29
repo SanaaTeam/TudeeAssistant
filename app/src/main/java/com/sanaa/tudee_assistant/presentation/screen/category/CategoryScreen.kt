@@ -59,6 +59,7 @@ fun CategoryScreenContent(
         }
     }
     TudeeScaffold(
+        systemNavColor = Theme.color.surfaceHigh,
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier,

@@ -72,6 +72,7 @@ private fun HomeScreenContent(
         }
     }
     TudeeScaffold(
+        systemNavColor = Theme.color.surfaceHigh,
         contentBackground = Theme.color.surface,
         floatingActionButton = {
             FloatingActionButton(

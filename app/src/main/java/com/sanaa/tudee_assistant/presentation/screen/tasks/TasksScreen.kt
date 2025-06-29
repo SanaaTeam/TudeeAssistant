@@ -105,6 +105,7 @@ fun TasksScreenContent(
         }
     }
     TudeeScaffold(
+        systemNavColor = Theme.color.surfaceHigh,
         floatingActionButton = {
             FloatingActionButton(
                 enabled = true,

@@ -97,6 +97,7 @@ private fun CategoryTaskScreenContent(
     }
     TudeeScaffold(
         modifier = modifier,
+        systemNavColor = Theme.color.surface,
         topBar = {
 
             CategoryTasksTopBar(

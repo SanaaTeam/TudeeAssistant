@@ -50,7 +50,7 @@ fun MainScreen(
     val currentDestination = backStackEntry?.destination
 
     CompositionLocalProvider(LocalMainNavController provides navController) {
-        TudeeScaffold {
+        TudeeScaffold(systemNavColor = Theme.color.surfaceHigh) {
             Column(
                 Modifier
                     .fillMaxSize()

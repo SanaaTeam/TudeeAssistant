@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.domain.model
+package com.sanaa.tudee_assistant.domain.entity
 
 data class Category(
     val id: Int,

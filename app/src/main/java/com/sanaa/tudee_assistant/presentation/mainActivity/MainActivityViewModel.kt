@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.mainActivity
 
-import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.entity.Task
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher

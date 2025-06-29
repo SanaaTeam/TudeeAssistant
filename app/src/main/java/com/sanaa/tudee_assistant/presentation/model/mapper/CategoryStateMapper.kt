@@ -1,11 +1,20 @@
 package com.sanaa.tudee_assistant.presentation.model.mapper
 
-import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
-import com.sanaa.tudee_assistant.domain.model.Category
+import com.sanaa.tudee_assistant.domain.entity.Category
+import com.sanaa.tudee_assistant.domain.entity.CategoryCreationRequest
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 
-fun CategoryUiState.toNewCategory(): AddCategoryRequest {
-    return AddCategoryRequest(
+fun CategoryUiState.toDomain(): Category {
+    return Category(
+        id = id,
+        name = name,
+        imagePath = imagePath,
+        isDefault = isDefault
+    )
+}
+
+fun CategoryUiState.toCreationRequest(): CategoryCreationRequest {
+    return CategoryCreationRequest(
         name = name,
         imagePath = imagePath,
     )
@@ -21,6 +30,6 @@ fun Category.toState(tasksCount: Int): CategoryUiState {
     )
 }
 
-fun List<Category>.toStateList(tasksCount: Int): List<CategoryUiState> {
+fun List<Category>.toState(tasksCount: Int): List<CategoryUiState> {
     return this.map { it.toState(tasksCount) }
 }

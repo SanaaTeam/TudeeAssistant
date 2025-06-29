@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.domain.model
+package com.sanaa.tudee_assistant.domain.entity
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime

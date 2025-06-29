@@ -4,8 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
-import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
-import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.entity.Task
+import com.sanaa.tudee_assistant.domain.entity.TaskCreationRequest
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import io.mockk.coEvery
@@ -155,8 +155,8 @@ class TasksServiceImplTest {
         )
     )
 
-    private fun TaskLocalDto.toNewTask(): AddTaskRequest {
-        return AddTaskRequest(
+    private fun TaskLocalDto.toNewTask(): TaskCreationRequest {
+        return TaskCreationRequest(
             title = title,
             description = description,
             status = Task.TaskStatus.valueOf(status),

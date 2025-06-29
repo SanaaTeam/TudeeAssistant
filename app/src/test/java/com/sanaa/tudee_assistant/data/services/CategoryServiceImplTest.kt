@@ -3,19 +3,17 @@ package com.sanaa.tudee_assistant.data.services
 import com.google.common.truth.Truth.assertThat
 import com.sanaa.tudee_assistant.data.local.dao.CategoryDao
 import com.sanaa.tudee_assistant.data.local.dto.CategoryLocalDto
-import com.sanaa.tudee_assistant.domain.exceptions.DatabaseFailureException
-import com.sanaa.tudee_assistant.domain.exceptions.DefaultCategoryException
+import com.sanaa.tudee_assistant.domain.entity.Category
+import com.sanaa.tudee_assistant.domain.entity.CategoryCreationRequest
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateException
+import com.sanaa.tudee_assistant.domain.exceptions.ModifyDefaultCategoryNotAllowedException
 import com.sanaa.tudee_assistant.domain.exceptions.NotFoundException
-import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
-import com.sanaa.tudee_assistant.domain.model.Category
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
@@ -66,19 +64,15 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    fun `getCategories should throw DatabaseFailureException when flow throws`() = runTest {
-        every { categoryDao.getAllCategories() } returns flow { throw RuntimeException("DB error") }
-
-        val result = runCatching { categoryService.getCategories().toList() }
-
-        assertThat(result.exceptionOrNull()).isInstanceOf(DatabaseFailureException::class.java)
-    }
-
-    @Test
     fun `addCategory should succeed when insert is successful`() = runTest {
         coEvery { categoryDao.insertCategory(any()) } returns 1L
 
-        categoryService.addCategory(AddCategoryRequest(fakeCategory.name, fakeCategory.imagePath))
+        categoryService.addCategory(
+            CategoryCreationRequest(
+                fakeCategory.name,
+                fakeCategory.imagePath
+            )
+        )
 
         coVerify { categoryDao.insertCategory(match { it.name == fakeCategory.name }) }
     }
@@ -89,7 +83,7 @@ class CategoryServiceImplTest {
 
         val result = runCatching {
             categoryService.addCategory(
-                AddCategoryRequest(
+                CategoryCreationRequest(
                     fakeCategory.name,
                     fakeCategory.imagePath
                 )
@@ -151,7 +145,9 @@ class CategoryServiceImplTest {
 
             val result = runCatching { categoryService.deleteCategoryById(1) }
 
-            assertThat(result.exceptionOrNull()).isInstanceOf(DefaultCategoryException::class.java)
+            assertThat(result.exceptionOrNull()).isInstanceOf(
+                ModifyDefaultCategoryNotAllowedException::class.java
+            )
         }
 
     @Test

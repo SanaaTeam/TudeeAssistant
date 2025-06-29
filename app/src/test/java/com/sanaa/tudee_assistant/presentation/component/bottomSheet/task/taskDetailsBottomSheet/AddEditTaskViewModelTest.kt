@@ -2,7 +2,7 @@ package com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.taskDe
 
 import com.google.common.truth.Truth.assertThat
 import com.sanaa.tudee_assistant.MainCoroutineRule
-import com.sanaa.tudee_assistant.domain.model.Category
+import com.sanaa.tudee_assistant.domain.entity.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority

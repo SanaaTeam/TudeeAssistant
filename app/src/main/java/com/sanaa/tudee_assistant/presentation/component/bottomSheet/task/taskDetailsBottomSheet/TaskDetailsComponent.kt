@@ -30,7 +30,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.button.Seco
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
-import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskUiState
+import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -126,7 +126,7 @@ fun TaskDetailsComponent(
                             ) {
                                 SecondaryIconButton(
                                     iconRes = painterResource(R.drawable.pencil_edit),
-                                    onClick = { onEditClick(state.value.toTaskUiState()) }
+                                    onClick = { onEditClick(state.value.toState()) }
                                 )
                                 SecondaryButton(
                                     label = label,

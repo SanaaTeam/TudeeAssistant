@@ -11,9 +11,5 @@ class FailedToUpdateException(message: String) : StoringDataFailureException(mes
 class FailedToAddException(message: String) : StoringDataFailureException(message)
 class FailedToDeleteException(message: String) : StoringDataFailureException(message)
 
-class DefaultCategoryException(message: String) : StoringDataFailureException(message)
-
-class DatabaseFailureException(
-    message: String,
-    cause: Throwable? = null
-) : Exception(message, cause)
+class ModifyDefaultCategoryNotAllowedException(message: String) :
+    StoringDataFailureException(message)

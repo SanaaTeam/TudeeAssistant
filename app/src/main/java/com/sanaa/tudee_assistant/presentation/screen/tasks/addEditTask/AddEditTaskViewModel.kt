@@ -7,10 +7,9 @@ import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.model.mapper.toNewTask
+import com.sanaa.tudee_assistant.presentation.model.mapper.toCreationRequest
+import com.sanaa.tudee_assistant.presentation.model.mapper.toDomain
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
-import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
-import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +44,7 @@ class AddEditTaskViewModel(
                     .collect { categoryList ->
                         updateState {
                             it.copy(
-                                categories = categoryList.toStateList(0)
+                                categories = categoryList.toState(0)
                             )
                         }
                     }
@@ -62,7 +61,7 @@ class AddEditTaskViewModel(
                 val allCategories = categoryService.getCategories().firstOrNull() ?: emptyList()
                 val selectedCategoryDomain = allCategories.find { it.id == task.categoryId }
 
-                val categoriesUiState = allCategories.toStateList(0)
+                val categoriesUiState = allCategories.toState(0)
                 val selectedCategoryUiState = selectedCategoryDomain?.toState(0)
 
                 Pair(categoriesUiState, selectedCategoryUiState)
@@ -98,7 +97,7 @@ class AddEditTaskViewModel(
             onSuccess = { categories ->
                 updateState { state ->
                     state.copy(
-                        categories = categories.toStateList(0),
+                        categories = categories.toState(0),
                         taskUiState = TaskUiState(
                             id = 0,
                             title = "",
@@ -195,7 +194,7 @@ class AddEditTaskViewModel(
             callee = {
                 val newTask = state.value.taskUiState.copy(
                     status = TaskUiStatus.TODO
-                ).toNewTask()
+                ).toCreationRequest()
                 taskService.addTask(newTask)
             },
             onSuccess = {
@@ -213,7 +212,7 @@ class AddEditTaskViewModel(
         updateState { it.copy(isLoading = true, error = null) }
         tryToExecute(
             callee = {
-                val task = state.value.taskUiState.toTask()
+                val task = state.value.taskUiState.toDomain()
                 taskService.updateTask(task)
             },
             onSuccess = {

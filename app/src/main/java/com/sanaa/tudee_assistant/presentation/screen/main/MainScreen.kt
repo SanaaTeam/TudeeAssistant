@@ -9,7 +9,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,12 +29,10 @@ import com.sanaa.tudee_assistant.presentation.navigation.util.navigatePreserving
 import com.sanaa.tudee_assistant.presentation.screen.category.CategoryScreen
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreen
 import com.sanaa.tudee_assistant.presentation.screen.tasks.TasksScreen
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen(
     startDestination: Any,
-    onStatusBarColor: (Color) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val screenNavController = rememberNavController()
@@ -61,17 +58,14 @@ fun MainScreen(
                 exitTransition = { fadeOut(tween()) },
             ) {
                 composable<HomeScreenRoute> {
-                    onStatusBarColor(Theme.color.primary)
                     HomeScreen()
                 }
 
                 composable<TasksScreenRoute> {
-                    onStatusBarColor(Theme.color.surfaceHigh)
                     TasksScreen(screenRoute = it.toRoute<TasksScreenRoute>())
                 }
 
                 composable<CategoriesScreenRoute> {
-                    onStatusBarColor(Theme.color.surfaceHigh)
                     CategoryScreen()
                 }
             }

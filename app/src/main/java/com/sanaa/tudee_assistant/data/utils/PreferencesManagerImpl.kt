@@ -37,7 +37,6 @@ class PreferencesManagerImpl(private val context: Context) : PreferencesManager 
     }
 
     override suspend fun changeTaskStatus(status: Task.TaskStatus) {
-        TODO("Not yet implemented")
     }
 
     companion object {

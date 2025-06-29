@@ -128,46 +128,46 @@ private fun HomeScreenContent(
 
 
 
-            if (state.showAddTaskSheet) {
-                AddEditTaskScreen(
-                    isEditMode = false,
-                    taskToEdit = null,
-                    initialDate = Clock.System.now()
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
-                    onDismiss = { interactionsListener.onHideAddTaskSheet() },
-                    onSuccess = { interactionsListener.onAddTaskSuccess() },
-                    onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
-                )
-            }
-            if (state.showEditTaskSheet) {
-                AddEditTaskScreen(
-                    isEditMode = true,
-                    taskToEdit = state.taskToEdit,
-                    initialDate = Clock.System.now()
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
-                    onDismiss = { interactionsListener.onHideEditTaskSheet() },
-                    onSuccess = { interactionsListener.onEditTaskSuccess() },
-                    onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
-                )
+        if (state.showAddTaskSheet) {
+            AddEditTaskScreen(
+                isEditMode = false,
+                taskToEdit = null,
+                initialDate = Clock.System.now()
+                    .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                onDismiss = { interactionsListener.onHideAddTaskSheet() },
+                onSuccess = { interactionsListener.onAddTaskSuccess() },
+                onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
+            )
+        }
+        if (state.showEditTaskSheet) {
+            AddEditTaskScreen(
+                isEditMode = true,
+                taskToEdit = state.taskToEdit,
+                initialDate = Clock.System.now()
+                    .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                onDismiss = { interactionsListener.onHideEditTaskSheet() },
+                onSuccess = { interactionsListener.onEditTaskSuccess() },
+                onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
+            )
 
 
-            }
-            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
-                TaskDetailsComponent(
-                    selectedTaskId = state.selectedTask.id,
-                    onDismiss = { interactionsListener.onShowTaskDetails(false) },
-                    onEditClick = { taskToEdit ->
-                        interactionsListener.onShowEditTaskSheet(
-                            taskToEdit
-                        )
-                    },
-                    onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
-                    onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
-                )
-            }
+        }
+        if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
+            TaskDetailsComponent(
+                selectedTaskId = state.selectedTask.id,
+                onDismiss = { interactionsListener.onShowTaskDetails(false) },
+                onEditClick = { taskToEdit ->
+                    interactionsListener.onShowEditTaskSheet(
+                        taskToEdit
+                    )
+                },
+                onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
+                onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
+            )
         }
     }
 }
+
 
 @Preview
 @Composable
@@ -184,7 +184,6 @@ fun PreviewHomeScreen() {
 
             override fun onAddTaskSuccess() {}
             override fun onAddTaskError(errorMessage: String) {}
-            override fun onNavigateToTaskScreen(status: TaskUiStatus) {}
             override fun onShowEditTaskSheet(taskToEdit: TaskUiState) {}
             override fun onHideEditTaskSheet() {}
             override fun onEditTaskSuccess() {}

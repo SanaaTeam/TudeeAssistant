@@ -25,7 +25,6 @@ fun TaskStatusTabs(
     state: TasksScreenUiState,
     onTaskSwipe: (TaskUiState) -> Boolean,
     onTaskClick: (TaskUiState) -> Unit,
-    onTapClick: (TaskUiStatus) -> Unit,
 ) {
 
     var selectedTab by remember {
@@ -42,8 +41,7 @@ fun TaskStatusTabs(
         tabs = listOf(
             TabItem(
                 label = stringResource(R.string.in_progress_task_status),
-                count = state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
-                onClick = { onTapClick(TaskUiStatus.IN_PROGRESS) },
+                count = state.currentDateTasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size
             ) {
                 if (state.currentDateTasks.any { it.status == TaskUiStatus.IN_PROGRESS }) {
                     TaskListColumn(
@@ -65,8 +63,7 @@ fun TaskStatusTabs(
             },
             TabItem(
                 label = stringResource(R.string.todo_task_status),
-                count = state.currentDateTasks.filter { it.status == TaskUiStatus.TODO }.size,
-                onClick = { onTapClick(TaskUiStatus.TODO) },
+                count = state.currentDateTasks.filter { it.status == TaskUiStatus.TODO }.size
             ) {
                 if (state.currentDateTasks.any { it.status == TaskUiStatus.TODO }) {
                     TaskListColumn(
@@ -89,8 +86,7 @@ fun TaskStatusTabs(
             },
             TabItem(
                 label = stringResource(R.string.done_task_status),
-                count = state.currentDateTasks.filter { it.status == TaskUiStatus.DONE }.size,
-                onClick = { onTapClick(TaskUiStatus.DONE) },
+                count = state.currentDateTasks.filter { it.status == TaskUiStatus.DONE }.size
             ) {
                 if (state.currentDateTasks.any { it.status == TaskUiStatus.DONE }) {
                     TaskListColumn(

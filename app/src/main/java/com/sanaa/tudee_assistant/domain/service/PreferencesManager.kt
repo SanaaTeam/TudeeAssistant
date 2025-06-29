@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface PreferencesManager {
     val isFirstLaunch: Flow<Boolean>
     val isDarkTheme: Flow<Boolean>
-    val lastSelectedTaskStatus: Flow<TaskUiStatus>
 
     suspend fun setOnboardingCompleted()
     suspend fun setDarkTheme(enabled: Boolean)

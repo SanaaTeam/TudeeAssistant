@@ -59,7 +59,6 @@ private fun HomeScreenContent(
 
     LaunchedEffect(state.snackBarState) {
         if (state.snackBarState.isVisible) {
-            snackBarState.value = state.snackBarState
             interactionsListener.onHideSnackBar()
         }
     }
@@ -113,11 +112,18 @@ private fun HomeScreenContent(
                     scrollState,
                     state,
                     onTaskClick = { interactionsListener.onTaskClick(it) },
-                    onNavigateToTaskScreen = { status ->
-                        interactionsListener.onNavigateToTaskScreen(status)
-                    }
                 )
             }
+
+            if (isScrolled) {
+                Line()
+            }
+            CategoryList(
+                scrollState,
+                state,
+                onTaskClick = { interactionsListener.onTaskClick(it) },
+            )
+        }
 
 
 

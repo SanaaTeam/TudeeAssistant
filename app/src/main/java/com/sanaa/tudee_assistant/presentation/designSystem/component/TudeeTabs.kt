@@ -93,10 +93,7 @@ fun TudeeScrollableTabs(
                 CustomTab(
                     tabItem = tabItem,
                     isSelected = selectedTabIndex == index,
-                    onClick = {
-                        onTabSelected(index)
-                        tabItem.onClick()
-                    }
+                    onClick = { onTabSelected(index) }
                 )
             }
         }
@@ -257,6 +254,5 @@ private fun TudeeScrollableTabsPreview() {
 data class TabItem(
     val label: String,
     val count: Int,
-    val onClick: () -> Unit = {},
-    val content: @Composable () -> Unit,
+    val content: @Composable () -> Unit
 )

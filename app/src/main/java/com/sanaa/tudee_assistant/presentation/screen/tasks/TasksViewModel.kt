@@ -10,7 +10,6 @@ import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
-import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -79,13 +78,6 @@ class TaskViewModel(
         }
     }
 
-    override fun onTapClick(status: TaskUiStatus) {
-        tryToExecute(
-            callee = {
-                preferencesManager.changeTaskStatus(status.toTaskStatus())
-            }
-        )
-    }
 
     override fun onDateSelected(date: LocalDate) {
         updateState {

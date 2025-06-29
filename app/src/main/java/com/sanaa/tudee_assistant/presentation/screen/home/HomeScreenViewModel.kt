@@ -86,13 +86,6 @@ class HomeScreenViewModel(
         }
     }
 
-    override fun onNavigateToTaskScreen(status: TaskUiStatus) {
-        tryToExecute(
-            callee = {
-                preferencesManager.changeTaskStatus(status.toTaskStatus())
-            }
-        )
-    }
 
     override fun onShowEditTaskSheet(taskToEdit: TaskUiState) {
         updateState {

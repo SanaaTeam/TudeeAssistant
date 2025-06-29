@@ -59,6 +59,7 @@ private fun HomeScreenContent(
 
     LaunchedEffect(state.snackBarState) {
         if (state.snackBarState.isVisible) {
+            snackBarState.value = state.snackBarState
             interactionsListener.onHideSnackBar()
         }
     }

@@ -18,8 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.TextAppBar
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
+import com.sanaa.tudee_assistant.presentation.component.TextAppBar
+import com.sanaa.tudee_assistant.presentation.component.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCount
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
@@ -59,6 +59,7 @@ fun CategoryScreenContent(
         }
     }
     TudeeScaffold(
+        systemNavColor = Theme.color.surfaceHigh,
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier,

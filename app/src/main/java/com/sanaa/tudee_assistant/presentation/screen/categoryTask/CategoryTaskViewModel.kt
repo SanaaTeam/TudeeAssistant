@@ -2,7 +2,6 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
 import androidx.core.net.toUri
-import com.sanaa.tudee_assistant.domain.model.Category
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -12,6 +11,7 @@ import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.model.mapper.toDomain
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -159,14 +159,7 @@ class CategoryTaskViewModel(
                     currentImagePath
                 }
 
-                categoryService.updateCategory(
-                    Category(
-                        id = category.id,
-                        name = category.name,
-                        imagePath = newImagePath,
-                        isDefault = category.isDefault
-                    )
-                )
+                categoryService.updateCategory(category.copy(imagePath = newImagePath).toDomain())
             },
             onSuccess = {
                 onSuccess(

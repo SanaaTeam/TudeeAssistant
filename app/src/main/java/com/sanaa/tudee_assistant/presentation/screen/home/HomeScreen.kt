@@ -18,9 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
+import com.sanaa.tudee_assistant.presentation.component.TudeeScaffold
+import com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.AppBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.DarkModeThemeSwitchButton
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
@@ -33,9 +33,6 @@ import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Line
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateUtil
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -75,6 +72,7 @@ private fun HomeScreenContent(
         }
     }
     TudeeScaffold(
+        systemNavColor = Theme.color.surfaceHigh,
         contentBackground = Theme.color.surface,
         floatingActionButton = {
             FloatingActionButton(
@@ -126,8 +124,7 @@ private fun HomeScreenContent(
                 AddEditTaskScreen(
                     isEditMode = false,
                     taskToEdit = null,
-                    initialDate = Clock.System.now()
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                    initialDate = DateUtil.today.date,
                     onDismiss = { interactionsListener.onHideAddTaskSheet() },
                     onSuccess = { interactionsListener.onAddTaskSuccess() },
                     onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
@@ -137,8 +134,7 @@ private fun HomeScreenContent(
                 AddEditTaskScreen(
                     isEditMode = true,
                     taskToEdit = state.taskToEdit,
-                    initialDate = Clock.System.now()
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                    initialDate = DateUtil.today.date,
                     onDismiss = { interactionsListener.onHideEditTaskSheet() },
                     onSuccess = { interactionsListener.onEditTaskSuccess() },
                     onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }

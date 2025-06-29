@@ -1,13 +1,13 @@
-package com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet
+package com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.taskDetailsBottomSheet
 
-import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.entity.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toDetailsState
-import com.sanaa.tudee_assistant.presentation.model.mapper.toTask
+import com.sanaa.tudee_assistant.presentation.model.mapper.toDomain
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -58,7 +58,7 @@ class TaskDetailsBottomSheetViewModel(
         state.value.let { state ->
             when (state.status) {
                 TaskUiStatus.TODO -> {
-                    newUpdatedTask = state.copy(status = TaskUiStatus.IN_PROGRESS).toTask()
+                    newUpdatedTask = state.copy(status = TaskUiStatus.IN_PROGRESS).toDomain()
                     tryToExecute(
                         callee = { taskService.updateTask(newUpdatedTask) },
                         onSuccess = {
@@ -75,7 +75,7 @@ class TaskDetailsBottomSheetViewModel(
                 }
 
                 TaskUiStatus.IN_PROGRESS -> {
-                    newUpdatedTask = state.copy(status = TaskUiStatus.DONE).toTask()
+                    newUpdatedTask = state.copy(status = TaskUiStatus.DONE).toDomain()
                     tryToExecute(
                         callee = { taskService.updateTask(newUpdatedTask) },
                         onSuccess = {

@@ -48,6 +48,7 @@ fun TudeeApp(isFirstLaunch: Boolean, isDarkTheme: Boolean) {
 
     val view = LocalView.current
     val activity = view.context as? ComponentActivity
+    val navigateColor = Theme.color.surfaceHigh
 
     LaunchedEffect(isDarkTheme) {
         val darkIcons = !isDarkTheme
@@ -111,15 +112,11 @@ private fun AppNavigation(
         }
 
         composable<MainScreenRoute> {
-            MainScreen(
-                startDestination = HomeScreenRoute,
-            )
+            MainScreen(startDestination = HomeScreenRoute)
         }
 
         composable<CategoryTasksScreenRoute> {
-            CategoryTaskScreen(
-                categoryId = it.toRoute<CategoryTasksScreenRoute>().id,
-            )
+            CategoryTaskScreen(categoryId = it.toRoute<CategoryTasksScreenRoute>().id)
         }
     }
 }

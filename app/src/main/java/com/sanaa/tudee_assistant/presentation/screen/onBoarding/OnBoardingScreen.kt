@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -110,6 +111,7 @@ private fun OnBoardingScreenContent(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
+                .blur(5.dp)
                 .fillMaxSize()
                 .align(Alignment.TopCenter),
         )
@@ -165,7 +167,7 @@ private fun OnBoardingScreenContent(
 private fun OnBoardingPager(
     pagerState: PagerState,
     pageList: List<OnBoardingPageContentItem>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     HorizontalPager(
         state = pagerState,

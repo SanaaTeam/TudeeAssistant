@@ -32,6 +32,7 @@
     <string name="delete_task_title">Delete task</string>
     <string name="delete_subtitle">Are you sure to continue?</string>
     <string name="delete">Delete</string>
+    <string name="no_task_here">No tasks here!</string>
     <string name="no_task_today">No tasks for today!</string>
     <string name="tap_to_add_task">Tap the + button to add your\nfirst one.</string>
 

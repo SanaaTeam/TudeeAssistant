@@ -4,10 +4,8 @@ import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import kotlinx.datetime.Clock
+import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 
 data class TasksScreenUiState(
@@ -19,7 +17,6 @@ data class TasksScreenUiState(
     val showDeleteTaskBottomSheet: Boolean = false,
     val selectedStatusTab: TaskUiStatus = TaskUiStatus.TODO,
     val selectedTask: TaskUiState? = null,
-    val selectedDate: LocalDate = Clock.System.now()
-        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    val selectedDate: LocalDate = DateUtil.today.date,
     val categories: List<CategoryUiState> = emptyList(),
 )

@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.CustomDatePickerDialog
+import com.sanaa.tudee_assistant.presentation.component.CustomDatePickerDialog
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CheckMarkContainer
 import com.sanaa.tudee_assistant.presentation.designSystem.component.PriorityTag
@@ -36,11 +36,10 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.utils.DateFormater
-import kotlinx.datetime.Clock
+import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun AddEditTaskContent(
@@ -106,8 +105,7 @@ fun AddEditTaskContent(
                         .padding(bottom = Theme.dimension.medium)
                         .clip(shape = RoundedCornerShape(Theme.dimension.medium))
                         .clickable { listener.onDatePickerShow() },
-                    placeholder = Clock.System.now()
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+                    placeholder = DateUtil.today.date.toString(),
                     value = uiState.taskUiState.dueDate,
                     onValueChange = {},
                     readOnly = true,
@@ -203,9 +201,7 @@ fun AddEditTaskContent(
                 }
             },
             onDismiss = listener::onDatePickerDismiss,
-            minDateMillis = Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-                .date
+            minDateMillis = DateUtil.today.date
                 .atStartOfDayIn(TimeZone.currentSystemDefault())
                 .toEpochMilliseconds(),
             initialSelectedDate = LocalDate.parse(uiState.taskUiState.dueDate)

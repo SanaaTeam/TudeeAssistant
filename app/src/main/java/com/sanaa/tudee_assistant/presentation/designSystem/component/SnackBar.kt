@@ -5,10 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +33,8 @@ fun SnackBar(
 ) {
     Row(
         modifier = modifier
-            .width(328.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
             .height(56.dp)
             .dropShadow(
                 blur = Theme.dimension.medium,

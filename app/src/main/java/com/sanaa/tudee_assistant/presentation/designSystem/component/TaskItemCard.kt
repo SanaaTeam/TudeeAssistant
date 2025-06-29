@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.sanaa.tudee_assistant.presentation.composable.CategoryThumbnail
+import com.sanaa.tudee_assistant.presentation.component.CategoryThumbnail
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
@@ -60,7 +61,9 @@ fun TaskItemCard(
             Box(modifier = Modifier.size(56.dp), contentAlignment = Alignment.Center) {
                 CategoryThumbnail(
                     imagePath = categoryImagePath,
-                    modifier = Modifier.size(Theme.dimension.extraLarge)
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(Theme.dimension.extraLarge)
                 )
             }
 

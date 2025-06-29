@@ -3,11 +3,11 @@ package com.sanaa.tudee_assistant.data.services
 import com.sanaa.tudee_assistant.data.local.dao.TaskDao
 import com.sanaa.tudee_assistant.data.local.mapper.toDomain
 import com.sanaa.tudee_assistant.data.local.mapper.toLocalDto
+import com.sanaa.tudee_assistant.domain.entity.Task
+import com.sanaa.tudee_assistant.domain.entity.TaskCreationRequest
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToAddException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToDeleteException
 import com.sanaa.tudee_assistant.domain.exceptions.FailedToUpdateException
-import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
-import com.sanaa.tudee_assistant.domain.model.Task
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -16,8 +16,8 @@ import kotlinx.datetime.LocalDate
 class TaskServiceImpl(
     private val taskDao: TaskDao,
 ) : TaskService {
-    override suspend fun addTask(addTaskRequest: AddTaskRequest) {
-        if (taskDao.insertTask(addTaskRequest.toLocalDto()) == -1L) {
+    override suspend fun addTask(taskCreationRequest: TaskCreationRequest) {
+        if (taskDao.insertTask(taskCreationRequest.toLocalDto()) == -1L) {
             throw FailedToAddException("Failed to add task")
         }
     }

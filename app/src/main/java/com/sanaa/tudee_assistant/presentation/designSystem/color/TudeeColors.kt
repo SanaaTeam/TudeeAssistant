@@ -1,13 +1,13 @@
 package com.sanaa.tudee_assistant.presentation.designSystem.color
 
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 data class TudeeColors(
     val primary: Color,
     val primaryVariant: Color,
-    val primaryGradientStart: Color,
-    val primaryGradientEnd: Color,
+    val primaryGradient: Brush,
     val secondary: Color,
 
     val title: Color,

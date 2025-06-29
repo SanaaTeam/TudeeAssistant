@@ -1,9 +1,9 @@
 package com.sanaa.tudee_assistant.presentation.model.mapper
 
-import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
-import com.sanaa.tudee_assistant.domain.model.Task
-import com.sanaa.tudee_assistant.domain.model.Task.TaskPriority
-import com.sanaa.tudee_assistant.domain.model.Task.TaskStatus
+import com.sanaa.tudee_assistant.domain.entity.Task
+import com.sanaa.tudee_assistant.domain.entity.Task.TaskPriority
+import com.sanaa.tudee_assistant.domain.entity.Task.TaskStatus
+import com.sanaa.tudee_assistant.domain.entity.TaskCreationRequest
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
@@ -24,7 +24,7 @@ fun Task.toState(): TaskUiState {
     )
 }
 
-fun List<Task>.toStateList(): List<TaskUiState> {
+fun List<Task>.toState(): List<TaskUiState> {
     return this.map { task -> task.toState() }
 }
 
@@ -44,20 +44,20 @@ fun TaskStatus.toState(): TaskUiStatus {
     }
 }
 
-fun TaskUiState.toTask(): Task {
+fun TaskUiState.toDomain(): Task {
     return Task(
         id = id,
         title = title,
         description = description,
-        status = status.toTaskStatus(),
+        status = status.toDomain(),
         dueDate = LocalDate.parse(dueDate),
-        priority = priority.toTaskPriority(),
+        priority = priority.toDomain(),
         categoryId = categoryId,
         createdAt = LocalDateTime.parse(createdAt),
     )
 }
 
-fun TaskUiPriority.toTaskPriority(): TaskPriority {
+fun TaskUiPriority.toDomain(): TaskPriority {
     return when (this) {
         TaskUiPriority.LOW -> TaskPriority.LOW
         TaskUiPriority.MEDIUM -> TaskPriority.MEDIUM
@@ -65,7 +65,7 @@ fun TaskUiPriority.toTaskPriority(): TaskPriority {
     }
 }
 
-fun TaskUiStatus.toTaskStatus(): TaskStatus {
+fun TaskUiStatus.toDomain(): TaskStatus {
     return when (this) {
         TaskUiStatus.TODO -> TaskStatus.TODO
         TaskUiStatus.IN_PROGRESS -> TaskStatus.IN_PROGRESS
@@ -73,13 +73,13 @@ fun TaskUiStatus.toTaskStatus(): TaskStatus {
     }
 }
 
-fun TaskUiState.toNewTask(): AddTaskRequest {
-    return AddTaskRequest(
+fun TaskUiState.toCreationRequest(): TaskCreationRequest {
+    return TaskCreationRequest(
         title = title,
         description = description,
-        status = status.toTaskStatus(),
+        status = status.toDomain(),
         dueDate = LocalDate.parse(dueDate),
-        priority = priority.toTaskPriority(),
+        priority = priority.toDomain(),
         categoryId = categoryId,
     )
 }

@@ -32,7 +32,6 @@ import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Categor
 import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Line
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
-import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -57,7 +56,7 @@ private fun HomeScreenContent(
 
     val snackBarState = LocalSnackBarState.current
 
-    LaunchedEffect(state.snackBarState) {
+    LaunchedEffect(state.snackBarState) { ->
         if (state.snackBarState.isVisible) {
             snackBarState.value = state.snackBarState
             interactionsListener.onHideSnackBar()
@@ -116,64 +115,54 @@ private fun HomeScreenContent(
                 )
             }
 
-            if (isScrolled) {
-                Line()
+
+
+
+            if (state.showAddTaskSheet) {
+                AddEditTaskScreen(
+                    isEditMode = false,
+                    taskToEdit = null,
+                    initialDate = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                    onDismiss = { interactionsListener.onHideAddTaskSheet() },
+                    onSuccess = { interactionsListener.onAddTaskSuccess() },
+                    onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
+                )
             }
-            CategoryList(
-                scrollState,
-                state,
-                onTaskClick = { interactionsListener.onTaskClick(it) },
-            )
-        }
+            if (state.showEditTaskSheet) {
+                AddEditTaskScreen(
+                    isEditMode = true,
+                    taskToEdit = state.taskToEdit,
+                    initialDate = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                    onDismiss = { interactionsListener.onHideEditTaskSheet() },
+                    onSuccess = { interactionsListener.onEditTaskSuccess() },
+                    onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
+                )
 
 
-
-
-        if (state.showAddTaskSheet) {
-            AddEditTaskScreen(
-                isEditMode = false,
-                taskToEdit = null,
-                initialDate = Clock.System.now()
-                    .toLocalDateTime(TimeZone.currentSystemDefault()).date,
-                onDismiss = { interactionsListener.onHideAddTaskSheet() },
-                onSuccess = { interactionsListener.onAddTaskSuccess() },
-                onError = { errorMessage -> interactionsListener.onAddTaskError(errorMessage) }
-            )
-        }
-        if (state.showEditTaskSheet) {
-            AddEditTaskScreen(
-                isEditMode = true,
-                taskToEdit = state.taskToEdit,
-                initialDate = Clock.System.now()
-                    .toLocalDateTime(TimeZone.currentSystemDefault()).date,
-                onDismiss = { interactionsListener.onHideEditTaskSheet() },
-                onSuccess = { interactionsListener.onEditTaskSuccess() },
-                onError = { errorMessage -> interactionsListener.onEditTaskError(errorMessage) }
-            )
-
-
-        }
-        if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
-            TaskDetailsComponent(
-                selectedTaskId = state.selectedTask.id,
-                onDismiss = { interactionsListener.onShowTaskDetails(false) },
-                onEditClick = { taskToEdit ->
-                    interactionsListener.onShowEditTaskSheet(
-                        taskToEdit
-                    )
-                },
-                onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
-                onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
-            )
+            }
+            if (state.selectedTask != null && state.showTaskDetailsBottomSheet) {
+                TaskDetailsComponent(
+                    selectedTaskId = state.selectedTask.id,
+                    onDismiss = { interactionsListener.onShowTaskDetails(false) },
+                    onEditClick = { taskToEdit ->
+                        interactionsListener.onShowEditTaskSheet(
+                            taskToEdit
+                        )
+                    },
+                    onMoveStatusSuccess = { interactionsListener.onMoveStatusSuccess() },
+                    onMoveStatusFail = { interactionsListener.onMoveStatusFail() }
+                )
+            }
         }
     }
 }
 
-
 @Preview
 @Composable
 fun PreviewHomeScreen() {
-    val dayDate = DateUtil.today
+    val dayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     var isDark by remember { mutableStateOf(false) }
     TudeeTheme(isDark = isDark) {
         val list = DataProvider.getTasksSample()

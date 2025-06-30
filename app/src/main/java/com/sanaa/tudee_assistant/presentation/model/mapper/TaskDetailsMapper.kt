@@ -1,13 +1,13 @@
 package com.sanaa.tudee_assistant.presentation.model.mapper
 
-import com.sanaa.tudee_assistant.domain.model.Task
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.DetailsUiState
+import com.sanaa.tudee_assistant.domain.entity.Task
+import com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.taskDetailsBottomSheet.DetailsUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 
-fun DetailsUiState.toTaskUiState(): TaskUiState {
+fun DetailsUiState.toState(): TaskUiState {
     return TaskUiState(
         id = this.id,
         title = this.title,
@@ -20,14 +20,14 @@ fun DetailsUiState.toTaskUiState(): TaskUiState {
     )
 }
 
-fun DetailsUiState.toTask(): Task {
+fun DetailsUiState.toDomain(): Task {
     return Task(
         id = this.id,
         title = this.title,
         description = this.description,
-        status = this.status.toTaskStatus(),
+        status = this.status.toDomain(),
         dueDate = LocalDate.parse(this.dueDate),
-        priority = this.priority.toTaskPriority(),
+        priority = this.priority.toDomain(),
         categoryId = this.categoryId,
         createdAt = LocalDateTime.parse(this.createdAt),
     )

@@ -1,8 +1,8 @@
 package com.sanaa.tudee_assistant.data.local.mapper
 
 import com.sanaa.tudee_assistant.data.local.dto.CategoryLocalDto
-import com.sanaa.tudee_assistant.domain.model.AddCategoryRequest
-import com.sanaa.tudee_assistant.domain.model.Category
+import com.sanaa.tudee_assistant.domain.entity.Category
+import com.sanaa.tudee_assistant.domain.entity.CategoryCreationRequest
 
 fun CategoryLocalDto.toDomain(): Category = Category(
     id = categoryId,
@@ -19,11 +19,9 @@ fun Category.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
 )
 
 
-fun AddCategoryRequest.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
-    categoryId = 0,
+fun CategoryCreationRequest.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
     name = name,
     imagePath = imagePath,
-    isDefault = false
 )
 
 fun List<CategoryLocalDto>.toDomain(): List<Category> {

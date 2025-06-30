@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -33,12 +32,7 @@ fun FloatingActionButton(
 ) {
     val backgroundModifier = when (enabled) {
         true -> Modifier.background(
-            brush = Brush.linearGradient(
-                listOf(
-                    Theme.color.primaryGradientStart,
-                    Theme.color.primaryGradientEnd
-                )
-            )
+            brush = Theme.color.primaryGradient
         )
 
         false -> Modifier.background(color = Theme.color.disable)

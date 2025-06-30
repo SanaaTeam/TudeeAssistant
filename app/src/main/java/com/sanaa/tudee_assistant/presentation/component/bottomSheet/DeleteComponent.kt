@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.composable.bottomSheet
+package com.sanaa.tudee_assistant.presentation.component.bottomSheet
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

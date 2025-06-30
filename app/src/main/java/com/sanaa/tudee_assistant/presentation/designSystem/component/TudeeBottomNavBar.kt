@@ -71,7 +71,7 @@ fun TudeeBottomNavBarItem(
             painter = painterResource(id = if (selected) selectedIconRes else iconRes),
             contentDescription = null,
             colorFilter = ColorFilter.tint(
-                if (selected) Theme.color.primary else Theme.color.hint
+                if (selected) Theme.color.primary else Theme.color.hint.copy(alpha = 1f)
             )
         )
     }

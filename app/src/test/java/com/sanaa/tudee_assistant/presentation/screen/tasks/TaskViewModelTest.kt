@@ -1,7 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.tasks
 
 import com.google.common.truth.Truth.assertThat
-import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.entity.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider

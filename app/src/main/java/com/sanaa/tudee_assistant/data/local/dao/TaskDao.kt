@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.sanaa.tudee_assistant.data.local.dto.CategoryTaskCountDto
 import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
-import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.entity.Task
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,12 +1,18 @@
 package com.sanaa.tudee_assistant.presentation.designSystem.color
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val darkSchemaColors = TudeeColors(
     primary = Color(0xFF3090BF),
     primaryVariant = Color(0xFF05202E),
-    primaryGradientStart = Color(0xFF3DB6F2),
-    primaryGradientEnd = Color(0xFF3A9CCD),
+    primaryGradient = Brush.linearGradient(
+        listOf(
+            Color(0xFF3090BF),
+            Color(0xFF3DB6F2),
+            Color(0xFF3A9CCD)
+        )
+    ),
     secondary = Color(0xFFF49061),
 
     title = Color(0xFFFFFFFF).copy(alpha = 0.87f),

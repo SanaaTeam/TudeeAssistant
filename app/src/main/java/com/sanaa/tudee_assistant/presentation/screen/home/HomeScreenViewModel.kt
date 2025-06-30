@@ -8,14 +8,12 @@ import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
-import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
+import com.sanaa.tudee_assistant.presentation.model.mapper.toDomain
+import com.sanaa.tudee_assistant.presentation.model.mapper.toState
+import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 class HomeScreenViewModel(
     private val preferencesManager: PreferencesManager,
@@ -44,14 +42,13 @@ class HomeScreenViewModel(
     private fun getTasks() {
         tryToExecute(
             callee = {
-                val today = Clock.System.now()
-                    .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                val today = DateUtil.today.date
                 taskService.getTasksByDueDate(today).collectLatest { tasks ->
-                    updateState { state -> state.copy(tasks = tasks.toStateList()) }
+                    updateState { state -> state.copy(tasks = tasks.toState()) }
 
                     categoryService.getCategories().collect { categories ->
                         updateState { state ->
-                            state.copy(categories = categories.toStateList(tasks.size))
+                            state.copy(categories = categories.toState(tasks.size))
                         }
                     }
                 }
@@ -89,7 +86,7 @@ class HomeScreenViewModel(
     override fun onNavigateToTaskScreen(status: TaskUiStatus) {
         tryToExecute(
             callee = {
-                preferencesManager.changeTaskStatus(status.toTaskStatus())
+                preferencesManager.changeTaskStatus(status.toDomain())
             }
         )
     }

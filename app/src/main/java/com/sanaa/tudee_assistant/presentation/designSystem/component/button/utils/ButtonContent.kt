@@ -14,8 +14,7 @@ fun ButtonContent(
         true -> Theme.color.primary
         false -> Theme.color.disable
     },
-
-    ) {
+) {
 
     Text(
         text = label,

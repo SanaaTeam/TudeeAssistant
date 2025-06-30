@@ -1,6 +1,6 @@
 package com.sanaa.tudee_assistant.domain.service
 
-import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.entity.Task
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import kotlinx.coroutines.flow.Flow
 

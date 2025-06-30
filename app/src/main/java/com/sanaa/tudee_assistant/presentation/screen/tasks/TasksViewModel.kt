@@ -9,8 +9,8 @@ import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.model.mapper.toStateList
-import com.sanaa.tudee_assistant.presentation.model.mapper.toTaskStatus
+import com.sanaa.tudee_assistant.presentation.model.mapper.toDomain
+import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -32,7 +32,7 @@ class TaskViewModel(
             callee = {
                 categoryService.getCategories().collect { categoryList ->
                     updateState {
-                        it.copy(categories = categoryList.toStateList(0))
+                        it.copy(categories = categoryList.toState(0))
                     }
                 }
             }
@@ -46,7 +46,7 @@ class TaskViewModel(
 
         dateJob = viewModelScope.launch {
             taskService.getTasksByDueDate(state.value.selectedDate).collect { taskList ->
-                updateState { it.copy(currentDateTasks = taskList.toStateList()) }
+                updateState { it.copy(currentDateTasks = taskList.toState()) }
             }
         }
     }
@@ -82,7 +82,7 @@ class TaskViewModel(
     override fun onTapClick(status: TaskUiStatus) {
         tryToExecute(
             callee = {
-                preferencesManager.changeTaskStatus(status.toTaskStatus())
+                preferencesManager.changeTaskStatus(status.toDomain())
             }
         )
     }

@@ -1,8 +1,8 @@
 package com.sanaa.tudee_assistant.data.local.mapper
 
 import com.sanaa.tudee_assistant.data.local.dto.TaskLocalDto
-import com.sanaa.tudee_assistant.domain.model.AddTaskRequest
-import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.entity.Task
+import com.sanaa.tudee_assistant.domain.entity.TaskCreationRequest
 import com.sanaa.tudee_assistant.presentation.utils.DateUtil
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -29,8 +29,7 @@ fun Task.toLocalDto(): TaskLocalDto = TaskLocalDto(
     createdAt = createdAt.toString()
 )
 
-fun AddTaskRequest.toLocalDto(): TaskLocalDto = TaskLocalDto(
-    taskId = 0,
+fun TaskCreationRequest.toLocalDto(): TaskLocalDto = TaskLocalDto(
     title = title,
     description = description,
     status = status.name,

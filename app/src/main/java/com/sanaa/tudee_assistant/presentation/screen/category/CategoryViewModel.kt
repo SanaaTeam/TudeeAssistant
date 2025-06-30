@@ -9,7 +9,7 @@ import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
-import com.sanaa.tudee_assistant.presentation.model.mapper.toNewCategory
+import com.sanaa.tudee_assistant.presentation.model.mapper.toCreationRequest
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -91,7 +91,7 @@ class CategoryViewModel(
             imageProcessor.processImage(categoryUiState.imagePath.toUri())
         )
         val newCategory = categoryUiState.copy(imagePath = imagePath)
-        categoryService.addCategory(newCategory.toNewCategory())
+        categoryService.addCategory(newCategory.toCreationRequest())
     }
 
     private fun onAddCategorySuccess(unit: Unit) {

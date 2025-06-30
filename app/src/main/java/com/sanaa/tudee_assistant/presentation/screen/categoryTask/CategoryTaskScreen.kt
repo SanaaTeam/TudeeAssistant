@@ -16,10 +16,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.DeleteComponent
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.AddEditTaskScreen
-import com.sanaa.tudee_assistant.presentation.composable.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
+import com.sanaa.tudee_assistant.presentation.component.TudeeScaffold
+import com.sanaa.tudee_assistant.presentation.component.bottomSheet.DeleteComponent
+import com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.AddEditTaskScreen
+import com.sanaa.tudee_assistant.presentation.component.bottomSheet.task.taskDetailsBottomSheet.TaskDetailsComponent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.EmptyContent
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TabItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeScrollableTabs
@@ -97,6 +97,7 @@ private fun CategoryTaskScreenContent(
     }
     TudeeScaffold(
         modifier = modifier,
+        systemNavColor = Theme.color.surface,
         topBar = {
 
             CategoryTasksTopBar(

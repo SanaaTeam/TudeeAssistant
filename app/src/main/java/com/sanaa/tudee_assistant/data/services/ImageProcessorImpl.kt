@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.data.utils
+package com.sanaa.tudee_assistant.data.services
 
 import android.content.Context
 import android.graphics.Bitmap

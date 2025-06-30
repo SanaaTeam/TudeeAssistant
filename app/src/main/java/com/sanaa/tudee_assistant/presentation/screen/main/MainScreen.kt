@@ -23,7 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.composable.TudeeScaffold
+import com.sanaa.tudee_assistant.presentation.component.TudeeScaffold
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBar
 import com.sanaa.tudee_assistant.presentation.designSystem.component.TudeeBottomNavBarItem
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
@@ -50,7 +50,7 @@ fun MainScreen(
     val currentDestination = backStackEntry?.destination
 
     CompositionLocalProvider(LocalMainNavController provides navController) {
-        TudeeScaffold {
+        TudeeScaffold(systemNavColor = Theme.color.surfaceHigh) {
             Column(
                 Modifier
                     .fillMaxSize()

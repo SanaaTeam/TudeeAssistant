@@ -20,10 +20,8 @@ fun Category.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
 
 
 fun CategoryCreationRequest.toLocalDto(): CategoryLocalDto = CategoryLocalDto(
-    categoryId = 0,
     name = name,
     imagePath = imagePath,
-    isDefault = false
 )
 
 fun List<CategoryLocalDto>.toDomain(): List<Category> {

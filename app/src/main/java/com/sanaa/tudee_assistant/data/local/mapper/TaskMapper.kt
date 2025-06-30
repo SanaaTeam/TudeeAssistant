@@ -30,7 +30,6 @@ fun Task.toLocalDto(): TaskLocalDto = TaskLocalDto(
 )
 
 fun TaskCreationRequest.toLocalDto(): TaskLocalDto = TaskLocalDto(
-    taskId = 0,
     title = title,
     description = description,
     status = status.name,

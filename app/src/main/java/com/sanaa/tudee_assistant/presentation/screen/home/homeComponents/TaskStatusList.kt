@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
@@ -90,7 +91,7 @@ fun TaskStatusList(
         }
 
         item {
-            TaskStatusList(
+            TaskSection(
                 items = state.tasks.filter { it.status == TaskUiStatus.DONE },
                 categories = state.categories,
                 onClick = { onTaskClick(it) }
@@ -109,7 +110,7 @@ fun TaskStatusList(
         }
 
         item {
-            TaskStatusList(
+            TaskSection(
                 items = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
                 categories = state.categories,
                 onClick = { onTaskClick(it) }
@@ -128,7 +129,7 @@ fun TaskStatusList(
         }
 
         item {
-            TaskStatusList(
+            TaskSection(
                 items = state.tasks.filter { it.status == TaskUiStatus.TODO },
                 categories = state.categories,
                 onClick = { onTaskClick(it) }
@@ -138,7 +139,7 @@ fun TaskStatusList(
 }
 
 @Composable
-fun TaskStatusList(
+fun TaskSection(
     items: List<TaskUiState>,
     categories: List<CategoryUiState>,
     onClick: (TaskUiState) -> Unit,
@@ -146,6 +147,8 @@ fun TaskStatusList(
     if (items.isEmpty()) return
     val targetHeight = if (items.size == 1) 111.dp + Theme.dimension.medium
     else 222.dp + Theme.dimension.extraLarge
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val itemWidth = screenWidth * 0.90f
 
     LazyHorizontalGrid(
         modifier = Modifier.height(targetHeight),
@@ -163,7 +166,7 @@ fun TaskStatusList(
         items(items = items) { task ->
             val categoryImagePath = categories.first { it.id == task.categoryId }.imagePath
             TaskItemCard(
-                modifier = Modifier.width(320.dp),
+                modifier = Modifier.width(itemWidth),
                 task = task,
                 categoryImagePath = categoryImagePath,
                 onClick = { onClick(it) },

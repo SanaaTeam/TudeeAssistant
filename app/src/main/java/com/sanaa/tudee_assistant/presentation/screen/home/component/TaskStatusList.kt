@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.home.homeComponents
+package com.sanaa.tudee_assistant.presentation.screen.home.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween

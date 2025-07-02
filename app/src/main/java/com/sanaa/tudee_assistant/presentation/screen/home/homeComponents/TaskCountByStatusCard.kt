@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.designSystem.component
+package com.sanaa.tudee_assistant.presentation.screen.home.homeComponents
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
@@ -68,7 +68,7 @@ fun RowScope.TaskCountByStatusCard(
             )
 
             Text(
-                text = getTaskStatusLabel (taskUiStatus),
+                text = getTaskStatusLabel(taskUiStatus),
                 color = Theme.color.onPrimaryCaption,
                 style = Theme.textStyle.label.small
             )
@@ -159,6 +159,7 @@ fun getTaskStatusLabel(taskUiStatus: TaskUiStatus): String = when (taskUiStatus)
     TaskUiStatus.IN_PROGRESS -> stringResource(R.string.in_progress_task_status)
     TaskUiStatus.DONE -> stringResource(R.string.done_task_status)
 }
+
 @PreviewLightDark
 @Composable
 private fun Preview() {

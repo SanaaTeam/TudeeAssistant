@@ -41,6 +41,8 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 
+
+private const val MAX_TITLE_LENGTH = 50
 @Composable
 fun AddEditTaskContent(
     uiState: AddTaskUiState,
@@ -76,7 +78,12 @@ fun AddEditTaskContent(
                 TudeeTextField(
                     placeholder = stringResource(R.string.task_title),
                     value = uiState.taskUiState.title,
-                    onValueChange = listener::onTitleChange,
+                    onValueChange = {
+                        if (it.length <= MAX_TITLE_LENGTH) {
+                            listener.onTitleChange(it)
+                        }
+                    }
+                    ,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = Theme.dimension.medium),

@@ -34,7 +34,7 @@ fun HomeOverviewCard(state: HomeScreenUiState) {
     ) {
         TopDate(state)
 
-        Slider(modifier = Modifier.padding(start = 12.dp), tasks = state.tasks)
+        Slider(modifier = Modifier.padding(start = 12.dp), state = state.sliderUiState)
 
         Text(
             modifier = Modifier.padding(

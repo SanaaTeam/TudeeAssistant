@@ -31,4 +31,21 @@ class StringProviderImpl(
         get() = context.getString(R.string.mark_as_in_progress)
     override val markAsDone: String
         get() = context.getString(R.string.mark_as_done)
+    override val goodStatusMessageTitle: String
+        get() = context.getString(R.string.good_status_message_title)
+    override val okayStatusMessageTitle: String
+        get() = context.getString(R.string.okay_status_message_title)
+    override val poorStatusMessageTitle: String
+        get() = context.getString(R.string.poor_status_message_title)
+    override val badStatusMessageTitle: String
+        get() = context.getString(R.string.bad_status_message_title)
+    override val goodStatusMessage: String
+        get() = context.getString(R.string.good_status_message)
+    override val okayStatusMessage: String
+        get() = context.getString(R.string.okay_status_message)
+    override val poorStatusMessage: String
+        get() = context.getString(R.string.poor_status_message)
+    override val badStatusMessage: String
+        get() = context.getString(R.string.bad_status_message)
+
 }

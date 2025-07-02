@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
+import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -8,6 +9,7 @@ import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.model.TudeeUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toDomain
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import com.sanaa.tudee_assistant.presentation.utils.DateUtil
@@ -45,7 +47,7 @@ class HomeScreenViewModel(
                 val today = DateUtil.today.date
                 taskService.getTasksByDueDate(today).collectLatest { tasks ->
                     updateState { state -> state.copy(tasks = tasks.toState()) }
-
+                    updateSliderUiState(tasks.toState())
                     categoryService.getCategories().collect { categories ->
                         updateState { state ->
                             state.copy(categories = categories.toState(tasks.size))
@@ -170,6 +172,51 @@ class HomeScreenViewModel(
                     exception.message ?: stringProvider.unknownError
                 )
             )
+        }
+    }
+    private fun updateSliderUiState(tasks: List<TaskUiState>) {
+        val status = getSlideStatus(tasks)
+
+        val title = when (status) {
+            TudeeUiStatus.GOOD -> stringProvider.goodStatusMessageTitle
+            TudeeUiStatus.OKAY -> stringProvider.okayStatusMessageTitle
+            TudeeUiStatus.POOR -> stringProvider.poorStatusMessageTitle
+            TudeeUiStatus.BAD -> stringProvider.badStatusMessageTitle
+        }
+
+        val message = when (status) {
+            TudeeUiStatus.GOOD -> stringProvider.goodStatusMessage
+            TudeeUiStatus.OKAY -> stringProvider.okayStatusMessageTitle
+                .replace("*", tasks.count { it.status == TaskUiStatus.DONE }.toString())
+                .replace("#", tasks.size.toString())
+
+            TudeeUiStatus.POOR -> stringProvider.poorStatusMessage
+            TudeeUiStatus.BAD -> stringProvider.badStatusMessage
+        }
+
+        val robotImageRes = when (status) {
+            TudeeUiStatus.OKAY, TudeeUiStatus.POOR -> R.drawable.robot1
+            TudeeUiStatus.GOOD -> R.drawable.robot2
+            TudeeUiStatus.BAD -> R.drawable.robot3
+        }
+
+        val sliderUiState = SliderUiState(
+            title = title,
+            message = message,
+            robotImageRes = robotImageRes,
+            status = status
+        )
+
+        updateState { it.copy(sliderUiState = sliderUiState) }
+    }
+    private fun getSlideStatus(tasks: List<TaskUiState>): TudeeUiStatus {
+        val allTasksDone = tasks.all { it.status == TaskUiStatus.DONE }
+        val allTasksNotFinished = tasks.none { it.status == TaskUiStatus.DONE }
+        return when {
+            tasks.isEmpty() -> TudeeUiStatus.POOR
+            allTasksNotFinished -> TudeeUiStatus.BAD
+            allTasksDone -> TudeeUiStatus.GOOD
+            else -> TudeeUiStatus.OKAY
         }
     }
 }

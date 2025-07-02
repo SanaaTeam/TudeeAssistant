@@ -19,4 +19,5 @@ data class HomeScreenUiState(
     val showEditTaskSheet: Boolean = false,
     val showTaskDetailsBottomSheet: Boolean = false,
     val taskToEdit: TaskUiState? = null,
+    val sliderUiState: SliderUiState = SliderUiState()
 )

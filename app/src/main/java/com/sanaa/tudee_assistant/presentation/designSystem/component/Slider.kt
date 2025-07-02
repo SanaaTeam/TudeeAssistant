@@ -29,14 +29,15 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.TudeeUiStatus
+import com.sanaa.tudee_assistant.presentation.screen.home.SliderUiState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 
 @Composable
 fun Slider(
-    tasks: List<TaskUiState>,
-    modifier: Modifier = Modifier,
+    state: SliderUiState,
+    modifier: Modifier = Modifier
 ) {
-    val status = getSlideStatus(tasks)
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -51,43 +52,17 @@ fun Slider(
                 horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
             ) {
                 Text(
-                    text = when (status) {
-                        TudeeUiStatus.GOOD -> stringResource(R.string.good_status_message_title)
-                        TudeeUiStatus.OKAY -> stringResource(R.string.okay_status_message_title)
-                        TudeeUiStatus.POOR -> stringResource(R.string.poor_status_message_title)
-                        TudeeUiStatus.BAD -> stringResource(R.string.bad_status_message_title)
-                    },
+                    text = state.title,
                     style = Theme.textStyle.title.small,
                     color = Theme.color.title
                 )
 
-                StatusImage(20.dp, status)
+                StatusImage(20.dp, state.status)
             }
 
             Text(
                 modifier = Modifier.fillMaxWidth(0.8f),
-                text = when (status) {
-                    TudeeUiStatus.GOOD -> {
-                        stringResource(R.string.good_status_message)
-                    }
-
-                    TudeeUiStatus.OKAY -> {
-                        stringResource(R.string.okay_status_message)
-                            .replace(
-                                "*",
-                                tasks.filter { it.status == TaskUiStatus.DONE }.size.toString()
-                            )
-                            .replace("#", tasks.size.toString())
-                    }
-
-                    TudeeUiStatus.POOR -> {
-                        stringResource(R.string.poor_status_message)
-                    }
-
-                    TudeeUiStatus.BAD -> {
-                        stringResource(R.string.bad_status_message)
-                    }
-                },
+                text = state.message,
                 style = Theme.textStyle.body.small,
                 color = Theme.color.body
             )
@@ -119,12 +94,7 @@ fun Slider(
                     .width(61.dp)
                     .height(92.dp),
                 painter = painterResource(
-                    id = when (status) {
-                        TudeeUiStatus.OKAY -> R.drawable.robot1
-                        TudeeUiStatus.GOOD -> R.drawable.robot2
-                        TudeeUiStatus.BAD -> R.drawable.robot3
-                        TudeeUiStatus.POOR -> R.drawable.robot1
-                    }
+                    id = state.robotImageRes
                 ),
                 contentDescription = null,
             )
@@ -132,24 +102,38 @@ fun Slider(
     }
 }
 
-fun getSlideStatus(tasks: List<TaskUiState>): TudeeUiStatus {
-    val allTasksDone = tasks.all { it.status == TaskUiStatus.DONE }
-    val allTasksNotFinished = !tasks.any { it.status == TaskUiStatus.DONE }
-    return if (tasks.isEmpty())
-        TudeeUiStatus.POOR
-    else if (allTasksNotFinished)
-        TudeeUiStatus.BAD
-    else if (allTasksDone)
-        TudeeUiStatus.GOOD
-    else
-        TudeeUiStatus.OKAY
-}
 
 @PreviewLightDark
 @Composable
 private fun Preview() {
-    val doneTask = DataProvider.getTasksSample()[0].copy(status = TaskUiStatus.DONE)
     TudeeTheme(isDark = isSystemInDarkTheme()) {
+        val previewStates = listOf(
+            SliderUiState(
+                title = stringResource(R.string.good_status_message_title),
+                message = stringResource(R.string.good_status_message),
+                robotImageRes = R.drawable.robot2,
+                status = TudeeUiStatus.GOOD
+            ),
+            SliderUiState(
+                title = stringResource(R.string.okay_status_message_title),
+                message = stringResource(R.string.okay_status_message),
+                robotImageRes = R.drawable.robot1,
+                status = TudeeUiStatus.OKAY
+            ),
+            SliderUiState(
+                title = stringResource(R.string.poor_status_message_title),
+                message = stringResource(R.string.poor_status_message),
+                robotImageRes = R.drawable.robot1,
+                status = TudeeUiStatus.POOR
+            ),
+            SliderUiState(
+                title = stringResource(R.string.bad_status_message_title),
+                message = stringResource(R.string.bad_status_message),
+                robotImageRes = R.drawable.robot3,
+                status = TudeeUiStatus.BAD
+            )
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -157,31 +141,9 @@ private fun Preview() {
                 .padding(Theme.dimension.medium),
             verticalArrangement = Arrangement.spacedBy(21.dp)
         ) {
-            Slider(
-                listOf(
-                    doneTask.copy(status = TaskUiStatus.IN_PROGRESS),
-                    doneTask.copy(status = TaskUiStatus.TODO),
-                    doneTask.copy(),
-                    doneTask.copy(),
-                )
-            )
-            Slider(
-                listOf(
-                    doneTask.copy(),
-                    doneTask.copy(),
-                    doneTask.copy(),
-                    doneTask.copy(),
-                )
-            )
-            Slider(
-                listOf(
-                    doneTask.copy(status = TaskUiStatus.IN_PROGRESS),
-                    doneTask.copy(status = TaskUiStatus.TODO),
-                    doneTask.copy(status = TaskUiStatus.IN_PROGRESS),
-                    doneTask.copy(status = TaskUiStatus.TODO),
-                )
-            )
-            Slider(emptyList())
+            previewStates.forEach { state ->
+                Slider(state = state)
+            }
         }
     }
 }

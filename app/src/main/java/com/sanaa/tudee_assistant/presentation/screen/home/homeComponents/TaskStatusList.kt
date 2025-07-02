@@ -35,7 +35,7 @@ import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenUiState
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-fun CategoryList(
+fun TaskStatusList(
     scrollState: LazyListState,
     state: HomeScreenUiState,
     onTaskClick: (TaskUiState) -> Unit,
@@ -90,7 +90,7 @@ fun CategoryList(
         }
 
         item {
-            CategoryList(
+            TaskStatusList(
                 items = state.tasks.filter { it.status == TaskUiStatus.DONE },
                 categories = state.categories,
                 onClick = { onTaskClick(it) }
@@ -109,7 +109,7 @@ fun CategoryList(
         }
 
         item {
-            CategoryList(
+            TaskStatusList(
                 items = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS },
                 categories = state.categories,
                 onClick = { onTaskClick(it) }
@@ -128,7 +128,7 @@ fun CategoryList(
         }
 
         item {
-            CategoryList(
+            TaskStatusList(
                 items = state.tasks.filter { it.status == TaskUiStatus.TODO },
                 categories = state.categories,
                 onClick = { onTaskClick(it) }
@@ -138,7 +138,7 @@ fun CategoryList(
 }
 
 @Composable
-fun CategoryList(
+fun TaskStatusList(
     items: List<TaskUiState>,
     categories: List<CategoryUiState>,
     onClick: (TaskUiState) -> Unit,

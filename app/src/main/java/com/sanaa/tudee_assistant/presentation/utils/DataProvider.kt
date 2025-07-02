@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import com.sanaa.tudee_assistant.presentation.model.TaskUiPriority
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
@@ -68,10 +69,23 @@ object DataProvider {
     @SuppressLint("DiscouragedApi")
     fun getStringResourceByName(resourceName: String, context: Context): String {
         val allowedResourceName = resourceName.filter { it.isLetterOrDigit() || it == '_' }
-        val resourceId = context.resources.getIdentifier(allowedResourceName, "string", context.packageName)
-        return if (resourceId != 0) {
-            context.getString(resourceId)
-        } else {
+        val resourceId =
+            context.resources.getIdentifier(allowedResourceName, "string", context.packageName)
+
+        return try {
+            if (resourceId != 0) {
+                context.resources.getResourceTypeName(resourceId).let { type ->
+                    if (type == "string") {
+                        context.getString(resourceId)
+                    } else {
+                        resourceName
+                    }
+                }
+            } else {
+                // Resource not found
+                resourceName
+            }
+        } catch (e: Resources.NotFoundException) {
             resourceName
         }
     }

@@ -37,8 +37,6 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.dropShadowColor
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
 import com.sanaa.tudee_assistant.presentation.modifire.dropShadow
-import com.sanaa.tudee_assistant.presentation.utils.HelperFunctions
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,15 +109,6 @@ fun AddEditCategoryBottomSheet(
                         modifier = Modifier.padding(top = Theme.dimension.small),
                         onImageSelected = { uri ->
                             onImageSelected(uri)
-                            uri?.let {
-                                scope.launch {
-                                    processedImageBytes =
-                                        HelperFunctions.processImage(context, it)
-                                }
-                            } ?: run {
-                                processedImageBytes = null
-                            }
-
                         },
                         initialImagePath = category.imagePath
                     )

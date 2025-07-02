@@ -28,8 +28,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
-import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.Line
-import com.sanaa.tudee_assistant.presentation.screen.home.homeComponents.TaskStatusList
+import com.sanaa.tudee_assistant.presentation.screen.home.component.Line
+import com.sanaa.tudee_assistant.presentation.screen.home.component.TaskStatusList
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
 import com.sanaa.tudee_assistant.presentation.utils.DataProvider
 import com.sanaa.tudee_assistant.presentation.utils.DateUtil

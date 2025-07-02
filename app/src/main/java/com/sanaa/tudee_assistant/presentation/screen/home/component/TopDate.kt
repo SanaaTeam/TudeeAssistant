@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.home.homeComponents
+package com.sanaa.tudee_assistant.presentation.screen.home.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

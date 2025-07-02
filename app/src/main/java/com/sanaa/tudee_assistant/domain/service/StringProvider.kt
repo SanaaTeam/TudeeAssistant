@@ -30,6 +30,6 @@ interface StringProvider {
     val poorStatusMessage: String
     val badStatusMessage: String
 
-
+    fun formattedOkayStatusMessage(done: Int, total: Int): String
 
 }

@@ -48,4 +48,8 @@ class StringProviderImpl(
     override val badStatusMessage: String
         get() = context.getString(R.string.bad_status_message)
 
+    override fun formattedOkayStatusMessage(done: Int, total: Int): String {
+        return context.getString(R.string.okay_status_message, done, total)
+    }
+
 }

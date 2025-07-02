@@ -186,9 +186,11 @@ class HomeScreenViewModel(
 
         val message = when (status) {
             TudeeUiStatus.GOOD -> stringProvider.goodStatusMessage
-            TudeeUiStatus.OKAY -> stringProvider.okayStatusMessageTitle
-                .replace("*", tasks.count { it.status == TaskUiStatus.DONE }.toString())
-                .replace("#", tasks.size.toString())
+            TudeeUiStatus.OKAY -> stringProvider.formattedOkayStatusMessage(
+                done = tasks.count { it.status == TaskUiStatus.DONE },
+                total = tasks.size
+            )
+
 
             TudeeUiStatus.POOR -> stringProvider.poorStatusMessage
             TudeeUiStatus.BAD -> stringProvider.badStatusMessage

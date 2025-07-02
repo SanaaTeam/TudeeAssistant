@@ -97,7 +97,10 @@ class CategoryTaskViewModel(
             callee = {
                 updateState { it.copy(isLoading = true) }
                 categoryService.deleteCategoryById(state.value.currentCategory.id)
-                taskService.deleteTaskByCategoryId(state.value.currentCategory.id)
+                try {
+                    taskService.deleteTaskByCategoryId(state.value.currentCategory.id)
+                } catch (e: Exception) {
+                }
             },
             onError = { onError(message = stringProvider.deletingCategoryError) },
             onSuccess = {

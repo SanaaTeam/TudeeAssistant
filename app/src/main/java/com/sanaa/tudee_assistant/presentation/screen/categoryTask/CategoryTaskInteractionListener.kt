@@ -11,8 +11,8 @@ interface CategoryTaskInteractionListener {
     fun onConfirmDeleteClicked()
     fun onDeleteDismiss()
     fun onStatusChanged(index: Int)
-    fun onImageSelect(image:Uri?)
-    fun onTitleChange(title:String)
+    fun onImageSelect(image: Uri?)
+    fun onTitleChange(title: String)
     fun onSaveEditClicked(category: CategoryUiState)
     fun onTaskClicked(task: TaskUiState)
     fun onTaskDetailsDismiss()
@@ -21,4 +21,5 @@ interface CategoryTaskInteractionListener {
     fun onTaskEditSuccess()
     fun onMoveStatusSuccess()
     fun onHideSnackBar()
+    fun onBackPressed()
 }

@@ -7,6 +7,7 @@ import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.model.mapper.toDomain
 import com.sanaa.tudee_assistant.presentation.screen.tasks.TaskViewModelTest
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -57,13 +58,20 @@ class HomeScreenViewModelTest {
             stringProvider = stringProvider
         )
     }
+
     val dummyTask = TaskUiState(
         id = 1,
         categoryId = 1,
         title = "Test Task",
         description = "Description",
         status = TaskUiStatus.TODO,
-        createdAt = LocalDateTime(2025, 6, 1, 12, 0).toString()
+        createdAt = LocalDateTime(
+            2025,
+            6,
+            1,
+            12,
+            0
+        ).toString()
     )
 
     @AfterEach
@@ -99,6 +107,7 @@ class HomeScreenViewModelTest {
 
         coVerify { preferencesManager.setDarkTheme(false) }
     }
+
     @Test
     fun `onShowTaskDetails should update showTaskDetailsBottomSheet to true`() = runTest {
         viewModel.onShowTaskDetails(true)
@@ -131,6 +140,7 @@ class HomeScreenViewModelTest {
         assertThat(state.snackBarState.message).isEqualTo(errorMessage)
         assertThat(state.snackBarState.isVisible).isTrue()
     }
+
     @Test
     fun `onEditTaskSuccess should reload tasks and show success snackbar`() = runTest {
         viewModel.onEditTaskSuccess()
@@ -139,6 +149,7 @@ class HomeScreenViewModelTest {
         assertThat(state.snackBarState.message).isEqualTo("Edited task successfully.")
         assertThat(state.snackBarState.isVisible).isTrue()
     }
+
     @Test
     fun `onHideSnackBar should hide snackbar`() = runTest {
         viewModel.onHideSnackBar()
@@ -146,6 +157,7 @@ class HomeScreenViewModelTest {
         val state = viewModel.state.value
         assertThat(state.snackBarState.isVisible).isFalse()
     }
+
     @Test
     fun `onHideEditTaskSheet should reset edit sheet state`() = runTest {
         viewModel.onHideEditTaskSheet()
@@ -154,6 +166,7 @@ class HomeScreenViewModelTest {
         assertThat(state.showEditTaskSheet).isFalse()
         assertThat(state.taskToEdit).isNull()
     }
+
     @Test
     fun `onShowEditTaskSheet should show edit sheet with selected task`() = runTest {
         viewModel.onShowEditTaskSheet(dummyTask)
@@ -163,7 +176,22 @@ class HomeScreenViewModelTest {
         assertThat(state.taskToEdit).isEqualTo(dummyTask)
     }
 
-
+    @Test
+    fun `onNavigateToTaskScreen should call changeTaskStatus with correct domain status`() = runTest {
+        val uiStatus = TaskUiStatus.DONE
+        val domainStatus = uiStatus.toDomain()
+        coEvery { preferencesManager.changeTaskStatus(domainStatus) } just Runs
+        viewModel.onNavigateToTaskScreen(uiStatus)
+        coVerify(exactly = 1) { preferencesManager.changeTaskStatus(domainStatus) }
+    }
+    @Test
+    fun `onHideAddTaskSheet should set showAddTaskSheet to false`() = runTest {
+        viewModel.onShowAddTaskSheet()
+        assertThat(viewModel.state.value.showAddTaskSheet).isTrue()
+        viewModel.onHideAddTaskSheet()
+        val state = viewModel.state.value
+        assertThat(state.showAddTaskSheet).isFalse()
+    }
 
     private companion object {
         const val UNKNOWN_ERROR = "Unknown error"

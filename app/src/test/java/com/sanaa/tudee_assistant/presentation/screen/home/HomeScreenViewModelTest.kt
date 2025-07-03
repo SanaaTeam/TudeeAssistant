@@ -184,7 +184,14 @@ class HomeScreenViewModelTest {
         viewModel.onNavigateToTaskScreen(uiStatus)
         coVerify(exactly = 1) { preferencesManager.changeTaskStatus(domainStatus) }
     }
-
+    @Test
+    fun `onHideAddTaskSheet should set showAddTaskSheet to false`() = runTest {
+        viewModel.onShowAddTaskSheet()
+        assertThat(viewModel.state.value.showAddTaskSheet).isTrue()
+        viewModel.onHideAddTaskSheet()
+        val state = viewModel.state.value
+        assertThat(state.showAddTaskSheet).isFalse()
+    }
 
     private companion object {
         const val UNKNOWN_ERROR = "Unknown error"

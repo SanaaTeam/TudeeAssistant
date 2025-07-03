@@ -8,7 +8,6 @@ import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toDomain
-import com.sanaa.tudee_assistant.presentation.screen.tasks.TaskViewModelTest
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -23,7 +22,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.LocalDateTime
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
@@ -85,7 +83,7 @@ class HomeScreenViewModelTest {
 
         val state = viewModel.state.value
 
-        assertThat(state.snackBarState.message).isEqualTo("Task added successfully!")
+        assertThat(state.snackBarState.message).isEqualTo(TASK_ADDED_SUCCESS)
         assertThat(state.snackBarState.isVisible).isTrue()
     }
 
@@ -133,7 +131,7 @@ class HomeScreenViewModelTest {
 
     @Test
     fun `onAddTaskError should show error snackbar`() = runTest {
-        val errorMessage = "Failed to add task"
+        val errorMessage = TASK_STATUS_UPDATE_ERROR
         viewModel.onAddTaskError(errorMessage)
 
         val state = viewModel.state.value
@@ -146,7 +144,7 @@ class HomeScreenViewModelTest {
         viewModel.onEditTaskSuccess()
 
         val state = viewModel.state.value
-        assertThat(state.snackBarState.message).isEqualTo("Edited task successfully.")
+        assertThat(state.snackBarState.message).isEqualTo(TASK_UPDATE_SUCCESS)
         assertThat(state.snackBarState.isVisible).isTrue()
     }
 
@@ -192,6 +190,27 @@ class HomeScreenViewModelTest {
         val state = viewModel.state.value
         assertThat(state.showAddTaskSheet).isFalse()
     }
+    @Test
+    fun `onMoveStatusSuccess should reload tasks, show success snackbar and hide bottom sheet`() = runTest {
+        coEvery { taskService.getTasksByDueDate(any()) } returns flowOf(emptyList())
+
+        viewModel.onMoveStatusSuccess()
+
+        val state = viewModel.state.value
+        assertThat(state.snackBarState.message).isEqualTo(TASK_STATUS_UPDATE_SUCCESS)
+        assertThat(state.snackBarState.isVisible).isTrue()
+        assertThat(state.showTaskDetailsBottomSheet).isFalse()
+    }
+    @Test
+    fun `onMoveStatusFail should show error snackbar with correct message`() = runTest {
+        viewModel.onMoveStatusFail()
+
+        val state = viewModel.state.value
+        assertThat(state.snackBarState.message).isEqualTo(TASK_STATUS_UPDATE_ERROR)
+        assertThat(state.snackBarState.isVisible).isTrue()
+    }
+
+
 
     private companion object {
         const val UNKNOWN_ERROR = "Unknown error"

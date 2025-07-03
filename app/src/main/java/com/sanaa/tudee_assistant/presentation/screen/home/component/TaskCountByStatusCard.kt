@@ -1,5 +1,6 @@
-package com.sanaa.tudee_assistant.presentation.designSystem.component
+package com.sanaa.tudee_assistant.presentation.screen.home.component
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -39,18 +41,17 @@ fun RowScope.TaskCountByStatusCard(
     count: Int,
     modifier: Modifier = Modifier,
 ) {
+    val backgroundColor by animateColorAsState(
+        targetValue = getTaskStatusBackgroundColor(taskUiStatus),
+        label = "taskCountCardBackground"
+    )
+
     Box(
         modifier
             .weight(1f)
             .clip(RoundedCornerShape(20.dp))
             .clipToBounds()
-            .background(
-                when (taskUiStatus) {
-                    TaskUiStatus.TODO -> Theme.color.purpleAccent
-                    TaskUiStatus.IN_PROGRESS -> Theme.color.yellowAccent
-                    TaskUiStatus.DONE -> Theme.color.greenAccent
-                }
-            )
+            .background(backgroundColor)
     ) {
         Column(
             modifier = Modifier
@@ -67,11 +68,7 @@ fun RowScope.TaskCountByStatusCard(
             )
 
             Text(
-                text = when (taskUiStatus) {
-                    TaskUiStatus.TODO -> stringResource(R.string.todo_task_status)
-                    TaskUiStatus.IN_PROGRESS -> stringResource(R.string.in_progress_task_status)
-                    TaskUiStatus.DONE -> stringResource(R.string.done_task_status)
-                },
+                text = getTaskStatusLabel(taskUiStatus),
                 color = Theme.color.onPrimaryCaption,
                 style = Theme.textStyle.label.small
             )
@@ -149,6 +146,19 @@ private fun CardTopEndDecoration(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun getTaskStatusBackgroundColor(taskUiStatus: TaskUiStatus): Color = when (taskUiStatus) {
+    TaskUiStatus.TODO -> Theme.color.purpleAccent
+    TaskUiStatus.IN_PROGRESS -> Theme.color.yellowAccent
+    TaskUiStatus.DONE -> Theme.color.greenAccent
+}
+
+@Composable
+fun getTaskStatusLabel(taskUiStatus: TaskUiStatus): String = when (taskUiStatus) {
+    TaskUiStatus.TODO -> stringResource(R.string.todo_task_status)
+    TaskUiStatus.IN_PROGRESS -> stringResource(R.string.in_progress_task_status)
+    TaskUiStatus.DONE -> stringResource(R.string.done_task_status)
+}
 
 @PreviewLightDark
 @Composable

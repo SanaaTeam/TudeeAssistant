@@ -1,6 +1,7 @@
 package com.sanaa.tudee_assistant.presentation.screen.home
 
 import com.sanaa.tudee_assistant.presentation.model.CategoryUiState
+import com.sanaa.tudee_assistant.presentation.model.SliderUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
@@ -19,4 +20,5 @@ data class HomeScreenUiState(
     val showEditTaskSheet: Boolean = false,
     val showTaskDetailsBottomSheet: Boolean = false,
     val taskToEdit: TaskUiState? = null,
+    val sliderUiState: SliderUiState = SliderUiState()
 )

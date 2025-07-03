@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.designSystem.component
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -40,23 +42,17 @@ fun PriorityTag(
     enabled: Boolean = true,
     onClick: () -> Unit = {},
 ) {
+    val backgroundColor by animateColorAsState(
+        targetValue = getPriorityColor(priority, isSelected),
+        label = "priorityTagBackground"
+    )
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(Theme.dimension.medium))
             .clickable(enabled = enabled) {
                 onClick.invoke()
             }
-            .background(
-                if (isSelected) {
-                    when (priority) {
-                        HIGH -> Theme.color.pinkAccent
-                        MEDIUM -> Theme.color.yellowAccent
-                        LOW -> Theme.color.greenAccent
-                    }
-                } else {
-                    Theme.color.surfaceLow
-                }
-            )
+            .background(backgroundColor)
             .padding(vertical = 6.dp, horizontal = Theme.dimension.small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp)
@@ -64,27 +60,41 @@ fun PriorityTag(
         Icon(
             modifier = Modifier.size(Theme.dimension.regular),
             painter = painterResource(
-                id = when (priority) {
-                    HIGH -> R.drawable.flag
-                    MEDIUM -> R.drawable.alert
-                    LOW -> R.drawable.trade_down
-                }
+                id = getPriorityIcon(priority)
             ),
             contentDescription = null,
             tint = if (isSelected) Theme.color.onPrimary else Theme.color.hint
         )
 
         Text(
-            text = when (priority) {
-                HIGH -> stringResource(R.string.high)
-                MEDIUM -> stringResource(R.string.medium)
-                LOW -> stringResource(R.string.low)
-            },
+            text = getPriorityLabel(priority),
             color = if (isSelected) Theme.color.onPrimary else Theme.color.hint,
             style = Theme.textStyle.label.small
         )
     }
 }
+
+@Composable
+fun getPriorityColor(priority: TaskUiPriority, isSelected: Boolean): Color =
+    if (!isSelected) Theme.color.surfaceLow else when (priority) {
+        HIGH -> Theme.color.pinkAccent
+        MEDIUM -> Theme.color.yellowAccent
+        LOW -> Theme.color.greenAccent
+    }
+
+fun getPriorityIcon(priority: TaskUiPriority): Int = when (priority) {
+    HIGH -> R.drawable.flag
+    MEDIUM -> R.drawable.alert
+    LOW -> R.drawable.trade_down
+}
+
+@Composable
+fun getPriorityLabel(priority: TaskUiPriority): String = when (priority) {
+    HIGH -> stringResource(R.string.high)
+    MEDIUM -> stringResource(R.string.medium)
+    LOW -> stringResource(R.string.low)
+}
+
 
 @PreviewLightDark
 @Composable

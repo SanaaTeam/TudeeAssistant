@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.designSystem.component.button
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,20 +28,17 @@ fun SecondaryButton(
     isLoading: Boolean = false,
     onClick: () -> Unit = {},
 ) {
-    val borderColor = when (enabled) {
-        true -> Theme.color.stroke
-        false -> Theme.color.disable
-    }
+    val animatedBorderColor by animateColorAsState(
+        targetValue = if (enabled) Theme.color.stroke else Theme.color.disable,
+        label = "animatedBorderColor"
+    )
 
-    val contentColor = when (enabled) {
-        true -> Theme.color.primary
-        false -> Theme.color.stroke
-    }
+    val animatedContentColor by animateColorAsState(
+        targetValue = if (enabled) Theme.color.primary else Theme.color.stroke,
+        label = "animatedContentColor"
+    )
 
-    val verticalPadding = when (isLoading) {
-        true -> Theme.dimension.medium
-        false -> 18.dp
-    }
+    val verticalPadding = if (isLoading) Theme.dimension.medium else 18.dp
 
     Row(
         modifier = modifier
@@ -50,7 +49,7 @@ fun SecondaryButton(
             )
             .border(
                 width = 1.dp,
-                color = borderColor,
+                color = animatedBorderColor,
                 shape = RoundedCornerShape(100.dp)
             )
             .padding(horizontal = Theme.dimension.large, vertical = verticalPadding),
@@ -65,7 +64,7 @@ fun SecondaryButton(
             label = label,
             isLoading = isLoading,
             enabled = enabled,
-            contentColor = contentColor
+            contentColor = animatedContentColor
         )
     }
 }

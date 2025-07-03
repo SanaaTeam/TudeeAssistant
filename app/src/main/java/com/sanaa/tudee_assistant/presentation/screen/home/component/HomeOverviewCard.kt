@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.screen.home.homeComponents
+package com.sanaa.tudee_assistant.presentation.screen.home.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
-import com.sanaa.tudee_assistant.presentation.designSystem.component.TaskCountByStatusCard
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenUiState
@@ -34,7 +33,7 @@ fun HomeOverviewCard(state: HomeScreenUiState) {
     ) {
         TopDate(state)
 
-        Slider(modifier = Modifier.padding(start = 12.dp), tasks = state.tasks)
+        Slider(modifier = Modifier.padding(start = 12.dp), state = state.sliderUiState)
 
         Text(
             modifier = Modifier.padding(

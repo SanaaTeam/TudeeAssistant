@@ -32,35 +32,32 @@ fun DayItem(
 ) {
     val backgroundBrush = Theme.color.primaryGradient
 
-    Box(
-        modifier = modifier
+    Column(
+        modifier
             .clip(RoundedCornerShape(Theme.dimension.medium))
             .clickable { onClick() }
+            .width(56.dp)
+            .then(
+                if (isSelected) Modifier.background(backgroundBrush)
+                else Modifier.background(Theme.color.surface)
+            )
+            .padding(vertical = Theme.dimension.regular),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .width(56.dp)
-                .then(
-                    if (isSelected) Modifier.background(backgroundBrush)
-                    else Modifier.background(Theme.color.surface)
-                )
-                .padding(vertical = Theme.dimension.regular),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            Text(
-                text = dayDate.dayOfMonth.toString(),
-                color = if (isSelected) Theme.color.onPrimary else Theme.color.body,
-                style = Theme.textStyle.title.medium
-            )
+        Text(
+            text = dayDate.dayOfMonth.toString(),
+            color = if (isSelected) Theme.color.onPrimary else Theme.color.body,
+            style = Theme.textStyle.title.medium
+        )
 
-            Text(
-                text = dayDate.getShortDayName(),
-                color = if (isSelected) Theme.color.onPrimaryCaption else Theme.color.hint,
-                style = Theme.textStyle.body.small
-            )
-        }
+        Text(
+            text = dayDate.getShortDayName(),
+            color = if (isSelected) Theme.color.onPrimaryCaption else Theme.color.hint,
+            style = Theme.textStyle.body.small
+        )
     }
+
 
 }
 

@@ -21,15 +21,17 @@ fun StatusImage(imageSize: Dp, status: TudeeUiStatus) {
     Image(
         modifier = Modifier.size(imageSize),
         painter = painterResource(
-            id = when (status) {
-                TudeeUiStatus.GOOD -> R.drawable.good_statues
-                TudeeUiStatus.OKAY -> R.drawable.okay_statues
-                TudeeUiStatus.POOR -> R.drawable.poor_statues
-                TudeeUiStatus.BAD -> R.drawable.bad_staues
-            }
+            id = getStatusImage(status)
         ),
         contentDescription = null,
     )
+}
+
+fun getStatusImage(status: TudeeUiStatus): Int = when (status) {
+    TudeeUiStatus.GOOD -> R.drawable.good_statues
+    TudeeUiStatus.OKAY -> R.drawable.okay_statues
+    TudeeUiStatus.POOR -> R.drawable.poor_statues
+    TudeeUiStatus.BAD -> R.drawable.bad_staues
 }
 
 @PreviewLightDark

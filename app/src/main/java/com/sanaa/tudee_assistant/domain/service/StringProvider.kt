@@ -20,7 +20,16 @@ interface StringProvider {
     val markAsInProgress: String
     val markAsDone: String
 
+    val goodStatusMessageTitle: String
+    val okayStatusMessageTitle: String
+    val poorStatusMessageTitle: String
+    val badStatusMessageTitle: String
 
+    val goodStatusMessage: String
+    val okayStatusMessage: String
+    val poorStatusMessage: String
+    val badStatusMessage: String
 
+    fun formattedOkayStatusMessage(done: Int, total: Int): String
 
 }

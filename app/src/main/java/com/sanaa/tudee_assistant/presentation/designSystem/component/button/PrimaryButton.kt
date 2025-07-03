@@ -1,5 +1,6 @@
 package com.sanaa.tudee_assistant.presentation.designSystem.component.button
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,9 +31,8 @@ fun PrimaryButton(
     onClick: () -> Unit = {},
     backgroundModifier: Modifier = when (enabled) {
         true -> Modifier.background(
-            brush = Theme.color.primaryGradient,
+            brush = Theme.color.primaryGradient
         )
-
         false -> Modifier.background(color = Theme.color.disable)
     },
     contentColor: Color = when (enabled) {
@@ -40,10 +41,11 @@ fun PrimaryButton(
     },
 ) {
 
-    val verticalPadding = when (isLoading) {
-        true -> Theme.dimension.medium
-        false -> 18.dp
-    }
+    val verticalPadding = if (isLoading) Theme.dimension.medium else 18.dp
+    val animatedContentColor by animateColorAsState(
+        targetValue = contentColor,
+        label = "primaryButtonTextColor"
+    )
 
     Row(
         modifier = modifier
@@ -65,7 +67,7 @@ fun PrimaryButton(
         ButtonContent(
             label = label,
             isLoading = isLoading,
-            contentColor = contentColor
+            contentColor = animatedContentColor
         )
 
     }

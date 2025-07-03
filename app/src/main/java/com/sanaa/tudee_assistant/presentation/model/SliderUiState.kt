@@ -1,7 +1,6 @@
-package com.sanaa.tudee_assistant.presentation.screen.home
+package com.sanaa.tudee_assistant.presentation.model
 
 import com.sanaa.tudee_assistant.R
-import com.sanaa.tudee_assistant.presentation.model.TudeeUiStatus
 
 data class SliderUiState(
     val title: String = "",

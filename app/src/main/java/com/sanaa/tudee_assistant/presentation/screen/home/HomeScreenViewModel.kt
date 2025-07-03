@@ -6,6 +6,7 @@ import com.sanaa.tudee_assistant.domain.service.PreferencesManager
 import com.sanaa.tudee_assistant.domain.service.StringProvider
 import com.sanaa.tudee_assistant.domain.service.TaskService
 import com.sanaa.tudee_assistant.presentation.base.BaseViewModel
+import com.sanaa.tudee_assistant.presentation.model.SliderUiState
 import com.sanaa.tudee_assistant.presentation.model.SnackBarState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus

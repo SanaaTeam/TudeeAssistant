@@ -30,6 +30,7 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.MainScreenRoute
 import com.sanaa.tudee_assistant.presentation.screen.category.AddEditCategoryBottomSheet
+import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTasksEffects.NavigateBackToCategoryList
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.CategoryTasksTopBar
 import com.sanaa.tudee_assistant.presentation.screen.categoryTask.components.TasksListComponent
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
@@ -66,11 +67,10 @@ fun CategoryTaskScreen(
 
 
     CategoryTaskScreenContent(
-        state = state, listener = viewModel, isValidForm = viewModel::isValidForm, onBackClick = {
-            navController.popBackStack(
-                route = MainScreenRoute, inclusive = false
-            )
-        }, modifier = modifier.fillMaxSize()
+        state = state,
+        listener = viewModel,
+        isValidForm = viewModel::isValidForm,
+        modifier = modifier.fillMaxSize()
     )
 }
 
@@ -79,7 +79,6 @@ private fun CategoryTaskScreenContent(
     state: CategoryTaskScreenUiState,
     isValidForm: () -> Boolean,
     listener: CategoryTaskInteractionListener,
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -103,7 +102,7 @@ private fun CategoryTaskScreenContent(
             CategoryTasksTopBar(
                 title = categoryName,
                 onEditClick = { listener.onEditClicked() },
-                onBackClick = onBackClick,
+                onBackClick = { listener.onBackPressed() },
                 isEditable = !state.currentCategory.isDefault,
                 modifier = Modifier
                     .background(Theme.color.surfaceHigh)
@@ -256,9 +255,9 @@ private fun CategoryTaskScreenPreview() {
                 override fun onTaskDetailsDismiss() {}
                 override fun onTaskEditSuccess() {}
                 override fun onMoveStatusSuccess() {}
+                override fun onBackPressed() {}
             },
             isValidForm = { true },
-            onBackClick = {},
         )
     }
 }

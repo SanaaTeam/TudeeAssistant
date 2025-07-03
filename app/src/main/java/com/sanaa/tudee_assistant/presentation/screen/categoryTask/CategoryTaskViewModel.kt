@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import android.net.Uri
 import androidx.core.net.toUri
+import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -13,11 +14,13 @@ import com.sanaa.tudee_assistant.presentation.model.TaskUiState
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.model.mapper.toDomain
 import com.sanaa.tudee_assistant.presentation.model.mapper.toState
+import com.sanaa.tudee_assistant.presentation.screen.categoryTask.CategoryTasksEffects.NavigateBackToCategoryList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class CategoryTaskViewModel(
     private val categoryService: CategoryService,
@@ -94,7 +97,10 @@ class CategoryTaskViewModel(
             callee = {
                 updateState { it.copy(isLoading = true) }
                 categoryService.deleteCategoryById(state.value.currentCategory.id)
-                taskService.deleteTaskByCategoryId(state.value.currentCategory.id)
+                try {
+                    taskService.deleteTaskByCategoryId(state.value.currentCategory.id)
+                } catch (e: Exception) {
+                }
             },
             onError = { onError(message = stringProvider.deletingCategoryError) },
             onSuccess = {
@@ -277,5 +283,11 @@ class CategoryTaskViewModel(
             edited.name.isNotBlank() && (edited.name.length in 2..24)
 
         return isNameValid && (hasNameChanged || hasImageChanged)
+    }
+
+    override fun onBackPressed() {
+        viewModelScope.launch {
+            _effects.emit(NavigateBackToCategoryList)
+        }
     }
 }

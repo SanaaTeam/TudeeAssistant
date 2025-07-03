@@ -2,6 +2,7 @@ package com.sanaa.tudee_assistant.presentation.screen.category
 
 import android.net.Uri
 import androidx.core.net.toUri
+import androidx.lifecycle.viewModelScope
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider
@@ -14,7 +15,10 @@ import com.sanaa.tudee_assistant.presentation.model.mapper.toState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
 class CategoryViewModel(
     private val categoryService: CategoryService,
@@ -28,6 +32,9 @@ class CategoryViewModel(
     init {
         loadCategoriesWithTasksCount()
     }
+
+    private val _effect = MutableSharedFlow<CategoryEffects>()
+    val effect = _effect.asSharedFlow()
 
     private fun loadCategoriesWithTasksCount() {
         updateState { it.copy(isLoading = true) }
@@ -140,6 +147,12 @@ class CategoryViewModel(
     override fun onHideSnakeBar() {
         updateState {
             it.copy(snackBarState = SnackBarState.hide())
+        }
+    }
+
+    override fun onCategoryClicked(categoryId: Int) {
+        viewModelScope.launch {
+            _effect.emit(CategoryEffects.NavigateToCategoryTasks(categoryId))
         }
     }
 

@@ -11,5 +11,4 @@ data class CategoryScreenUiState(
     val currentCategory: CategoryUiState = CategoryUiState(),
     val newCategory: CategoryUiState = CategoryUiState(),
     val isEditMode: Boolean = false,
-    val navigateToCategoryId: Long? = null,
 )

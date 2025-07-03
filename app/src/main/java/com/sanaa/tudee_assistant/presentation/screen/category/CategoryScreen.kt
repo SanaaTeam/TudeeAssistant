@@ -27,6 +27,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -35,7 +36,17 @@ fun CategoryScreen(
     viewModel: CategoryViewModel = koinViewModel<CategoryViewModel>(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val navController = AppNavigation.app
 
+    LaunchedEffect(Unit) {
+        viewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is CategoryEffects.NavigateToCategoryTasks -> {
+                    navController.navigate(CategoryTasksScreenRoute(effect.categoryId))
+                }
+            }
+        }
+    }
     CategoryScreenContent(
         modifier = modifier,
         state = state,
@@ -49,7 +60,6 @@ fun CategoryScreenContent(
     state: CategoryScreenUiState,
     listener: CategoryInteractionListener,
 ) {
-    val screenNavController = AppNavigation.app
     val snackBarState = LocalSnackBarState.current
 
     LaunchedEffect(state.snackBarState) {
@@ -97,7 +107,7 @@ fun CategoryScreenContent(
                             category = category,
                             topContent = { CategoryCount(category.tasksCount.toString()) },
                             onClick = {
-                                screenNavController.navigate(CategoryTasksScreenRoute(category.id))
+                                listener.onCategoryClicked(category.id)
                             },
                         )
                     }

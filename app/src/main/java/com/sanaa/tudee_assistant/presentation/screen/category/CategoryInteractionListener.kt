@@ -10,4 +10,5 @@ interface CategoryInteractionListener {
     fun onCategoryImageSelected(uri: Uri?)
     fun isFormValid(): Boolean
     fun onHideSnakeBar()
+    fun onCategoryClicked(categoryId: Int)
 }

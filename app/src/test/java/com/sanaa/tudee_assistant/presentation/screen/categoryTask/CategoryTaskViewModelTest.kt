@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class CategoryTaskViewModelTest {
 
+    private lateinit var viewModel: CategoryTaskViewModel
     private val categoryService: CategoryService = mockk(relaxed = true)
     private val taskService: TaskService = mockk(relaxed = true)
     private val imageProcessor: ImageProcessor = mockk(relaxed = true)
@@ -38,6 +39,24 @@ class CategoryTaskViewModelTest {
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(dispatcher)
+
+        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
+        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
+
+        every { stringProvider.deletedCategorySuccessfully } returns DELETE_SUCCESS
+        every { stringProvider.categoryUpdateSuccessfully } returns UPDATE_SUCCESS
+        every { stringProvider.taskUpdateSuccess } returns TASK_UPDATE_SUCCESS
+        every { stringProvider.taskStatusUpdateSuccess } returns STATUS_UPDATE_SUCCESS
+        every { stringProvider.deletingCategoryError } returns DELETE_ERROR
+
+        viewModel = CategoryTaskViewModel(
+            categoryService = categoryService,
+            taskService = taskService,
+            categoryId = categoryId,
+            imageProcessor = imageProcessor,
+            stringProvider = stringProvider,
+            dispatcher = dispatcher
+        )
     }
 
     @AfterEach
@@ -46,13 +65,9 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `initial state should load category and tasks`() = runTest {
-        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
-        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
-
-        val viewModel = createViewModel()
-
+    fun `should load category and tasks when ViewModel is initialized`() = runTest {
         val state = viewModel.state.value
+
         assertThat(state.currentCategory.id).isEqualTo(categoryId)
         assertThat(state.todoTasks).hasSize(1)
         assertThat(state.inProgressTasks).hasSize(1)
@@ -61,72 +76,56 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onDeleteClicked should show delete bottom sheet`() = runTest {
-        val viewModel = createViewModel()
-
+    fun `should show delete bottom sheet when delete is clicked`() {
         viewModel.onDeleteClicked()
-
         val state = viewModel.state.value
+
         assertThat(state.showDeleteCategoryBottomSheet).isTrue()
         assertThat(state.showEditCategoryBottomSheet).isFalse()
     }
 
     @Test
-    fun `onDeleteDismiss should hide delete bottom sheet`() = runTest {
-        val viewModel = createViewModel()
-
+    fun `should hide delete bottom sheet and show edit bottom sheet when delete is dismissed`() {
         viewModel.onDeleteClicked()
         viewModel.onDeleteDismiss()
-
         val state = viewModel.state.value
+
         assertThat(state.showDeleteCategoryBottomSheet).isFalse()
         assertThat(state.showEditCategoryBottomSheet).isTrue()
     }
 
     @Test
-    fun `onEditClicked should show edit bottom sheet with current category`() = runTest {
-        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
-        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
-
-        val viewModel = createViewModel()
-
+    fun `should show edit bottom sheet with current category when edit is clicked`() {
         viewModel.onEditClicked()
-
         val state = viewModel.state.value
+
         assertThat(state.showEditCategoryBottomSheet).isTrue()
         assertThat(state.editCategory).isEqualTo(state.currentCategory)
     }
 
     @Test
-    fun `onEditDismissClicked should hide edit bottom sheet`() = runTest {
-        val viewModel = createViewModel()
-
+    fun `should hide edit bottom sheet when edit is dismissed`() {
         viewModel.onEditClicked()
         viewModel.onEditDismissClicked()
-
         val state = viewModel.state.value
+
         assertThat(state.showEditCategoryBottomSheet).isFalse()
     }
 
     @Test
-    fun `onConfirmDeleteClicked should delete category and navigate back`() = runTest {
+    fun `should delete category and hide delete bottom sheet when confirm delete is clicked`() = runTest {
         coEvery { categoryService.deleteCategoryById(categoryId) } returns Unit
         coEvery { taskService.deleteTaskByCategoryId(categoryId) } returns Unit
-        every { stringProvider.deletedCategorySuccessfully } returns DELETE_SUCCESS
-
-        val viewModel = createViewModel()
 
         viewModel.onConfirmDeleteClicked()
-
         val state = viewModel.state.value
+
         assertThat(state.snackBarState.message).isEqualTo(DELETE_SUCCESS)
         assertThat(state.showDeleteCategoryBottomSheet).isFalse()
     }
 
     @Test
-    fun `onStatusChanged should update selected status`() = runTest {
-        val viewModel = createViewModel()
-
+    fun `should update selected task status when status is changed`() {
         viewModel.onStatusChanged(0)
         assertThat(viewModel.state.value.currentSelectedTaskStatus).isEqualTo(TaskUiStatus.IN_PROGRESS)
 
@@ -138,155 +137,98 @@ class CategoryTaskViewModelTest {
     }
 
     @Test
-    fun `onTitleChange should update edit category name`() = runTest {
-        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
-        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
-
-        val viewModel = createViewModel()
-
-        viewModel.onEditClicked()
-        viewModel.onTitleChange("New Name")
-
+    fun `should update category name when title is changed`() {
+        val newName = "New Category Name"
+        viewModel.onTitleChange(newName)
         val state = viewModel.state.value
-        assertThat(state.editCategory.name).isEqualTo("New Name")
+
+        assertThat(state.editCategory.name).isEqualTo(newName)
     }
 
     @Test
-    fun `onTaskClicked should show task details bottom sheet`() = runTest {
-        val viewModel = createViewModel()
-
-        viewModel.onTaskClicked(fakeUiTasks[0])
-
+    fun `should show task details bottom sheet when task is clicked`() {
+        val task = fakeUiTasks[0]
+        viewModel.onTaskClicked(task)
         val state = viewModel.state.value
-        assertThat(state.selectedTask).isEqualTo(fakeUiTasks[0])
+
+        assertThat(state.selectedTask).isEqualTo(task)
         assertThat(state.showTaskDetailsBottomSheet).isTrue()
     }
 
     @Test
-    fun `onTaskEditClicked should show edit task bottom sheet`() = runTest {
-        val viewModel = createViewModel()
-
-        viewModel.onTaskClicked(fakeUiTasks[0])
-        viewModel.onTaskEditClicked(fakeUiTasks[0])
-
+    fun `should show edit task bottom sheet when task edit is clicked`() {
+        val task = fakeUiTasks[0]
+        viewModel.onTaskClicked(task)
+        viewModel.onTaskEditClicked(task)
         val state = viewModel.state.value
+
         assertThat(state.showEditTaskBottomSheet).isTrue()
     }
 
     @Test
-    fun `onTaskEditDismiss should hide edit task bottom sheet`() = runTest {
-        val viewModel = createViewModel()
-
+    fun `should hide edit task bottom sheet and clear selected task when dismiss is clicked`() {
         viewModel.onTaskEditClicked(fakeUiTasks[0])
         viewModel.onTaskEditDismiss()
-
         val state = viewModel.state.value
+
         assertThat(state.showEditTaskBottomSheet).isFalse()
         assertThat(state.selectedTask).isNull()
     }
 
     @Test
-    fun `onTaskEditSuccess should show success message`() = runTest {
-        every { stringProvider.taskUpdateSuccess } returns TASK_UPDATE_SUCCESS
-
-        val viewModel = createViewModel()
-
+    fun `should show task update success message when edit succeeds`() {
         viewModel.onTaskEditSuccess()
-
         val state = viewModel.state.value
+
         assertThat(state.snackBarState.message).isEqualTo(TASK_UPDATE_SUCCESS)
         assertThat(state.showEditTaskBottomSheet).isFalse()
     }
 
     @Test
-    fun `onMoveStatusSuccess should show success message`() = runTest {
-        every { stringProvider.taskStatusUpdateSuccess } returns STATUS_UPDATE_SUCCESS
-
-        val viewModel = createViewModel()
-
+    fun `should show status update message when task status move succeeds`() {
         viewModel.onMoveStatusSuccess()
-
         val state = viewModel.state.value
+
         assertThat(state.snackBarState.message).isEqualTo(STATUS_UPDATE_SUCCESS)
         assertThat(state.showTaskDetailsBottomSheet).isFalse()
     }
 
     @Test
-    fun `onHideSnackBar should reset snackbar state`() = runTest {
-        val viewModel = createViewModel()
-
+    fun `should clear snackbar message when snackbar is hidden`() {
         viewModel.onTaskEditSuccess()
         viewModel.onHideSnackBar()
-
         val state = viewModel.state.value
+
         assertThat(state.snackBarState.message).isEmpty()
     }
 
     @Test
-    fun `onTaskDetailsDismiss should hide details bottom sheet`() = runTest {
-        val viewModel = createViewModel()
-
+    fun `should hide task details bottom sheet and clear selected task when dismissed`() {
         viewModel.onTaskClicked(fakeUiTasks[0])
         viewModel.onTaskDetailsDismiss()
-
         val state = viewModel.state.value
+
         assertThat(state.showTaskDetailsBottomSheet).isFalse()
         assertThat(state.selectedTask).isNull()
     }
 
     @Test
-    fun `isValidForm should return true when name is valid and changes exist`() = runTest {
-        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
-        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
-
-        val viewModel = createViewModel()
-
+    fun `should return true from isValidForm when name is valid and changed`() {
         viewModel.onEditClicked()
         viewModel.onTitleChange("New Name")
 
-        val result = viewModel.isValidForm()
-        assertThat(result).isTrue()
+        assertThat(viewModel.isValidForm()).isTrue()
     }
 
     @Test
-    fun `isValidForm should return false when name is invalid`() = runTest {
-        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
-        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
-
-        val viewModel = createViewModel()
-
+    fun `should return false from isValidForm when name is too short`() {
         viewModel.onEditClicked()
         viewModel.onTitleChange("A")
 
-        val result = viewModel.isValidForm()
-        assertThat(result).isFalse()
+        assertThat(viewModel.isValidForm()).isFalse()
     }
 
-    @Test
-    fun `isValidForm should return false when name has not changed`() = runTest {
-        coEvery { categoryService.getCategoryById(categoryId) } returns fakeCategory
-        coEvery { taskService.getTasksByCategoryId(categoryId) } returns flowOf(fakeTasks)
-
-        val viewModel = createViewModel()
-
-        viewModel.onEditClicked()
-        viewModel.onTitleChange("Test Category")
-
-        val result = viewModel.isValidForm()
-        assertThat(result).isFalse()
-    }
-
-    private fun createViewModel(): CategoryTaskViewModel {
-        return CategoryTaskViewModel(
-            categoryService = categoryService,
-            taskService = taskService,
-            categoryId = categoryId,
-            imageProcessor = imageProcessor,
-            stringProvider = stringProvider,
-            dispatcher = dispatcher
-        )
-    }
-
+    // Fake data
     private val fakeCategory = Category(
         id = categoryId,
         name = "Test Category",

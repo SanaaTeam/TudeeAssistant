@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -36,7 +35,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.TudeeTheme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 
 @Composable
-fun RowScope.TaskCountByStatusCard(
+fun TaskCountByStatusCard(
     taskUiStatus: TaskUiStatus,
     count: Int,
     modifier: Modifier = Modifier,
@@ -48,7 +47,6 @@ fun RowScope.TaskCountByStatusCard(
 
     Box(
         modifier
-            .weight(1f)
             .clip(RoundedCornerShape(20.dp))
             .clipToBounds()
             .background(backgroundColor)
@@ -171,9 +169,9 @@ private fun Preview() {
                 .padding(Theme.dimension.medium),
             horizontalArrangement = Arrangement.spacedBy(Theme.dimension.medium)
         ) {
-            TaskCountByStatusCard(TaskUiStatus.DONE, 2)
-            TaskCountByStatusCard(TaskUiStatus.IN_PROGRESS, 16)
-            TaskCountByStatusCard(TaskUiStatus.TODO, 1)
+            TaskCountByStatusCard(TaskUiStatus.DONE, 2, Modifier.weight(1f))
+            TaskCountByStatusCard(TaskUiStatus.IN_PROGRESS, 16, Modifier.weight(1f))
+            TaskCountByStatusCard(TaskUiStatus.TODO, 1, Modifier.weight(1f))
         }
     }
 }

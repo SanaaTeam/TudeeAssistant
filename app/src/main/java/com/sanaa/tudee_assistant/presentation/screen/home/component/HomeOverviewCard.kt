@@ -17,6 +17,7 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenUiState
+import com.sanaa.tudee_assistant.presentation.utils.animation.applyTaskCardAnimation
 
 @Composable
 fun HomeOverviewCard(state: HomeScreenUiState) {
@@ -44,26 +45,35 @@ fun HomeOverviewCard(state: HomeScreenUiState) {
             color = Theme.color.title,
             style = Theme.textStyle.title.large
         )
+        TaskStatusCardsRow(state)
+    }
+}
 
-        Row(
-            modifier = Modifier.padding(
-                top = Theme.dimension.small,
-                start = Theme.dimension.regular,
-                end = Theme.dimension.regular
-            ),
-            horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
-        ) {
+@Composable
+fun TaskStatusCardsRow(state: HomeScreenUiState) {
+    val statuses = listOf(
+        TaskUiStatus.DONE,
+        TaskUiStatus.IN_PROGRESS,
+        TaskUiStatus.TODO
+    )
+
+    Row(
+        modifier = Modifier.padding(
+            top = Theme.dimension.small,
+            start = Theme.dimension.regular,
+            end = Theme.dimension.regular
+        ),
+        horizontalArrangement = Arrangement.spacedBy(Theme.dimension.small)
+    ) {
+        statuses.forEachIndexed { index, status ->
+            val count = state.tasks.count { it.status == status }
+
             TaskCountByStatusCard(
-                count = state.tasks.filter { it.status == TaskUiStatus.DONE }.size,
-                taskUiStatus = TaskUiStatus.DONE,
-            )
-            TaskCountByStatusCard(
-                count = state.tasks.filter { it.status == TaskUiStatus.IN_PROGRESS }.size,
-                taskUiStatus = TaskUiStatus.IN_PROGRESS,
-            )
-            TaskCountByStatusCard(
-                count = state.tasks.filter { it.status == TaskUiStatus.TODO }.size,
-                taskUiStatus = TaskUiStatus.TODO,
+                count = count,
+                taskUiStatus = status,
+                modifier = Modifier
+                    .weight(1f)
+                    .applyTaskCardAnimation(delayMillis = index * 50)
             )
         }
     }

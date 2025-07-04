@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,6 +27,8 @@ import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
+import com.sanaa.tudee_assistant.presentation.utils.animation.SlideDirection
+import com.sanaa.tudee_assistant.presentation.utils.animation.slide
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
@@ -102,8 +104,13 @@ fun CategoryScreenContent(
                     verticalArrangement = Arrangement.spacedBy(24.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(state.allCategories) { category ->
+                    itemsIndexed(state.allCategories) { index, category ->
                         CategoryItem(
+                            modifier = Modifier
+                                .slide(
+                                    direction = SlideDirection.Up,
+                                    delayMillis = (index * 100 / (index + 2)).coerceAtMost(1500)
+                                ),
                             category = category,
                             topContent = { CategoryCount(category.tasksCount.toString()) },
                             onClick = {

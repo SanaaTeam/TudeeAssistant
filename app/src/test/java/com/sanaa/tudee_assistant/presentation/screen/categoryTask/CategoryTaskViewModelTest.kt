@@ -1,8 +1,8 @@
 package com.sanaa.tudee_assistant.presentation.screen.categoryTask
 
 import com.google.common.truth.Truth.assertThat
-import com.sanaa.tudee_assistant.domain.model.Category
-import com.sanaa.tudee_assistant.domain.model.Task
+import com.sanaa.tudee_assistant.domain.entity.Category
+import com.sanaa.tudee_assistant.domain.entity.Task
 import com.sanaa.tudee_assistant.domain.service.CategoryService
 import com.sanaa.tudee_assistant.domain.service.ImageProcessor
 import com.sanaa.tudee_assistant.domain.service.StringProvider

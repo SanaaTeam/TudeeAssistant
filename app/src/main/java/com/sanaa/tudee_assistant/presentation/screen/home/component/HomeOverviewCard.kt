@@ -16,8 +16,8 @@ import com.sanaa.tudee_assistant.R
 import com.sanaa.tudee_assistant.presentation.designSystem.component.Slider
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
 import com.sanaa.tudee_assistant.presentation.model.TaskUiStatus
+import com.sanaa.tudee_assistant.presentation.modifire.applyTaskCardAnimation
 import com.sanaa.tudee_assistant.presentation.screen.home.HomeScreenUiState
-import com.sanaa.tudee_assistant.presentation.utils.animation.applyTaskCardAnimation
 
 @Composable
 fun HomeOverviewCard(state: HomeScreenUiState) {

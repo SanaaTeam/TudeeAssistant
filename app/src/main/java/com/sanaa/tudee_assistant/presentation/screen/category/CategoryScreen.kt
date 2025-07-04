@@ -24,11 +24,11 @@ import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryCou
 import com.sanaa.tudee_assistant.presentation.designSystem.component.CategoryItem
 import com.sanaa.tudee_assistant.presentation.designSystem.component.button.FloatingActionButton
 import com.sanaa.tudee_assistant.presentation.designSystem.theme.Theme
+import com.sanaa.tudee_assistant.presentation.modifire.SlideDirection
+import com.sanaa.tudee_assistant.presentation.modifire.slide
 import com.sanaa.tudee_assistant.presentation.navigation.AppNavigation
 import com.sanaa.tudee_assistant.presentation.navigation.CategoryTasksScreenRoute
 import com.sanaa.tudee_assistant.presentation.shared.LocalSnackBarState
-import com.sanaa.tudee_assistant.presentation.utils.animation.SlideDirection
-import com.sanaa.tudee_assistant.presentation.utils.animation.slide
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 

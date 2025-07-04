@@ -1,4 +1,4 @@
-package com.sanaa.tudee_assistant.presentation.utils.animation
+package com.sanaa.tudee_assistant.presentation.modifire
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateFloatAsState

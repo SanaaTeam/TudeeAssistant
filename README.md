@@ -8,7 +8,8 @@ It’s designed to help users efficiently organize their daily routines while of
 
 ## 📋 Table of Contents  
 - [Overview](#-overview)  
-- [Features](#-features)  
+- [Features](#-features)
+- [Screenshots](3-screenshots)
 - [Architecture](#-architecture)  
 - [Dependencies](#-dependencies)  
 - [Getting Started](#-getting-started)  
@@ -74,6 +75,14 @@ Create and manage tasks effortlessly with:
 - Optimized for all screen sizes and orientations  
 
 ---
+## 📸Screenshots
+
+
+<img width="324" height="720" alt="image" src="https://github.com/user-attachments/assets/2e718a17-efb5-4ff7-ab3c-ef5086990805" />
+<img width="324" height="720" alt="image" src="https://github.com/user-attachments/assets/ad0dec42-d77a-49f8-8929-260226ba5774" />
+
+<img width="324" height="720" alt="image" src="https://github.com/user-attachments/assets/dd71bab5-15ed-4b21-acdb-29beb277bb15" />
+<img width="324" height="720" alt="image" src="https://github.com/user-attachments/assets/512e28f8-2d0c-498c-b085-428afcb47d2b" />
 
 ## 🏗️ Architecture  
 
